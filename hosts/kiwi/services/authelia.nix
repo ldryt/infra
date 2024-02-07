@@ -2,14 +2,6 @@
 let secrets = import ../../../secrets/git-crypt.nix;
 in
 {
-  sops.secrets."authelia/ldryt/jwtSecret" = {};
-  sops.secrets."authelia/ldryt/sessionSecret" = {};
-  sops.secrets."authelia/ldryt/storageEncryption" = {};
-  sops.secrets."authelia/ldryt/oidcHmacSecret" = {};
-  sops.secrets."authelia/ldryt/oidcIssuerPrivateKey" = {};
-  sops.secrets."authelia/ldryt/usersDB" = {};
-  sops.secrets."authelia/ldryt/postgresPassword" = {};
-
   services.authelia.instances."ldryt" = {
     enable = true;
     secrets = {
@@ -55,7 +47,7 @@ in
         port = 44051;
         database = "authelia";
         username = "authelia";
-      };
+        password = config.sops.secrets."authelia/ldryt/postgresPassword".path;
       session = {
         name = "ldryt_authelia_session";
         domain = "iam." + secrets.ldryt.host;
@@ -84,7 +76,9 @@ in
       environment = {
         POSTGRES_PASSWORD_FILE = config.sops.secrets."authelia/ldryt/postgresPassword".path;
         POSTGRES_USER = "authelia";
+        PGPORT = 44051;
       };
+      extraOptions = ["--network=host"];
     };
   };
 
@@ -94,7 +88,7 @@ in
       forceSSL = true;
       locations."/" = {
         recommendedProxySettings = true;
-        proxyPass = "http://localhost:9091";
+        proxyPass = "http://localhost:44081";
         extraConfig = ''
           proxy_buffers 4 256k;
           proxy_buffer_size 128k;
