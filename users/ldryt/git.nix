@@ -5,7 +5,7 @@ in
 {
   programs.git = {
     enable = true;
-    userName = secrets.ldryt.name + secrets.ldryt.surname;
+    userName = secrets.ldryt.name + " " + secrets.ldryt.surname;
     userEmail = secrets.ldryt.email;
   };
 }
