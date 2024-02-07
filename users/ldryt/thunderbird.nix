@@ -1,5 +1,4 @@
-{ ... }:
-{
+{ ... }: {
   programs.thunderbird = {
     enable = true;
     settings = {
@@ -7,8 +6,6 @@
       "privacy.donottrackheader.enabled" = true;
       "mail.spellcheck.inline" = false;
     };
-    profiles."main" = {
-      isDefault = true;
-    };
+    profiles."main" = { isDefault = true; };
   };
 }

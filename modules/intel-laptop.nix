@@ -1,6 +1,5 @@
-{ config, lib, ... }:
-{
-services.power-profiles-daemon.enable = lib.mkForce false;
+{ config, lib, ... }: {
+  services.power-profiles-daemon.enable = lib.mkForce false;
   services.thermald.enable = true;
   services.tlp = {
     enable = true;
@@ -33,5 +32,6 @@ services.power-profiles-daemon.enable = lib.mkForce false;
   };
 
   hardware.enableRedistributableFirmware = true;
-  hardware.cpu.intel.updateMicrocode = config.hardware.enableRedistributableFirmware;
+  hardware.cpu.intel.updateMicrocode =
+    config.hardware.enableRedistributableFirmware;
 }

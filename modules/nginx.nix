@@ -1,7 +1,6 @@
 { ... }:
 let secrets = import ../secrets/git-crypt.nix;
-in
-{
+in {
   security.acme = {
     acceptTerms = true;
     defaults.email = secrets.ldryt.email;

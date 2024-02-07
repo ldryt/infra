@@ -8,7 +8,7 @@
     sops-nix.url = "github:mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
-  outputs = { nixpkgs, home-manager, sops-nix, ... } @ inputs: {
+  outputs = { nixpkgs, home-manager, sops-nix, ... }@inputs: {
     nixosConfigurations = {
       "tinkerbell" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
@@ -26,10 +26,7 @@
       };
       "kiwi" = nixpkgs.lib.nixosSystem {
         system = "x86_64-linux";
-        modules = [
-          ./hosts/kiwi
-          sops-nix.nixosModules.sops
-        ];
+        modules = [ ./hosts/kiwi sops-nix.nixosModules.sops ];
       };
     };
   };

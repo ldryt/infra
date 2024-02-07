@@ -1,5 +1,4 @@
-{ lib, ... }: 
-{
+{ lib, ... }: {
   dconf.enable = true;
   dconf.settings = {
     "org/gnome/desktop/peripherals/touchpad" = {
@@ -26,7 +25,8 @@
       power-button-action = "hibernate";
     };
     "org/gnome/shell" = {
-      enabled-extensions = ["launch-new-instance@gnome-shell-extensions.gcampax.github.com"];
+      enabled-extensions =
+        [ "launch-new-instance@gnome-shell-extensions.gcampax.github.com" ];
     };
     "org/gnome/desktop/wm/keybindings" = {
       toggle-fullscreen = [ "<Super>f" ];
@@ -42,20 +42,23 @@
         "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
       ];
     };
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-      binding = "<Super>Return";
-      command = "kgx";
-      name = "open-terminal";
-    };
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
-      binding = "<Super>b";
-      command = "firefox";
-      name = "open-browser";
-    };
-    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
-      binding = "<Super>e";
-      command = "nautilus";
-      name = "open-file-browser";
-    };
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" =
+      {
+        binding = "<Super>Return";
+        command = "kgx";
+        name = "open-terminal";
+      };
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" =
+      {
+        binding = "<Super>b";
+        command = "firefox";
+        name = "open-browser";
+      };
+    "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" =
+      {
+        binding = "<Super>e";
+        command = "nautilus";
+        name = "open-file-browser";
+      };
   };
 }

@@ -1,5 +1,4 @@
-{ ... }:
-{
+{ ... }: {
   boot.loader.systemd-boot.configurationLimit = 10;
   nix.gc = {
     automatic = true;

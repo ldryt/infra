@@ -1,7 +1,6 @@
 { ... }:
 let secrets = ../../../../secrets/git-crypt.nix;
-in
-{
+in {
   virtualisation.oci-containers.containers = {
     "ocis" = {
       image =
@@ -19,7 +18,8 @@ in
         STORAGE_USERS_S3NG_BUCKET = "ldryt-ocis";
         PROXY_AUTOPROVISION_ACCOUNTS = "true";
         PROXY_ROLE_ASSIGNMENT_DRIVER = "oidc";
-        OCIS_OIDC_ISSUER = "https://iam." + secrets.ldryt.host + "/realms/master";
+        OCIS_OIDC_ISSUER = "https://iam." + secrets.ldryt.host
+          + "/realms/master";
         PROXY_OIDC_REWRITE_WELLKNOWN = "true";
         OCIS_INSECURE = "true";
         IDM_ADMIN_PASSWORD = "blabla";

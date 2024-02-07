@@ -1,14 +1,12 @@
-{ pkgs, ... }:
-{
+{ pkgs, ... }: {
   home.packages = with pkgs; [
     which
     tree
     btop
     iotop
     iftop
-    
-    git-crypt
 
+    git-crypt
 
     rustc
     cargo
@@ -18,7 +16,6 @@
     nil
     nixfmt
 
-    
     libreoffice
     spotify
     prismlauncher
