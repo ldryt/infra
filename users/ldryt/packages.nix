@@ -6,9 +6,7 @@
     btop
     iotop
     iftop
-    libreoffice
-    spotify
-    prismlauncher
+
 
     rustc
     cargo
@@ -17,5 +15,10 @@
 
     nil
     nixfmt
+
+    
+    libreoffice
+    spotify
+    prismlauncher
   ];
 }
