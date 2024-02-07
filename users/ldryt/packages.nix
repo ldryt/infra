@@ -6,6 +6,8 @@
     btop
     iotop
     iftop
+    
+    git-crypt
 
 
     rustc
