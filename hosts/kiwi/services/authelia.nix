@@ -1,15 +1,18 @@
 { config, ... }:
 let secrets = import ../../../secrets/git-crypt.nix;
-in
-{
+in {
   services.authelia.instances."ldryt" = {
     enable = true;
     secrets = {
       jwtSecretFile = config.sops.secrets."authelia/ldryt/jwtSecret".path;
-      sessionSecretFile = config.sops.secrets."authelia/ldryt/sessionSecret".path;
-      storageEncryptionKeyFile = config.sops.secrets."authelia/ldryt/storageEncryption".path;
-      oidcHmacSecretFile = config.sops.secrets."authelia/ldryt/oidcHmacSecret".path;
-      oidcIssuerPrivateKeyFile = config.sops.secrets."authelia/ldryt/oidcIssuerPrivateKey".path;
+      sessionSecretFile =
+        config.sops.secrets."authelia/ldryt/sessionSecret".path;
+      storageEncryptionKeyFile =
+        config.sops.secrets."authelia/ldryt/storageEncryption".path;
+      oidcHmacSecretFile =
+        config.sops.secrets."authelia/ldryt/oidcHmacSecret".path;
+      oidcIssuerPrivateKeyFile =
+        config.sops.secrets."authelia/ldryt/oidcIssuerPrivateKey".path;
     };
     settings = {
       theme = "auto";
@@ -48,22 +51,16 @@ in
         database = "authelia";
         username = "authelia";
         password = config.sops.secrets."authelia/ldryt/postgresPassword".path;
-      session = {
-        name = "ldryt_authelia_session";
-        domain = "iam." + secrets.ldryt.host;
-        redis = {
-          host = "/run/redis-authelia/redis.sock";
+        session = {
+          name = "ldryt_authelia_session";
+          domain = "iam." + secrets.ldryt.host;
+          redis = { host = "/run/redis-authelia/redis.sock"; };
         };
-      };
-      identity_providers.oidc = {
-        cors.allowed_origins_from_client_redirect_uris = true;
-        cors.endpoints = [
-          "authorization"
-          "introspection"
-          "revocation"
-          "token"
-          "userinfo"
-        ];
+        identity_providers.oidc = {
+          cors.allowed_origins_from_client_redirect_uris = true;
+          cors.endpoints =
+            [ "authorization" "introspection" "revocation" "token" "userinfo" ];
+        };
       };
     };
   };
@@ -72,13 +69,15 @@ in
 
   virtualisation.oci-containers.containers = {
     "authelia-db" = {
-      image = "docker.io/library/postgres@sha256:17eb369d9330fe7fbdb2f705418c18823d66322584c77c2b43cc0e1851d01de7";
+      image =
+        "docker.io/library/postgres@sha256:17eb369d9330fe7fbdb2f705418c18823d66322584c77c2b43cc0e1851d01de7";
       environment = {
-        POSTGRES_PASSWORD_FILE = config.sops.secrets."authelia/ldryt/postgresPassword".path;
+        POSTGRES_PASSWORD_FILE =
+          config.sops.secrets."authelia/ldryt/postgresPassword".path;
         POSTGRES_USER = "authelia";
         PGPORT = 44051;
       };
-      extraOptions = ["--network=host"];
+      extraOptions = [ "--network=host" ];
     };
   };
 
