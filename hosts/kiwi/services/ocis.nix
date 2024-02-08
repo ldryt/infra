@@ -1,5 +1,5 @@
 { config, ... }:
-let secrets = import ../../../secrets/obfuscated.nix;
+let hidden = import ../../../secrets/obfuscated.nix;
 in {
   virtualisation.oci-containers.containers = {
     "ocis" = {
@@ -8,7 +8,7 @@ in {
       entrypoint = "/bin/sh";
       cmd = [ "-c" "ocis init | true; ocis server" ];
       environment = {
-        OCIS_URL = "https://files.${secrets.ldryt.host}";
+        OCIS_URL = "https://files.${hidden.ldryt.host}";
         OCIS_LOG_LEVEL = "info";
         OCIS_LOG_COLOR = "true";
 
@@ -19,7 +19,7 @@ in {
         OCIS_INSECURE = "false";
         PROXY_AUTOPROVISION_ACCOUNTS = "true";
         PROXY_ROLE_ASSIGNMENT_DRIVER = "oidc";
-        OCIS_OIDC_ISSUER = "https://iam.${secrets.ldryt.host}";
+        OCIS_OIDC_ISSUER = "https://iam.${hidden.ldryt.host}";
         PROXY_OIDC_REWRITE_WELLKNOWN = "true";
         WEB_OIDC_CLIENT_ID = "ocis-web";
         WEB_OIDC_SCOPE = "openid profile groups email";
@@ -31,7 +31,7 @@ in {
   };
 
   services.nginx = {
-    virtualHosts."files.${secrets.ldryt.host}" = {
+    virtualHosts."files.${hidden.ldryt.host}" = {
       enableACME = true;
       forceSSL = true;
       locations."/" = {
@@ -57,9 +57,9 @@ in {
         consent_mode = "implicit";
         scopes = [ "email" "groups" "openid" "profile" ];
         redirect_uris = [
-          "https://ocis.${secrets.ldryt.host}/"
-          "https://ocis.${secrets.ldryt.host}/oidc-callback.html"
-          "https://ocis.${secrets.ldryt.host}/oidc-silent-redirect.html"
+          "https://ocis.${hidden.ldryt.host}/"
+          "https://ocis.${hidden.ldryt.host}/oidc-callback.html"
+          "https://ocis.${hidden.ldryt.host}/oidc-silent-redirect.html"
         ];
       }
       {

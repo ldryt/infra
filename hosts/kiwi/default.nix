@@ -1,5 +1,5 @@
-{ ... }:
-let secrets = import ../../secrets/obfuscated.nix;
+{ config, ... }:
+let hidden = import ../../secrets/obfuscated.nix;
 in {
   imports = [
     ./hardware.nix
@@ -22,12 +22,12 @@ in {
   users.mutableUsers = false;
   users.users.colon = {
     isNormalUser = true;
-    extraGroups = ["wheel"];
-    openssh.authorizedKeys.keys = [ secrets.kiwi.ssh-pubkey ];
+    extraGroups = [ "wheel" ];
+    hashedPasswordFile = config.sops.secrets."users/colon/hashedPassword".path;
+    openssh.authorizedKeys.keys = [ hidden.kiwi.ssh-pubkey ];
   };
 
   virtualisation.vmVariant = {
-    # following configuration is added only when building VM with build-vm
     virtualisation = {
       cores = 3;
       memorySize = 2048;

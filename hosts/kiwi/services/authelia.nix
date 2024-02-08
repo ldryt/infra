@@ -1,5 +1,5 @@
 { config, ... }:
-let secrets = import ../../../secrets/obfuscated.nix;
+let hidden = import ../../../secrets/obfuscated.nix;
 in
 {
   services.authelia.instances."ldryt" = {
@@ -54,7 +54,7 @@ in
         password = config.sops.secrets."services/authelia/postgresPassword".path;
         session = {
           name = "ldryt_authelia_session";
-          domain = "iam." + secrets.ldryt.host;
+          domain = "iam.${hidden.ldryt.host}";
           redis = { host = "/run/redis-authelia/redis.sock"; };
         };
         identity_providers.oidc = {
@@ -83,7 +83,7 @@ in
   };
 
   services.nginx = {
-    virtualHosts.${"iam." + secrets.ldryt.host} = {
+    virtualHosts."iam.${hidden.ldryt.host}" = {
       enableACME = true;
       forceSSL = true;
       locations."/" = {

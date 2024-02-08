@@ -1,10 +1,9 @@
 { ... }:
-# beware: this "semi-secrets" handling method is exposing those to the nix store with full access to all users. this is fine for my use case, but you should be careful.
-let secrets = import ../../secrets/obfuscated.nix;
+let hidden = import ../../secrets/obfuscated.nix;
 in {
   programs.git = {
     enable = true;
-    userName = secrets.ldryt.name + " " + secrets.ldryt.surname;
-    userEmail = secrets.ldryt.email;
+    userName = "${hidden.ldryt.name} ${hidden.ldryt.surname}";
+    userEmail = hidden.ldryt.email;
   };
 }
