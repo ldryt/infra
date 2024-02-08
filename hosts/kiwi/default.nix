@@ -16,6 +16,8 @@ in {
   nix.settings.system-features = [ "nix-command" "flakes" ];
   zramSwap.enable = true;
   networking.hostName = "kiwi";
+  networking.useDHCP = false;
+  networking.interfaces."eth0".useDHCP = true;
 
   users.mutableUsers = false;
   users.users.colon = {
