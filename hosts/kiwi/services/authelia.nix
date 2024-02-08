@@ -5,15 +5,15 @@ in
   services.authelia.instances."ldryt" = {
     enable = true;
     secrets = {
-      jwtSecretFile = config.sops.secrets."authelia/ldryt/jwtSecret".path;
+      jwtSecretFile = config.sops.secrets."services/authelia/jwtSecret".path;
       sessionSecretFile =
-        config.sops.secrets."authelia/ldryt/sessionSecret".path;
+        config.sops.secrets."services/authelia/sessionSecret".path;
       storageEncryptionKeyFile =
-        config.sops.secrets."authelia/ldryt/storageEncryption".path;
+        config.sops.secrets."services/authelia/storageEncryption".path;
       oidcHmacSecretFile =
-        config.sops.secrets."authelia/ldryt/oidcHmacSecret".path;
+        config.sops.secrets."services/authelia/oidcHmacSecret".path;
       oidcIssuerPrivateKeyFile =
-        config.sops.secrets."authelia/ldryt/oidcIssuerPrivateKey".path;
+        config.sops.secrets."services/autheliaoidcIssuerPrivateKey".path;
     };
     settings = {
       theme = "auto";
@@ -27,7 +27,7 @@ in
       };
       authentication_backend = {
         file = {
-          path = config.sops.secrets."authelia/ldryt/usersDB".path;
+          path = config.sops.secrets."services/authelia/usersDB".path;
           search.email = true;
         };
         algorithm = "argon2";
@@ -51,7 +51,7 @@ in
         port = 44051;
         database = "authelia";
         username = "authelia";
-        password = config.sops.secrets."authelia/ldryt/postgresPassword".path;
+        password = config.sops.secrets."services/authelia/postgresPassword".path;
         session = {
           name = "ldryt_authelia_session";
           domain = "iam." + secrets.ldryt.host;
@@ -74,7 +74,7 @@ in
         "docker.io/library/postgres@sha256:17eb369d9330fe7fbdb2f705418c18823d66322584c77c2b43cc0e1851d01de7";
       environment = {
         POSTGRES_PASSWORD_FILE =
-          config.sops.secrets."authelia/ldryt/postgresPassword".path;
+          config.sops.secrets."services/authelia/postgresPassword".path;
         POSTGRES_USER = "authelia";
         PGPORT = "44051";
       };

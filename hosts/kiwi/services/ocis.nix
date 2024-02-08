@@ -24,7 +24,7 @@ in {
         WEB_OIDC_CLIENT_ID = "ocis-web";
         WEB_OIDC_SCOPE = "openid profile groups email";
       };
-      environmentFiles = [ config.sops.secrets."ocis/secret_envs".path ];
+      environmentFiles = [ config.sops.secrets."services/ocis/secret_envs".path ];
       volumes = [ "ocis-config:/etc/ocis" "ocis-data:/var/lib/ocis" ];
       ports = [ "9200:9200" ];
     };
