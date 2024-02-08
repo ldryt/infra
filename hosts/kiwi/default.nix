@@ -5,7 +5,7 @@ in {
     ./hardware.nix
     ./sops.nix
 
-    # ./services/ocis.nix
+    ./services/ocis.nix
     ./services/authelia.nix
 
     ../../modules/nginx.nix
@@ -21,9 +21,7 @@ in {
   users.users.colon = {
     isSystemUser = true;
     group = "wheel";
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOeroOCZerWNky5qXwi0uPV7+bOXHETDfXui0zc8fErp"
-    ];
+    openssh.authorizedKeys.keys = [ secrets.kiwi.ssh-pubkey ];
   };
 
   networking.firewall.allowedTCPPorts = [ 22 80 443 ];
