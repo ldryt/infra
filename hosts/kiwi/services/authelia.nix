@@ -13,7 +13,7 @@ in
       oidcHmacSecretFile =
         config.sops.secrets."services/authelia/oidcHmacSecret".path;
       oidcIssuerPrivateKeyFile =
-        config.sops.secrets."services/autheliaoidcIssuerPrivateKey".path;
+        config.sops.secrets."services/authelia/oidcIssuerPrivateKey".path;
     };
     settings = {
       theme = "auto";
