@@ -9,4 +9,5 @@
   sops.secrets."authelia/ldryt/oidcIssuerPrivateKey" = { };
   sops.secrets."authelia/ldryt/usersDB" = { };
   sops.secrets."authelia/ldryt/postgresPassword" = { };
+  sops.secrets."ocis/secret_envs" = { };
 }

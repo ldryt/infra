@@ -75,7 +75,7 @@ in {
         POSTGRES_PASSWORD_FILE =
           config.sops.secrets."authelia/ldryt/postgresPassword".path;
         POSTGRES_USER = "authelia";
-        PGPORT = 44051;
+        PGPORT = "44051";
       };
       extraOptions = [ "--network=host" ];
     };

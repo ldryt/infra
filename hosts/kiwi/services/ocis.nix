@@ -1,5 +1,5 @@
 { config, ... }:
-let secrets = ../../../../secrets/git-crypt.nix;
+let secrets = import ../../../secrets/git-crypt.nix;
 in {
   virtualisation.oci-containers.containers = {
     "ocis" = {
@@ -10,7 +10,7 @@ in {
       environment = {
         OCIS_URL = "https://files.${secrets.ldryt.host}";
         OCIS_LOG_LEVEL = "info";
-        OCIS_LOG_COLOR = true;
+        OCIS_LOG_COLOR = "true";
 
         STORAGE_USERS_DRIVER = "s3ng";
         STORAGE_SYSTEM_DRIVER = "ocis";
