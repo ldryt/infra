@@ -1,5 +1,5 @@
 { ... }: {
-  sops.defaultSopsFile = ../../secrets/encrypted.yaml;
+  sops.defaultSopsFile = ../secrets/encrypted.yaml;
   sops.age.keyFile = "/var/lib/sops/age/main.key";
 
 
