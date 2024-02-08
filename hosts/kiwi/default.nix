@@ -3,11 +3,11 @@ let secrets = import ../../secrets/obfuscated.nix;
 in {
   imports = [
     ./hardware.nix
-    ./sops.nix
 
     ./services/ocis.nix
     ./services/authelia.nix
 
+    ../../modules/sops.nix
     ../../modules/nginx.nix
     ../../modules/openssh.nix
     ../../modules/podman.nix

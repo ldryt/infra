@@ -1,8 +1,8 @@
 { config, inputs, ... }: {
   imports = [
     ./hardware.nix
-    ./sops.nix
-
+    
+    ../../modules/sops.nix
     ../../modules/gnome.nix
     ../../modules/resolved.nix
     ../../modules/printing.nix
