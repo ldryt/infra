@@ -1,5 +1,5 @@
 { config, ... }:
-let secrets = import ../../../secrets/git-crypt.nix;
+let secrets = import ../../../secrets/obfuscated.nix;
 in {
   virtualisation.oci-containers.containers = {
     "ocis" = {

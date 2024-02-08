@@ -1,5 +1,5 @@
 { ... }:
-let secrets = import ../../secrets/git-crypt.nix;
+let secrets = import ../../secrets/obfuscated.nix;
 in {
   imports = [
     ./hardware.nix
@@ -21,9 +21,20 @@ in {
 
   users.mutableUsers = false;
   users.users.colon = {
-    isSystemUser = true;
-    group = "wheel";
+    isNormalUser = true;
+    extraGroups = ["wheel"];
     openssh.authorizedKeys.keys = [ secrets.kiwi.ssh-pubkey ];
+  };
+
+  virtualisation.vmVariant = {
+    # following configuration is added only when building VM with build-vm
+    virtualisation = {
+      cores = 3;
+      memorySize = 2048;
+      diskSize = 8192;
+      forwardPorts = [ { from = "host"; host.port = 2222; guest.port = 22; } ];
+      graphics = false;
+    };
   };
 
   networking.firewall.allowedTCPPorts = [ 22 80 443 ];

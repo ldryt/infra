@@ -1,5 +1,5 @@
 { ... }:
-let secrets = import ../secrets/git-crypt.nix;
+let secrets = import ../secrets/obfuscated.nix;
 in {
   security.acme = {
     acceptTerms = true;

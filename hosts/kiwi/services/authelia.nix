@@ -1,6 +1,7 @@
 { config, ... }:
-let secrets = import ../../../secrets/git-crypt.nix;
-in {
+let secrets = import ../../../secrets/obfuscated.nix;
+in
+{
   services.authelia.instances."ldryt" = {
     enable = true;
     secrets = {
