@@ -3,11 +3,11 @@ let hidden = import ../../secrets/obfuscated.nix;
 in {
   imports = [
     ./hardware.nix
+    ./sops.nix
 
     ./services/ocis.nix
     ./services/authelia.nix
 
-    ../../modules/sops.nix
     ../../modules/nginx.nix
     ../../modules/openssh.nix
     ../../modules/podman.nix
@@ -34,8 +34,11 @@ in {
       diskSize = 8192;
       forwardPorts = [ { from = "host"; host.port = 2222; guest.port = 22; } ];
       graphics = false;
+      useHostCerts = true;
     };
   };
+  security.acme.defaults.server = "https://acme-staging-v02.api.letsencrypt.org/directory";
+  environment.etc."sops_age_key".source = /etc/ssh/ssh_host_ed25519_key;
 
   networking.firewall.allowedTCPPorts = [ 22 80 443 ];
 
