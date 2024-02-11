@@ -1,5 +1,5 @@
 { ... }: {
-  sops.defaultSopsFile = ../secrets/tinkerbell.yaml;
+  sops.defaultSopsFile = ../../secrets/tinkerbell.yaml;
   sops.age.keyFile = "/etc/ssh/ssh_host_ed25519_key";
 
 

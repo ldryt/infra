@@ -38,7 +38,6 @@ in {
     };
   };
   security.acme.defaults.server = "https://acme-staging-v02.api.letsencrypt.org/directory";
-  environment.etc."sops_age_key".source = /etc/ssh/ssh_host_ed25519_key;
 
   networking.firewall.allowedTCPPorts = [ 22 80 443 ];
 

@@ -1,5 +1,5 @@
 { ... }: {
-  sops.defaultSopsFile = ../secrets/kiwi.yaml;
+  sops.defaultSopsFile = ../../secrets/kiwi.yaml;
   sops.age.keyFile = "/etc/ssh/ssh_host_ed25519_key";
 
 
