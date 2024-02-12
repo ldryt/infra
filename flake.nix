@@ -26,16 +26,17 @@
       };
     };
     colmena = {
-      meta = {
-        nixpkgs = import nixpkgs {
-          system = "x86_64-linux";
-        };
-      };
+      meta = { nixpkgs = import nixpkgs { system = "x86_64-linux"; }; };
       kiwi = {
         deployment = {
           targetHost = "kiwi"; # details in ~/.ssh/config
-          targetPort = 22;
           targetUser = "colon";
+          keys = {
+            "sops_kiwi_age_key" = {
+              keyFile = "/var/lib/sops/sops_kiwi_age_key";
+              destDir = "/var/lib/sops";
+            };
+          };
         };
         imports = [ ./hosts/kiwi sops-nix.nixosModules.sops ];
       };
