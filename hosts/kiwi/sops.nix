@@ -3,6 +3,8 @@
   sops.age.keyFile = "/etc/ssh/ssh_host_ed25519_key";
 
 
+  sops.secrets."system/smb/glouton/credentials" = { };
+
   sops.secrets."users/colon/hashedPassword".neededForUsers = true;
 
   sops.secrets."services/authelia/jwtSecret" = { };

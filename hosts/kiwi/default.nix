@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 let hidden = import ../../secrets/obfuscated.nix;
 in {
   imports = [
@@ -21,10 +21,18 @@ in {
 
   users.mutableUsers = false;
   users.users.colon = {
+    uid = 1000;
     isNormalUser = true;
     extraGroups = [ "wheel" ];
     hashedPasswordFile = config.sops.secrets."users/colon/hashedPassword".path;
     openssh.authorizedKeys.keys = [ hidden.kiwi.ssh-pubkey ];
+  };
+
+  environment.systemPackages = [ pkgs.cifs-utils ];
+  fileSystems."/mnt/glouton" = {
+    device = hidden.kiwi.smb.glouton.shareName;
+    fsType = "cifs";
+    options = ["x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s,credentials=${config.sops.secrets."system/smb/glouton/credentials".path},uid=1000,gid=100"];
   };
 
   virtualisation.vmVariant = {
