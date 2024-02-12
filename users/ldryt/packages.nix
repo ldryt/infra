@@ -15,6 +15,8 @@
 
     nil
     nixfmt
+    colmena
+    sops
 
     libreoffice
     spotify
