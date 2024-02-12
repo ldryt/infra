@@ -1,7 +1,6 @@
 { ... }: {
   sops.defaultSopsFile = ../../secrets/kiwi.yaml;
-  sops.age.keyFile = "/etc/ssh/ssh_host_ed25519_key";
-
+  sops.age.keyFile = "/var/lib/sops/age/main.key";
 
   sops.secrets."system/smb/glouton/credentials" = { };
 
@@ -14,6 +13,6 @@
   sops.secrets."services/authelia/oidcIssuerPrivateKey" = { };
   sops.secrets."services/authelia/usersDB" = { };
   sops.secrets."services/authelia/postgresPassword" = { };
-  
+
   sops.secrets."services/ocis/secret_envs" = { };
 }
