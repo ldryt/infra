@@ -24,9 +24,20 @@
           }
         ];
       };
-      "kiwi" = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
-        modules = [ ./hosts/kiwi sops-nix.nixosModules.sops ];
+    };
+    colmena = {
+      meta = {
+        nixpkgs = import nixpkgs {
+          system = "x86_64-linux";
+        };
+      };
+      kiwi = {
+        deployment = {
+          targetHost = "kiwi"; # details in ~/.ssh/config
+          targetPort = 22;
+          targetUser = "colon";
+        };
+        imports = [ ./hosts/kiwi sops-nix.nixosModules.sops ];
       };
     };
   };
