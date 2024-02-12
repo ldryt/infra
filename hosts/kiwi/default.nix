@@ -14,6 +14,7 @@ in {
   ];
 
   nix.settings.system-features = [ "nix-command" "flakes" ];
+  nix.settings.trusted-users = [ "root" "colon" ];
   zramSwap.enable = true;
   networking.hostName = "kiwi";
   networking.useDHCP = false;
