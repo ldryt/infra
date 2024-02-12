@@ -28,6 +28,7 @@ in {
     hashedPasswordFile = config.sops.secrets."users/colon/hashedPassword".path;
     openssh.authorizedKeys.keys = [ hidden.kiwi.ssh-pubkey ];
   };
+  security.sudo.wheelNeedsPassword = false;
 
   environment.systemPackages = [ pkgs.cifs-utils ];
   fileSystems."/mnt/glouton" = {
