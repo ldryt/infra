@@ -52,16 +52,16 @@ in
         database = "authelia";
         username = "authelia";
         password = config.sops.secrets."services/authelia/postgresPassword".path;
-        session = {
-          name = "ldryt_authelia_session";
-          domain = "iam.${hidden.ldryt.host}";
-          redis = { host = "/run/redis-authelia/redis.sock"; };
-        };
-        identity_providers.oidc = {
-          cors.allowed_origins_from_client_redirect_uris = true;
-          cors.endpoints =
-            [ "authorization" "introspection" "revocation" "token" "userinfo" ];
-        };
+      };
+      session = {
+        name = "ldryt_authelia_session";
+        domain = "iam.${hidden.ldryt.host}";
+        redis = { host = "/run/redis-authelia/redis.sock"; };
+      };
+      identity_providers.oidc = {
+        cors.allowed_origins_from_client_redirect_uris = true;
+        cors.endpoints =
+          [ "authorization" "introspection" "revocation" "token" "userinfo" ];
       };
     };
   };
