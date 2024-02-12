@@ -1,6 +1,6 @@
 { ... }: {
   sops.defaultSopsFile = ../../secrets/kiwi.yaml;
-  sops.age.keyFile = "/var/lib/sops/age/main.key";
+  sops.age.keyFile = "/var/lib/sops/sops_kiwi_age_key";
 
   sops.secrets."system/smb/glouton/credentials" = { };
 

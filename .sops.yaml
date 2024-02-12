@@ -1,5 +1,12 @@
+keys:
+  - &tinkerbell age17xpcl8fcqvkmt56sckdhgkaprwl0qzqx9n5m9cltqkmylyml2c3qvfdwty
+  - &kiwi age1arf8azraycjvzrgtnupn4mkx64e3g5qrnkghpq5qs8y7yhp9u3psqrhdgs
 creation_rules:
-  - path_regex: secrets/[^/]+\.yaml$
+  - path_regex: secrets/tinkerbell.yaml$
     key_groups:
       - age:
-        - age19u4v8qduy350073xgzjt0htwnnurxan27a2842y9cujedvk2ddfscrlmw0
+        - *tinkerbell
+  - path_regex: secrets/kiwi.yaml$
+    key_groups:
+      - age:
+        - *kiwi
