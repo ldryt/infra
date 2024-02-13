@@ -43,13 +43,11 @@
     mutableUsers = false;
     users.ldryt = {
       isNormalUser = true;
-      extraGroups = [ "wheel" "networkmanager" "vboxusers" ];
+      extraGroups = [ "wheel" "networkmanager" ];
       hashedPasswordFile =
         config.sops.secrets."users/ldryt/hashedPassword".path;
     };
   };
-
-  virtualisation.virtualbox.host.enable = true;
 
   system.stateVersion = "23.05";
 }
