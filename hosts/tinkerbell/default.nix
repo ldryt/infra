@@ -10,6 +10,7 @@
   ];
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.settings.trusted-users = [ "root" "ldryt" ];
   nix.registry.nixpkgs.flake = inputs.nixpkgs;
   nixpkgs.config.allowUnfree = true;
 
