@@ -44,7 +44,8 @@
     users.ldryt = {
       isNormalUser = true;
       extraGroups = [ "wheel" "networkmanager" "vboxusers" ];
-      hashedPasswordFile = config.sops.secrets."users/ldryt/hashedPassword".path;
+      hashedPasswordFile =
+        config.sops.secrets."users/ldryt/hashedPassword".path;
     };
   };
 

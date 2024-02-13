@@ -1,7 +1,6 @@
 { config, ... }:
 let hidden = import ../../../secrets/obfuscated.nix;
-in
-{
+in {
   services.authelia.instances."ldryt" = {
     enable = true;
     secrets = {
@@ -51,7 +50,8 @@ in
         port = 44051;
         database = "authelia";
         username = "authelia";
-        password = config.sops.secrets."services/authelia/postgresPassword".path;
+        password =
+          config.sops.secrets."services/authelia/postgresPassword".path;
       };
       session = {
         name = "ldryt_authelia_session";

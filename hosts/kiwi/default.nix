@@ -34,7 +34,11 @@ in {
   fileSystems."/mnt/glouton" = {
     device = hidden.kiwi.smb.glouton.shareName;
     fsType = "cifs";
-    options = ["x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s,credentials=${config.sops.secrets."system/smb/glouton/credentials".path},uid=1000,gid=100,cache=loose,fsc"];
+    options = [
+      "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s,credentials=${
+        config.sops.secrets."system/smb/glouton/credentials".path
+      },uid=1000,gid=100,cache=loose,fsc"
+    ];
   };
 
   virtualisation.vmVariant = {
@@ -42,12 +46,17 @@ in {
       cores = 3;
       memorySize = 2048;
       diskSize = 8192;
-      forwardPorts = [ { from = "host"; host.port = 2222; guest.port = 22; } ];
+      forwardPorts = [{
+        from = "host";
+        host.port = 2222;
+        guest.port = 22;
+      }];
       graphics = false;
       useHostCerts = true;
     };
   };
-  security.acme.defaults.server = "https://acme-staging-v02.api.letsencrypt.org/directory";
+  security.acme.defaults.server =
+    "https://acme-staging-v02.api.letsencrypt.org/directory";
 
   networking.firewall.allowedTCPPorts = [ 22 80 443 ];
 
