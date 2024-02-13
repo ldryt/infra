@@ -41,5 +41,18 @@
         imports = [ ./hosts/kiwi sops-nix.nixosModules.sops ];
       };
     };
+    devShell.x86_64-linux = nixpkgs.legacyPackages.x86_64-linux.mkShell {
+      buildInputs = with nixpkgs.legacyPackages.x86_64-linux; [
+        ripgrep
+        colmena
+        nixfmt
+        sops
+        git-crypt
+        nil
+      ];
+      shellHook = ''
+        echo "shell with ripgrep"
+      '';
+    };
   };
 }

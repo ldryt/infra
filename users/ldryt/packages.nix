@@ -6,17 +6,10 @@
     iotop
     iftop
 
-    git-crypt
-
     rustc
     cargo
     rustfmt
     rust-analyzer
-
-    nil
-    nixfmt
-    colmena
-    sops
 
     libreoffice
     spotify
