@@ -19,6 +19,7 @@ in {
   networking.hostName = "kiwi";
   networking.useDHCP = false;
   networking.interfaces."eth0".useDHCP = true;
+  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
 
   users.mutableUsers = false;
   users.users.colon = {
@@ -40,25 +41,6 @@ in {
       },uid=1000,gid=100,cache=loose,fsc"
     ];
   };
-
-  virtualisation.vmVariant = {
-    virtualisation = {
-      cores = 3;
-      memorySize = 2048;
-      diskSize = 8192;
-      forwardPorts = [{
-        from = "host";
-        host.port = 2222;
-        guest.port = 22;
-      }];
-      graphics = false;
-      useHostCerts = true;
-    };
-  };
-  security.acme.defaults.server =
-    "https://acme-staging-v02.api.letsencrypt.org/directory";
-
-  networking.firewall.allowedTCPPorts = [ 22 80 443 ];
 
   system.stateVersion = "23.05";
 }
