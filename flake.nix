@@ -50,9 +50,6 @@
         git-crypt
         nil
       ];
-      shellHook = ''
-        echo "shell with ripgrep"
-      '';
     };
   };
 }
