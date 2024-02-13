@@ -5,7 +5,6 @@
 
     ../../modules/gnome.nix
     ../../modules/resolved.nix
-    ../../modules/printing.nix
     ../../modules/intel-laptop.nix
     ../../modules/nixos-gc.nix
   ];
