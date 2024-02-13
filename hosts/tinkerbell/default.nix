@@ -19,9 +19,12 @@
     efi.canTouchEfiVariables = true;
   };
 
-  networking.hostName = "tinkerbell";
-  networking.networkmanager.enable = true;
-  networking.useDHCP = false;
+  networking = {
+    hostName = "tinkerbell";
+    networkmanager.enable = true;
+    timeServers = [ "europe.pool.ntp.org" "time.cloudflare.com" ];
+  };
+  systemd.services.NetworkManager-wait-online.enable = false;
 
   time.timeZone = "Europe/Vilnius";
   i18n.defaultLocale = "en_US.UTF-8";
