@@ -24,6 +24,14 @@
           formatter.command = "nixfmt";
           auto-format = true;
         }
+        {
+          name = "python";
+          formatter = {
+            command = "black";
+            args = [ "--quiet" "-" ];
+          };
+          auto-format = true;
+        }
       ];
     };
   };
