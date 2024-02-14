@@ -7,11 +7,6 @@
     iftop
     git-crypt
 
-    rustc
-    cargo
-    rustfmt
-    rust-analyzer
-
     libreoffice
     spotify
     prismlauncher
