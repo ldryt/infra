@@ -28,20 +28,22 @@ in {
         file = {
           path = config.sops.secrets."services/authelia/usersDB".path;
           search.email = true;
-        };
-        algorithm = "argon2";
-        argon2 = {
-          variant = "argon2id";
-          iterations = 3;
-          memory = 12288;
-          parallelism = 3;
-          key_length = 32;
-          salt_length = 16;
+          password = {
+            algorithm = "argon2";
+            argon2 = {
+              variant = "argon2id";
+              iterations = 3;
+              memory = 12288;
+              parallelism = 3;
+              key_length = 32;
+              salt_length = 16;
+            };
+          };
         };
       };
       password_policy = {
         zxcvbn = {
-          enable = true;
+          enabled = true;
           min_score = 4;
         };
       };
@@ -63,21 +65,29 @@ in {
         cors.endpoints =
           [ "authorization" "introspection" "revocation" "token" "userinfo" ];
       };
+      notifier.filesystem.filename = "/tmp/authelia-notification";
+      access_control.default_policy = "one_factor";
     };
   };
 
-  services.redis.servers."authelia".enable = true;
+  services.redis.servers."authelia" = {
+    enable = true;
+    user = config.services.authelia.instances.ldryt.user;
+  };
 
   virtualisation.oci-containers.containers = {
     "authelia-db" = {
       image =
         "docker.io/library/postgres@sha256:17eb369d9330fe7fbdb2f705418c18823d66322584c77c2b43cc0e1851d01de7";
       environment = {
-        POSTGRES_PASSWORD_FILE =
-          config.sops.secrets."services/authelia/postgresPassword".path;
+        POSTGRES_PASSWORD_FILE = "/pass";
         POSTGRES_USER = "authelia";
         PGPORT = "44051";
       };
+      volumes = [
+        "authelia-db-data:/var/lib/postgresql"
+        "${config.sops.secrets."services/authelia/postgresPassword".path}:/pass"
+      ];
       extraOptions = [ "--network=host" ];
     };
   };
