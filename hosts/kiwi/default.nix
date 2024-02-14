@@ -13,7 +13,8 @@ in {
     ../../modules/podman.nix
   ];
 
-  nix.settings.system-features = [ "nix-command" "flakes" ];
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  nix.registry.nixpkgs.flake = inputs.nixpkgs;
   nix.settings.trusted-users = [ "root" "colon" ];
   zramSwap.enable = true;
   networking.hostName = "kiwi";
