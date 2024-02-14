@@ -9,11 +9,17 @@
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = { nixpkgs, home-manager, sops-nix, ... }@inputs: {
-    nixosConfigurations = {
-      "tinkerbell" = nixpkgs.lib.nixosSystem {
-        system = "x86_64-linux";
+    colmena = {
+      meta = {
+        nixpkgs = import nixpkgs { system = "x86_64-linux"; };
         specialArgs = { inherit inputs; };
-        modules = [
+      };
+      tinkerbell = {
+      deployment = {
+        allowLocalDeployment = true;
+        targetHost = null;
+        };
+        imports = [
           ./hosts/tinkerbell
           sops-nix.nixosModules.sops
           home-manager.nixosModules.home-manager
@@ -22,13 +28,7 @@
             home-manager.useUserPackages = true;
             home-manager.users.ldryt = import ./users/ldryt;
           }
-        ];
-      };
-    };
-    colmena = {
-      meta = {
-        nixpkgs = import nixpkgs { system = "x86_64-linux"; };
-        specialArgs = { inherit inputs; };
+          ];
       };
       kiwi = {
         deployment = {
