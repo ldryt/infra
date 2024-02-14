@@ -26,7 +26,10 @@
       };
     };
     colmena = {
-      meta = { nixpkgs = import nixpkgs { system = "x86_64-linux"; }; };
+      meta = {
+        nixpkgs = import nixpkgs { system = "x86_64-linux"; };
+        specialArgs = { inherit inputs; };
+      };
       kiwi = {
         deployment = {
           targetHost = "kiwi"; # details in ~/.ssh/config

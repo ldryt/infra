@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ inputs, config, pkgs, ... }:
 let hidden = import ../../secrets/obfuscated.nix;
 in {
   imports = [
