@@ -24,5 +24,6 @@
     mode = "0444"; # "0440";
   };
 
-  sops.secrets."services/ocis/secret_envs" = { };
+  sops.secrets."services/ocis/secretsConfig".owner =
+    config.users.users.colon.name;
 }

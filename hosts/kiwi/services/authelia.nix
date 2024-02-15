@@ -28,19 +28,11 @@ in {
         file = {
           path = config.sops.secrets."services/authelia/usersDB".path;
           search.email = true;
-          password = {
-            algorithm = "argon2";
-            argon2 = {
-              variant = "argon2id";
-              iterations = 3;
-              memory = 12288;
-              parallelism = 3;
-              key_length = 32;
-              salt_length = 16;
-            };
-          };
+          password.algorithm = "argon2";
         };
       };
+      totp.issuer = "iam.${hidden.ldryt.host}";
+      duo_api.disable = true;
       password_policy = {
         zxcvbn = {
           enabled = true;
