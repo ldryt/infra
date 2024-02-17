@@ -4,11 +4,10 @@ in {
   imports = [
     ./hardware.nix
     ./sops.nix
-    ./cifs.nix
 
     ./services/ocis.nix
     ./services/authelia.nix
-    ./services/minio.nix
+    ./services/vaultwarden.nix
 
     ../../modules/nginx.nix
     ../../modules/openssh.nix

@@ -2,6 +2,7 @@
   sops.defaultSopsFile = ../../secrets/kiwi.yaml;
   sops.age.keyFile = "/var/lib/sops/sops_kiwi_age_key";
 
+  sops.secrets."system/smb/glouton/backups-pool/credentials" = { };
   sops.secrets."system/smb/glouton/minio-buckets/credentials" = { };
 
   sops.secrets."users/colon/hashedPassword".neededForUsers = true;

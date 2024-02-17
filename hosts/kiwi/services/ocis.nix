@@ -1,5 +1,13 @@
-{ config, ... }:
-let hidden = import ../../../secrets/obfuscated.nix;
+{ config, pkgs, ... }:
+let
+  hidden = import ../../../secrets/obfuscated.nix;
+  ocisSubdomain = "files";
+  autheliaSubdomain = "iam";
+  gloutonPath = "/mnt/glouton";
+  minioDataDirName = "minio-buckets";
+  minioPort = 44061;
+  ocisBucket = "ocis-blobs";
+  ocisOidcID = "ocis-web";
 in {
   virtualisation.oci-containers.containers = {
     "ocis" = {
@@ -8,14 +16,14 @@ in {
       entrypoint = "/bin/sh";
       cmd = [ "-c" "ocis server" ];
       environment = {
-        OCIS_URL = "https://files.${hidden.ldryt.host}";
+        OCIS_URL = "https://${ocisSubdomain}.${hidden.ldryt.host}";
         PROXY_HTTP_ADDR = "127.0.0.1:44082";
         OCIS_LOG_LEVEL = "info";
         OCIS_LOG_COLOR = "true";
         OCIS_LOG_PRETTY = "true";
 
-        OCIS_OIDC_ISSUER = "https://iam.${hidden.ldryt.host}";
-        WEB_OIDC_CLIENT_ID = "ocis-web";
+        OCIS_OIDC_ISSUER = "https://${autheliaSubdomain}.${hidden.ldryt.host}";
+        WEB_OIDC_CLIENT_ID = "${ocisOidcID}";
         WEB_OIDC_SCOPE = "openid profile groups email";
         PROXY_TLS = "false";
         PROXY_AUTOPROVISION_ACCOUNTS = "true";
@@ -26,9 +34,9 @@ in {
 
         STORAGE_USERS_DRIVER = "s3ng";
         STORAGE_SYSTEM_DRIVER = "ocis";
-        STORAGE_USERS_S3NG_ENDPOINT = "http://127.0.0.1:44061";
+        STORAGE_USERS_S3NG_ENDPOINT = "http://127.0.0.1:${toString minioPort}";
         STORAGE_USERS_S3NG_REGION = "default";
-        STORAGE_USERS_S3NG_BUCKET = "ocis-blobs";
+        STORAGE_USERS_S3NG_BUCKET = "${ocisBucket}";
         STORAGE_USERS_S3NG_ACCESS_KEY = "\${MINIO_ACCESS_KEY:?error message}";
         STORAGE_USERS_S3NG_SECRET_KEY = "\${MINIO_SECRET_KEY:?error message}";
       };
@@ -43,15 +51,41 @@ in {
       ];
       extraOptions = [ "--network=host" ];
     };
+    "minio" = {
+      image =
+        "docker.io/minio/minio@sha256:971b368520f677012644eb4884391d6fe3fc39ec60cddaf246a5858ed39843bb";
+      entrypoint = "/bin/sh";
+      cmd = [ "-c" "mkdir -p /data/${ocisBucket} && minio server /data" ];
+      environment = {
+        MINIO_ACCESS_KEY = "\${MINIO_ACCESS_KEY:?error message}";
+        MINIO_SECRET_KEY = "\${MINIO_SECRET_KEY:?error message}";
+      };
+      environmentFiles =
+        [ config.sops.secrets."services/ocis/s3/credentials".path ];
+      volumes = [ "${gloutonPath}/${minioDataDirName}:/data" ];
+      ports = [ "${toString minioPort}:9000" ];
+    };
+  };
+
+  environment.systemPackages = [ pkgs.cifs-utils ];
+  fileSystems."${gloutonPath}/${minioDataDirName}" = {
+    device = hidden.kiwi.smb.glouton.${minioDataDirName}.shareName;
+    fsType = "cifs";
+    options = [
+      "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s,credentials=${
+        config.sops.secrets."system/smb/glouton/${minioDataDirName}/credentials".path
+      },uid=${toString config.users.users.colon.uid},cache=loose,fsc,sfu"
+    ];
   };
 
   services.nginx = {
-    virtualHosts."files.${hidden.ldryt.host}" = {
+    virtualHosts."${ocisSubdomain}.${hidden.ldryt.host}" = {
       enableACME = true;
       forceSSL = true;
       locations."/" = {
         recommendedProxySettings = true;
-        proxyPass = "http://127.0.0.1:44082";
+        proxyPass =
+          "http://${config.virtualisation.oci-containers.containers.ocis.environment.PROXY_HTTP_ADDR}";
         extraConfig = ''
           proxy_buffers 4 256k;
           proxy_buffer_size 128k;
@@ -71,14 +105,14 @@ in {
     clients = [
       {
         description = "ownCloud Web";
-        id = "ocis-web";
+        id = "${ocisOidcID}";
         public = true;
         consent_mode = "implicit";
         scopes = [ "email" "groups" "openid" "profile" ];
         redirect_uris = [
-          "https://files.${hidden.ldryt.host}/"
-          "https://files.${hidden.ldryt.host}/oidc-callback.html"
-          "https://files.${hidden.ldryt.host}/oidc-silent-redirect.html"
+          "https://${ocisSubdomain}.${hidden.ldryt.host}/"
+          "https://${ocisSubdomain}.${hidden.ldryt.host}/oidc-callback.html"
+          "https://${ocisSubdomain}.${hidden.ldryt.host}/oidc-silent-redirect.html"
         ];
       }
       {
