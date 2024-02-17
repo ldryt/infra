@@ -8,6 +8,7 @@ in {
 
     ./services/ocis.nix
     ./services/authelia.nix
+    ./services/minio.nix
 
     ../../modules/nginx.nix
     ../../modules/openssh.nix

@@ -2,7 +2,7 @@
   sops.defaultSopsFile = ../../secrets/kiwi.yaml;
   sops.age.keyFile = "/var/lib/sops/sops_kiwi_age_key";
 
-  sops.secrets."system/smb/glouton/credentials" = { };
+  sops.secrets."system/smb/glouton/minio-buckets/credentials" = { };
 
   sops.secrets."users/colon/hashedPassword".neededForUsers = true;
 
@@ -25,5 +25,7 @@
   };
 
   sops.secrets."services/ocis/secretsConfig".owner =
+    config.users.users.colon.name;
+  sops.secrets."services/ocis/s3/credentials".owner =
     config.users.users.colon.name;
 }
