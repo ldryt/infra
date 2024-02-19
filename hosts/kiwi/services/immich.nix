@@ -220,13 +220,13 @@ in {
     "immich-db" = {
       hostname = "immich-db";
       image =
-        "docker.io/tensorchord/pgvecto-rs:pg14-v0.1.11@sha256:d952982caad4baab3f54422a37814f47692506e253e664a6eb2eac98045d4ab4";
+        "docker.io/tensorchord/pgvecto-rs:pg14-v0.1.11@sha256:0335a1a22f8c5dd1b697f14f079934f5152eaaa216c09b61e293be285491f8ee";
       environment = {
         POSTGRES_PASSWORD = "\${DB_PASSWORD:?error message}";
-        POSTGRES_USER = "immich";
+        POSTGRES_USER = "postgres";
         POSTGRES_DB = "immich";
       };
-      volumes = [ "immich-db-data:/var/lib/postgresql" ];
+      volumes = [ "immich-db-data:/var/lib/postgresql/data" ];
       environmentFiles =
         config.virtualisation.oci-containers.containers.immich-server.environmentFiles;
       extraOptions = [ "--network=${immichNetworkName}" ];
@@ -234,7 +234,7 @@ in {
     "immich-redis" = {
       hostname = "immich-redis";
       image =
-        "docker.io/library/redis:6.2-alpine@sha256:0e8fea68028b2ce9d6b36e9e76bb0e37ad01158ba5d8e1b86cb425f2c2f50739";
+        "docker.io/library/redis:6.2-alpine@sha256:afb290a0a0d0b2bd7537b62ebff1eb84d045c757c1c31ca2ca48c79536c0de82";
       extraOptions = [ "--network=${immichNetworkName}" ];
     };
   };
