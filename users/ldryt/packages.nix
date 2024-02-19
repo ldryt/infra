@@ -25,5 +25,6 @@
     libreoffice
     spotify
     prismlauncher
+    owncloud-client
   ];
 }
