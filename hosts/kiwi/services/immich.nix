@@ -260,7 +260,7 @@ in {
       id = "${immichOidcID}";
       secret = hidden.kiwi.immich.oidcSecret;
       public = false;
-      consent_mode = "explicit";
+      consent_mode = "implicit";
       authorization_policy = "two_factor";
       scopes = [ "email" "groups" "openid" "profile" ];
       redirect_uris = [
