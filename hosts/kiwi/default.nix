@@ -8,6 +8,7 @@ in {
     ./services/ocis.nix
     ./services/authelia.nix
     ./services/vaultwarden.nix
+    ./services/immich.nix
 
     ../../modules/nginx.nix
     ../../modules/openssh.nix
@@ -22,6 +23,7 @@ in {
     registry.nixpkgs.flake = inputs.nixpkgs;
   };
 
+  time.timeZone = "Etc/UTC";
   networking = {
     hostName = "kiwi";
     useDHCP = false;
