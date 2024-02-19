@@ -15,9 +15,9 @@
         specialArgs = { inherit inputs; };
       };
       tinkerbell = {
-      deployment = {
-        allowLocalDeployment = true;
-        targetHost = null;
+        deployment = {
+          allowLocalDeployment = true;
+          targetHost = null;
         };
         imports = [
           ./hosts/tinkerbell
@@ -28,7 +28,7 @@
             home-manager.useUserPackages = true;
             home-manager.users.ldryt = import ./users/ldryt;
           }
-          ];
+        ];
       };
       kiwi = {
         deployment = {

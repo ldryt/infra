@@ -12,7 +12,7 @@ in {
   virtualisation.oci-containers.containers = {
     "ocis" = {
       image =
-        "owncloud/ocis@sha256:0275e27d2ffb37ec234c4a27523fa16ab3cdfdc8750318da2cd7c6f29794e8fe";
+        "docker.io/owncloud/ocis:4.0.6@sha256:f4e4ebd5abfbc1da667fdc0e072061208597a0afe60ee8792be246deb09eb9b2";
       entrypoint = "/bin/sh";
       cmd = [ "-c" "ocis server" ];
       environment = {
@@ -53,7 +53,7 @@ in {
     };
     "minio" = {
       image =
-        "docker.io/minio/minio@sha256:971b368520f677012644eb4884391d6fe3fc39ec60cddaf246a5858ed39843bb";
+        "docker.io/minio/minio:RELEASE.2024-02-17T01-15-57Z@sha256:e02b92b9df448c6c1a07dada58b690105afed2c344aa5195d36388ed33e19e7a";
       entrypoint = "/bin/sh";
       cmd = [ "-c" "mkdir -p /data/${ocisBucket} && minio server /data" ];
       environment = {

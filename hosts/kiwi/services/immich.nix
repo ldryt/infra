@@ -171,7 +171,8 @@ in {
   virtualisation.oci-containers.containers = {
     "immich-server" = {
       hostname = "immich-server";
-      image = "ghcr.io/immich-app/immich-server:v1.94.1";
+      image =
+        "ghcr.io/immich-app/immich-server:v1.94.1@sha256:e0655cdd4351a8406eb87ec379a9c45e7bc2a9d051d25c93e2953d92e01713b6";
       cmd = [ "start.sh" "immich" ];
       environment = {
         IMMICH_CONFIG_FILE = "/etc/immich-config.json";
@@ -211,14 +212,15 @@ in {
     };
     "immich-machine-learning" = {
       hostname = "immich-machine-learning";
-      image = "ghcr.io/immich-app/immich-machine-learning:v1.94.1";
+      image =
+        "ghcr.io/immich-app/immich-machine-learning:v1.94.1@sha256:48a9f0056983703b1f50728b4e4dd4879f3bff307579910c00a4f62204f113dc";
       volumes = [ "immich-ml-cache:/cache" ];
       extraOptions = [ "--network=${immichNetworkName}" ];
     };
     "immich-db" = {
       hostname = "immich-db";
       image =
-        "docker.io/tensorchord/pgvecto-rs:pg14-v0.1.11@sha256:0335a1a22f8c5dd1b697f14f079934f5152eaaa216c09b61e293be285491f8ee";
+        "docker.io/tensorchord/pgvecto-rs:pg14-v0.1.11@sha256:d952982caad4baab3f54422a37814f47692506e253e664a6eb2eac98045d4ab4";
       environment = {
         POSTGRES_PASSWORD = "\${DB_PASSWORD:?error message}";
         POSTGRES_USER = "immich";
@@ -232,7 +234,7 @@ in {
     "immich-redis" = {
       hostname = "immich-redis";
       image =
-        "redis:6.2-alpine@sha256:afb290a0a0d0b2bd7537b62ebff1eb84d045c757c1c31ca2ca48c79536c0de82";
+        "docker.io/library/redis:6.2-alpine@sha256:0e8fea68028b2ce9d6b36e9e76bb0e37ad01158ba5d8e1b86cb425f2c2f50739";
       extraOptions = [ "--network=${immichNetworkName}" ];
     };
   };
