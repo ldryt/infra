@@ -10,7 +10,7 @@ in {
     ./services/vaultwarden.nix
     ./services/immich.nix
 
-    ../../modules/nginx.nix
+    ../../modules/caddy.nix
     ../../modules/openssh.nix
     ../../modules/podman.nix
   ];

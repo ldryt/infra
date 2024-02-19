@@ -78,24 +78,10 @@ in {
     ];
   };
 
-  services.nginx = {
-    virtualHosts."${ocisSubdomain}.${hidden.ldryt.host}" = {
-      enableACME = true;
-      forceSSL = true;
-      locations."/" = {
-        recommendedProxySettings = true;
-        proxyPass =
-          "http://${config.virtualisation.oci-containers.containers.ocis.environment.PROXY_HTTP_ADDR}";
-        extraConfig = ''
-          proxy_buffers 4 256k;
-          proxy_buffer_size 128k;
-          proxy_busy_buffers_size 256k;
-
-          client_max_body_size 0;
-        '';
-      };
-    };
-  };
+  services.caddy.virtualHosts."${ocisSubdomain}.${hidden.ldryt.host}".extraConfig =
+    ''
+      reverse_proxy http://${config.virtualisation.oci-containers.containers.ocis.environment.PROXY_HTTP_ADDR}
+    '';
 
   services.authelia.instances."ldryt".settings.identity_providers.oidc = {
     access_token_lifespan = "2d";

@@ -13,6 +13,13 @@ in {
     };
   };
 
+  services.caddy.virtualHosts."${vaultwardenSubdomain}.${hidden.ldryt.host}".extraConfig =
+    ''
+      reverse_proxy http://${config.services.vaultwarden.config.ROCKET_ADDRESS}:${
+        toString config.services.vaultwarden.config.ROCKET_PORT
+      }
+    '';
+
   services.nginx = {
     virtualHosts."${vaultwardenSubdomain}.${hidden.ldryt.host}" = {
       enableACME = true;

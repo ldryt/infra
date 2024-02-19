@@ -246,28 +246,10 @@ in {
     ];
   };
 
-  services.nginx = {
-    virtualHosts."${immichSubdomain}.${hidden.ldryt.host}" = {
-      enableACME = true;
-      forceSSL = true;
-      locations."/" = {
-        recommendedProxySettings = true;
-        proxyPass = "http://127.0.0.1:${immichExposedPort}";
-        extraConfig = ''
-          proxy_http_version 1.1;
-          proxy_set_header   Upgrade    $http_upgrade;
-          proxy_set_header   Connection "upgrade";
-          proxy_redirect off;
-
-          proxy_buffers 4 256k;
-          proxy_buffer_size 128k;
-          proxy_busy_buffers_size 256k;
-
-          client_max_body_size 0;
-        '';
-      };
-    };
-  };
+  services.caddy.virtualHosts."${immichSubdomain}.${hidden.ldryt.host}".extraConfig =
+    ''
+      reverse_proxy http://127.0.0.1:${immichExposedPort}
+    '';
 
   services.authelia.instances."ldryt".settings.identity_providers.oidc = {
     access_token_lifespan = "2d";

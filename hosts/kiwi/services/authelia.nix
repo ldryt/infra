@@ -69,19 +69,7 @@ in {
     user = config.services.authelia.instances.ldryt.user;
   };
 
-  services.nginx = {
-    virtualHosts."iam.${hidden.ldryt.host}" = {
-      enableACME = true;
-      forceSSL = true;
-      locations."/" = {
-        recommendedProxySettings = true;
-        proxyPass = "http://localhost:44081";
-        extraConfig = ''
-          proxy_buffers 4 256k;
-          proxy_buffer_size 128k;
-          proxy_busy_buffers_size 256k;
-        '';
-      };
-    };
-  };
+  services.caddy.virtualHosts."iam.${hidden.ldryt.host}".extraConfig = ''
+    reverse_proxy http://localhost:44081
+  '';
 }
