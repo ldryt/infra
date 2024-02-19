@@ -70,6 +70,9 @@ in {
   };
 
   services.caddy.virtualHosts."iam.${hidden.ldryt.host}".extraConfig = ''
+    # https://github.com/authelia/authelia/issues/3277#issuecomment-1370168028
+    uri /api/oidc/authorization replace &prompt=select_account%20consent ""
+
     reverse_proxy http://localhost:44081
   '';
 }
