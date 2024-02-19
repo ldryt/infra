@@ -77,7 +77,7 @@ let
         "url": "http://immich-machine-learning:3003",
         "clip": {
           "enabled": true,
-          "modelName": "immich-app/ViT-g-14__laion2b-s12b-b42k"
+          "modelName": "immich-app/ViT-B-32__openai"
         },
         "facialRecognition": {
           "enabled": true,
@@ -85,9 +85,6 @@ let
           "minScore": 0.8,
           "maxDistance": 0.5,
           "minFaces": 7
-        },
-        "classification": {
-          "minScore": 0.8
         }
       },
       "map": {
@@ -96,8 +93,7 @@ let
         "darkStyle": ""
       },
       "reverseGeocoding": {
-        "enabled": true,
-        "citiesFileOverride": "cities1000"
+        "enabled": true
       },
       "oauth": {
         "enabled": true,
