@@ -20,6 +20,8 @@
     config.services.authelia.instances.ldryt.user;
   sops.secrets."services/authelia/usersDB".owner =
     config.services.authelia.instances.ldryt.user;
+  sops.secrets."services/authelia/smtpPassword".owner =
+    config.services.authelia.instances.ldryt.user;
   sops.secrets."services/authelia/postgresPassword" = {
     # owner = config.services.authelia.instances.ldryt.user;
     # group = "postgres";

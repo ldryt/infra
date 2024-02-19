@@ -14,6 +14,10 @@ in {
       oidcIssuerPrivateKeyFile =
         config.sops.secrets."services/authelia/oidcIssuerPrivateKey".path;
     };
+    environmentVariables = {
+      AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE =
+        config.sops.secrets."services/authelia/smtpPassword".path;
+    };
     settings = {
       theme = "auto";
       log = {
@@ -57,7 +61,12 @@ in {
         cors.endpoints =
           [ "authorization" "introspection" "revocation" "token" "userinfo" ];
       };
-      notifier.filesystem.filename = "/tmp/authelia-notification";
+      notifier.smtp = {
+        username = hidden.kiwi.authelia.smtp.username;
+        sender = hidden.kiwi.authelia.smtp.sender;
+        host = hidden.kiwi.authelia.smtp.host;
+        port = hidden.kiwi.authelia.smtp.port;
+      };
       access_control.default_policy = "one_factor";
     };
   };
