@@ -22,11 +22,6 @@
     config.services.authelia.instances.ldryt.user;
   sops.secrets."services/authelia/smtpPassword".owner =
     config.services.authelia.instances.ldryt.user;
-  sops.secrets."services/authelia/postgresPassword" = {
-    # owner = config.services.authelia.instances.ldryt.user;
-    # group = "postgres";
-    mode = "0444"; # "0440";
-  };
 
   sops.secrets."services/ocis/secretsConfig".owner =
     config.users.users.colon.name;

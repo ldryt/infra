@@ -43,14 +43,7 @@ in {
           min_score = 4;
         };
       };
-      storage.postgres = {
-        host = "localhost";
-        port = 44051;
-        database = "authelia";
-        username = "authelia";
-        password =
-          config.sops.secrets."services/authelia/postgresPassword".path;
-      };
+      storage.local.path = "/var/lib/authelia-ldryt/db.sqlite3";
       session = {
         name = "ldryt_authelia_session";
         domain = "iam.${hidden.ldryt.host}";
@@ -74,23 +67,6 @@ in {
   services.redis.servers."authelia" = {
     enable = true;
     user = config.services.authelia.instances.ldryt.user;
-  };
-
-  virtualisation.oci-containers.containers = {
-    "authelia-db" = {
-      image =
-        "docker.io/library/postgres@sha256:17eb369d9330fe7fbdb2f705418c18823d66322584c77c2b43cc0e1851d01de7";
-      environment = {
-        POSTGRES_PASSWORD_FILE = "/pass";
-        POSTGRES_USER = "authelia";
-        PGPORT = "44051";
-      };
-      volumes = [
-        "authelia-db-data:/var/lib/postgresql"
-        "${config.sops.secrets."services/authelia/postgresPassword".path}:/pass"
-      ];
-      extraOptions = [ "--network=host" ];
-    };
   };
 
   services.nginx = {
