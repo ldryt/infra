@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 let
   hidden = import ../../../secrets/obfuscated.nix;
   immichSubdomain = "pics";
@@ -6,6 +6,7 @@ let
   immichOidcID = "immich-clients";
   immichNetworkName = "immich-bridge";
   immichExposedPort = "44084";
+  immichBackupTmpDir = "/tmp/immich_backup";
   autheliaSubdomain = "iam";
   gloutonPath = "/mnt/glouton";
   immichConfigFile = pkgs.writeText "immich-config.json" ''
@@ -164,6 +165,10 @@ in {
     '';
   };
 
+  system.activationScripts."makeImmichDataDir" = lib.stringAfter [ "var" ] ''
+    mkdir -p /var/lib/immich-data
+  '';
+
   virtualisation.oci-containers.containers = {
     "immich-server" = {
       hostname = "immich-server";
@@ -185,7 +190,7 @@ in {
       volumes = [
         "${immichConfigFile}:/etc/immich-config.json:ro"
         "${gloutonPath}/${immichLibraryDirName}:/usr/src/app/upload/library"
-        "immich-data:/usr/src/app/upload"
+        "/var/lib/immich-data:/usr/src/app/upload"
         "/etc/localtime:/etc/localtime:ro"
       ];
       ports = [ "${immichExposedPort}:3001" ];
@@ -276,5 +281,43 @@ in {
       response_modes = [ "form_post" "query" "fragment" ];
       grant_types = [ "refresh_token" "authorization_code" ];
     }];
+  };
+
+  services.restic.backups.immich = {
+    user = "root";
+    backupPrepareCommand = ''
+      ${pkgs.bash}/bin/bash -c '
+        if ! mkdir -p "${immichBackupTmpDir}"; then
+          echo "Could not create backup folder '${immichBackupTmpDir}'" >&2
+          exit 1
+        fi
+
+        ${pkgs.podman}/bin/podman exec -t immich-db pg_dumpall -c -U postgres | ${pkgs.gzip}/bin/gzip > "${immichBackupTmpDir}/immich-db-dump.sql.gz"
+      '
+    '';
+    paths = [ immichBackupTmpDir "/var/lib/immich-data" ];
+    repository = "sftp:${hidden.backups.restic.immich.host}:restic-repo-immich";
+    extraOptions = [
+      "sftp.command='ssh ${hidden.backups.restic.immich.host} -p 23 -i ${
+        config.sops.secrets."backups/restic/immich/sshKey".path
+      } -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -s sftp'"
+    ];
+    initialize = true;
+    passwordFile =
+      config.sops.secrets."backups/restic/immich/repositoryPass".path;
+    backupCleanupCommand = ''
+      ${pkgs.bash}/bin/bash -c 'rm -rf "${immichBackupTmpDir}"'
+    '';
+    pruneOpts = [
+      "--keep-daily 7"
+      "--keep-weekly 8"
+      "--keep-monthly 12"
+      "--keep-yearly 100"
+    ];
+    timerConfig = {
+      OnCalendar = "daily";
+      RandomizedDelaySec = "6h";
+      Persistent = true;
+    };
   };
 }

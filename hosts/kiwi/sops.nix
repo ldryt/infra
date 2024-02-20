@@ -38,4 +38,6 @@
     config.services.authelia.instances."ldryt".user;
   sops.secrets."backups/restic/authelia/sshKey".owner =
     config.services.authelia.instances."ldryt".user;
+  sops.secrets."backups/restic/immich/repositoryPass".owner = "root";
+  sops.secrets."backups/restic/immich/sshKey".owner = "root";
 }
