@@ -40,4 +40,8 @@
     config.services.authelia.instances."ldryt".user;
   sops.secrets."backups/restic/immich/repositoryPass".owner = "root";
   sops.secrets."backups/restic/immich/sshKey".owner = "root";
+  sops.secrets."backups/restic/ocis/repositoryPass".owner =
+    config.users.users.colon.name;
+  sops.secrets."backups/restic/ocis/sshKey".owner =
+    config.users.users.colon.name;
 }
