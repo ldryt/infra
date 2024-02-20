@@ -2,7 +2,6 @@
   sops.defaultSopsFile = ../../secrets/kiwi.yaml;
   sops.age.keyFile = "/var/lib/sops/sops_kiwi_age_key";
 
-  sops.secrets."system/smb/glouton/backups-pool/credentials" = { };
   sops.secrets."system/smb/glouton/minio-buckets/credentials" = { };
   sops.secrets."system/smb/glouton/immich-library/credentials" = { };
 
@@ -30,4 +29,9 @@
 
   sops.secrets."services/immich/credentials".owner =
     config.users.users.colon.name;
+
+  sops.secrets."backups/restic/vaultwarden/repositoryPass".owner =
+    config.users.users.vaultwarden.name;
+  sops.secrets."backups/restic/vaultwarden/sshKey".owner =
+    config.users.users.vaultwarden.name;
 }
