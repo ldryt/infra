@@ -34,4 +34,8 @@
     config.users.users.vaultwarden.name;
   sops.secrets."backups/restic/vaultwarden/sshKey".owner =
     config.users.users.vaultwarden.name;
+  sops.secrets."backups/restic/authelia/repositoryPass".owner =
+    config.services.authelia.instances."ldryt".user;
+  sops.secrets."backups/restic/authelia/sshKey".owner =
+    config.services.authelia.instances."ldryt".user;
 }
