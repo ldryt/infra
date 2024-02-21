@@ -173,7 +173,7 @@ in {
     "immich-server" = {
       hostname = "immich-server";
       image =
-        "ghcr.io/immich-app/immich-server:v1.94.1@sha256:e0655cdd4351a8406eb87ec379a9c45e7bc2a9d051d25c93e2953d92e01713b6";
+        "ghcr.io/immich-app/immich-server:v1.95.1@sha256:300ec7246e77f4b3c886814602114d9217a7f3c68fc9a782c655df2cb235f848";
       cmd = [ "start.sh" "immich" ];
       environment = {
         IMMICH_CONFIG_FILE = "/etc/immich-config.json";
@@ -214,14 +214,14 @@ in {
     "immich-machine-learning" = {
       hostname = "immich-machine-learning";
       image =
-        "ghcr.io/immich-app/immich-machine-learning:v1.94.1@sha256:48a9f0056983703b1f50728b4e4dd4879f3bff307579910c00a4f62204f113dc";
+        "ghcr.io/immich-app/immich-machine-learning:v1.95.1@sha256:d1b33dde44be9a5a7bc6876b90067a81b0f3916740d33bbb656c8b065198c64c";
       volumes = [ "immich-ml-cache:/cache" ];
       extraOptions = [ "--network=${immichNetworkName}" ];
     };
     "immich-db" = {
       hostname = "immich-db";
       image =
-        "docker.io/tensorchord/pgvecto-rs:pg14-v0.1.11@sha256:0335a1a22f8c5dd1b697f14f079934f5152eaaa216c09b61e293be285491f8ee";
+        "docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0";
       environment = {
         POSTGRES_PASSWORD = "\${DB_PASSWORD:?error message}";
         POSTGRES_USER = "postgres";
