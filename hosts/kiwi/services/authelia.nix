@@ -30,26 +30,22 @@ in {
         host = "localhost";
         port = 44081;
       };
-      authentication_backend = {
-        file = {
-          path = config.sops.secrets."services/authelia/usersDB".path;
-          search.email = true;
-          password.algorithm = "argon2";
-        };
+      authentication_backend.file = {
+        path = config.sops.secrets."services/authelia/usersDB".path;
+        search.email = true;
+        password.algorithm = "argon2";
       };
       totp.issuer = "iam.${hidden.ldryt.host}";
       duo_api.disable = true;
-      password_policy = {
-        zxcvbn = {
-          enabled = true;
-          min_score = 4;
-        };
+      password_policy.zxcvbn = {
+        enabled = true;
+        min_score = 4;
       };
       storage.local.path = "/var/lib/authelia-ldryt/db.sqlite3";
       session = {
         name = "ldryt_authelia_session";
         domain = "iam.${hidden.ldryt.host}";
-        redis = { host = "/run/redis-authelia/redis.sock"; };
+        redis.host = "/run/redis-authelia/redis.sock";
       };
       identity_providers.oidc = {
         cors.allowed_origins_from_client_redirect_uris = true;
@@ -75,12 +71,15 @@ in {
     # https://github.com/authelia/authelia/issues/3277#issuecomment-1370168028
     uri /api/oidc/authorization replace &prompt=select_account%20consent ""
 
-    reverse_proxy http://localhost:44081
+    reverse_proxy http://${
+      config.services.authelia.instances."ldryt".settings.server.host
+    }:${
+      toString config.services.authelia.instances."ldryt".settings.server.port
+    }
   '';
 
   services.restic.backups.authelia = {
     user = config.services.authelia.instances."ldryt".user;
-    # https://github.com/NixOS/nixpkgs/blob/592047fc9e4f7b74a4dc85d1b9f5243dfe4899e3/nixos/modules/services/security/vaultwarden/backup.sh
     backupPrepareCommand = ''
       ${pkgs.bash}/bin/bash -c '
         if ! mkdir -p "${autheliaBackupTmpDir}"; then
