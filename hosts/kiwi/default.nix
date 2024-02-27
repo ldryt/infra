@@ -9,6 +9,7 @@ in {
     ./services/authelia.nix
     ./services/vaultwarden.nix
     ./services/immich.nix
+    ./services/velocity.nix
 
     ../../modules/caddy.nix
     ../../modules/openssh.nix
