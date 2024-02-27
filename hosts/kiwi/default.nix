@@ -28,6 +28,7 @@ in {
     hostName = "kiwi";
     useDHCP = false;
     interfaces."eth0".useDHCP = true;
+    interfaces."enp7s0".useDHCP = true;
     firewall.allowedTCPPorts = [ 22 80 443 ];
   };
 
