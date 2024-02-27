@@ -62,7 +62,7 @@ in {
         "-jar"
         "velocity.jar"
       ];
-      ports = [ "127.0.0.1:25565:25577" ];
+      ports = [ "0.0.0.0:25565:25577" ];
       volumes = [
         "${velocityConfigFile}:/velocity.toml:ro"
         "${velocityJar}:/velocity.jar:ro"
@@ -73,5 +73,4 @@ in {
       ];
     };
   };
-  networking.firewall.allowedTCPPorts = [ 25565 ];
 }

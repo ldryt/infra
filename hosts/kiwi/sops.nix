@@ -30,6 +30,9 @@
   sops.secrets."services/immich/credentials".owner =
     config.users.users.colon.name;
 
+  sops.secrets."services/velocity/forwardingSecret".owner =
+    config.users.users.colon.name;
+
   sops.secrets."backups/restic/vaultwarden/repositoryPass".owner =
     config.users.users.vaultwarden.name;
   sops.secrets."backups/restic/vaultwarden/sshKey".owner =
