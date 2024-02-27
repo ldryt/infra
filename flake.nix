@@ -34,6 +34,7 @@
         deployment = {
           targetHost = "kiwi"; # details in ~/.ssh/config
           targetUser = "colon";
+          buildOnTarget = true;
           keys = {
             "sops_kiwi_age_key" = {
               keyFile = "/var/lib/sops/sops_kiwi_age_key";
