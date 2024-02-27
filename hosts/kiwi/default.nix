@@ -14,6 +14,7 @@ in {
     ../../modules/caddy.nix
     ../../modules/openssh.nix
     ../../modules/podman.nix
+    ../../modules/fail2ban.nix
   ];
 
   nix = {
