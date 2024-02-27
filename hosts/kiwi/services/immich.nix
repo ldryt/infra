@@ -193,7 +193,7 @@ in {
         "/var/lib/immich-data:/usr/src/app/upload"
         "/etc/localtime:/etc/localtime:ro"
       ];
-      ports = [ "${immichExposedPort}:3001" ];
+      ports = [ "127.0.0.1:${immichExposedPort}:3001" ];
       dependsOn = [ "immich-redis" "immich-db" ];
       extraOptions = [ "--network=${immichNetworkName}" ];
     };

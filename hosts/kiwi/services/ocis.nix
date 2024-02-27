@@ -68,7 +68,7 @@ in {
       environmentFiles =
         [ config.sops.secrets."services/ocis/s3/credentials".path ];
       volumes = [ "${gloutonPath}/${minioDataDirName}:/data" ];
-      ports = [ "${toString minioPort}:9000" ];
+      ports = [ "127.0.0.1:${toString minioPort}:9000" ];
     };
   };
 
