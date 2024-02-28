@@ -15,12 +15,6 @@
       rndtime = "4m";
     };
     jails = {
-      "caddy".settings = {
-        filter = "caddy";
-        logpath = "/var/log/caddy/access-*.log";
-        backend = "auto";
-        findtime = 60;
-      };
       "portscan".settings = {
         filter = "portscan";
         backend = "systemd";
@@ -30,12 +24,6 @@
   };
 
   environment.etc = {
-    "fail2ban/filter.d/caddy.conf".text = ''
-      [Definition]
-      failregex = ^.*"remote_ip":"<HOST>",.*?"status":(?:400|401|403|404|500),.*$
-      datepattern = "ts":<DATE>\.
-      ignoreregex =
-    '';
     "fail2ban/filter.d/portscan.conf".text = ''
       [Definition]
       failregex = ^.*refused connection.* IN=.* SRC=<HOST>.*$
@@ -43,8 +31,4 @@
       ignoreregex =
     '';
   };
-
-  services.caddy.logFormat = ''
-    level INFO
-  '';
 }
