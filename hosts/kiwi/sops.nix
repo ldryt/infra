@@ -32,6 +32,8 @@
 
   sops.secrets."services/velocity/forwardingSecret".owner =
     config.users.users.colon.name;
+  sops.secrets."services/velocity/auternasKey".owner =
+    config.users.users.colon.name;
 
   sops.secrets."backups/restic/vaultwarden/repositoryPass".owner =
     config.users.users.vaultwarden.name;
