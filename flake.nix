@@ -7,8 +7,11 @@
 
     sops-nix.url = "github:mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
   };
-  outputs = { nixpkgs, home-manager, sops-nix, ... }@inputs: {
+  outputs = { nixpkgs, home-manager, sops-nix, disko, ... }@inputs: {
     colmena = {
       meta = {
         nixpkgs = import nixpkgs { system = "x86_64-linux"; };
@@ -43,6 +46,13 @@
           };
         };
         imports = [ ./hosts/kiwi sops-nix.nixosModules.sops ];
+      };
+    };
+    nixosConfigurations = {
+      auternas = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
+        system = "x86_64-linux";
+        modules = [ ./hosts/auternas disko.nixosModules.disko ];
       };
     };
   };
