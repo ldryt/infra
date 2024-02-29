@@ -3,13 +3,28 @@ let
   hidden = import ../../../secrets/obfuscated.nix;
   ocisSubdomain = "files";
   ocisDataDir = "/var/lib/ocis-data";
+  ocisNetworkName = "ocis-network";
+  ocisPort = 44082;
   autheliaSubdomain = "iam";
   gloutonPath = "/mnt/glouton";
   minioDataDirName = "minio-buckets";
-  minioPort = 44061;
   ocisBucket = "ocis-blobs";
   ocisOidcID = "ocis-web";
 in {
+  systemd.services.init-ocis-network = {
+    description = "Create the network named ${ocisNetworkName}.";
+    after = [ "network.target" ];
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig.Type = "oneshot";
+    script = ''
+      check=$(${pkgs.podman}/bin/podman network ls | grep "${ocisNetworkName}" || true)
+      if [ -z "$check" ];
+        then ${pkgs.podman}/bin/podman network create ${ocisNetworkName}
+        else echo "${ocisNetworkName} already exists in podman"
+      fi
+    '';
+  };
+
   system.activationScripts."makeOcisDataDir" = lib.stringAfter [ "var" ] ''
     mkdir -p ${ocisDataDir} && chown colon ${ocisDataDir}
   '';
@@ -21,8 +36,8 @@ in {
       entrypoint = "/bin/sh";
       cmd = [ "-c" "ocis server" ];
       environment = {
+        PROXY_HTTP_ADDR = "0.0.0.0:9200";
         OCIS_URL = "https://${ocisSubdomain}.${hidden.ldryt.host}";
-        PROXY_HTTP_ADDR = "127.0.0.1:44082";
         OCIS_LOG_LEVEL = "info";
         OCIS_LOG_COLOR = "true";
         OCIS_LOG_PRETTY = "true";
@@ -39,7 +54,7 @@ in {
 
         STORAGE_USERS_DRIVER = "s3ng";
         STORAGE_SYSTEM_DRIVER = "ocis";
-        STORAGE_USERS_S3NG_ENDPOINT = "http://127.0.0.1:${toString minioPort}";
+        STORAGE_USERS_S3NG_ENDPOINT = "http://minio:9000";
         STORAGE_USERS_S3NG_REGION = "default";
         STORAGE_USERS_S3NG_BUCKET = "${ocisBucket}";
         STORAGE_USERS_S3NG_ACCESS_KEY = "\${MINIO_ACCESS_KEY:?error message}";
@@ -54,9 +69,11 @@ in {
           config.sops.secrets."services/ocis/secretsConfig".path
         }:/etc/ocis/ocis.yaml:ro"
       ];
-      extraOptions = [ "--network=host" ];
+      ports = [ "127.0.0.1:${toString ocisPort}:9200" ];
+      extraOptions = [ "--network=${ocisNetworkName}" ];
     };
     "minio" = {
+      hostname = "minio";
       image =
         "docker.io/minio/minio:RELEASE.2024-02-17T01-15-57Z@sha256:e02b92b9df448c6c1a07dada58b690105afed2c344aa5195d36388ed33e19e7a";
       entrypoint = "/bin/sh";
@@ -68,7 +85,7 @@ in {
       environmentFiles =
         [ config.sops.secrets."services/ocis/s3/credentials".path ];
       volumes = [ "${gloutonPath}/${minioDataDirName}:/data" ];
-      ports = [ "127.0.0.1:${toString minioPort}:9000" ];
+      extraOptions = [ "--network=${ocisNetworkName}" ];
     };
   };
 
@@ -97,7 +114,7 @@ in {
         Cache-Control "public, max-age=15, must-revalidate"
         Feature-Policy "accelerometer 'none'; ambient-light-sensor 'none'; autoplay 'self'; camera 'none'; encrypted-media 'none'; fullscreen 'self'; geolocation 'none'; gyroscope 'none';       magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; picture-in-picture *; speaker 'none'; sync-xhr 'none'; usb 'none'; vr 'none'"
       }
-      reverse_proxy http://${config.virtualisation.oci-containers.containers.ocis.environment.PROXY_HTTP_ADDR}
+      reverse_proxy http://127.0.0.1:${toString ocisPort}
     '';
 
   services.authelia.instances."ldryt".settings.identity_providers.oidc = {
