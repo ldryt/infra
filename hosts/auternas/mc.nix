@@ -7,20 +7,23 @@
   virtualisation.oci-containers.containers = {
     "auternas" = {
       image =
-        "ghcr.io/itzg/minecraft-server@sha256:2adc322f52549917a99f0d6e851c2e3d5893dd5f4a38e9e2420c5cbee486a476";
+        "ghcr.io/itzg/minecraft-server:java21-graalvm@sha256:759d450f110f69e515846c3b04d143c8cc4f4a79b9bb9e9775c6ff3c9aee0024";
       ports = [ "25565:25565" ];
       volumes = [
-        "auternas-data:/data"
+        # "/var/lib/auternas-data:/data"
         "/etc/auternas-config/FabricProxy-Lite.toml:/config/FabricProxy-Lite.toml:ro"
       ];
       environment = {
         EULA = "true";
-        MEMORY = "6G";
+        MEMORY = "";
+        JVM_XX_OPTS = "-XX:MaxRAMPercentage=75";
         USE_AIKAR_FLAGS = "true";
+        MOTD = "f8916f4a";
         VERSION = "1.20.4";
         TYPE = "fabric";
         MODRINTH_PROJECTS = "fabric-api:9p2sguD7,fabricproxy-lite:Mxw3Cbsk";
         ONLINE_MODE = "false";
+        SNOOPER_ENABLED = "false";
       };
     };
   };
