@@ -47,45 +47,63 @@ in {
   nixpkgs.config.allowUnfreePredicate = pkg:
     builtins.elem (lib.getName pkg) [ "terraform" ];
   systemd.services.${terraformConfigName} = {
-    description = "Automated mc server deployment daemon";
-    wantedBy = [ "multi-user.target" ];
     after =
       [ "${config.virtualisation.oci-containers.backend}-velocity.service" ];
+    path = with pkgs; [ terraform mcstatus ];
     serviceConfig = {
       Restart = "always";
       User = config.users.users.colon.name;
     };
-    path = [
-      # (pkgs.terraform.withPlugins (p: [ p.null p.external p.hcloud ]))
-      pkgs.terraform
-      pkgs.git
-      pkgs.bash
-      pkgs.jq
-      pkgs.nix
-    ];
+    preStart = "terraform -chdir=/etc/${terraformConfigName} init -input=false";
     script = ''
       #!/usr/bin/env bash
-
       set -euo pipefail
 
-      terraform -chdir=/etc/${terraformConfigName} init -input=false
-      terraform -chdir=/etc/${terraformConfigName} plan -input=false
-
       while true; do
-        echo "Entered main loop"
-        journalctl -fu ${config.virtualisation.oci-containers.backend}-velocity.service --since "0sec ago" | while read -r line; do
-          if echo "$line" | grep -q "Unable to connect you to ${auternasServerName}. Please try again later."; then
-            echo "Detected a connection attempt."
-            echo "Deploying with terraform..."
-            terraform -chdir=/etc/${terraformConfigName} apply -auto-approve -lock=false -input=false
-            echo "Deployed with terraform"
-            break
+        if terraform -chdir=/etc/${terraformConfigName} plan -input=false -no-color | grep -q "Plan: 0 to add, 0 to change"; then
+          echo "the server is already deployed (0 changes in tf plan)"
+          if mcstatus ${velocitySubdomain}.${hidden.ldryt.host} status | grep -q "f8916f4a"; then
+            echo "the server is healthy"
+            echo "TODO: velocity NOT in maintenance mode"
+            echo "waiting until there is no players for a period of 30min..."
+            counter=0
+            while [[ counter -ne 30 ]]; do
+              if mcstatus ${velocitySubdomain}.${hidden.ldryt.host} status | grep -q "players: 0"; then
+                counter++
+              else
+                counter=0
+              fi
+              echo $counter
+              sleep 60
+            done
+            echo "no players since 30min"
+            echo "TODO: back up"
+          else
+            echo "the server is not healthy"
           fi
-        done
-        echo "Exited main loop"
-       
+          echo "TODO: velocity in maintenance mode -> motd: click to deploy"
+          echo "destroying..."
+          terraform -chdir=/etc/${terraformConfigName} destroy -auto-approve -lock=false -input=false
+        else
+          echo "the server is not deployed"
+          echo "waiting for a connection attempt..."
+          journalctl -fu ${config.virtualisation.oci-containers.backend}-velocity.service --since "0sec ago" | while read -r line; do
+            if echo "$line" | grep -q "Unable to connect you to ${auternasServerName}. Please try again later."; then
+              echo "detected a connection attempt"
+              echo "deploying..."
+              echo "TODO: velocity in maintenance mode -> motd: deploying... please wait"
+              terraform -chdir=/etc/${terraformConfigName} apply -auto-approve -lock=false -input=false
+              break
+            fi
+          done
+        fi
       done
     '';
+    postStop = ''
+      echo "TODO: velocity in maintenance mode -> motd: click to deploy"
+      terraform -chdir=/etc/${terraformConfigName} destroy -auto-approve -lock=false -input=false
+    '';
+    wantedBy = [ "multi-user.target" ];
   };
 
   environment.etc = {
@@ -111,10 +129,10 @@ in {
       }
       resource "hcloud_ssh_key" "auternas_key" {
         name = "auternas-key"
-        public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOeroOCZerWNky5qXwi0uPV7+bOXHETDfXui0zc8fErp"
+        public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM7H3QrvcjOTte+AfpDQC2Rc0RfgXv6xXqed7DUOXU9O"
       }
       data "hcloud_image" "auternas-snapshot" {
-        id = 444444444
+        id = 152243666
       }
       resource "hcloud_server" "auternas_server" {
         depends_on = [ hcloud_ssh_key.auternas_key ]
