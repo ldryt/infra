@@ -17,22 +17,6 @@
         nixpkgs = import nixpkgs { system = "x86_64-linux"; };
         specialArgs = { inherit inputs; };
       };
-      tinkerbell = {
-        deployment = {
-          allowLocalDeployment = true;
-          targetHost = null;
-        };
-        imports = [
-          ./hosts/tinkerbell
-          sops-nix.nixosModules.sops
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.ldryt = import ./users/ldryt;
-          }
-        ];
-      };
       kiwi = {
         deployment = {
           targetHost = "kiwi"; # details in ~/.ssh/config
@@ -49,6 +33,20 @@
       };
     };
     nixosConfigurations = {
+      tinkerbell = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
+        system = "x86_64-linux";
+        modules = [
+          ./hosts/tinkerbell
+          sops-nix.nixosModules.sops
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.users.ldryt = import ./users/ldryt;
+          }
+        ];
+      };
       auternas = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
         system = "x86_64-linux";
