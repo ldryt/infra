@@ -169,6 +169,8 @@ in {
     mkdir -p /var/lib/immich-data
   '';
 
+  sops.secrets."services/immich/credentials".owner =
+    config.users.users.colon.name;
   virtualisation.oci-containers.containers = {
     "immich-server" = {
       hostname = "immich-server";
@@ -240,6 +242,7 @@ in {
     };
   };
 
+  sops.secrets."system/smb/glouton/immich-library/credentials" = { };
   environment.systemPackages = [ pkgs.cifs-utils ];
   fileSystems."${gloutonPath}/${immichLibraryDirName}" = {
     device = hidden.kiwi.smb.glouton.${immichLibraryDirName}.shareName;
@@ -295,6 +298,8 @@ in {
     }];
   };
 
+  sops.secrets."backups/restic/immich/repositoryPass".owner = "root";
+  sops.secrets."backups/restic/immich/sshKey".owner = "root";
   services.restic.backups.immich = {
     user = "root";
     backupPrepareCommand = ''

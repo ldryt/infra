@@ -11,6 +11,10 @@ let
     sha256 = "a5f958608eb890fa12dc16c492fa06122a0219c6696a1f17f405b972fce2dd00";
   };
 in {
+  sops.secrets."services/velocity/forwardingSecret".owner =
+    config.users.users.colon.name;
+  sops.secrets."services/velocity/auternasKey".owner =
+    config.users.users.colon.name;
   virtualisation.oci-containers.containers = {
     "velocity" = {
       image =

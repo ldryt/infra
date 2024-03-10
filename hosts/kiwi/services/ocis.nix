@@ -11,6 +11,11 @@ let
   ocisBucket = "ocis-blobs";
   ocisOidcID = "ocis-web";
 in {
+  sops.secrets."services/ocis/secretsConfig".owner =
+    config.users.users.colon.name;
+  sops.secrets."services/ocis/s3/credentials".owner =
+    config.users.users.colon.name;
+
   systemd.services.init-ocis-network = {
     description = "Create the network named ${ocisNetworkName}.";
     after = [ "network.target" ];
@@ -89,6 +94,7 @@ in {
     };
   };
 
+  sops.secrets."system/smb/glouton/minio-buckets/credentials" = { };
   environment.systemPackages = [ pkgs.cifs-utils ];
   fileSystems."${gloutonPath}/${minioDataDirName}" = {
     device = hidden.kiwi.smb.glouton.${minioDataDirName}.shareName;
@@ -168,6 +174,10 @@ in {
     ];
   };
 
+  sops.secrets."backups/restic/ocis/repositoryPass".owner =
+    config.users.users.colon.name;
+  sops.secrets."backups/restic/ocis/sshKey".owner =
+    config.users.users.colon.name;
   services.restic.backups.ocis = {
     user = "colon";
     paths = [ ocisDataDir ];

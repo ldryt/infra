@@ -49,6 +49,10 @@ in {
     };
   };
 
+  sops.secrets."backups/restic/vaultwarden/repositoryPass".owner =
+    config.users.users.vaultwarden.name;
+  sops.secrets."backups/restic/vaultwarden/sshKey".owner =
+    config.users.users.vaultwarden.name;
   services.restic.backups.vaultwarden = {
     user = config.users.users.vaultwarden.name;
     # https://github.com/NixOS/nixpkgs/blob/592047fc9e4f7b74a4dc85d1b9f5243dfe4899e3/nixos/modules/services/security/vaultwarden/backup.sh

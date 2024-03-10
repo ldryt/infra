@@ -3,7 +3,6 @@ let hidden = import ../../secrets/obfuscated.nix;
 in {
   imports = [
     ./hardware.nix
-    ./sops.nix
 
     ./services/ocis.nix
     ./services/authelia.nix
@@ -16,6 +15,9 @@ in {
     ../../modules/podman.nix
     ../../modules/fail2ban.nix
   ];
+
+  sops.defaultSopsFile = ../../secrets/kiwi.yaml;
+  sops.age.keyFile = "/var/lib/sops/sops_kiwi_age_key";
 
   nix = {
     settings = {
@@ -34,6 +36,7 @@ in {
     firewall.allowedTCPPorts = [ 22 80 443 ];
   };
 
+  sops.secrets."users/colon/hashedPassword".neededForUsers = true;
   users = {
     mutableUsers = false;
     users.colon = {

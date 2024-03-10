@@ -3,6 +3,21 @@ let
   hidden = import ../../../secrets/obfuscated.nix;
   autheliaBackupTmpDir = "/tmp/authelia_backup";
 in {
+  sops.secrets."services/authelia/jwtSecret".owner =
+    config.services.authelia.instances.ldryt.user;
+  sops.secrets."services/authelia/sessionSecret".owner =
+    config.services.authelia.instances.ldryt.user;
+  sops.secrets."services/authelia/storageEncryption".owner =
+    config.services.authelia.instances.ldryt.user;
+  sops.secrets."services/authelia/oidcHmacSecret".owner =
+    config.services.authelia.instances.ldryt.user;
+  sops.secrets."services/authelia/oidcIssuerPrivateKey".owner =
+    config.services.authelia.instances.ldryt.user;
+  sops.secrets."services/authelia/usersDB".owner =
+    config.services.authelia.instances.ldryt.user;
+  sops.secrets."services/authelia/smtpPassword".owner =
+    config.services.authelia.instances.ldryt.user;
+
   services.authelia.instances."ldryt" = {
     enable = true;
     secrets = {
@@ -91,6 +106,10 @@ in {
     }
   '';
 
+  sops.secrets."backups/restic/authelia/repositoryPass".owner =
+    config.services.authelia.instances."ldryt".user;
+  sops.secrets."backups/restic/authelia/sshKey".owner =
+    config.services.authelia.instances."ldryt".user;
   services.restic.backups.authelia = {
     user = config.services.authelia.instances."ldryt".user;
     backupPrepareCommand = ''

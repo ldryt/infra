@@ -1,13 +1,15 @@
 { config, inputs, ... }: {
   imports = [
     ./hardware.nix
-    ./sops.nix
 
     ../../modules/gnome.nix
     ../../modules/resolved.nix
     ../../modules/intel-laptop.nix
     ../../modules/nixos-gc.nix
   ];
+
+  sops.defaultSopsFile = ../../secrets/tinkerbell.yaml;
+  sops.age.keyFile = "/var/lib/sops/sops_tinkerbell_age_key";
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
   nix.settings.trusted-users = [ "root" "ldryt" ];
@@ -44,6 +46,7 @@
   console.keyMap = "fr";
   services.xserver.xkb.layout = "fr";
 
+  sops.secrets."users/ldryt/hashedPassword".neededForUsers = true;
   users = {
     mutableUsers = false;
     users.ldryt = {
