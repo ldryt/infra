@@ -60,7 +60,7 @@ in {
       set -euo pipefail
 
       while true; do
-        if terraform -chdir=/etc/${terraformConfigName} plan -input=false -no-color | grep -q "Plan: 0 to add, 0 to change"; then
+        if terraform -chdir=/etc/${terraformConfigName} plan -input=false -no-color | grep -q "No changes."; then
           echo "the server is already deployed (0 changes in tf plan)"
           if mcstatus ${velocitySubdomain}.${hidden.ldryt.host} status | grep -q "f8916f4a"; then
             echo "the server is healthy"
@@ -101,7 +101,8 @@ in {
     '';
     postStop = ''
       echo "TODO: velocity in maintenance mode -> motd: click to deploy"
-      terraform -chdir=/etc/${terraformConfigName} destroy -auto-approve -lock=false -input=false
+      # terraform -chdir=/etc/${terraformConfigName} destroy -auto-approve -lock=false -input=false
+      echo "FAKE DESTROY"
     '';
     wantedBy = [ "multi-user.target" ];
   };
@@ -144,10 +145,6 @@ in {
         network {
           network_id = data.hcloud_network.velocity_network.id
           ip = "${auternasInternalIP}"
-        }
-        lifecycle {
-          ignore_changes  = [ ssh_keys ]
-          prevent_destroy = true
         }
       }
     '';
