@@ -18,6 +18,7 @@
     # rust related
     cargo
     rustc
+    gcc
     rustfmt
     rust-analyzer
 
