@@ -7,24 +7,14 @@
     iotop
     iftop
     ripgrep
-
-    # nix related
     git-crypt
     sops
     colmena
-    nixfmt
-    nil
-
-    # rust related
-    cargo
-    rustc
-    gcc
-    rustfmt
-    rust-analyzer
 
     # gui programs
     libreoffice
     spotify
+    discord
     prismlauncher
     owncloud-client
   ];
