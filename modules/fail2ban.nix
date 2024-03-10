@@ -4,7 +4,7 @@
     ignoreIP = [ "10.0.0.0/32" "fe80::/10" ];
     extraPackages = [ pkgs.ipset ];
     banaction = "iptables-ipset-proto6-allports";
-    maxretry = 5;
+    maxretry = 1;
     bantime = "10m";
     bantime-increment = {
       enable = true;
@@ -18,7 +18,6 @@
       "portscan".settings = {
         filter = "portscan";
         backend = "systemd";
-        findtime = 600;
       };
     };
   };
