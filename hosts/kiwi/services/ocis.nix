@@ -43,9 +43,6 @@ in {
       environment = {
         PROXY_HTTP_ADDR = "0.0.0.0:9200";
         OCIS_URL = "https://${ocisSubdomain}.${hidden.ldryt.host}";
-        OCIS_LOG_LEVEL = "info";
-        OCIS_LOG_COLOR = "true";
-        OCIS_LOG_PRETTY = "true";
 
         OCIS_OIDC_ISSUER = "https://${autheliaSubdomain}.${hidden.ldryt.host}";
         WEB_OIDC_CLIENT_ID = "${ocisOidcID}";
