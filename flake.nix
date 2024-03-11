@@ -12,26 +12,6 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = { nixpkgs, home-manager, sops-nix, disko, ... }@inputs: {
-    colmena = {
-      meta = {
-        nixpkgs = import nixpkgs { system = "x86_64-linux"; };
-        specialArgs = { inherit inputs; };
-      };
-      kiwi = {
-        deployment = {
-          targetHost = "kiwi"; # details in ~/.ssh/config
-          targetUser = "colon";
-          buildOnTarget = true;
-          keys = {
-            "sops_kiwi_age_key" = {
-              keyFile = "/var/lib/sops/sops_kiwi_age_key";
-              destDir = "/var/lib/sops";
-            };
-          };
-        };
-        imports = [ ./hosts/kiwi sops-nix.nixosModules.sops ];
-      };
-    };
     nixosConfigurations = {
       tinkerbell = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
@@ -46,6 +26,11 @@
             home-manager.users.ldryt = import ./users/ldryt;
           }
         ];
+      };
+      kiwi = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs; };
+        system = "aarch64-linux";
+        modules = [ ./hosts/kiwi sops-nix.nixosModules.sops ];
       };
       auternas = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };
