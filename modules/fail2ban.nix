@@ -5,12 +5,11 @@
     extraPackages = [ pkgs.ipset ];
     banaction = "iptables-ipset-proto6-allports";
     maxretry = 1;
-    bantime = "10m";
+    bantime = "24h";
     bantime-increment = {
       enable = true;
       formula =
         "ban.Time * math.exp(float(ban.Count+1)*banFactor)/math.exp(1*banFactor)";
-      maxtime = "48h";
       overalljails = true;
       rndtime = "4m";
     };
