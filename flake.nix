@@ -12,6 +12,21 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs = { nixpkgs, home-manager, sops-nix, disko, ... }@inputs: {
+    devShells.x86_64-linux =
+      let pkgs = import nixpkgs { system = "x86_64-linux"; };
+      in {
+        default = pkgs.mkShell {
+          buildInputs = with pkgs;
+            with pulumiPackages; [
+              pulumi
+              pulumi-language-nodejs
+              nodejs
+            ];
+          shellHook = ''
+            export PULUMI_SKIP_UPDATE_CHECK=true
+          '';
+        };
+      };
     nixosConfigurations = {
       tinkerbell = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs; };

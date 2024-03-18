@@ -1,0 +1,6 @@
+encryptionsalt: v1:k4mZTbAmEh0=:v1:ic5xMcG6nUxqAnB6:nI/5n1WUu9P7Bt39ceh+3X9nyTYAtw==
+config:
+  gandi:key:
+    secure: v1:rlmHXsUNqh2UvKuI:O0JeUHx/sUe3NhqDXV3knsQjk4ETk7OksB7m297fuYjWotWLaiKhZQ==
+  hcloud:token:
+    secure: v1:9DoJ3bxngfHu438u:oB2gZU0iS/4Mk1HhrYjcATsF4nrfloIP94LLyTe7yD6aPczw1mbM3ZqM8l0sXlRhv5CoMDlBdSeTGNC2IvoYvcfSRTdFDSnpU4HvpkJLqi0=

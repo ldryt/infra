@@ -1,0 +1,12 @@
+{
+    "name": "ldryt-infra",
+    "main": "index.ts",
+    "devDependencies": {
+        "@types/node": "^18"
+    },
+    "dependencies": {
+        "@pulumi/hcloud": "^1.17.1",
+        "@pulumi/pulumi": "^3.0.0",
+        "@pulumiverse/gandi": "^0.0.14"
+    }
+}
