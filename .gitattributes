@@ -1,1 +1,1 @@
-secrets/obfuscated.nix filter=git-crypt diff=git-crypt
+**/*.gitcrypt.* filter=git-crypt diff=git-crypt

@@ -1,9 +1,7 @@
-{ ... }:
-let hidden = import ../secrets/obfuscated.nix;
-in {
+{ vars, ... }: {
   security.acme = {
     acceptTerms = true;
-    defaults.email = hidden.ldryt.email;
+    defaults.email = vars.users.ldryt.email;
   };
   services.nginx = {
     enable = true;

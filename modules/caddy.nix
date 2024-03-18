@@ -1,8 +1,6 @@
-{ ... }:
-let hidden = import ../secrets/obfuscated.nix;
-in {
+{ vars, ... }: {
   services.caddy = {
     enable = true;
-    email = hidden.ldryt.email;
+    email = vars.sensitive.users.ldryt.email;
   };
 }

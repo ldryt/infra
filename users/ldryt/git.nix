@@ -1,9 +1,8 @@
-{ ... }:
-let hidden = import ../../secrets/obfuscated.nix;
-in {
+{ vars, ... }: {
   programs.git = {
     enable = true;
-    userName = "${hidden.ldryt.name} ${hidden.ldryt.surname}";
-    userEmail = hidden.ldryt.email;
+    userName =
+      "${vars.sensitive.users.ldryt.name} ${vars.sensitive.users.ldryt.surname}";
+    userEmail = vars.sensitive.users.ldryt.email;
   };
 }

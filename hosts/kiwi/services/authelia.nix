@@ -1,8 +1,4 @@
-{ config, pkgs, ... }:
-let
-  hidden = import ../../../secrets/obfuscated.nix;
-  autheliaBackupTmpDir = "/tmp/authelia_backup";
-in {
+{ config, pkgs, vars, ... }: {
   sops.secrets."services/authelia/jwtSecret".owner =
     config.services.authelia.instances.ldryt.user;
   sops.secrets."services/authelia/sessionSecret".owner =
@@ -50,7 +46,7 @@ in {
         search.email = true;
         password.algorithm = "argon2";
       };
-      totp.issuer = "iam.${hidden.ldryt.host}";
+      totp.issuer = vars.services.authelia.subdomain + "." + vars.zone;
       duo_api.disable = true;
       password_policy.zxcvbn = {
         enabled = true;
@@ -59,7 +55,7 @@ in {
       storage.local.path = "/var/lib/authelia-ldryt/db.sqlite3";
       session = {
         name = "ldryt_authelia_session";
-        domain = "iam.${hidden.ldryt.host}";
+        domain = vars.services.authelia.subdomain + "." + vars.zone;
         redis.host = "/run/redis-authelia/redis.sock";
       };
       identity_providers.oidc = {
@@ -68,10 +64,10 @@ in {
           [ "authorization" "introspection" "revocation" "token" "userinfo" ];
       };
       notifier.smtp = {
-        username = hidden.kiwi.authelia.smtp.username;
-        sender = hidden.kiwi.authelia.smtp.sender;
-        host = hidden.kiwi.authelia.smtp.host;
-        port = hidden.kiwi.authelia.smtp.port;
+        username = vars.sensitive.services.authelia.smtp.username;
+        sender = vars.sensitive.services.authelia.smtp.sender;
+        host = vars.sensitive.services.authelia.smtp.host;
+        port = vars.sensitive.services.authelia.smtp.port;
       };
       access_control.default_policy = "one_factor";
     };
@@ -82,7 +78,8 @@ in {
     user = config.services.authelia.instances.ldryt.user;
   };
 
-  services.caddy.virtualHosts."iam.${hidden.ldryt.host}".extraConfig = ''
+  services.caddy.virtualHosts."${vars.services.authelia.subdomain + "."
+  + vars.zone}".extraConfig = ''
     header {
       -Server
       Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
@@ -114,8 +111,8 @@ in {
     user = config.services.authelia.instances."ldryt".user;
     backupPrepareCommand = ''
       ${pkgs.bash}/bin/bash -c '
-        if ! mkdir -p "${autheliaBackupTmpDir}"; then
-          echo "Could not create backup folder '${autheliaBackupTmpDir}'" >&2
+        if ! mkdir -p "${vars.services.authelia.backups.tmpDir}"; then
+          echo "Could not create backup folder '${vars.services.authelia.backups.tmpDir}'" >&2
           exit 1
         fi
 
@@ -130,14 +127,17 @@ in {
 
         ${pkgs.sqlite}/bin/sqlite3 "${
           config.services.authelia.instances."ldryt".settings.storage.local.path
-        }" ".backup '${autheliaBackupTmpDir}/db.sqlite3'"
+        }" ".backup '${vars.services.authelia.backups.tmpDir}/db.sqlite3'"
       '
     '';
-    paths = [ autheliaBackupTmpDir ];
-    repository =
-      "sftp:${hidden.backups.restic.authelia.host}:restic-repo-authelia";
+    paths = [ vars.services.authelia.backups.tmpDir ];
+    repository = "sftp:${
+        vars.sensitive.backups.user + "@" + vars.sensitive.backups.host
+      }:restic-repo-authelia";
     extraOptions = [
-      "sftp.command='ssh ${hidden.backups.restic.authelia.host} -p 23 -i ${
+      "sftp.command='ssh ${
+        vars.sensitive.backups.user + "@" + vars.sensitive.backups.host
+      } -p 23 -i ${
         config.sops.secrets."backups/restic/authelia/sshKey".path
       } -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -s sftp'"
     ];
@@ -145,7 +145,7 @@ in {
     passwordFile =
       config.sops.secrets."backups/restic/authelia/repositoryPass".path;
     backupCleanupCommand = ''
-      ${pkgs.bash}/bin/bash -c 'rm -rf "${autheliaBackupTmpDir}"'
+      ${pkgs.bash}/bin/bash -c 'rm -rf "${vars.services.authelia.backups.tmpDir}"'
     '';
     pruneOpts = [
       "--keep-daily 7"

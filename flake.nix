@@ -11,47 +11,58 @@
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs";
   };
-  outputs = { nixpkgs, home-manager, sops-nix, disko, ... }@inputs: {
-    devShells.x86_64-linux =
-      let pkgs = import nixpkgs { system = "x86_64-linux"; };
-      in {
-        default = pkgs.mkShell {
-          buildInputs = with pkgs;
-            with pulumiPackages; [
-              pulumi
-              pulumi-language-nodejs
-              nodejs
-            ];
-          shellHook = ''
-            export PULUMI_SKIP_UPDATE_CHECK=true
-          '';
+  outputs = { nixpkgs, home-manager, sops-nix, disko, ... }@inputs:
+    let
+      vars = (builtins.fromJSON (builtins.readFile ./vars.json))
+        // (builtins.fromJSON (builtins.readFile ./vars.gitcrypt.json));
+    in {
+      devShells.x86_64-linux =
+        let pkgs = import nixpkgs { system = "x86_64-linux"; };
+        in {
+          default = pkgs.mkShell {
+            buildInputs = with pkgs;
+              with pulumiPackages; [
+                pulumi
+                pulumi-language-nodejs
+                nodejs
+              ];
+            shellHook = ''
+              export PULUMI_SKIP_UPDATE_CHECK=true
+            '';
+          };
+        };
+      nixosConfigurations = {
+        tinkerbell = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs;
+            inherit vars;
+          };
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/tinkerbell
+            sops-nix.nixosModules.sops
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.ldryt = import ./users/ldryt;
+              home-manager.extraSpecialArgs = { inherit vars; };
+            }
+          ];
+        };
+        kiwi = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs;
+            inherit vars;
+          };
+          system = "aarch64-linux";
+          modules = [ ./hosts/kiwi sops-nix.nixosModules.sops ];
+        };
+        auternas = nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs; };
+          system = "x86_64-linux";
+          modules = [ ./hosts/auternas disko.nixosModules.disko ];
         };
       };
-    nixosConfigurations = {
-      tinkerbell = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; };
-        system = "x86_64-linux";
-        modules = [
-          ./hosts/tinkerbell
-          sops-nix.nixosModules.sops
-          home-manager.nixosModules.home-manager
-          {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.users.ldryt = import ./users/ldryt;
-          }
-        ];
-      };
-      kiwi = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; };
-        system = "aarch64-linux";
-        modules = [ ./hosts/kiwi sops-nix.nixosModules.sops ];
-      };
-      auternas = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; };
-        system = "x86_64-linux";
-        modules = [ ./hosts/auternas disko.nixosModules.disko ];
-      };
     };
-  };
 }

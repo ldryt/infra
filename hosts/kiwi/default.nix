@@ -1,6 +1,4 @@
-{ inputs, config, ... }:
-let hidden = import ../../secrets/obfuscated.nix;
-in {
+{ inputs, config, vars, ... }: {
   imports = [
     ./hardware.nix
 
@@ -43,7 +41,7 @@ in {
       extraGroups = [ "wheel" ];
       hashedPasswordFile =
         config.sops.secrets."users/colon/hashedPassword".path;
-      openssh.authorizedKeys.keys = [ hidden.kiwi.ssh-pubkey ];
+      openssh.authorizedKeys.keys = [ vars.sensitive.users.colon.sshPubKey ];
     };
   };
   security.sudo.wheelNeedsPassword = false;

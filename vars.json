@@ -1,0 +1,39 @@
+{
+  "zone": "ldryt.dev",
+  "services": {
+    "authelia": {
+      "subdomain": "iam",
+      "backups": {
+        "tmpDir": "/tmp/authelia_backup"
+      }
+    },
+    "ocis": {
+      "subdomain": "files",
+      "dataDir": "/var/lib/ocis-data",
+      "bucket": "ocis-blobs",
+      "podmanNetwork": "ocis-network",
+      "internalPort": "44082",
+      "oidcID": "ocis-web"
+    },
+    "minio": {
+      "dataDir": "/mnt/minio-buckets"
+    },
+    "vaultwarden": {
+      "subdomain": "pass",
+      "dataDir": "/var/lib/bitwarden_rs",
+      "backups": {
+        "tmpDir": "/tmp/bitwarden_rs_backup"
+      }
+    },
+    "immich": {
+      "subdomain": "pics",
+      "dataDir": "/mnt/immich-library",
+      "oidcID": "immich-clients",
+      "podmanNetwork": "immich-network",
+      "internalPort": "44084",
+      "backups": {
+        "tmpDir": "/tmp/immich_backup"
+      }
+    }
+  }
+}
