@@ -5,7 +5,7 @@
     ../../modules/gnome.nix
     ../../modules/resolved.nix
     ../../modules/intel-laptop.nix
-    ../../modules/nixos-gc.nix
+    ../../modules/nix-gc.nix
   ];
 
   sops.defaultSopsFile = ../../secrets/tinkerbell.yaml;

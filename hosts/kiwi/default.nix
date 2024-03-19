@@ -11,6 +11,7 @@
     ../../modules/openssh.nix
     ../../modules/podman.nix
     ../../modules/fail2ban.nix
+    ../../modules/nix-gc.nix
   ];
 
   sops.defaultSopsFile = ../../secrets/kiwi.yaml;
