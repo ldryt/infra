@@ -66,11 +66,6 @@
         system = "aarch64-linux";
         modules = [ ./hosts/kiwi sops-nix.nixosModules.sops ];
       };
-      auternas = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs; };
-        system = "x86_64-linux";
-        modules = [ ./hosts/auternas disko.nixosModules.disko ];
-      };
     };
   };
 }
