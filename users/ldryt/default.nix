@@ -4,7 +4,7 @@
     ./helix.nix
     ./bash.nix
     ./git.nix
-    ./dconf.nix
+    ./gnome.nix
     ./firefox.nix
     ./thunderbird.nix
   ];
