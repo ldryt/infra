@@ -16,11 +16,11 @@
   sops.age.keyFile = "/var/lib/sops/sops_age_kiwi.key";
 
   nix = {
+    registry.nixpkgs.flake = inputs.nixpkgs;
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
       trusted-users = [ "root" "colon" ];
       auto-optimise-store = true;
-      registry.nixpkgs.flake = inputs.nixpkgs;
     };
     gc = {
       automatic = true;
