@@ -1,19 +1,22 @@
-{ pkgs, config, inputs, ... }: {
-  imports = [
-    ./hardware.nix
-
-    ../../modules/gnome.nix
-    ../../modules/resolved.nix
-    ../../modules/intel-laptop.nix
-    ../../modules/nix-gc.nix
-  ];
+{ lib, pkgs, config, inputs, ... }: {
+  imports = [ ./hardware.nix ];
 
   sops.defaultSopsFile = ./secrets.yaml;
   sops.age.keyFile = "/var/lib/sops/sops_age_tinkerbell.key";
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  nix.settings.trusted-users = [ "root" "ldryt" ];
-  nix.registry.nixpkgs.flake = inputs.nixpkgs;
+  nix = {
+    registry.nixpkgs.flake = inputs.nixpkgs;
+    settings = {
+      experimental-features = [ "nix-command" "flakes" ];
+      trusted-users = [ "root" "ldryt" ];
+      auto-optimise-store = true;
+    };
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+  };
   nixpkgs.config.allowUnfree = true;
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
@@ -25,9 +28,28 @@
 
   networking = {
     hostName = "tinkerbell";
-    networkmanager.enable = true;
+    networkmanager = {
+      enable = true;
+      dns = "systemd-resolved";
+    };
     timeServers = [ "europe.pool.ntp.org" "time.cloudflare.com" ];
+    nameservers = [
+      "2606:4700:4700::1111#cloudflare-dns.com"
+      "2606:4700:4700::1001#cloudflare-dns.com"
+      "1.1.1.1#cloudflare-dns.com"
+      "1.0.0.1#cloudflare-dns.com"
+    ];
   };
+  services.resolved = {
+    enable = true;
+    dnssec = "true";
+    domains = [ "~." ];
+    fallbackDns = [ "1.1.1.1" ];
+    extraConfig = ''
+      DNSOverTLS=yes
+    '';
+  };
+  # eduroam patch
   systemd.services.NetworkManager-wait-online.enable = false;
   systemd.services.wpa_supplicant.environment.OPENSSL_CONF =
     pkgs.writeText "openssl.cnf" ''
@@ -67,6 +89,67 @@
       hashedPasswordFile =
         config.sops.secrets."users/ldryt/hashedPassword".path;
     };
+  };
+
+  # GNOME
+  services.xserver = {
+    enable = true;
+    displayManager.gdm = {
+      enable = true;
+      wayland = true;
+    };
+    desktopManager.gnome.enable = true;
+  };
+  environment.gnome.excludePackages = with pkgs.gnome; [
+    cheese
+    epiphany
+    yelp
+    file-roller
+    geary
+    seahorse
+    gnome-characters
+    gnome-contacts
+    gnome-font-viewer
+    gnome-logs
+    gnome-maps
+    gnome-music
+    pkgs.gnome-photos
+    gnome-system-monitor
+    pkgs.gnome-connections
+    pkgs.gnome-tour
+  ];
+
+  #
+  services.power-profiles-daemon.enable = lib.mkForce false;
+  services.thermald.enable = true;
+  services.tlp = {
+    enable = true;
+    settings = {
+      CPU_SCALING_GOVERNOR_ON_AC = "performance";
+      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+
+      CPU_ENERGY_PERF_POLICY_ON_AC = "performance";
+      CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+
+      PLATFORM_PROFILE_ON_AC = "quiet";
+      PLATFORM_PROFILE_ON_BAT = "quiet";
+
+      CPU_BOOST_ON_AC = 1;
+      CPU_BOOST_ON_BAT = 0;
+
+      CPU_HWP_DYN_BOOST_ON_AC = 1;
+      CPU_HWP_DYN_BOOST_ON_BAT = 0;
+
+      CPU_MAX_PERF_ON_AC = 100;
+      CPU_MAX_PERF_ON_BAT = 80;
+    };
+  };
+
+  services.logind = {
+    powerKey = "hibernate";
+    powerKeyLongPress = "poweroff";
+    lidSwitch = config.services.logind.powerKey;
+    lidSwitchDocked = "ignore";
   };
 
   system.stateVersion = "23.05";

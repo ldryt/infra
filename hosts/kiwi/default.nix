@@ -7,11 +7,9 @@
     ./services/vaultwarden.nix
     ./services/immich.nix
 
-    ../../modules/caddy.nix
+    ../../modules/fail2ban.nix
     ../../modules/openssh.nix
     ../../modules/podman.nix
-    ../../modules/fail2ban.nix
-    ../../modules/nix-gc.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
@@ -21,8 +19,19 @@
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
       trusted-users = [ "root" "colon" ];
+      auto-optimise-store = true;
+      registry.nixpkgs.flake = inputs.nixpkgs;
     };
-    registry.nixpkgs.flake = inputs.nixpkgs;
+    gc = {
+      automatic = true;
+      dates = "weekly";
+      options = "--delete-older-than 7d";
+    };
+  };
+
+  services.caddy = {
+    enable = true;
+    email = vars.sensitive.services.caddy.email;
   };
 
   time.timeZone = "Etc/UTC";

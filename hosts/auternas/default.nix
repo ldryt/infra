@@ -8,7 +8,6 @@
 
     ../../modules/openssh.nix
     ../../modules/fail2ban.nix
-    ../../modules/nix-gc.nix
     ../../modules/podman.nix
   ];
   boot.loader.grub = {
