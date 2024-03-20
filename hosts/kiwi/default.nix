@@ -14,8 +14,8 @@
     ../../modules/nix-gc.nix
   ];
 
-  sops.defaultSopsFile = ../../secrets/kiwi.yaml;
-  sops.age.keyFile = "/var/lib/sops/sops_kiwi_age_key";
+  sops.defaultSopsFile = ./secrets.yaml;
+  sops.age.keyFile = "/var/lib/sops/sops_age_kiwi.key";
 
   nix = {
     settings = {

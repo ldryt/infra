@@ -28,6 +28,7 @@
               ];
             shellHook = ''
               export PULUMI_SKIP_UPDATE_CHECK=true
+              export SOPS_AGE_KEY_FILE=~/.keyring/sops_age_ldryt.key
             '';
           };
         };
@@ -47,6 +48,7 @@
               home-manager.useUserPackages = true;
               home-manager.users.ldryt = import ./users/ldryt;
               home-manager.extraSpecialArgs = { inherit vars; };
+              home-manager.sharedModules = [ sops-nix.homeManagerModules.sops ];
             }
           ];
         };

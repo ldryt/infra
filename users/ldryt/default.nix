@@ -1,4 +1,4 @@
-{ ... }: {
+{ config, ... }: {
   imports = [
     ./packages.nix
     ./helix.nix
@@ -9,10 +9,18 @@
     ./thunderbird.nix
   ];
 
-  home.username = "ldryt";
-  home.homeDirectory = "/home/ldryt";
-
-  home.stateVersion = "23.05";
-
   programs.home-manager.enable = true;
+
+  home = {
+    username = "ldryt";
+    homeDirectory = "/home/${config.home.username}";
+    stateVersion = "23.05";
+  };
+
+  sops = {
+    age.keyFile = "${config.home.homeDirectory}/.keyring/sops_age_ldryt.key";
+    defaultSopsFile = ./secrets.yaml;
+    defaultSymlinkPath = "${config.home.homeDirectory}/.sops/secrets";
+    defaultSecretsMountPoint = "${config.home.homeDirectory}/.sops/secrets.d";
+  };
 }

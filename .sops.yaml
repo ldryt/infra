@@ -1,12 +1,19 @@
 keys:
-  - &tinkerbell age17xpcl8fcqvkmt56sckdhgkaprwl0qzqx9n5m9cltqkmylyml2c3qvfdwty
-  - &kiwi age1arf8azraycjvzrgtnupn4mkx64e3g5qrnkghpq5qs8y7yhp9u3psqrhdgs
+  - &tinkerbell age18gc6nka7mveyup3he02ff08dl96f7uf9nd4c4rgcq04qwpc95djs8f75p2
+  - &kiwi age105dymh0rynp4un2dmqykp87280wurt23as784kylg7003sqhugeq042uc4
+  - &ldryt age1d7d0ed4268h2gdew58c62gcpac2y9tn9ke03kdkr5c93alvzm5rqn2zg2j
 creation_rules:
-  - path_regex: secrets/tinkerbell.yaml$
-    key_groups:
-      - age:
-        - *tinkerbell
-  - path_regex: secrets/kiwi.yaml$
+  - path_regex: hosts/kiwi/secrets.yaml$
     key_groups:
       - age:
         - *kiwi
+        - *ldryt
+  - path_regex: hosts/tinkerbell/secrets.yaml$
+    key_groups:
+      - age:
+        - *tinkerbell
+        - *ldryt
+  - path_regex: users/ldryt/secrets.yaml$
+    key_groups:
+      - age:
+        - *ldryt
