@@ -21,6 +21,7 @@
               pulumi
               pulumi-language-nodejs
               nodejs
+              sops
             ];
           shellHook = ''
             export PULUMI_SKIP_UPDATE_CHECK=true
