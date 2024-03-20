@@ -8,8 +8,6 @@
     iftop
     ripgrep
     git-crypt
-    sops
-    colmena
 
     # gui programs
     libreoffice
