@@ -24,7 +24,7 @@
     "immich-server" = {
       hostname = "immich-server";
       image =
-        "ghcr.io/immich-app/immich-server:v1.98.1@sha256:67fcd4fd5a47a742801242c6defa65df0685042b96319d7924c479258760c135";
+        "ghcr.io/immich-app/immich-server:v1.99.0@sha256:0b11fd4161d44b484695d338ddae3503afdbcb6709195b790fb1e7f0b8e6a26b";
       cmd = [ "start.sh" "immich" ];
       environment = {
         IMMICH_CONFIG_FILE = "/etc/immich-config.json";
@@ -65,7 +65,7 @@
     "immich-machine-learning" = {
       hostname = "immich-machine-learning";
       image =
-        "ghcr.io/immich-app/immich-machine-learning:v1.98.1@sha256:e2e7d612b90b977544e4c1ee31fe65a79836505906942fff9b3749ffe4c364ed";
+        "ghcr.io/immich-app/immich-machine-learning:v1.99.0@sha256:8eae1c623eb7a761aa4a581aade4ad69944b698a0d09681d3d804784f5c46229";
       volumes = [ "immich-ml-cache:/cache" ];
       extraOptions = [ "--network=${vars.services.immich.podmanNetwork}" ];
     };
