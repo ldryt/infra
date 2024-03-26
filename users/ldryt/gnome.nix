@@ -31,11 +31,11 @@
           [ "launch-new-instance@gnome-shell-extensions.gcampax.github.com" ];
       };
       "org/gnome/desktop/background" = {
-        picture-uri = "file://" + ./.wp.jpg;
-        picture-uri-dark = "file://" + ./.wp.jpg;
+        picture-uri = "file://" + ./wallpaper.jpg;
+        picture-uri-dark = "file://" + ./wallpaper.jpg;
       };
       "org/gnome/desktop/screensaver" = {
-        picture-uri = "file://" + ./.wp.jpg;
+        picture-uri = "file://" + ./wallpaper.jpg;
         primary-color = "#191724";
         secondary-color = "#000000";
       };
