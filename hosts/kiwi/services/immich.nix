@@ -1,4 +1,4 @@
-{ config, pkgs, lib, vars, ... }: {
+{ config, pkgs, vars, ... }: {
   systemd.services.init-immich-network = {
     description =
       "Create the network named ${vars.services.immich.podmanNetwork}.";
@@ -13,10 +13,6 @@
       fi
     '';
   };
-
-  system.activationScripts."makeImmichDataDir" = lib.stringAfter [ "var" ] ''
-    mkdir -p /var/lib/immich-data
-  '';
 
   sops.secrets."services/immich/credentials".owner =
     config.users.users.colon.name;
@@ -40,8 +36,7 @@
         [ "${config.sops.secrets."services/immich/credentials".path}" ];
       volumes = [
         "/etc/immich/config.json:/etc/immich-config.json:ro"
-        "${vars.services.immich.dataDir}:/usr/src/app/upload/library"
-        "/var/lib/immich-data:/usr/src/app/upload"
+        "${vars.services.immich.dataDir}:/usr/src/app/upload"
         "/etc/localtime:/etc/localtime:ro"
       ];
       ports = [ "127.0.0.1:${vars.services.immich.internalPort}:3001" ];
@@ -97,9 +92,9 @@
     device = vars.sensitive.services.immich.smbShare;
     fsType = "cifs";
     options = [
-      "x-systemd.automount,noauto,x-systemd.idle-timeout=60,x-systemd.device-timeout=5s,x-systemd.mount-timeout=5s,credentials=${
+      "async,rw,auto,nofail,credentials=${
         config.sops.secrets."system/smb/glouton/immich-library/credentials".path
-      },uid=${toString config.users.users.colon.uid},cache=loose,fsc,sfu"
+      },uid=${toString config.users.users.colon.uid},cache=loose,fsc"
     ];
   };
 
@@ -167,7 +162,8 @@
         ${pkgs.podman}/bin/podman exec -t immich-db pg_dumpall -c -U postgres | ${pkgs.gzip}/bin/gzip > "${vars.services.immich.backups.tmpDir}/immich-db-dump.sql.gz"
       '
     '';
-    paths = [ vars.services.immich.backups.tmpDir "/var/lib/immich-data" ];
+    paths =
+      [ vars.services.immich.backups.tmpDir vars.services.immich.dataDir ];
     repository = "sftp:${
         vars.sensitive.backups.user + "@" + vars.sensitive.backups.host
       }:restic-repo-immich";
