@@ -66,10 +66,10 @@
         system = "aarch64-linux";
         modules = [ ./hosts/kiwi sops-nix.nixosModules.sops ];
       };
-      bozi = let
-        vars = (builtins.fromJSON (builtins.readFile ./hosts/bozi/vars.json))
+      ernos = let
+        vars = (builtins.fromJSON (builtins.readFile ./hosts/ernos/vars.json))
           // (builtins.fromJSON
-            (builtins.readFile ./hosts/bozi/vars.gitcrypt.json));
+            (builtins.readFile ./hosts/ernos/vars.gitcrypt.json));
       in nixpkgs.lib.nixosSystem {
         specialArgs = {
           inherit inputs;
@@ -77,7 +77,7 @@
         };
         system = "x86_64-linux";
         modules =
-          [ ./hosts/bozi sops-nix.nixosModules.sops disko.nixosModules.disko ];
+          [ ./hosts/ernos sops-nix.nixosModules.sops disko.nixosModules.disko ];
       };
     };
   };
