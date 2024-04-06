@@ -56,7 +56,6 @@
       ];
     settings = {
       editor = {
-        mouse = false;
         soft-wrap.enable = true;
         cursor-shape.insert = "bar";
       };
