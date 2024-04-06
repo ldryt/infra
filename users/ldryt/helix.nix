@@ -19,7 +19,7 @@
 
         # Nix
         nil
-        nixfmt
+        nixfmt-rfc-style
 
         # GO
         gopls
