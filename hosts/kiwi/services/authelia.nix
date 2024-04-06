@@ -1,6 +1,11 @@
-{ config, pkgs, vars, ... }: {
-  sops.secrets."services/authelia/jwtSecret".owner =
-    config.services.authelia.instances.ldryt.user;
+{
+  config,
+  pkgs,
+  vars,
+  ...
+}:
+{
+  sops.secrets."services/authelia/jwtSecret".owner = config.services.authelia.instances.ldryt.user;
   sops.secrets."services/authelia/sessionSecret".owner =
     config.services.authelia.instances.ldryt.user;
   sops.secrets."services/authelia/storageEncryption".owner =
@@ -9,27 +14,20 @@
     config.services.authelia.instances.ldryt.user;
   sops.secrets."services/authelia/oidcIssuerPrivateKey".owner =
     config.services.authelia.instances.ldryt.user;
-  sops.secrets."services/authelia/usersDB".owner =
-    config.services.authelia.instances.ldryt.user;
-  sops.secrets."services/authelia/smtpPassword".owner =
-    config.services.authelia.instances.ldryt.user;
+  sops.secrets."services/authelia/usersDB".owner = config.services.authelia.instances.ldryt.user;
+  sops.secrets."services/authelia/smtpPassword".owner = config.services.authelia.instances.ldryt.user;
 
   services.authelia.instances."ldryt" = {
     enable = true;
     secrets = {
       jwtSecretFile = config.sops.secrets."services/authelia/jwtSecret".path;
-      sessionSecretFile =
-        config.sops.secrets."services/authelia/sessionSecret".path;
-      storageEncryptionKeyFile =
-        config.sops.secrets."services/authelia/storageEncryption".path;
-      oidcHmacSecretFile =
-        config.sops.secrets."services/authelia/oidcHmacSecret".path;
-      oidcIssuerPrivateKeyFile =
-        config.sops.secrets."services/authelia/oidcIssuerPrivateKey".path;
+      sessionSecretFile = config.sops.secrets."services/authelia/sessionSecret".path;
+      storageEncryptionKeyFile = config.sops.secrets."services/authelia/storageEncryption".path;
+      oidcHmacSecretFile = config.sops.secrets."services/authelia/oidcHmacSecret".path;
+      oidcIssuerPrivateKeyFile = config.sops.secrets."services/authelia/oidcIssuerPrivateKey".path;
     };
     environmentVariables = {
-      AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE =
-        config.sops.secrets."services/authelia/smtpPassword".path;
+      AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE = config.sops.secrets."services/authelia/smtpPassword".path;
     };
     settings = {
       theme = "auto";
@@ -60,8 +58,13 @@
       };
       identity_providers.oidc = {
         cors.allowed_origins_from_client_redirect_uris = true;
-        cors.endpoints =
-          [ "authorization" "introspection" "revocation" "token" "userinfo" ];
+        cors.endpoints = [
+          "authorization"
+          "introspection"
+          "revocation"
+          "token"
+          "userinfo"
+        ];
       };
       notifier.smtp = {
         username = vars.sensitive.services.authelia.smtp.username;
@@ -78,8 +81,7 @@
     user = config.services.authelia.instances.ldryt.user;
   };
 
-  services.caddy.virtualHosts."${vars.services.authelia.subdomain + "."
-  + vars.zone}".extraConfig = ''
+  services.caddy.virtualHosts."${vars.services.authelia.subdomain + "." + vars.zone}".extraConfig = ''
     header {
       -Server
       Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
@@ -96,9 +98,7 @@
     # https://github.com/authelia/authelia/issues/3277#issuecomment-1370168028
     uri /api/oidc/authorization replace &prompt=select_account%20consent ""
 
-    reverse_proxy http://${
-      config.services.authelia.instances."ldryt".settings.server.host
-    }:${
+    reverse_proxy http://${config.services.authelia.instances."ldryt".settings.server.host}:${
       toString config.services.authelia.instances."ldryt".settings.server.port
     }
   '';
@@ -116,9 +116,7 @@
           exit 1
         fi
 
-        if [[ ! -f "${
-          config.services.authelia.instances."ldryt".settings.storage.local.path
-        }" ]]; then
+        if [[ ! -f "${config.services.authelia.instances."ldryt".settings.storage.local.path}" ]]; then
           echo "Could not find SQLite database file '${
             config.services.authelia.instances."ldryt".settings.storage.local.path
           }'" >&2
@@ -132,18 +130,15 @@
     '';
     paths = [ vars.services.authelia.backups.tmpDir ];
     repository = "sftp:${
-        vars.sensitive.backups.user + "@" + vars.sensitive.backups.host
-      }:restic-repo-authelia";
+      vars.sensitive.backups.user + "@" + vars.sensitive.backups.host
+    }:restic-repo-authelia";
     extraOptions = [
-      "sftp.command='ssh ${
-        vars.sensitive.backups.user + "@" + vars.sensitive.backups.host
-      } -p 23 -i ${
+      "sftp.command='ssh ${vars.sensitive.backups.user + "@" + vars.sensitive.backups.host} -p 23 -i ${
         config.sops.secrets."backups/restic/authelia/sshKey".path
       } -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -s sftp'"
     ];
     initialize = true;
-    passwordFile =
-      config.sops.secrets."backups/restic/authelia/repositoryPass".path;
+    passwordFile = config.sops.secrets."backups/restic/authelia/repositoryPass".path;
     backupCleanupCommand = ''
       ${pkgs.bash}/bin/bash -c 'rm -rf "${vars.services.authelia.backups.tmpDir}"'
     '';

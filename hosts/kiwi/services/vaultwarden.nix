@@ -1,17 +1,23 @@
-{ config, pkgs, vars, ... }: {
+{
+  config,
+  pkgs,
+  vars,
+  ...
+}:
+{
   services.vaultwarden = {
     enable = true;
     config = {
-      DOMAIN =
-        "https://${vars.services.vaultwarden.subdomain + "." + vars.zone}";
+      DOMAIN = "https://${vars.services.vaultwarden.subdomain + "." + vars.zone}";
       SIGNUPS_ALLOWED = "true";
       ROCKET_ADDRESS = "127.0.0.1";
       ROCKET_PORT = 44083;
     };
   };
 
-  services.caddy.virtualHosts."${vars.services.vaultwarden.subdomain + "."
-  + vars.zone}".extraConfig = ''
+  services.caddy.virtualHosts."${
+    vars.services.vaultwarden.subdomain + "." + vars.zone
+  }".extraConfig = ''
     header {
       -Server
       Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
@@ -25,9 +31,7 @@
       Feature-Policy "accelerometer 'none'; ambient-light-sensor 'none'; autoplay 'self'; camera 'none'; encrypted-media 'none'; fullscreen 'self'; geolocation 'none'; gyroscope 'none';       magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; picture-in-picture *; speaker 'none'; sync-xhr 'none'; usb 'none'; vr 'none'"
     }
 
-    reverse_proxy http://${config.services.vaultwarden.config.ROCKET_ADDRESS}:${
-      toString config.services.vaultwarden.config.ROCKET_PORT
-    }
+    reverse_proxy http://${config.services.vaultwarden.config.ROCKET_ADDRESS}:${toString config.services.vaultwarden.config.ROCKET_PORT}
   '';
 
   services.nginx = {
@@ -36,18 +40,14 @@
       forceSSL = true;
       locations."/" = {
         recommendedProxySettings = true;
-        proxyPass =
-          "http://${config.services.vaultwarden.config.ROCKET_ADDRESS}:${
-            toString config.services.vaultwarden.config.ROCKET_PORT
-          }";
+        proxyPass = "http://${config.services.vaultwarden.config.ROCKET_ADDRESS}:${toString config.services.vaultwarden.config.ROCKET_PORT}";
       };
     };
   };
 
   sops.secrets."backups/restic/vaultwarden/repositoryPass".owner =
     config.users.users.vaultwarden.name;
-  sops.secrets."backups/restic/vaultwarden/sshKey".owner =
-    config.users.users.vaultwarden.name;
+  sops.secrets."backups/restic/vaultwarden/sshKey".owner = config.users.users.vaultwarden.name;
   services.restic.backups.vaultwarden = {
     user = config.users.users.vaultwarden.name;
     # https://github.com/NixOS/nixpkgs/blob/592047fc9e4f7b74a4dc85d1b9f5243dfe4899e3/nixos/modules/services/security/vaultwarden/backup.sh
@@ -71,18 +71,15 @@
     '';
     paths = [ vars.services.vaultwarden.backups.tmpDir ];
     repository = "sftp:${
-        vars.sensitive.backups.user + "@" + vars.sensitive.backups.host
-      }:restic-repo-vaultwarden";
+      vars.sensitive.backups.user + "@" + vars.sensitive.backups.host
+    }:restic-repo-vaultwarden";
     extraOptions = [
-      "sftp.command='ssh ${
-        vars.sensitive.backups.user + "@" + vars.sensitive.backups.host
-      } -p 23 -i ${
+      "sftp.command='ssh ${vars.sensitive.backups.user + "@" + vars.sensitive.backups.host} -p 23 -i ${
         config.sops.secrets."backups/restic/vaultwarden/sshKey".path
       } -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -s sftp'"
     ];
     initialize = true;
-    passwordFile =
-      config.sops.secrets."backups/restic/vaultwarden/repositoryPass".path;
+    passwordFile = config.sops.secrets."backups/restic/vaultwarden/repositoryPass".path;
     backupCleanupCommand = ''
       ${pkgs.bash}/bin/bash -c 'rm -rf "${vars.services.vaultwarden.backups.tmpDir}"'
     '';

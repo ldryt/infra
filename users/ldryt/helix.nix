@@ -1,12 +1,15 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.sessionVariables.EDITOR = "hx";
   home.shellAliases."vim" = "hx";
 
   programs.helix = {
     enable = true;
-    extraPackages = with pkgs;
+    extraPackages =
+      with pkgs;
       with nodePackages;
-      with python311Packages; [
+      with python311Packages;
+      [
         # TeX
         texlab
         texliveMedium
@@ -112,7 +115,10 @@
           name = "python";
           formatter = {
             command = "black";
-            args = [ "--quiet" "-" ];
+            args = [
+              "--quiet"
+              "-"
+            ];
           };
           auto-format = true;
         }

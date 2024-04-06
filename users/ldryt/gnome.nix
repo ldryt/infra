@@ -1,4 +1,5 @@
-{ lib, ... }: {
+{ lib, ... }:
+{
   dconf = {
     enable = true;
     settings = {
@@ -15,20 +16,30 @@
         dynamic-workspaces = true;
       };
       "org/gnome/desktop/search-providers" = {
-        disabled =
-          [ "org.gnome.clocks.desktop" "org.gnome.Characters.desktop" ];
+        disabled = [
+          "org.gnome.clocks.desktop"
+          "org.gnome.Characters.desktop"
+        ];
       };
-      "org/gnome/desktop/sound" = { event-sounds = false; };
+      "org/gnome/desktop/sound" = {
+        event-sounds = false;
+      };
       "org/gnome/desktop/input-sources" = {
-        sources = [ (lib.hm.gvariant.mkTuple [ "xkb" "fr" ]) ];
+        sources = [
+          (lib.hm.gvariant.mkTuple [
+            "xkb"
+            "fr"
+          ])
+        ];
       };
-      "system/locale" = { region = "fr_FR.UTF-8"; };
+      "system/locale" = {
+        region = "fr_FR.UTF-8";
+      };
       "org/gnome/settings-daemon/plugins/power" = {
         power-button-action = "hibernate";
       };
       "org/gnome/shell" = {
-        enabled-extensions =
-          [ "launch-new-instance@gnome-shell-extensions.gcampax.github.com" ];
+        enabled-extensions = [ "launch-new-instance@gnome-shell-extensions.gcampax.github.com" ];
       };
       "org/gnome/desktop/background" = {
         picture-uri = "file://" + ./wallpaper.jpg;
@@ -53,24 +64,21 @@
           "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
         ];
       };
-      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" =
-        {
-          binding = "<Super>Return";
-          command = "kgx";
-          name = "open-terminal";
-        };
-      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" =
-        {
-          binding = "<Super>b";
-          command = "firefox";
-          name = "open-browser";
-        };
-      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" =
-        {
-          binding = "<Super>e";
-          command = "nautilus";
-          name = "open-file-browser";
-        };
+      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
+        binding = "<Super>Return";
+        command = "kgx";
+        name = "open-terminal";
+      };
+      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
+        binding = "<Super>b";
+        command = "firefox";
+        name = "open-browser";
+      };
+      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
+        binding = "<Super>e";
+        command = "nautilus";
+        name = "open-file-browser";
+      };
     };
   };
 }

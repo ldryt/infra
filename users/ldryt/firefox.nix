@@ -1,11 +1,13 @@
-{ ... }: {
+{ ... }:
+{
   home.file."firefox-gnome-theme" = {
     target = ".mozilla/firefox/default/chrome/firefox-gnome-theme";
-    source = (fetchTarball {
-      url =
-        "https://github.com/rafaelmardojai/firefox-gnome-theme/archive/refs/tags/v122.tar.gz";
-      sha256 = "0mack8i6splsywc5h0bdgh1njs4rm8fsi0lpvvwmbdqmjjlkz6a1";
-    });
+    source = (
+      fetchTarball {
+        url = "https://github.com/rafaelmardojai/firefox-gnome-theme/archive/refs/tags/v122.tar.gz";
+        sha256 = "0mack8i6splsywc5h0bdgh1njs4rm8fsi0lpvvwmbdqmjjlkz6a1";
+      }
+    );
   };
 
   programs.firefox = {
@@ -16,39 +18,31 @@
         force = true;
         engines = {
           "Phind" = {
-            urls = [{
-              template =
-                "https://www.phind.com/search?q={searchTerms}&ignoreSearchResults=false";
-            }];
+            urls = [ { template = "https://www.phind.com/search?q={searchTerms}&ignoreSearchResults=false"; } ];
             iconUpdateURL = "https://www.phind.com/images/favicon.png";
             updateInterval = 7 * 24 * 60 * 60 * 1000;
             definedAliases = [ "p" ];
           };
           "GitHub" = {
-            urls =
-              [{ template = "https://github.com/search?q={searchTerms}"; }];
+            urls = [ { template = "https://github.com/search?q={searchTerms}"; } ];
             iconUpdateURL = "https://github.com/fluidicon.png";
             updateInterval = 7 * 24 * 60 * 60 * 1000;
             definedAliases = [ "gh" ];
           };
           "WolframAlpha" = {
-            urls = [{
-              template = "https://www.wolframalpha.com/input?i={searchTerms}";
-            }];
-            iconUpdateURL =
-              "https://www.wolframalpha.com/_next/static/images/favicon_1zbE9hjk.ico";
+            urls = [ { template = "https://www.wolframalpha.com/input?i={searchTerms}"; } ];
+            iconUpdateURL = "https://www.wolframalpha.com/_next/static/images/favicon_1zbE9hjk.ico";
             updateInterval = 7 * 24 * 60 * 60 * 1000;
             definedAliases = [ "wa" ];
           };
           "MyNixOS" = {
-            urls =
-              [{ template = "https://mynixos.com/search?q={searchTerms}"; }];
+            urls = [ { template = "https://mynixos.com/search?q={searchTerms}"; } ];
             iconUpdateURL = "https://mynixos.com/favicon-dark.svg";
             updateInterval = 7 * 24 * 60 * 60 * 1000;
             definedAliases = [ "nx" ];
           };
           "Noogle" = {
-            urls = [{ template = "https://noogle.dev/q?term={searchTerms}"; }];
+            urls = [ { template = "https://noogle.dev/q?term={searchTerms}"; } ];
             iconUpdateURL = "https://noogle.dev/favicon.png";
             updateInterval = 7 * 24 * 60 * 60 * 1000;
             definedAliases = [ "no" ];
@@ -109,12 +103,9 @@
         "browser.toolbars.bookmarks.visibility" = "never";
         "browser.download.useDownloadDir" = false; # Ask where to save downloads
         "browser.translations.enable" = false; # disable translations
-        "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons" =
-          false; # Do not recommend addons
-        "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features" =
-          false; # Do not recommend features
-        "extensions.htmlaboutaddons.recommendations.enabled" =
-          false; # Do not recommend extensions
+        "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons" = false; # Do not recommend addons
+        "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features" = false; # Do not recommend features
+        "extensions.htmlaboutaddons.recommendations.enabled" = false; # Do not recommend extensions
         "layout.spellcheckDefault" = 0; # Spellcheck off
 
         # firefox-gnome-theme

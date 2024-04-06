@@ -1,7 +1,12 @@
-{ config, pkgs, vars, ... }: {
+{
+  config,
+  pkgs,
+  vars,
+  ...
+}:
+{
   systemd.services.init-immich-network = {
-    description =
-      "Create the network named ${vars.services.immich.podmanNetwork}.";
+    description = "Create the network named ${vars.services.immich.podmanNetwork}.";
     after = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig.Type = "oneshot";
@@ -14,74 +19,74 @@
     '';
   };
 
-  sops.secrets."services/immich/credentials".owner =
-    config.users.users.colon.name;
+  sops.secrets."services/immich/credentials".owner = config.users.users.colon.name;
   virtualisation.oci-containers.containers = {
     "immich-server" = {
       hostname = "immich-server";
-      image =
-        "ghcr.io/immich-app/immich-server:v1.100.0@sha256:4d9040b4199e38374d4b8041437ed708a6c9dfab5b381aff7142402ca824d413";
-      cmd = [ "start.sh" "immich" ];
+      image = "ghcr.io/immich-app/immich-server:v1.100.0@sha256:4d9040b4199e38374d4b8041437ed708a6c9dfab5b381aff7142402ca824d413";
+      cmd = [
+        "start.sh"
+        "immich"
+      ];
       environment = {
         IMMICH_CONFIG_FILE = "/etc/immich-config.json";
         DB_HOSTNAME = "immich-db";
-        DB_USERNAME =
-          config.virtualisation.oci-containers.containers.immich-db.environment.POSTGRES_USER;
+        DB_USERNAME = config.virtualisation.oci-containers.containers.immich-db.environment.POSTGRES_USER;
         DB_DATABASE_NAME =
           config.virtualisation.oci-containers.containers.immich-db.environment.POSTGRES_DB;
         DB_PASSWORD = "\${DB_PASSWORD:?error message}";
         REDIS_HOSTNAME = "immich-redis";
       };
-      environmentFiles =
-        [ "${config.sops.secrets."services/immich/credentials".path}" ];
+      environmentFiles = [ "${config.sops.secrets."services/immich/credentials".path}" ];
       volumes = [
         "/etc/immich/config.json:/etc/immich-config.json:ro"
         "${vars.services.immich.dataDir}:/usr/src/app/upload"
         "/etc/localtime:/etc/localtime:ro"
       ];
       ports = [ "127.0.0.1:${vars.services.immich.internalPort}:3001" ];
-      dependsOn = [ "immich-redis" "immich-db" ];
+      dependsOn = [
+        "immich-redis"
+        "immich-db"
+      ];
       extraOptions = [ "--network=${vars.services.immich.podmanNetwork}" ];
     };
     "immich-microservices" = {
       hostname = "immich-microservices";
-      image =
-        config.virtualisation.oci-containers.containers.immich-server.image;
-      cmd = [ "start.sh" "microservices" ];
-      environment =
-        config.virtualisation.oci-containers.containers.immich-server.environment;
-      environmentFiles =
-        config.virtualisation.oci-containers.containers.immich-server.environmentFiles;
-      volumes =
-        config.virtualisation.oci-containers.containers.immich-server.volumes;
-      dependsOn = [ "immich-redis" "immich-db" ];
+      image = config.virtualisation.oci-containers.containers.immich-server.image;
+      cmd = [
+        "start.sh"
+        "microservices"
+      ];
+      environment = config.virtualisation.oci-containers.containers.immich-server.environment;
+      environmentFiles = config.virtualisation.oci-containers.containers.immich-server.environmentFiles;
+      volumes = config.virtualisation.oci-containers.containers.immich-server.volumes;
+      dependsOn = [
+        "immich-redis"
+        "immich-db"
+      ];
       extraOptions = [ "--network=${vars.services.immich.podmanNetwork}" ];
     };
     "immich-machine-learning" = {
       hostname = "immich-machine-learning";
-      image =
-        "ghcr.io/immich-app/immich-machine-learning:v1.100.0@sha256:ddf76a30d2a6f30cef1535b2538f55037dee96b889f34394319fadec9d49db62";
+      image = "ghcr.io/immich-app/immich-machine-learning:v1.100.0@sha256:ddf76a30d2a6f30cef1535b2538f55037dee96b889f34394319fadec9d49db62";
       volumes = [ "immich-ml-cache:/cache" ];
       extraOptions = [ "--network=${vars.services.immich.podmanNetwork}" ];
     };
     "immich-db" = {
       hostname = "immich-db";
-      image =
-        "docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0";
+      image = "docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0";
       environment = {
         POSTGRES_PASSWORD = "\${DB_PASSWORD:?error message}";
         POSTGRES_USER = "postgres";
         POSTGRES_DB = "immich";
       };
       volumes = [ "immich-db-data:/var/lib/postgresql/data" ];
-      environmentFiles =
-        config.virtualisation.oci-containers.containers.immich-server.environmentFiles;
+      environmentFiles = config.virtualisation.oci-containers.containers.immich-server.environmentFiles;
       extraOptions = [ "--network=${vars.services.immich.podmanNetwork}" ];
     };
     "immich-redis" = {
       hostname = "immich-redis";
-      image =
-        "docker.io/library/redis:6.2-alpine@sha256:afb290a0a0d0b2bd7537b62ebff1eb84d045c757c1c31ca2ca48c79536c0de82";
+      image = "docker.io/library/redis:6.2-alpine@sha256:afb290a0a0d0b2bd7537b62ebff1eb84d045c757c1c31ca2ca48c79536c0de82";
       extraOptions = [ "--network=${vars.services.immich.podmanNetwork}" ];
     };
   };
@@ -98,8 +103,7 @@
     ];
   };
 
-  services.caddy.virtualHosts."${vars.services.immich.subdomain + "."
-  + vars.zone}".extraConfig = ''
+  services.caddy.virtualHosts."${vars.services.immich.subdomain + "." + vars.zone}".extraConfig = ''
     header {
       -Server
       Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
@@ -119,33 +123,41 @@
     access_token_lifespan = "2d";
     refresh_token_lifespan = "3d";
 
-    clients = [{
-      description = "Immich Clients";
-      id = vars.services.immich.oidcID;
-      secret = vars.sensitive.services.immich.oidcSecret;
-      public = false;
-      consent_mode = "implicit";
-      authorization_policy = "two_factor";
-      scopes = [ "email" "groups" "openid" "profile" ];
-      redirect_uris = [
-        "https://${vars.services.immich.subdomain + "." + vars.zone}"
-        "https://${vars.services.immich.subdomain + "." + vars.zone}/auth/login"
-        "https://${
-          vars.services.immich.subdomain + "." + vars.zone
-        }/user-settings"
-        "https://${
-          vars.services.immich.subdomain + "." + vars.zone
-        }/oauth2/callback"
-        "https://${
-          vars.services.immich.subdomain + "." + vars.zone
-        }/api/oauth/mobile-redirect"
-        "app.immich:/"
-      ];
-      userinfo_signing_algorithm = "none";
-      response_types = [ "code" ];
-      response_modes = [ "form_post" "query" "fragment" ];
-      grant_types = [ "refresh_token" "authorization_code" ];
-    }];
+    clients = [
+      {
+        description = "Immich Clients";
+        id = vars.services.immich.oidcID;
+        secret = vars.sensitive.services.immich.oidcSecret;
+        public = false;
+        consent_mode = "implicit";
+        authorization_policy = "two_factor";
+        scopes = [
+          "email"
+          "groups"
+          "openid"
+          "profile"
+        ];
+        redirect_uris = [
+          "https://${vars.services.immich.subdomain + "." + vars.zone}"
+          "https://${vars.services.immich.subdomain + "." + vars.zone}/auth/login"
+          "https://${vars.services.immich.subdomain + "." + vars.zone}/user-settings"
+          "https://${vars.services.immich.subdomain + "." + vars.zone}/oauth2/callback"
+          "https://${vars.services.immich.subdomain + "." + vars.zone}/api/oauth/mobile-redirect"
+          "app.immich:/"
+        ];
+        userinfo_signing_algorithm = "none";
+        response_types = [ "code" ];
+        response_modes = [
+          "form_post"
+          "query"
+          "fragment"
+        ];
+        grant_types = [
+          "refresh_token"
+          "authorization_code"
+        ];
+      }
+    ];
   };
 
   sops.secrets."backups/restic/immich/repositoryPass".owner = "root";
@@ -162,21 +174,20 @@
         ${pkgs.podman}/bin/podman exec -t immich-db pg_dumpall -c -U postgres | ${pkgs.gzip}/bin/gzip > "${vars.services.immich.backups.tmpDir}/immich-db-dump.sql.gz"
       '
     '';
-    paths =
-      [ vars.services.immich.backups.tmpDir vars.services.immich.dataDir ];
+    paths = [
+      vars.services.immich.backups.tmpDir
+      vars.services.immich.dataDir
+    ];
     repository = "sftp:${
-        vars.sensitive.backups.user + "@" + vars.sensitive.backups.host
-      }:restic-repo-immich";
+      vars.sensitive.backups.user + "@" + vars.sensitive.backups.host
+    }:restic-repo-immich";
     extraOptions = [
-      "sftp.command='ssh ${
-        vars.sensitive.backups.user + "@" + vars.sensitive.backups.host
-      } -p 23 -i ${
+      "sftp.command='ssh ${vars.sensitive.backups.user + "@" + vars.sensitive.backups.host} -p 23 -i ${
         config.sops.secrets."backups/restic/immich/sshKey".path
       } -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -s sftp'"
     ];
     initialize = true;
-    passwordFile =
-      config.sops.secrets."backups/restic/immich/repositoryPass".path;
+    passwordFile = config.sops.secrets."backups/restic/immich/repositoryPass".path;
     backupCleanupCommand = ''
       ${pkgs.bash}/bin/bash -c 'rm -rf "${vars.services.immich.backups.tmpDir}"'
     '';
@@ -282,9 +293,7 @@
       },
       "oauth": {
         "enabled": true,
-        "issuerUrl": "https://${
-          vars.services.authelia.subdomain + "." + vars.zone
-        }",
+        "issuerUrl": "https://${vars.services.authelia.subdomain + "." + vars.zone}",
         "clientId": "${vars.services.immich.oidcID}",
         "clientSecret": "${vars.sensitive.services.immich.oidcSecret}",
         "mobileOverrideEnabled": true,
@@ -333,9 +342,7 @@
         }
       },
       "server": {
-        "externalDomain": "https://${
-          vars.services.immich.subdomain + "." + vars.zone
-        }",
+        "externalDomain": "https://${vars.services.immich.subdomain + "." + vars.zone}",
         "loginPageMessage": ""
       }
     }

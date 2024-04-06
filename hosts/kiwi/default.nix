@@ -1,4 +1,10 @@
-{ inputs, config, vars, ... }: {
+{
+  inputs,
+  config,
+  vars,
+  ...
+}:
+{
   imports = [
     ./hardware.nix
 
@@ -18,8 +24,14 @@
   nix = {
     registry.nixpkgs.flake = inputs.nixpkgs;
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "root" "colon" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = [
+        "root"
+        "colon"
+      ];
       auto-optimise-store = true;
     };
     gc = {
@@ -39,7 +51,11 @@
     hostName = "kiwi";
     useDHCP = false;
     interfaces."eth0".useDHCP = true;
-    firewall.allowedTCPPorts = [ 22 80 443 ];
+    firewall.allowedTCPPorts = [
+      22
+      80
+      443
+    ];
   };
 
   sops.secrets."users/colon/hashedPassword".neededForUsers = true;
@@ -49,8 +65,7 @@
       uid = 1000;
       isNormalUser = true;
       extraGroups = [ "wheel" ];
-      hashedPasswordFile =
-        config.sops.secrets."users/colon/hashedPassword".path;
+      hashedPasswordFile = config.sops.secrets."users/colon/hashedPassword".path;
       openssh.authorizedKeys.keys = [ vars.sensitive.users.colon.sshPubKey ];
     };
   };

@@ -1,4 +1,13 @@
-{ config, lib, pkgs, inputs, vars, modulesPath, ... }: {
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  vars,
+  modulesPath,
+  ...
+}:
+{
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
@@ -22,7 +31,10 @@
   nix = {
     registry.nixpkgs.flake = inputs.nixpkgs;
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       auto-optimise-store = true;
     };
     gc = {
@@ -40,8 +52,7 @@
     firewall.allowedTCPPorts = [ 22 ];
   };
 
-  users.users.root.openssh.authorizedKeys.keys =
-    [ vars.sensitive.users.root.sshPubKey ];
+  users.users.root.openssh.authorizedKeys.keys = [ vars.sensitive.users.root.sshPubKey ];
 
   system.stateVersion = "23.11";
 }

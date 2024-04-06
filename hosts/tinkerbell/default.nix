@@ -1,4 +1,11 @@
-{ lib, pkgs, config, inputs, ... }: {
+{
+  lib,
+  pkgs,
+  config,
+  inputs,
+  ...
+}:
+{
   imports = [ ./hardware.nix ];
 
   sops.defaultSopsFile = ./secrets.yaml;
@@ -7,8 +14,14 @@
   nix = {
     registry.nixpkgs.flake = inputs.nixpkgs;
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
-      trusted-users = [ "root" "ldryt" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = [
+        "root"
+        "ldryt"
+      ];
       auto-optimise-store = true;
     };
     gc = {
@@ -32,7 +45,10 @@
       enable = true;
       dns = "systemd-resolved";
     };
-    timeServers = [ "europe.pool.ntp.org" "time.cloudflare.com" ];
+    timeServers = [
+      "europe.pool.ntp.org"
+      "time.cloudflare.com"
+    ];
     nameservers = [
       "2606:4700:4700::1111#cloudflare-dns.com"
       "2606:4700:4700::1001#cloudflare-dns.com"
@@ -51,18 +67,17 @@
   };
   # eduroam patch
   systemd.services.NetworkManager-wait-online.enable = false;
-  systemd.services.wpa_supplicant.environment.OPENSSL_CONF =
-    pkgs.writeText "openssl.cnf" ''
-      openssl_conf = openssl_init
-      [openssl_init]
-      ssl_conf = ssl_sect
-      [ssl_sect]
-      system_default = system_default_sect
-      [system_default_sect]
-      Options = UnsafeLegacyRenegotiation
-      [system_default_sect]
-      CipherString = Default:@SECLEVEL=0
-    '';
+  systemd.services.wpa_supplicant.environment.OPENSSL_CONF = pkgs.writeText "openssl.cnf" ''
+    openssl_conf = openssl_init
+    [openssl_init]
+    ssl_conf = ssl_sect
+    [ssl_sect]
+    system_default = system_default_sect
+    [system_default_sect]
+    Options = UnsafeLegacyRenegotiation
+    [system_default_sect]
+    CipherString = Default:@SECLEVEL=0
+  '';
 
   time.timeZone = "Europe/Vilnius";
   i18n.defaultLocale = "en_US.UTF-8";
@@ -85,9 +100,11 @@
     mutableUsers = false;
     users.ldryt = {
       isNormalUser = true;
-      extraGroups = [ "wheel" "networkmanager" ];
-      hashedPasswordFile =
-        config.sops.secrets."users/ldryt/hashedPassword".path;
+      extraGroups = [
+        "wheel"
+        "networkmanager"
+      ];
+      hashedPasswordFile = config.sops.secrets."users/ldryt/hashedPassword".path;
     };
   };
 

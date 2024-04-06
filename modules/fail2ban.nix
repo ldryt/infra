@@ -1,15 +1,18 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   services.fail2ban = {
     enable = true;
-    ignoreIP = [ "10.0.0.0/32" "fe80::/10" ];
+    ignoreIP = [
+      "10.0.0.0/32"
+      "fe80::/10"
+    ];
     extraPackages = [ pkgs.ipset ];
     banaction = "iptables-ipset-proto6-allports";
     maxretry = 1;
     bantime = "24h";
     bantime-increment = {
       enable = true;
-      formula =
-        "ban.Time * math.exp(float(ban.Count+1)*banFactor)/math.exp(1*banFactor)";
+      formula = "ban.Time * math.exp(float(ban.Count+1)*banFactor)/math.exp(1*banFactor)";
       overalljails = true;
       rndtime = "4m";
     };
