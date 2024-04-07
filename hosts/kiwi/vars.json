@@ -25,6 +25,9 @@
         "tmpDir": "/tmp/bitwarden_rs_backup"
       }
     },
+    "keycloak": {
+      "subdomain": "auth"
+    },
     "immich": {
       "subdomain": "pics",
       "dataDir": "/mnt/immich-library",

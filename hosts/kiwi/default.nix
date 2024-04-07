@@ -12,6 +12,7 @@
     ./services/authelia.nix
     ./services/vaultwarden.nix
     ./services/immich.nix
+    ./services/keycloak.nix
 
     ../../modules/fail2ban.nix
     ../../modules/openssh.nix
