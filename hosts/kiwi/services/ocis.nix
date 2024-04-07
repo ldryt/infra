@@ -39,15 +39,14 @@
         PROXY_HTTP_ADDR = "0.0.0.0:9200";
         OCIS_URL = "https://${vars.services.ocis.subdomain}.${vars.zone}";
 
-        OCIS_OIDC_ISSUER = "https://${vars.services.authelia.subdomain}.${vars.zone}";
+        OCIS_OIDC_ISSUER = "https://${vars.services.keycloak.subdomain}.${vars.zone}/realms/master";
         WEB_OIDC_CLIENT_ID = vars.services.ocis.oidcID;
-        WEB_OIDC_SCOPE = "openid profile groups email";
         PROXY_TLS = "false";
         PROXY_AUTOPROVISION_ACCOUNTS = "true";
-        PROXY_OIDC_REWRITE_WELLKNOWN = "true";
+        PROXY_USER_OIDC_CLAIM = "preferred_username";
+        PROXY_USER_CS3_CLAIM = "username";
         # PROXY_ROLE_ASSIGNMENT_DRIVER = "oidc";
-        # PROXY_ROLE_ASSIGNMENT_OIDC_CLAIM = "groups";
-        PROXY_OIDC_ACCESS_TOKEN_VERIFY_METHOD = "none";
+        PROXY_OIDC_REWRITE_WELLKNOWN = "true";
 
         STORAGE_USERS_DRIVER = "s3ng";
         STORAGE_SYSTEM_DRIVER = "ocis";
