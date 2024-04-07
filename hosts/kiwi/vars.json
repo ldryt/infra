@@ -26,7 +26,10 @@
       }
     },
     "keycloak": {
-      "subdomain": "auth"
+      "subdomain": "auth",
+      "backups": {
+        "tmpDir": "/tmp/keycloak_backup"
+      }
     },
     "immich": {
       "subdomain": "pics",
