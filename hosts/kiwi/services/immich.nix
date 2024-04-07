@@ -293,16 +293,12 @@
       },
       "oauth": {
         "enabled": true,
-        "issuerUrl": "https://${vars.services.authelia.subdomain + "." + vars.zone}",
+        "issuerUrl": "https://${vars.services.keycloak.subdomain}.${vars.zone}/realms/master",
         "clientId": "${vars.services.immich.oidcID}",
         "clientSecret": "${vars.sensitive.services.immich.oidcSecret}",
-        "mobileOverrideEnabled": true,
-        "mobileRedirectUri": "https://${
-          vars.services.immich.subdomain + "." + vars.zone
-        }/api/oauth/mobile-redirect",
         "scope": "openid email profile",
         "storageLabelClaim": "preferred_username",
-        "buttonText": "Login with Authelia",
+        "buttonText": "Login with ${vars.services.keycloak.subdomain}.${vars.zone}",
         "autoRegister": true,
         "autoLaunch": true
       },
