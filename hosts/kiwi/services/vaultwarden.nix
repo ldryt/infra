@@ -18,6 +18,7 @@
   services.nginx.virtualHosts."${vars.services.vaultwarden.subdomain}.${vars.zone}" = {
     enableACME = true;
     forceSSL = true;
+    kTLS = true;
     locations."/" = {
       proxyWebsockets = true;
       proxyPass = "http://${config.services.vaultwarden.config.ROCKET_ADDRESS}:${toString config.services.vaultwarden.config.ROCKET_PORT}";

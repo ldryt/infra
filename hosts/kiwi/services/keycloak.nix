@@ -27,6 +27,7 @@
   services.nginx.virtualHosts."${vars.services.keycloak.subdomain}.${vars.zone}" = {
     enableACME = true;
     forceSSL = true;
+    kTLS = true;
     locations."/".proxyPass = "http://${config.services.keycloak.settings.http-host}:${toString config.services.keycloak.settings.http-port}";
   };
 

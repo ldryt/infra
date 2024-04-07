@@ -106,6 +106,7 @@
   services.nginx.virtualHosts."${vars.services.immich.subdomain}.${vars.zone}" = {
     enableACME = true;
     forceSSL = true;
+    kTLS = true;
     locations."/" = {
       proxyWebsockets = true;
       proxyPass = "http://127.0.0.1:${vars.services.immich.internalPort}";
