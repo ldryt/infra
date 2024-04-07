@@ -8,6 +8,7 @@
   imports = [
     ./hardware.nix
 
+    ./services/nginx.nix
     ./services/ocis.nix
     ./services/vaultwarden.nix
     ./services/immich.nix
@@ -39,11 +40,6 @@
       dates = "weekly";
       options = "--delete-older-than 7d";
     };
-  };
-
-  services.caddy = {
-    enable = true;
-    email = vars.sensitive.services.caddy.email;
   };
 
   time.timeZone = "Etc/UTC";

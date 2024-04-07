@@ -15,33 +15,12 @@
     };
   };
 
-  services.caddy.virtualHosts."${
-    vars.services.vaultwarden.subdomain + "." + vars.zone
-  }".extraConfig = ''
-    header {
-      -Server
-      Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
-      X-Xss-Protection "1; mode=block"
-      X-Content-Type-Options "nosniff"
-      X-Frame-Options "DENY"
-      Permissions-Policy interest-cohort=()
-      Content-Security-Policy "upgrade-insecure-requests"
-      Referrer-Policy "strict-origin-when-cross-origin"
-      Cache-Control "public, max-age=15, must-revalidate"
-      Feature-Policy "accelerometer 'none'; ambient-light-sensor 'none'; autoplay 'self'; camera 'none'; encrypted-media 'none'; fullscreen 'self'; geolocation 'none'; gyroscope 'none';       magnetometer 'none'; microphone 'none'; midi 'none'; payment 'none'; picture-in-picture *; speaker 'none'; sync-xhr 'none'; usb 'none'; vr 'none'"
-    }
-
-    reverse_proxy http://${config.services.vaultwarden.config.ROCKET_ADDRESS}:${toString config.services.vaultwarden.config.ROCKET_PORT}
-  '';
-
-  services.nginx = {
-    virtualHosts."${vars.services.vaultwarden.subdomain + "." + vars.zone}" = {
-      enableACME = true;
-      forceSSL = true;
-      locations."/" = {
-        recommendedProxySettings = true;
-        proxyPass = "http://${config.services.vaultwarden.config.ROCKET_ADDRESS}:${toString config.services.vaultwarden.config.ROCKET_PORT}";
-      };
+  services.nginx.virtualHosts."${vars.services.vaultwarden.subdomain}.${vars.zone}" = {
+    enableACME = true;
+    forceSSL = true;
+    locations."/" = {
+      proxyWebsockets = true;
+      proxyPass = "http://${config.services.vaultwarden.config.ROCKET_ADDRESS}:${toString config.services.vaultwarden.config.ROCKET_PORT}";
     };
   };
 
