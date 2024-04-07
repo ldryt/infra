@@ -9,7 +9,6 @@
     ./hardware.nix
 
     ./services/ocis.nix
-    ./services/authelia.nix
     ./services/vaultwarden.nix
     ./services/immich.nix
     ./services/keycloak.nix

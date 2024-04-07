@@ -119,47 +119,6 @@
     reverse_proxy http://127.0.0.1:${vars.services.immich.internalPort}
   '';
 
-  services.authelia.instances."ldryt".settings.identity_providers.oidc = {
-    access_token_lifespan = "2d";
-    refresh_token_lifespan = "3d";
-
-    clients = [
-      {
-        description = "Immich Clients";
-        id = vars.services.immich.oidcID;
-        secret = vars.sensitive.services.immich.oidcSecret;
-        public = false;
-        consent_mode = "implicit";
-        authorization_policy = "two_factor";
-        scopes = [
-          "email"
-          "groups"
-          "openid"
-          "profile"
-        ];
-        redirect_uris = [
-          "https://${vars.services.immich.subdomain + "." + vars.zone}"
-          "https://${vars.services.immich.subdomain + "." + vars.zone}/auth/login"
-          "https://${vars.services.immich.subdomain + "." + vars.zone}/user-settings"
-          "https://${vars.services.immich.subdomain + "." + vars.zone}/oauth2/callback"
-          "https://${vars.services.immich.subdomain + "." + vars.zone}/api/oauth/mobile-redirect"
-          "app.immich:/"
-        ];
-        userinfo_signing_algorithm = "none";
-        response_types = [ "code" ];
-        response_modes = [
-          "form_post"
-          "query"
-          "fragment"
-        ];
-        grant_types = [
-          "refresh_token"
-          "authorization_code"
-        ];
-      }
-    ];
-  };
-
   sops.secrets."backups/restic/immich/repositoryPass".owner = "root";
   sops.secrets."backups/restic/immich/sshKey".owner = "root";
   services.restic.backups.immich = {

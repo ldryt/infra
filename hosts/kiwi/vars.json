@@ -1,12 +1,6 @@
 {
   "zone": "ldryt.dev",
   "services": {
-    "authelia": {
-      "subdomain": "iam",
-      "backups": {
-        "tmpDir": "/tmp/authelia_backup"
-      }
-    },
     "ocis": {
       "subdomain": "files",
       "dataDir": "/var/lib/ocis-data",
