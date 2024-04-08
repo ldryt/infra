@@ -28,7 +28,14 @@
     enableACME = true;
     forceSSL = true;
     kTLS = true;
-    locations."/".proxyPass = "http://${config.services.keycloak.settings.http-host}:${toString config.services.keycloak.settings.http-port}";
+    locations."/" = {
+      proxyPass = "http://${config.services.keycloak.settings.http-host}:${toString config.services.keycloak.settings.http-port}";
+      extraConfig = ''
+        proxy_buffer_size   128k;
+        proxy_buffers   4 256k;
+        proxy_busy_buffers_size   256k;
+      '';
+    };
   };
 
   sops.secrets."backups/restic/keycloak/repositoryPass" = { };
