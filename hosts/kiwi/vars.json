@@ -3,9 +3,7 @@
   "services": {
     "ocis": {
       "subdomain": "files",
-      "dataDir": "/var/lib/ocis-data",
-      "bucket": "ocis-blobs",
-      "podmanNetwork": "ocis-network",
+      "dataDir": "/mnt/ocis-data",
       "internalPort": "44082",
       "oidcID": "ocis-web"
     },
