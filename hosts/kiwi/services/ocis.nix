@@ -99,7 +99,12 @@
     enableACME = true;
     forceSSL = true;
     kTLS = true;
-    locations."/".proxyPass = "http://127.0.0.1:${vars.services.ocis.internalPort}";
+    locations."/" = {
+      proxyPass = "http://127.0.0.1:${vars.services.ocis.internalPort}";
+      extraConfig = ''
+        client_max_body_size 0;
+      '';
+    };
   };
 
   sops.secrets."backups/restic/ocis/repositoryPass".owner = config.users.users.colon.name;
