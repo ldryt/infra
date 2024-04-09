@@ -61,31 +61,7 @@
     };
   };
 
-  sops.secrets."backups/restic/ocis/repositoryPass".owner = config.users.users.colon.name;
-  sops.secrets."backups/restic/ocis/sshKey".owner = config.users.users.colon.name;
-  services.restic.backups.ocis = {
-    user = "colon";
+  kiwi.backups.ocis = {
     paths = [ vars.services.ocis.dataDir ];
-    repository = "sftp:${
-      vars.sensitive.backups.user + "@" + vars.sensitive.backups.host
-    }:restic-repo-ocis";
-    extraOptions = [
-      "sftp.command='ssh ${vars.sensitive.backups.user + "@" + vars.sensitive.backups.host} -p 23 -i ${
-        config.sops.secrets."backups/restic/ocis/sshKey".path
-      } -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -s sftp'"
-    ];
-    initialize = true;
-    passwordFile = config.sops.secrets."backups/restic/ocis/repositoryPass".path;
-    pruneOpts = [
-      "--keep-daily 7"
-      "--keep-weekly 8"
-      "--keep-monthly 12"
-      "--keep-yearly 100"
-    ];
-    timerConfig = {
-      OnCalendar = "daily";
-      RandomizedDelaySec = "6h";
-      Persistent = true;
-    };
   };
 }
