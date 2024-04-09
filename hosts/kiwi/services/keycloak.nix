@@ -38,9 +38,8 @@
     };
   };
 
-  sops.secrets."backups/restic/keycloak/repositoryPass" = { };
-  sops.secrets."backups/restic/keycloak/sshKey" = { };
-  services.restic.backups.keycloak = {
+  kiwi.backups.keycloak = {
+    paths = [ vars.services.keycloak.backups.tmpDir ];
     backupPrepareCommand = ''
       ${pkgs.bash}/bin/bash -c '
         if ! mkdir -p "${vars.services.keycloak.backups.tmpDir}"; then
@@ -54,30 +53,8 @@
            --stream=xbstream | ${pkgs.gzip}/bin/gzip > "${vars.services.keycloak.backups.tmpDir}/keycloak-db-dump.sql.gz"
       '
     '';
-    paths = [ vars.services.keycloak.backups.tmpDir ];
-    repository = "sftp:${
-      vars.sensitive.backups.user + "@" + vars.sensitive.backups.host
-    }:restic-repo-keycloak";
-    extraOptions = [
-      "sftp.command='ssh ${vars.sensitive.backups.user + "@" + vars.sensitive.backups.host} -p 23 -i ${
-        config.sops.secrets."backups/restic/keycloak/sshKey".path
-      } -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -s sftp'"
-    ];
-    initialize = true;
-    passwordFile = config.sops.secrets."backups/restic/keycloak/repositoryPass".path;
     backupCleanupCommand = ''
       ${pkgs.bash}/bin/bash -c 'rm -rf "${vars.services.keycloak.backups.tmpDir}"'
     '';
-    pruneOpts = [
-      "--keep-daily 7"
-      "--keep-weekly 8"
-      "--keep-monthly 12"
-      "--keep-yearly 100"
-    ];
-    timerConfig = {
-      OnCalendar = "daily";
-      RandomizedDelaySec = "6h";
-      Persistent = true;
-    };
   };
 }

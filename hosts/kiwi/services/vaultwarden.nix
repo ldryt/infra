@@ -25,11 +25,8 @@
     };
   };
 
-  sops.secrets."backups/restic/vaultwarden/repositoryPass".owner =
-    config.users.users.vaultwarden.name;
-  sops.secrets."backups/restic/vaultwarden/sshKey".owner = config.users.users.vaultwarden.name;
-  services.restic.backups.vaultwarden = {
-    user = config.users.users.vaultwarden.name;
+  kiwi.backups.vaultwarden = {
+    paths = [ vars.services.vaultwarden.backups.tmpDir ];
     # https://github.com/NixOS/nixpkgs/blob/592047fc9e4f7b74a4dc85d1b9f5243dfe4899e3/nixos/modules/services/security/vaultwarden/backup.sh
     backupPrepareCommand = ''
       ${pkgs.bash}/bin/bash -c '
@@ -49,30 +46,8 @@
         cp -r "${vars.services.vaultwarden.dataDir}"/sends "${vars.services.vaultwarden.backups.tmpDir}"
       '
     '';
-    paths = [ vars.services.vaultwarden.backups.tmpDir ];
-    repository = "sftp:${
-      vars.sensitive.backups.user + "@" + vars.sensitive.backups.host
-    }:restic-repo-vaultwarden";
-    extraOptions = [
-      "sftp.command='ssh ${vars.sensitive.backups.user + "@" + vars.sensitive.backups.host} -p 23 -i ${
-        config.sops.secrets."backups/restic/vaultwarden/sshKey".path
-      } -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -s sftp'"
-    ];
-    initialize = true;
-    passwordFile = config.sops.secrets."backups/restic/vaultwarden/repositoryPass".path;
     backupCleanupCommand = ''
       ${pkgs.bash}/bin/bash -c 'rm -rf "${vars.services.vaultwarden.backups.tmpDir}"'
     '';
-    pruneOpts = [
-      "--keep-daily 7"
-      "--keep-weekly 8"
-      "--keep-monthly 12"
-      "--keep-yearly 100"
-    ];
-    timerConfig = {
-      OnCalendar = "daily";
-      RandomizedDelaySec = "6h";
-      Persistent = true;
-    };
   };
 }

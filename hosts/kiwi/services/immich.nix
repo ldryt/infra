@@ -113,10 +113,11 @@
     };
   };
 
-  sops.secrets."backups/restic/immich/repositoryPass".owner = "root";
-  sops.secrets."backups/restic/immich/sshKey".owner = "root";
-  services.restic.backups.immich = {
-    user = "root";
+  kiwi.backups.immich = {
+    paths = [
+      vars.services.immich.backups.tmpDir
+      vars.services.immich.dataDir
+    ];
     backupPrepareCommand = ''
       ${pkgs.bash}/bin/bash -c '
         if ! mkdir -p "${vars.services.immich.backups.tmpDir}"; then
@@ -127,34 +128,9 @@
         ${pkgs.podman}/bin/podman exec -t immich-db pg_dumpall -c -U postgres | ${pkgs.gzip}/bin/gzip > "${vars.services.immich.backups.tmpDir}/immich-db-dump.sql.gz"
       '
     '';
-    paths = [
-      vars.services.immich.backups.tmpDir
-      vars.services.immich.dataDir
-    ];
-    repository = "sftp:${
-      vars.sensitive.backups.user + "@" + vars.sensitive.backups.host
-    }:restic-repo-immich";
-    extraOptions = [
-      "sftp.command='ssh ${vars.sensitive.backups.user + "@" + vars.sensitive.backups.host} -p 23 -i ${
-        config.sops.secrets."backups/restic/immich/sshKey".path
-      } -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -s sftp'"
-    ];
-    initialize = true;
-    passwordFile = config.sops.secrets."backups/restic/immich/repositoryPass".path;
     backupCleanupCommand = ''
       ${pkgs.bash}/bin/bash -c 'rm -rf "${vars.services.immich.backups.tmpDir}"'
     '';
-    pruneOpts = [
-      "--keep-daily 7"
-      "--keep-weekly 8"
-      "--keep-monthly 12"
-      "--keep-yearly 100"
-    ];
-    timerConfig = {
-      OnCalendar = "daily";
-      RandomizedDelaySec = "6h";
-      Persistent = true;
-    };
   };
 
   environment.etc."immich/config.json".text = ''
