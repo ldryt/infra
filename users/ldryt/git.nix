@@ -6,6 +6,12 @@
   programs.git = {
     enable = true;
     userName = "${vars.sensitive.users.ldryt.name} ${vars.sensitive.users.ldryt.surname}";
-    userEmail = vars.sensitive.users.ldryt.email;
+    userEmail = "git@ldryt.anonaddy.me";
+    includes = [
+      {
+        contents.user.email = vars.sensitive.users.ldryt.work.email;
+        condition = "hasconfig:remote.*.url:*@${vars.sensitive.users.ldryt.work.gitUrl}:**/**";
+      }
+    ];
   };
 }
