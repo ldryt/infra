@@ -210,9 +210,9 @@
         "facialRecognition": {
           "enabled": true,
           "modelName": "buffalo_l",
-          "minScore": 0.8,
+          "minScore": 0.7,
           "maxDistance": 0.5,
-          "minFaces": 7
+          "minFaces": 3
         }
       },
       "map": {
