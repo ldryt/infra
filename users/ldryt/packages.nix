@@ -16,5 +16,6 @@
     discord
     prismlauncher
     owncloud-client
+    beeper
   ];
 }
