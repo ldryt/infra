@@ -14,6 +14,7 @@
     ./services/vaultwarden.nix
     ./services/immich.nix
     ./services/keycloak.nix
+    ./services/frontpage.nix
 
     ../../modules/fail2ban.nix
     ../../modules/openssh.nix
