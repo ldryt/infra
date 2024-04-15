@@ -14,8 +14,8 @@ in
     autoStart = false; # start it when needed with `sudo systemctl start podman-windows.service`
     environment = {
       VERSION = winVersion;
-      RAM_SIZE = "4G";
-      CPU_CORES = "4";
+      RAM_SIZE = "6G";
+      CPU_CORES = "6";
       DISK_SIZE = "200G";
     };
     ports = [
