@@ -32,5 +32,5 @@ in
     ];
     volumes = [ "${dataDir}:/storage" ];
   };
-  systemd.tmpfiles.rules = [ "d '${dataDir}' 0700 root root - -" ];
+  systemd.tmpfiles.rules = [ "d '${dataDir}' 0755 root root - -" ];
 }
