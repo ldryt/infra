@@ -4,7 +4,7 @@
 # WEB access: http://127.0.0.1:8006/
 { ... }:
 let
-  winVersion = "tiny11";
+  winVersion = "ltsc10";
   dataDir = "/var/lib/windows-dockur/${winVersion}";
 in
 {
