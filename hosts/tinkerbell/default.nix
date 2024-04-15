@@ -95,6 +95,8 @@
   console.keyMap = "fr";
   services.xserver.xkb.layout = "fr";
 
+  virtualisation.virtualbox.host.enable = true;
+
   sops.secrets."users/ldryt/hashedPassword".neededForUsers = true;
   users = {
     mutableUsers = false;
@@ -103,6 +105,7 @@
       extraGroups = [
         "wheel"
         "networkmanager"
+        "vboxusers"
       ];
       hashedPasswordFile = config.sops.secrets."users/ldryt/hashedPassword".path;
     };
