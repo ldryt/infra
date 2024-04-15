@@ -141,7 +141,6 @@
     gnome-music
     pkgs.gnome-photos
     gnome-system-monitor
-    pkgs.gnome-connections
     pkgs.gnome-tour
   ];
 
