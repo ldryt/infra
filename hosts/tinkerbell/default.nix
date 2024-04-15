@@ -6,7 +6,10 @@
   ...
 }:
 {
-  imports = [ ./hardware.nix ];
+  imports = [
+    ./hardware.nix
+    ../../modules/podman.nix
+  ];
 
   sops.defaultSopsFile = ./secrets.yaml;
   sops.age.keyFile = "/var/lib/sops/sops_age_tinkerbell.key";
