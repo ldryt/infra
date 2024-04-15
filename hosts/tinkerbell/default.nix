@@ -8,7 +8,10 @@
 {
   imports = [
     ./hardware.nix
+
     ../../modules/podman.nix
+
+    ./services/windows-dockur.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
