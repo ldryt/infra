@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 {
   virtualisation = {
     podman = {
@@ -18,4 +18,9 @@
 
   # https://github.com/NixOS/nixpkgs/issues/226365
   networking.firewall.interfaces."podman+".allowedUDPPorts = [ 53 ];
+
+  environment.systemPackages = with pkgs; [
+    podman-compose
+    podman-tui
+  ];
 }
