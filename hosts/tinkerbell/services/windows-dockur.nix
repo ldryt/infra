@@ -28,7 +28,7 @@ in
       "--device=/dev/net/tun"
       "--cap-add=NET_ADMIN"
       "--cap-add=NET_RAW"
-      "--timeout=500"
+      "--stop-timeout=120"
     ];
     volumes = [ "${dataDir}:/storage" ];
   };
