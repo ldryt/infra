@@ -8,6 +8,7 @@
     ./gnome.nix
     ./firefox.nix
     ./thunderbird.nix
+    ./aliases.nix
   ];
 
   programs.home-manager.enable = true;
