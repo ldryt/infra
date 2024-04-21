@@ -15,6 +15,7 @@
     ./services/immich.nix
     ./services/keycloak.nix
     ./services/frontpage.nix
+    ./services/shlink.nix
 
     ../../modules/fail2ban.nix
     ../../modules/openssh.nix

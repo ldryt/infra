@@ -23,6 +23,14 @@
         "tmpDir": "/tmp/keycloak_backup"
       }
     },
+    "shlink": {
+      "subfolder": "link",
+      "podmanNetwork": "shlink-network",
+      "internalPort": "44086",
+      "backups": {
+        "tmpDir": "/tmp/shlink_backup"
+      }
+    },
     "immich": {
       "subdomain": "pics",
       "dataDir": "/mnt/immich-library",
