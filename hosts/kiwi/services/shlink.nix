@@ -26,7 +26,6 @@
       hostname = "shlink-server";
       image = "ghcr.io/shlinkio/shlink:4.1@sha256:7a43d41029ea879234359f0a30a59efaa8ede35a3d94e73fbad84845f5927c74";
       environment = {
-        SHELL_VERBOSITY = "3";
         DEFAULT_DOMAIN = vars.zone;
         IS_HTTPS_ENABLED = "true";
         BASE_PATH = "/${vars.services.shlink.subfolder}";
