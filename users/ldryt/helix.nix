@@ -37,7 +37,7 @@
 
         # Python
         black
-        python-lsp-server
+        pyright
 
         # YAML
         yaml-language-server
@@ -112,6 +112,7 @@
         }
         {
           name = "python";
+          language-servers = [ "pyright" ];
           formatter = {
             command = "black";
             args = [
