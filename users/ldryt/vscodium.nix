@@ -29,6 +29,7 @@
     userSettings = {
       "git.confirmSync" = false;
       "workbench.colorTheme" = "Gruvbox Dark Medium";
+      "vim.useSystemClipboard" = true;
     };
   };
 }
