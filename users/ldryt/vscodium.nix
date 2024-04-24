@@ -1,6 +1,10 @@
 { pkgs, ... }:
 {
   home.sessionVariables."NIXOS_OZONE_WL" = "1";
+  home.packages = with pkgs; [
+    nil
+    nixfmt-rfc-style
+  ];
 
   programs.vscode = {
     enable = true;
@@ -12,6 +16,9 @@
 
       # VSCode Theme
       jdinhlife.gruvbox
+
+      # Nix support
+      jnoortheen.nix-ide
 
       # MD support
       yzhang.markdown-all-in-one
@@ -31,6 +38,9 @@
       "workbench.colorTheme" = "Gruvbox Dark Hard";
       "vim.useSystemClipboard" = true;
       "window.zoomLevel" = 1;
+      "nix.formatterPath" = "nixfmt";
+      "nix.enableLanguageServer" = true;
+      "nix.serverPath" = "nil";
     };
   };
 }
