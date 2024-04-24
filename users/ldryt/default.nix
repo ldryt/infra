@@ -9,6 +9,7 @@
     ./firefox.nix
     ./thunderbird.nix
     ./aliases.nix
+    ./vscodium.nix
   ];
 
   programs.home-manager.enable = true;

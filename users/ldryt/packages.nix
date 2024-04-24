@@ -10,6 +10,7 @@
     ripgrep
     git-crypt
     wl-clipboard
+    direnv
 
     # gui programs
     libreoffice
