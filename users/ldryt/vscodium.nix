@@ -30,6 +30,7 @@
       "git.confirmSync" = false;
       "workbench.colorTheme" = "Gruvbox Dark Medium";
       "vim.useSystemClipboard" = true;
+      "window.zoomLevel" = 1;
     };
   };
 }
