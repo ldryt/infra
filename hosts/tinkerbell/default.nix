@@ -84,8 +84,7 @@
     [system_default_sect]
     CipherString = Default:@SECLEVEL=0
   '';
-
-  time.timeZone = "Europe/Vilnius";
+  time.timeZone = lib.mkForce null; # allow TZ to be set by user
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
     LC_TIME = "fr_FR.UTF-8";
