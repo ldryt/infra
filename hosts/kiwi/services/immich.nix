@@ -23,7 +23,7 @@
   virtualisation.oci-containers.containers = {
     "immich-server" = {
       hostname = "immich-server";
-      image = "ghcr.io/immich-app/immich-server:v1.102.3@sha256:eee0681397fa004c304a1d26c9a87e4691ea360366bce438f96efefb9fba1b83";
+      image = "ghcr.io/immich-app/immich-server:v1.103.1@sha256:61d7054ad63c415e1eb93c69ec044b9de8714d7d2c23cd3f9e29c0b6850a0036";
       cmd = [
         "start.sh"
         "immich"
@@ -68,7 +68,7 @@
     };
     "immich-machine-learning" = {
       hostname = "immich-machine-learning";
-      image = "ghcr.io/immich-app/immich-machine-learning:v1.102.3@sha256:aed99e2e206b4ad214c351edd94d10b23a640b62e8c2a1cdb07dd5c8343b81c3";
+      image = "ghcr.io/immich-app/immich-machine-learning:v1.103.1@sha256:bc88183787c3cda42521e0843e2be80863e0975c0a7236e3573f2688b93f5596";
       volumes = [ "immich-ml-cache:/cache" ];
       extraOptions = [ "--network=${vars.services.immich.podmanNetwork}" ];
     };
