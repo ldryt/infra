@@ -8,7 +8,6 @@
     ./gnome.nix
     ./firefox.nix
     ./thunderbird.nix
-    ./aliases.nix
     ./vscodium.nix
   ];
 
