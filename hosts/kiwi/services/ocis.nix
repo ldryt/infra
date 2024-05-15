@@ -9,7 +9,7 @@
 
   virtualisation.oci-containers.containers = {
     "ocis" = {
-      image = "docker.io/owncloud/ocis:5.0.2-linux-arm64@sha256:041ea2d42f3d480370258cbd19911cec81be46496231259449dfe32fdac3d76b";
+      image = "docker.io/owncloud/ocis:5.0.4-linux-arm64@sha256:171e04e04ca5f2cf076008a6fbeda6a625ef9ed5106ff8a329b973b4303bac98";
       entrypoint = "/bin/sh";
       cmd = [
         "-c"
