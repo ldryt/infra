@@ -28,15 +28,10 @@
           default = pkgs.mkShell {
             buildInputs =
               with pkgs;
-              with pulumiPackages;
               [
-                pulumi
-                pulumi-language-nodejs
-                nodejs
                 sops
               ];
             shellHook = ''
-              export PULUMI_SKIP_UPDATE_CHECK=true
               export SOPS_AGE_KEY_FILE=~/.keyring/sops_age_ldryt.key
             '';
           };
