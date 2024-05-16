@@ -11,7 +11,7 @@
     package = pkgs.vscodium;
     extensions = with pkgs.vscode-extensions; [
       # VSCode utilities
-      vscodevim.vim
+      # vscodevim.vim
       mkhl.direnv
 
       # VSCode Theme
