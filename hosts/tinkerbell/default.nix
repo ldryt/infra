@@ -101,6 +101,21 @@
   services.xserver.xkb.layout = "fr";
 
   virtualisation.virtualbox.host.enable = true;
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu = {
+      package = pkgs.qemu_kvm;
+      runAsRoot = true;
+      swtpm.enable = true;
+      ovmf = {
+        enable = true;
+        packages = [(pkgs.OVMF.override {
+          secureBoot = true;
+          tpmSupport = true;
+        }).fd];
+      };
+    };
+  };
 
   sops.secrets."users/ldryt/hashedPassword".neededForUsers = true;
   users = {
@@ -111,6 +126,7 @@
         "wheel"
         "networkmanager"
         "vboxusers"
+        "libvirtd"
       ];
       hashedPasswordFile = config.sops.secrets."users/ldryt/hashedPassword".path;
     };
