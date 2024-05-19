@@ -35,8 +35,6 @@
       "system/locale" = {
         region = "fr_FR.UTF-8";
       };
-      "org/gnome/desktop/datetime" = { automatic-timezone = true; };
-      "org/gnome/system/location" = { enabled = true; };
       "org/gnome/settings-daemon/plugins/power" = {
         power-button-action = "hibernate";
       };
