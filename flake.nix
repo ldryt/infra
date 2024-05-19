@@ -22,15 +22,17 @@
     {
       devShells.x86_64-linux =
         let
-          pkgs = import nixpkgs { system = "x86_64-linux"; };
+          pkgs = import nixpkgs {
+            config.allowUnfree = true;
+            system = "x86_64-linux";
+          };
         in
         {
           default = pkgs.mkShell {
-            buildInputs =
-              with pkgs;
-              [
-                sops
-              ];
+            buildInputs = with pkgs; [
+              sops
+              terraform
+            ];
             shellHook = ''
               export SOPS_AGE_KEY_FILE=~/.keyring/sops_age_ldryt.key
             '';
