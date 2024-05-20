@@ -82,6 +82,11 @@
         {
           name = "latex";
           auto-format = true;
+          auto-pairs = {
+            "(" = ")";
+            "`" = "'";
+            "{" = "}";
+          };
         }
         {
           name = "rust";
