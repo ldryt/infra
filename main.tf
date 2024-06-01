@@ -83,11 +83,11 @@ module "deploy" {
   install_user       = "root"
   deployment_ssh_key = "~/.keyring/ssh_kiwi_colon.key"
 
-  extra_files_script = "${path.module}/decrypt-ssh-secrets.sh"
-  disk_encryption_key_scripts = [{
-    path   = "/tmp/secret.key"
-    script = "${path.module}/decrypt-zfs-key.sh"
-  }]
+  extra_files_script = "${path.module}/terraform-deploy-keys.sh"
+  extra_environment = {
+    "SERVER_NAME"  = hcloud_server.kiwi_server.name
+    "KEYRING_PATH" = "~/.keyring"
+  }
 
   # debug_logging          = true
 }
