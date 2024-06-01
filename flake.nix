@@ -82,6 +82,7 @@
             modules = [
               ./hosts/kiwi
               sops-nix.nixosModules.sops
+              disko.nixosModules.disko
             ];
           };
         ernos =

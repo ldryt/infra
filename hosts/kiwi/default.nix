@@ -8,6 +8,7 @@
   imports = [
     ./hardware.nix
     ./backups.nix
+    ./disko.nix
 
     ./services/nginx.nix
     ./services/ocis.nix
