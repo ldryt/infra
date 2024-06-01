@@ -7,9 +7,6 @@
 
     sops-nix.url = "github:mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
-
-    disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs";
   };
   outputs =
     {
@@ -81,24 +78,6 @@
             system = "aarch64-linux";
             modules = [
               ./hosts/kiwi
-              sops-nix.nixosModules.sops
-              disko.nixosModules.disko
-            ];
-          };
-        ernos =
-          let
-            vars =
-              (builtins.fromJSON (builtins.readFile ./hosts/ernos/vars.json))
-              // (builtins.fromJSON (builtins.readFile ./hosts/ernos/vars.gitcrypt.json));
-          in
-          nixpkgs.lib.nixosSystem {
-            specialArgs = {
-              inherit inputs;
-              inherit vars;
-            };
-            system = "x86_64-linux";
-            modules = [
-              ./hosts/ernos
               sops-nix.nixosModules.sops
               disko.nixosModules.disko
             ];
