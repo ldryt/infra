@@ -32,6 +32,7 @@
             buildInputs = with pkgs; [
               sops
               terraform
+              jq
             ];
             shellHook = ''
               export SOPS_AGE_KEY_FILE=~/.keyring/sops_age_ldryt.key
