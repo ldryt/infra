@@ -77,7 +77,7 @@ module "deploy" {
   nixos_system_attr      = ".#nixosConfigurations.${hcloud_server.kiwi_server.name}.config.system.build.toplevel"
   nixos_partitioner_attr = ".#nixosConfigurations.${hcloud_server.kiwi_server.name}.config.system.build.diskoScript"
 
-  instance_id        = hcloud_primary_ip.kiwi_ipv4.id
+  instance_id        = hcloud_server.kiwi_server.id
   target_host        = hcloud_primary_ip.kiwi_ipv4.ip_address
   target_user        = "colon"
   install_user       = "root"
