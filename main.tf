@@ -78,7 +78,7 @@ module "deploy" {
   nixos_partitioner_attr = ".#nixosConfigurations.${hcloud_server.kiwi_server.name}.config.system.build.diskoScript"
 
   instance_id        = hcloud_primary_ip.kiwi_ipv4.id
-  target_host        = hcloud_primary_ip.kiwi_ipv4.id
+  target_host        = hcloud_primary_ip.kiwi_ipv4.ip_address
   target_user        = "colon"
   install_user       = "root"
   deployment_ssh_key = "/home/ldryt/.keyring/ssh_kiwi_colon.key"
