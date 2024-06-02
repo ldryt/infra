@@ -81,7 +81,7 @@ module "deploy" {
   target_host        = hcloud_primary_ip.kiwi_ipv4.ip_address
   target_user        = "colon"
   install_user       = "root"
-  deployment_ssh_key = "/home/ldryt/.keyring/ssh_kiwi_colon.key"
+  deployment_ssh_key = file("/home/ldryt/.keyring/ssh_kiwi_colon.key")
 
   extra_files_script = "${path.module}/terraform-deploy-keys.sh"
   extra_environment = {
