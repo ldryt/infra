@@ -81,12 +81,12 @@ module "deploy" {
   target_host        = hcloud_primary_ip.kiwi_ipv4.id
   target_user        = "colon"
   install_user       = "root"
-  deployment_ssh_key = "~/.keyring/ssh_kiwi_colon.key"
+  deployment_ssh_key = "/home/ldryt/.keyring/ssh_kiwi_colon.key"
 
   extra_files_script = "${path.module}/terraform-deploy-keys.sh"
   extra_environment = {
     "SERVER_NAME"  = hcloud_server.kiwi_server.name
-    "KEYRING_PATH" = "~/.keyring"
+    "KEYRING_PATH" = "/home/ldryt/.keyring"
   }
 
   # debug_logging          = true
