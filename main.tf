@@ -1,4 +1,10 @@
 terraform {
+  cloud {
+    organization = "ldryt-infra"
+    workspaces {
+      name = "main"
+    }
+  }
   required_providers {
     hcloud = {
       source  = "hetznercloud/hcloud"
