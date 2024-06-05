@@ -1,3 +1,7 @@
+locals {
+  keyring_path = "/home/ldryt/.keyring"
+}
+
 resource "hcloud_firewall" "kiwi_firewall" {
   labels = {
     "kiwi" : true
@@ -52,7 +56,7 @@ resource "hcloud_ssh_key" "kiwi_ssh_key" {
     "kiwi" : true
   }
   name       = "kiwi_ssh_key"
-  public_key = file("~/.keyring/ssh_kiwi_colon.pub")
+  public_key = file("${local.keyring_path}/ssh_kiwi_colon.pub")
 }
 
 resource "hcloud_server" "kiwi_server" {
@@ -81,13 +85,13 @@ module "deploy" {
   target_host        = hcloud_primary_ip.kiwi_ipv4.ip_address
   target_user        = "colon"
   install_user       = "root"
-  install_ssh_key    = file("/home/ldryt/.keyring/ssh_kiwi_colon.key")
-  deployment_ssh_key = file("/home/ldryt/.keyring/ssh_kiwi_colon.key")
+  install_ssh_key    = file("${local.keyring_path}/ssh_kiwi_colon.key")
+  deployment_ssh_key = file("${local.keyring_path}/ssh_kiwi_colon.key")
 
   extra_files_script = "${path.module}/terraform-deploy-keys.sh"
   extra_environment = {
     "SERVER_NAME"  = hcloud_server.kiwi_server.name
-    "KEYRING_PATH" = "/home/ldryt/.keyring"
+    "KEYRING_PATH" = local.keyring_path
   }
 
   # debug_logging          = true
