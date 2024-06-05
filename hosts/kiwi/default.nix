@@ -25,7 +25,7 @@
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
-  sops.age.keyFile = "/var/lib/sops/sops_age_kiwi.key";
+  sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
   nix = {
     registry.nixpkgs.flake = inputs.nixpkgs;

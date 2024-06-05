@@ -10,6 +10,10 @@ terraform {
       source  = "hetznercloud/hcloud"
       version = "~>1.47.0"
     }
+    sops = {
+      source  = "carlpett/sops"
+      version = "~>1.0.0"
+    }
   }
 }
 
@@ -21,8 +25,10 @@ provider "hcloud" {
   token = var.hcloud_token
 }
 
-locals {
-  keyring_path = "/home/ldryt/.keyring"
+provider "sops" {}
+
+data "sops_file" "kiwi_secrets" {
+  source_file = "hosts/kiwi/secrets.yaml"
 }
 
 resource "hcloud_firewall" "kiwi_firewall" {
@@ -79,7 +85,7 @@ resource "hcloud_ssh_key" "kiwi_ssh_key" {
     "kiwi" : true
   }
   name       = "kiwi_ssh_key"
-  public_key = file("${local.keyring_path}/ssh_kiwi_colon.pub")
+  public_key = data.sops_file.kiwi_secrets.data["users.colon.sshPubKey"]
 }
 
 resource "hcloud_server" "kiwi_server" {
@@ -108,13 +114,12 @@ module "deploy" {
   target_host        = hcloud_primary_ip.kiwi_ipv4.ip_address
   target_user        = "colon"
   install_user       = "root"
-  install_ssh_key    = file("${local.keyring_path}/ssh_kiwi_colon.key")
-  deployment_ssh_key = file("${local.keyring_path}/ssh_kiwi_colon.key")
+  install_ssh_key    = nonsensitive(data.sops_file.kiwi_secrets.data["users.colon.sshKey"])
+  deployment_ssh_key = nonsensitive(data.sops_file.kiwi_secrets.data["users.colon.sshKey"])
 
   extra_files_script = "${path.module}/terraform-deploy-keys.sh"
   extra_environment = {
-    "SERVER_NAME"  = hcloud_server.kiwi_server.name
-    "KEYRING_PATH" = local.keyring_path
+    "SERVER_NAME" = hcloud_server.kiwi_server.name
   }
 
   # debug_logging          = true
