@@ -1,3 +1,7 @@
+locals {
+  keyring_path = "/home/ldryt/.keyring"
+}
+
 resource "hcloud_firewall" "kiwi_firewall" {
   labels = {
     "kiwi" : true
@@ -52,7 +56,7 @@ resource "hcloud_ssh_key" "kiwi_ssh_key" {
     "kiwi" : true
   }
   name       = "kiwi_ssh_key"
-  public_key = file("~/.keyring/ssh_kiwi_colon.pub")
+  public_key = file("${local.keyring_path}/ssh_kiwi_colon.pub")
 }
 
 resource "hcloud_server" "kiwi_server" {
@@ -60,7 +64,7 @@ resource "hcloud_server" "kiwi_server" {
     "kiwi" = true
   }
   name         = "kiwi"
-  image        = "debian12"
+  image        = "debian-12"
   server_type  = "cax11"
   datacenter   = "fsn1-dc14"
   firewall_ids = [hcloud_firewall.kiwi_firewall.id]
@@ -77,17 +81,18 @@ module "deploy" {
   nixos_system_attr      = ".#nixosConfigurations.${hcloud_server.kiwi_server.name}.config.system.build.toplevel"
   nixos_partitioner_attr = ".#nixosConfigurations.${hcloud_server.kiwi_server.name}.config.system.build.diskoScript"
 
-  instance_id        = hcloud_primary_ip.kiwi_ipv4.id
-  target_host        = hcloud_primary_ip.kiwi_ipv4.id
+  instance_id        = hcloud_server.kiwi_server.id
+  target_host        = hcloud_primary_ip.kiwi_ipv4.ip_address
   target_user        = "colon"
   install_user       = "root"
-  deployment_ssh_key = "~/.keyring/ssh_kiwi_colon.key"
+  install_ssh_key    = file("${local.keyring_path}/ssh_kiwi_colon.key")
+  deployment_ssh_key = file("${local.keyring_path}/ssh_kiwi_colon.key")
 
-  extra_files_script = "${path.module}/decrypt-ssh-secrets.sh"
-  disk_encryption_key_scripts = [{
-    path   = "/tmp/secret.key"
-    script = "${path.module}/decrypt-zfs-key.sh"
-  }]
+  extra_files_script = "${path.module}/terraform-deploy-keys.sh"
+  extra_environment = {
+    "SERVER_NAME"  = hcloud_server.kiwi_server.name
+    "KEYRING_PATH" = local.keyring_path
+  }
 
   # debug_logging          = true
 }

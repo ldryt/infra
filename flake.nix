@@ -32,6 +32,7 @@
             buildInputs = with pkgs; [
               sops
               terraform
+              jq
             ];
             shellHook = ''
               export SOPS_AGE_KEY_FILE=~/.keyring/sops_age_ldryt.key
@@ -81,6 +82,7 @@
             modules = [
               ./hosts/kiwi
               sops-nix.nixosModules.sops
+              disko.nixosModules.disko
             ];
           };
         ernos =
