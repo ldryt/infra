@@ -50,7 +50,7 @@
         ${pkgs.mariadb}/bin/mariabackup --backup --user=root --password=$(cat ${
           config.sops.secrets."services/keycloak/db/password".path
         }) \
-           --stream=xbstream | ${pkgs.gzip}/bin/gzip > "${vars.services.keycloak.backups.tmpDir}/keycloak-db-dump.sql.gz"
+           --stream=xbstream | ${pkgs.gzip}/bin/gzip > "${vars.services.keycloak.backups.tmpDir}/keycloak-db.mbstream.gz"
       '
     '';
     backupCleanupCommand = ''
