@@ -17,7 +17,6 @@
     ./services/keycloak.nix
     ./services/frontpage.nix
     ./services/shlink.nix
-    ./services/mc.nix
 
     ../../modules/fail2ban.nix
     ../../modules/openssh.nix
