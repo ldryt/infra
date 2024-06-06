@@ -116,7 +116,7 @@
     };
   };
 
-  kiwi.backups.immich = {
+  silvermist.backups.immich = {
     paths = [
       vars.services.immich.backups.tmpDir
       vars.services.immich.dataDir

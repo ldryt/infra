@@ -7,10 +7,10 @@
 with lib;
 
 let
-  cfg = config.kiwi.backups;
+  cfg = config.silvermist.backups;
 in
 {
-  options.kiwi.backups = mkOption {
+  options.silvermist.backups = mkOption {
     type = types.attrsOf (
       types.submodule (
         { config, name, ... }:

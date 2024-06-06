@@ -62,7 +62,7 @@
     locations."/${vars.services.shlink.subfolder}".proxyPass = "http://127.0.0.1:${vars.services.shlink.internalPort}";
   };
 
-  kiwi.backups.shlink = {
+  silvermist.backups.shlink = {
     paths = [ vars.services.shlink.backups.tmpDir ];
     backupPrepareCommand = ''
       ${pkgs.bash}/bin/bash -c '

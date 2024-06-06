@@ -58,7 +58,7 @@
 
   time.timeZone = "Etc/UTC";
   networking = {
-    hostName = "kiwi";
+    hostName = "silvermist";
     useDHCP = false;
     interfaces."eth0".useDHCP = true;
     firewall.allowedTCPPorts = [

@@ -64,11 +64,11 @@
               }
             ];
           };
-        kiwi =
+        silvermist =
           let
             vars =
-              (builtins.fromJSON (builtins.readFile ./hosts/kiwi/vars.json))
-              // (builtins.fromJSON (builtins.readFile ./hosts/kiwi/vars.gitcrypt.json));
+              (builtins.fromJSON (builtins.readFile ./hosts/silvermist/vars.json))
+              // (builtins.fromJSON (builtins.readFile ./hosts/silvermist/vars.gitcrypt.json));
           in
           nixpkgs.lib.nixosSystem {
             specialArgs = {
@@ -77,7 +77,7 @@
             };
             system = "x86_64-linux";
             modules = [
-              ./hosts/kiwi
+              ./hosts/silvermist
               sops-nix.nixosModules.sops
               disko.nixosModules.disko
             ];

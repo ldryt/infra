@@ -61,7 +61,7 @@
     };
   };
 
-  kiwi.backups.ocis = {
+  silvermist.backups.ocis = {
     paths = [ vars.services.ocis.dataDir ];
   };
 }

@@ -38,7 +38,7 @@
     };
   };
 
-  kiwi.backups.keycloak = {
+  silvermist.backups.keycloak = {
     paths = [ vars.services.keycloak.backups.tmpDir ];
     backupPrepareCommand = ''
       ${pkgs.bash}/bin/bash -c '
