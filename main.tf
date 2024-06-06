@@ -14,6 +14,10 @@ terraform {
       source  = "carlpett/sops"
       version = "~>1.0.0"
     }
+    gandi = {
+      version = "~>2.3.0"
+      source  = "go-gandi/gandi"
+    }
   }
 }
 
@@ -29,6 +33,14 @@ provider "sops" {}
 
 data "sops_file" "kiwi_secrets" {
   source_file = "hosts/kiwi/secrets.yaml"
+}
+
+variable "gandi_token" {
+  sensitive = true
+}
+
+provider "gandi" {
+  personal_access_token = var.gandi_token
 }
 
 resource "hcloud_firewall" "kiwi_firewall" {
@@ -123,4 +135,28 @@ module "deploy" {
   }
 
   # debug_logging          = true
+}
+
+variable "subdomains" {
+  description = "List of subdomains"
+  type        = list(string)
+  default     = ["auth", "files", "mc", "pass", "pics"]
+}
+
+resource "gandi_livedns_record" "kiwi_A_record" {
+  name   = "kiwi"
+  zone   = "ldryt.dev"
+  type   = "A"
+  values = [hcloud_primary_ip.kiwi_ipv4.ip_address]
+  ttl    = 86400
+}
+
+resource "gandi_livedns_record" "kiwi_subdomains" {
+  for_each = toset(var.subdomains)
+
+  name   = each.key
+  zone   = "ldryt.dev"
+  type   = "CNAME"
+  values = ["kiwi"]
+  ttl    = 86400
 }
