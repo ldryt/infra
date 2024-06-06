@@ -13,14 +13,4 @@
     "xen_blkfront"
   ];
   boot.initrd.kernelModules = [ "nvme" ];
-  zramSwap = {
-    enable = true;
-    memoryPercent = 20;
-  };
-  swapDevices = [
-    {
-      device = "/var/lib/swapfile";
-      size = 8 * 1024;
-    }
-  ];
 }
