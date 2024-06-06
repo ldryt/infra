@@ -23,7 +23,7 @@
   virtualisation.oci-containers.containers = {
     "immich-server" = {
       hostname = "immich-server";
-      image = "ghcr.io/immich-app/immich-server:v1.105.1@sha256:0a3df3c14e563d8cf44b12e64fa5a2cc3ae89eba23481d74d7422ce2e60ac219";
+      image = "ghcr.io/immich-app/immich-server:v1.105.1@sha256:9ab0f8213abcb1ed622da2442ef112cb3bd544954b8127bac7d3609a11f57886"; # https://github.com/immich-app/immich/pkgs/container/immich-server/216222331?tag=v1.105.1
       cmd = [
         "start.sh"
         "immich"
@@ -68,7 +68,7 @@
     };
     "immich-machine-learning" = {
       hostname = "immich-machine-learning";
-      image = "ghcr.io/immich-app/immich-machine-learning:v1.105.1@sha256:6dcf46e66b123deb43f60d7ceb6d551867ef579515133f65ca76d4f197eaa392";
+      image = "ghcr.io/immich-app/immich-machine-learning:v1.105.1@sha256:d9302b9f4c71bd1b070346e3020a6fcfba2c7ec394a62d7e04200b94003b0845"; # https://github.com/immich-app/immich/pkgs/container/immich-machine-learning/216222274?tag=v1.105.1
       volumes = [ "immich-ml-cache:/cache" ];
       extraOptions = [ "--network=${vars.services.immich.podmanNetwork}" ];
     };
@@ -86,7 +86,7 @@
     };
     "immich-redis" = {
       hostname = "immich-redis";
-      image = "docker.io/library/redis:6.2-alpine@sha256:afb290a0a0d0b2bd7537b62ebff1eb84d045c757c1c31ca2ca48c79536c0de82";
+      image = "docker.io/library/redis:6.2-alpine@sha256:84882e87b54734154586e5f8abd4dce69fe7311315e2fc6d67c29614c8de2672";
       extraOptions = [ "--network=${vars.services.immich.podmanNetwork}" ];
     };
   };

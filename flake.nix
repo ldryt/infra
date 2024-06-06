@@ -75,7 +75,7 @@
               inherit inputs;
               inherit vars;
             };
-            system = "aarch64-linux";
+            system = "x86_64-linux";
             modules = [
               ./hosts/kiwi
               sops-nix.nixosModules.sops

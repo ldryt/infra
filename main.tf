@@ -106,7 +106,7 @@ resource "hcloud_server" "kiwi_server" {
   }
   name         = "kiwi"
   image        = "debian-12"
-  server_type  = "cax11"
+  server_type  = "cx22"
   datacenter   = "fsn1-dc14"
   firewall_ids = [hcloud_firewall.kiwi_firewall.id]
   ssh_keys     = [hcloud_ssh_key.kiwi_ssh_key.id]

@@ -1,7 +1,6 @@
 { modulesPath, ... }:
 {
   imports = [ (modulesPath + "/profiles/qemu-guest.nix") ];
-  nixpkgs.system = "aarch64-linux";
   boot.loader.grub = {
     efiSupport = true;
     efiInstallAsRemovable = true;
