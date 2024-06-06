@@ -60,7 +60,7 @@ in
         ];
         timerConfig = {
           OnCalendar = "daily";
-          RandomizedDelaySec = "6h";
+          RandomizedDelaySec = "2h";
           Persistent = true;
         };
       }
