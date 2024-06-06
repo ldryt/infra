@@ -160,3 +160,11 @@ resource "gandi_livedns_record" "kiwi_subdomains" {
   values = ["kiwi"]
   ttl    = 86400
 }
+
+resource "gandi_livedns_record" "root_A_record" {
+  name   = "@"
+  zone   = "ldryt.dev"
+  type   = "A"
+  values = [hcloud_primary_ip.kiwi_ipv4.ip_address]
+  ttl    = 86400
+}
