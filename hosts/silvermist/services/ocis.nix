@@ -61,7 +61,7 @@
     };
   };
 
-  silvermist.backups.ocis = {
+  ldryt-infra.backups.ocis = {
     paths = [ vars.services.ocis.dataDir ];
   };
 }

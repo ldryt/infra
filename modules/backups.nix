@@ -7,10 +7,10 @@
 with lib;
 
 let
-  cfg = config.silvermist.backups;
+  cfg = config.ldryt-infra.backups;
 in
 {
-  options.silvermist.backups = mkOption {
+  options.ldryt-infra.backups = mkOption {
     type = types.attrsOf (
       types.submodule (
         { config, name, ... }:

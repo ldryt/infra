@@ -6,7 +6,6 @@
 }:
 {
   imports = [
-    ./backups.nix
     ./disk-config.nix
 
     ./services/nginx.nix
@@ -21,6 +20,7 @@
     ../../modules/openssh.nix
     ../../modules/podman.nix
     ../../modules/nix-settings.nix
+    ../../modules/backups.nix
 
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")

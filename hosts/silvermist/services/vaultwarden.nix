@@ -25,7 +25,7 @@
     };
   };
 
-  silvermist.backups.vaultwarden = {
+  ldryt-infra.backups.vaultwarden = {
     paths = [ vars.services.vaultwarden.backups.tmpDir ];
     # https://github.com/NixOS/nixpkgs/blob/592047fc9e4f7b74a4dc85d1b9f5243dfe4899e3/nixos/modules/services/security/vaultwarden/backup.sh
     backupPrepareCommand = ''

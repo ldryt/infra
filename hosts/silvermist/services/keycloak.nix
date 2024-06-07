@@ -38,7 +38,7 @@
     };
   };
 
-  silvermist.backups.keycloak = {
+  ldryt-infra.backups.keycloak = {
     paths = [ vars.services.keycloak.backups.tmpDir ];
     backupPrepareCommand = ''
       ${pkgs.bash}/bin/bash -c '
