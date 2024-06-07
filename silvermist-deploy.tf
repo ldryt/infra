@@ -1,4 +1,4 @@
-module "deploy" {
+module "silvermist-deploy" {
   source                 = "github.com/nix-community/nixos-anywhere?ref=1.2.0//terraform/all-in-one"
   nixos_system_attr      = ".#nixosConfigurations.${hcloud_server.silvermist_server.name}.config.system.build.toplevel"
   nixos_partitioner_attr = ".#nixosConfigurations.${hcloud_server.silvermist_server.name}.config.system.build.diskoScript"
