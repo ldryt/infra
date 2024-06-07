@@ -32,4 +32,8 @@ in
   };
   networking.firewall.allowedUDPPorts = [ 24454 ];
   systemd.services.minecraft-server.serviceConfig.RestartSec = "10s";
+
+  ldryt-infra.backups.mc = {
+    paths = [ config.services.minecraft-server.dataDir ];
+  };
 }
