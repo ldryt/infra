@@ -5,6 +5,11 @@
     defaults.email = vars.sensitive.services.acme.email;
   };
 
+  networking.firewall.allowedTCPPorts = [
+    80
+    443
+  ];
+
   services.nginx = {
     enable = true;
     package = pkgs.nginxMainline;

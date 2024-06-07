@@ -1,5 +1,4 @@
 {
-  inputs,
   config,
   vars,
   modulesPath,
@@ -21,14 +20,13 @@
     ../../modules/fail2ban.nix
     ../../modules/openssh.nix
     ../../modules/podman.nix
+    ../../modules/nix-settings.nix
 
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
   boot.loader.grub = {
-    # no need to set devices, disko will add all devices that have a EF02 partition to the list already
-    # devices = [ ];
     efiSupport = true;
     efiInstallAsRemovable = true;
   };
@@ -36,36 +34,11 @@
   sops.defaultSopsFile = ./secrets.yaml;
   sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
 
-  nix = {
-    registry.nixpkgs.flake = inputs.nixpkgs;
-    settings = {
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-      trusted-users = [
-        "root"
-        "colon"
-      ];
-      auto-optimise-store = true;
-    };
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 7d";
-    };
-  };
-
   time.timeZone = "Etc/UTC";
   networking = {
     hostName = "silvermist";
     useDHCP = false;
     interfaces."eth0".useDHCP = true;
-    firewall.allowedTCPPorts = [
-      22
-      80
-      443
-    ];
   };
 
   sops.secrets."users/colon/hashedPassword".neededForUsers = true;
@@ -80,6 +53,7 @@
     };
   };
   security.sudo.wheelNeedsPassword = false;
+  nix.settings.trusted-users = [ config.users.users.colon.name ];
 
   system.stateVersion = "23.05";
 }
