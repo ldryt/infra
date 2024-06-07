@@ -62,7 +62,7 @@
     locations."/${vars.services.shlink.subfolder}".proxyPass = "http://127.0.0.1:${vars.services.shlink.internalPort}";
   };
 
-  silvermist.backups.shlink = {
+  ldryt-infra.backups.shlink = {
     paths = [ vars.services.shlink.backups.tmpDir ];
     backupPrepareCommand = ''
       ${pkgs.bash}/bin/bash -c '

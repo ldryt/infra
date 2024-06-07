@@ -10,6 +10,7 @@
     ./hardware.nix
 
     ../../modules/podman.nix
+    ../../modules/nix-settings.nix
 
     ./services/windows-dockur.nix
   ];
@@ -17,28 +18,7 @@
   sops.defaultSopsFile = ./secrets.yaml;
   sops.age.keyFile = "/var/lib/sops/sops_age_tinkerbell.key";
 
-  nix = {
-    registry.nixpkgs.flake = inputs.nixpkgs;
-    settings = {
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-      trusted-users = [
-        "root"
-        "ldryt"
-      ];
-      auto-optimise-store = true;
-    };
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 7d";
-    };
-  };
   nixpkgs.config.allowUnfree = true;
-
-  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
   boot.loader = {
     systemd-boot.enable = true;
@@ -71,19 +51,7 @@
       DNSOverTLS=yes
     '';
   };
-  # eduroam patch
-  systemd.services.NetworkManager-wait-online.enable = false;
-  systemd.services.wpa_supplicant.environment.OPENSSL_CONF = pkgs.writeText "openssl.cnf" ''
-    openssl_conf = openssl_init
-    [openssl_init]
-    ssl_conf = ssl_sect
-    [ssl_sect]
-    system_default = system_default_sect
-    [system_default_sect]
-    Options = UnsafeLegacyRenegotiation
-    [system_default_sect]
-    CipherString = Default:@SECLEVEL=0
-  '';
+
   time.timeZone = "Europe/Vilnius";
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
@@ -116,6 +84,7 @@
       hashedPasswordFile = config.sops.secrets."users/ldryt/hashedPassword".path;
     };
   };
+  nix.settings.trusted-users = [ config.users.users.ldryt.name ];
 
   # GNOME
   services.xserver = {
@@ -144,7 +113,7 @@
     pkgs.gnome-tour
   ];
 
-  #
+  # Battery savings
   services.power-profiles-daemon.enable = lib.mkForce false;
   services.thermald.enable = true;
   services.tlp = {

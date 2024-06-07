@@ -82,6 +82,24 @@
               disko.nixosModules.disko
             ];
           };
+        zarina =
+          let
+            vars =
+              (builtins.fromJSON (builtins.readFile ./hosts/zarina/vars.json))
+              // (builtins.fromJSON (builtins.readFile ./hosts/zarina/vars.gitcrypt.json));
+          in
+          nixpkgs.lib.nixosSystem {
+            specialArgs = {
+              inherit inputs;
+              inherit vars;
+            };
+            system = "x86_64-linux";
+            modules = [
+              ./hosts/zarina
+              sops-nix.nixosModules.sops
+              disko.nixosModules.disko
+            ];
+          };
       };
     };
 }

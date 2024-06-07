@@ -116,7 +116,7 @@
     };
   };
 
-  silvermist.backups.immich = {
+  ldryt-infra.backups.immich = {
     paths = [
       vars.services.immich.backups.tmpDir
       vars.services.immich.dataDir

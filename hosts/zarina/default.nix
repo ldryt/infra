@@ -8,19 +8,11 @@
   imports = [
     ./disk-config.nix
 
-    ./services/nginx.nix
-    ./services/ocis.nix
-    ./services/vaultwarden.nix
-    ./services/immich.nix
-    ./services/keycloak.nix
-    ./services/frontpage.nix
-    ./services/shlink.nix
+    ./services/mc.nix
 
     ../../modules/fail2ban.nix
     ../../modules/openssh.nix
-    ../../modules/podman.nix
     ../../modules/nix-settings.nix
-    ../../modules/backups.nix
 
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
@@ -36,7 +28,7 @@
 
   time.timeZone = "Etc/UTC";
   networking = {
-    hostName = "silvermist";
+    hostName = "zarina";
     useDHCP = false;
     interfaces."eth0".useDHCP = true;
   };
