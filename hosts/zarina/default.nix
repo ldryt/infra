@@ -13,6 +13,7 @@
     ../../modules/fail2ban.nix
     ../../modules/openssh.nix
     ../../modules/nix-settings.nix
+    ../../modules/backups.nix
 
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
