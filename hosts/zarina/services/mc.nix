@@ -35,5 +35,9 @@ in
 
   ldryt-infra.backups.mc = {
     paths = [ config.services.minecraft-server.dataDir ];
+    timerConfig = {
+      OnCalendar = "hourly";
+      Persistent = true;
+    };
   };
 }
