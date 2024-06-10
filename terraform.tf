@@ -1,4 +1,10 @@
 terraform {
+  cloud {
+    organization = "ldryt-infra"
+    workspaces {
+      name = "main"
+    }
+  }
   required_providers {
     hcloud = {
       source  = "hetznercloud/hcloud"
@@ -14,20 +20,3 @@ terraform {
     }
   }
 }
-
-
-variable "hcloud_token" {
-  sensitive = true
-}
-provider "hcloud" {
-  token = var.hcloud_token
-}
-
-variable "gandi_token" {
-  sensitive = true
-}
-provider "gandi" {
-  personal_access_token = var.gandi_token
-}
-
-provider "sops" {}

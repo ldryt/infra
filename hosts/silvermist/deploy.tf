@@ -10,7 +10,7 @@ module "silvermist-deploy" {
   install_ssh_key    = nonsensitive(data.sops_file.silvermist_secrets.data["users.colon.sshKey"])
   deployment_ssh_key = nonsensitive(data.sops_file.silvermist_secrets.data["users.colon.sshKey"])
 
-  extra_files_script = "${path.module}/terraform-deploy-keys.sh"
+  extra_files_script = "${path.root}/terraform-deploy-keys.sh"
   extra_environment = {
     "SERVER_NAME" = hcloud_server.silvermist_server.name
   }

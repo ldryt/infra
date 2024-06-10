@@ -10,7 +10,7 @@ module "zarina-deploy" {
   install_ssh_key    = nonsensitive(data.sops_file.zarina_secrets.data["users.colon.sshKey"])
   deployment_ssh_key = nonsensitive(data.sops_file.zarina_secrets.data["users.colon.sshKey"])
 
-  extra_files_script = "${path.module}/terraform-deploy-keys.sh"
+  extra_files_script = "${path.root}/terraform-deploy-keys.sh"
   extra_environment = {
     "SERVER_NAME" = hcloud_server.zarina_server.name
   }
