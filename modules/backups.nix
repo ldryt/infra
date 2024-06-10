@@ -2,12 +2,14 @@
   config,
   vars,
   lib,
+  utils,
   ...
 }:
 with lib;
 
 let
   cfg = config.ldryt-infra.backups;
+  inherit (utils.systemdUtils.unitOptions) unitOption;
 in
 {
   options.ldryt-infra.backups = mkOption {
@@ -27,6 +29,14 @@ in
             backupCleanupCommand = mkOption {
               type = types.nullOr types.str;
               default = null;
+            };
+            timerConfig = mkOption {
+              type = types.nullOr (types.attrsOf unitOption);
+              default = {
+                OnCalendar = "daily";
+                RandomizedDelaySec = "2h";
+                Persistent = true;
+              };
             };
           };
         }
@@ -58,11 +68,7 @@ in
           "--keep-monthly 12"
           "--keep-yearly 100"
         ];
-        timerConfig = {
-          OnCalendar = "daily";
-          RandomizedDelaySec = "2h";
-          Persistent = true;
-        };
+        timerConfig = conf.timerConfig;
       }
     ) cfg;
   };
