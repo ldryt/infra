@@ -23,11 +23,7 @@
   virtualisation.oci-containers.containers = {
     "immich-server" = {
       hostname = "immich-server";
-      image = "ghcr.io/immich-app/immich-server:v1.105.1@sha256:9ab0f8213abcb1ed622da2442ef112cb3bd544954b8127bac7d3609a11f57886"; # https://github.com/immich-app/immich/pkgs/container/immich-server/216222331?tag=v1.105.1
-      cmd = [
-        "start.sh"
-        "immich"
-      ];
+      image = "ghcr.io/immich-app/immich-server:v1.106.4@sha256:ad971367766f6b5386fbb80637073aa558eb1cd0a4a3e412c5d5c6457e0df0d5"; # https://github.com/immich-app/immich/pkgs/container/immich-server/229694705?tag=v1.106.4
       environment = {
         IMMICH_CONFIG_FILE = "/etc/immich-config.json";
         DB_HOSTNAME = "immich-db";
@@ -50,25 +46,9 @@
       ];
       extraOptions = [ "--network=${vars.services.immich.podmanNetwork}" ];
     };
-    "immich-microservices" = {
-      hostname = "immich-microservices";
-      image = config.virtualisation.oci-containers.containers.immich-server.image;
-      cmd = [
-        "start.sh"
-        "microservices"
-      ];
-      environment = config.virtualisation.oci-containers.containers.immich-server.environment;
-      environmentFiles = config.virtualisation.oci-containers.containers.immich-server.environmentFiles;
-      volumes = config.virtualisation.oci-containers.containers.immich-server.volumes;
-      dependsOn = [
-        "immich-redis"
-        "immich-db"
-      ];
-      extraOptions = [ "--network=${vars.services.immich.podmanNetwork}" ];
-    };
     "immich-machine-learning" = {
       hostname = "immich-machine-learning";
-      image = "ghcr.io/immich-app/immich-machine-learning:v1.105.1@sha256:d9302b9f4c71bd1b070346e3020a6fcfba2c7ec394a62d7e04200b94003b0845"; # https://github.com/immich-app/immich/pkgs/container/immich-machine-learning/216222274?tag=v1.105.1
+      image = "ghcr.io/immich-app/immich-machine-learning:v1.106.4@sha256:1dcebde9a0c02c7f90ea93f64f883423f8067eef297ff2330d65001e32ce12fd"; # https://github.com/immich-app/immich/pkgs/container/immich-machine-learning/229687734?tag=v1.106.4
       volumes = [ "immich-ml-cache:/cache" ];
       extraOptions = [ "--network=${vars.services.immich.podmanNetwork}" ];
     };
