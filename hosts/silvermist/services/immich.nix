@@ -259,9 +259,7 @@
           "cronExpression": "0 0 * * *"
         },
         "watch": {
-          "enabled": false,
-          "usePolling": false,
-          "interval": 10000
+          "enabled": false
         }
       },
       "server": {
