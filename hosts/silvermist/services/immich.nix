@@ -121,7 +121,7 @@
       "ffmpeg": {
         "crf": 30,
         "threads": 0,
-        "preset": "slower",
+        "preset": "medium",
         "targetVideoCodec": "vp9",
         "acceptedVideoCodecs": [
           "vp9"
@@ -173,7 +173,10 @@
           "concurrency": 5
         },
         "videoConversion": {
-          "concurrency": 1
+          "concurrency": 2
+        },
+        "notifications": {
+          "concurrency": 5
         }
       },
       "logging": {
@@ -186,6 +189,10 @@
         "clip": {
           "enabled": true,
           "modelName": "immich-app/ViT-B-32__openai"
+        },
+        "duplicateDetection": {
+          "enabled": true,
+          "maxDistance": 0.03
         },
         "facialRecognition": {
           "enabled": true,
@@ -204,15 +211,20 @@
         "enabled": true
       },
       "oauth": {
-        "enabled": true,
-        "issuerUrl": "https://${vars.services.keycloak.subdomain}.${vars.zone}/realms/master",
+        "autoLaunch": true,
+        "autoRegister": true,
+        "buttonText": "Login with ${vars.services.keycloak.subdomain}.${vars.zone}",
         "clientId": "${vars.services.immich.oidcID}",
         "clientSecret": "${vars.sensitive.services.immich.oidcSecret}",
+        "defaultStorageQuota": 0,
+        "enabled": true,
+        "issuerUrl": "https://${vars.services.keycloak.subdomain}.${vars.zone}/realms/master",
+        "mobileOverrideEnabled": false,
+        "mobileRedirectUri": "",
         "scope": "openid email profile",
+        "signingAlgorithm": "RS256",
         "storageLabelClaim": "preferred_username",
-        "buttonText": "Login with ${vars.services.keycloak.subdomain}.${vars.zone}",
-        "autoRegister": true,
-        "autoLaunch": true
+        "storageQuotaClaim": "immich_quota"
       },
       "passwordLogin": {
         "enabled": false
@@ -222,11 +234,14 @@
         "hashVerificationEnabled": true,
         "template": "{{y}}/{{MMMM}}/{{y}}{{MM}}{{dd}}-{{HH}}{{mm}}{{ss}}"
       },
-      "thumbnail": {
-        "webpSize": 200,
-        "jpegSize": 1080,
-        "quality": 88,
-        "colorspace": "p3"
+      "image": {
+        "thumbnailFormat": "webp",
+        "thumbnailSize": 150,
+        "previewFormat": "jpeg",
+        "previewSize": 1080,
+        "quality": 80,
+        "colorspace": "p3",
+        "extractEmbedded": false
       },
       "newVersionCheck": {
         "enabled": false
@@ -242,11 +257,33 @@
         "scan": {
           "enabled": true,
           "cronExpression": "0 0 * * *"
+        },
+        "watch": {
+          "enabled": false,
+          "usePolling": false,
+          "interval": 10000
         }
       },
       "server": {
         "externalDomain": "https://${vars.services.immich.subdomain + "." + vars.zone}",
         "loginPageMessage": ""
+      },
+      "notifications": {
+        "smtp": {
+          "enabled": false,
+          "from": "",
+          "replyTo": "",
+          "transport": {
+            "ignoreCert": false,
+            "host": "",
+            "port": 587,
+            "username": "",
+            "password": ""
+          }
+        }
+      },
+      "user": {
+        "deleteDelay": 7
       }
     }
   '';
