@@ -16,7 +16,14 @@ provider "gandi" {
 
 provider "sops" {}
 
+variable "create_zarina" {
+  description = "Flag to create or not host zarina"
+  type        = bool
+  default     = false
+}
+
 module "zarina" {
+  count  = var.create_zarina ? 1 : 0
   source = "./hosts/zarina"
 }
 
