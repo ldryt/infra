@@ -236,10 +236,10 @@
       },
       "image": {
         "thumbnailFormat": "webp",
-        "thumbnailSize": 250,
-        "previewFormat": "jpeg",
+        "thumbnailSize": 200,
+        "previewFormat": "webp",
         "previewSize": 1080,
-        "quality": 80,
+        "quality": 83,
         "colorspace": "p3",
         "extractEmbedded": false
       },
