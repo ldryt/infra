@@ -236,7 +236,7 @@
       },
       "image": {
         "thumbnailFormat": "webp",
-        "thumbnailSize": 150,
+        "thumbnailSize": 250,
         "previewFormat": "jpeg",
         "previewSize": 1080,
         "quality": 80,
