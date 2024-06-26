@@ -1,8 +1,4 @@
-{
-  config,
-  modulesPath,
-  ...
-}:
+{ config, modulesPath, ... }:
 {
   imports = [
     ./disk-config.nix
@@ -41,7 +37,9 @@
       isNormalUser = true;
       extraGroups = [ "wheel" ];
       hashedPasswordFile = config.sops.secrets."users/colon/hashedPassword".path;
-      openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHuxxbBzmH4ucWtoGEfpmnRiM9kVOo1uanhSZdVY6vDZ" ];
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHuxxbBzmH4ucWtoGEfpmnRiM9kVOo1uanhSZdVY6vDZ"
+      ];
     };
   };
   security.sudo.wheelNeedsPassword = false;
