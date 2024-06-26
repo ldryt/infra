@@ -5,6 +5,7 @@
     ./helix.nix
     ./bash.nix
     ./git.nix
+    ./ssh.nix
     ./gnome.nix
     ./firefox.nix
     ./thunderbird.nix

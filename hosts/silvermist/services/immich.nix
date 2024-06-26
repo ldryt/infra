@@ -1,20 +1,27 @@
 {
   config,
   pkgs,
-  vars,
+  dns,
   ...
 }:
+let
+  dataDir = "/mnt/immich-library";
+  oidcID = "immich-clients";
+  podmanNetwork = "immich-network";
+  internalPort = "44084";
+  backupsTmpDir = "/tmp/immich_backups";
+in
 {
   systemd.services.init-immich-network = {
-    description = "Create the network named ${vars.services.immich.podmanNetwork}.";
+    description = "Create the network named ${podmanNetwork}.";
     after = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig.Type = "oneshot";
     script = ''
-      check=$(${pkgs.podman}/bin/podman network ls | grep "${vars.services.immich.podmanNetwork}" || true)
+      check=$(${pkgs.podman}/bin/podman network ls | grep "${podmanNetwork}" || true)
       if [ -z "$check" ];
-        then ${pkgs.podman}/bin/podman network create ${vars.services.immich.podmanNetwork}
-        else echo "${vars.services.immich.podmanNetwork} already exists in podman"
+        then ${pkgs.podman}/bin/podman network create ${podmanNetwork}
+        else echo "${podmanNetwork} already exists in podman"
       fi
     '';
   };
@@ -36,21 +43,21 @@
       environmentFiles = [ "${config.sops.secrets."services/immich/credentials".path}" ];
       volumes = [
         "/etc/immich/config.json:/etc/immich-config.json:ro"
-        "${vars.services.immich.dataDir}:/usr/src/app/upload"
+        "${dataDir}:/usr/src/app/upload"
         "/etc/localtime:/etc/localtime:ro"
       ];
-      ports = [ "127.0.0.1:${vars.services.immich.internalPort}:3001" ];
+      ports = [ "127.0.0.1:${internalPort}:3001" ];
       dependsOn = [
         "immich-redis"
         "immich-db"
       ];
-      extraOptions = [ "--network=${vars.services.immich.podmanNetwork}" ];
+      extraOptions = [ "--network=${podmanNetwork}" ];
     };
     "immich-machine-learning" = {
       hostname = "immich-machine-learning";
       image = "ghcr.io/immich-app/immich-machine-learning:v1.106.4@sha256:1dcebde9a0c02c7f90ea93f64f883423f8067eef297ff2330d65001e32ce12fd"; # https://github.com/immich-app/immich/pkgs/container/immich-machine-learning/229687734?tag=v1.106.4
       volumes = [ "immich-ml-cache:/cache" ];
-      extraOptions = [ "--network=${vars.services.immich.podmanNetwork}" ];
+      extraOptions = [ "--network=${podmanNetwork}" ];
     };
     "immich-db" = {
       hostname = "immich-db";
@@ -62,19 +69,19 @@
       };
       volumes = [ "immich-db-data:/var/lib/postgresql/data" ];
       environmentFiles = config.virtualisation.oci-containers.containers.immich-server.environmentFiles;
-      extraOptions = [ "--network=${vars.services.immich.podmanNetwork}" ];
+      extraOptions = [ "--network=${podmanNetwork}" ];
     };
     "immich-redis" = {
       hostname = "immich-redis";
       image = "docker.io/library/redis:6.2-alpine@sha256:84882e87b54734154586e5f8abd4dce69fe7311315e2fc6d67c29614c8de2672";
-      extraOptions = [ "--network=${vars.services.immich.podmanNetwork}" ];
+      extraOptions = [ "--network=${podmanNetwork}" ];
     };
   };
 
   sops.secrets."system/smb/glouton/immich-library/credentials" = { };
   environment.systemPackages = [ pkgs.cifs-utils ];
-  fileSystems."${vars.services.immich.dataDir}" = {
-    device = vars.sensitive.services.immich.smbShare;
+  fileSystems."${dataDir}" = {
+    device = "//u391790-sub1.your-storagebox.de/u391790-sub1";
     fsType = "cifs";
     options = [
       "async,rw,auto,nofail,credentials=${
@@ -83,13 +90,13 @@
     ];
   };
 
-  services.nginx.virtualHosts."${vars.services.immich.subdomain}.${vars.zone}" = {
+  services.nginx.virtualHosts."${dns.silvermist.subdomains.immich}.${dns.silvermist.zone}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;
     locations."/" = {
       proxyWebsockets = true;
-      proxyPass = "http://127.0.0.1:${vars.services.immich.internalPort}";
+      proxyPass = "http://127.0.0.1:${internalPort}";
       extraConfig = ''
         client_max_body_size 0;
       '';
@@ -98,21 +105,21 @@
 
   ldryt-infra.backups.immich = {
     paths = [
-      vars.services.immich.backups.tmpDir
-      vars.services.immich.dataDir
+      backupsTmpDir
+      dataDir
     ];
     backupPrepareCommand = ''
       ${pkgs.bash}/bin/bash -c '
-        if ! mkdir -p "${vars.services.immich.backups.tmpDir}"; then
-          echo "Could not create backup folder '${vars.services.immich.backups.tmpDir}'" >&2
+        if ! mkdir -p "${backupsTmpDir}"; then
+          echo "Could not create backup folder '${backupsTmpDir}'" >&2
           exit 1
         fi
 
-        ${pkgs.podman}/bin/podman exec -t immich-db pg_dumpall -c -U postgres | ${pkgs.gzip}/bin/gzip > "${vars.services.immich.backups.tmpDir}/immich-db-dump.sql.gz"
+        ${pkgs.podman}/bin/podman exec -t immich-db pg_dumpall -c -U postgres | ${pkgs.gzip}/bin/gzip > "${backupsTmpDir}/immich-db-dump.sql.gz"
       '
     '';
     backupCleanupCommand = ''
-      ${pkgs.bash}/bin/bash -c 'rm -rf "${vars.services.immich.backups.tmpDir}"'
+      ${pkgs.bash}/bin/bash -c 'rm -rf "${backupsTmpDir}"'
     '';
   };
 
@@ -213,12 +220,12 @@
       "oauth": {
         "autoLaunch": true,
         "autoRegister": true,
-        "buttonText": "Login with ${vars.services.keycloak.subdomain}.${vars.zone}",
-        "clientId": "${vars.services.immich.oidcID}",
-        "clientSecret": "${vars.sensitive.services.immich.oidcSecret}",
+        "buttonText": "Login with ${dns.silvermist.subdomains.keycloak}.${dns.silvermist.zone}",
+        "clientId": "${oidcID}",
+        "clientSecret": "STFOR2hVQzMl3v0ckIYjzGlpbjEznstV",
         "defaultStorageQuota": 0,
         "enabled": true,
-        "issuerUrl": "https://${vars.services.keycloak.subdomain}.${vars.zone}/realms/master",
+        "issuerUrl": "https://${dns.silvermist.subdomains.keycloak}.${dns.silvermist.zone}/realms/master",
         "mobileOverrideEnabled": false,
         "mobileRedirectUri": "",
         "scope": "openid email profile",
@@ -263,7 +270,7 @@
         }
       },
       "server": {
-        "externalDomain": "https://${vars.services.immich.subdomain + "." + vars.zone}",
+        "externalDomain": "https://${dns.silvermist.subdomains.immich}.${dns.silvermist.zone}",
         "loginPageMessage": ""
       },
       "notifications": {

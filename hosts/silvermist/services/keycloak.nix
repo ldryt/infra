@@ -1,9 +1,12 @@
 {
   config,
-  vars,
   pkgs,
+  dns,
   ...
 }:
+let
+  backupsTmpDir = "/tmp/keycloak_backup";
+in
 {
   sops.secrets."services/keycloak/db/password" = { };
 
@@ -11,7 +14,7 @@
     enable = true;
     initialAdminPassword = "matchbook-purse3";
     settings = {
-      hostname = "${vars.services.keycloak.subdomain}.${vars.zone}";
+      hostname = "${dns.silvermist.subdomains.keycloak}.${dns.silvermist.zone}";
       hostname-strict-backchannel = true;
       http-host = "127.0.0.1";
       http-port = 44085;
@@ -24,7 +27,7 @@
     };
   };
 
-  services.nginx.virtualHosts."${vars.services.keycloak.subdomain}.${vars.zone}" = {
+  services.nginx.virtualHosts."${dns.silvermist.subdomains.keycloak}.${dns.silvermist.zone}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;
@@ -39,22 +42,22 @@
   };
 
   ldryt-infra.backups.keycloak = {
-    paths = [ vars.services.keycloak.backups.tmpDir ];
+    paths = [ backupsTmpDir ];
     backupPrepareCommand = ''
       ${pkgs.bash}/bin/bash -c '
-        if ! mkdir -p "${vars.services.keycloak.backups.tmpDir}"; then
-          echo "Could not create backup folder '${vars.services.keycloak.backups.tmpDir}'" >&2
+        if ! mkdir -p "${backupsTmpDir}"; then
+          echo "Could not create backup folder '${backupsTmpDir}'" >&2
           exit 1
         fi
 
         ${pkgs.mariadb}/bin/mariabackup --backup --user=root --password=$(cat ${
           config.sops.secrets."services/keycloak/db/password".path
         }) \
-           --stream=xbstream | ${pkgs.gzip}/bin/gzip > "${vars.services.keycloak.backups.tmpDir}/keycloak-db.mbstream.gz"
+           --stream=xbstream | ${pkgs.gzip}/bin/gzip > "${backupsTmpDir}/keycloak-db.mbstream.gz"
       '
     '';
     backupCleanupCommand = ''
-      ${pkgs.bash}/bin/bash -c 'rm -rf "${vars.services.keycloak.backups.tmpDir}"'
+      ${pkgs.bash}/bin/bash -c 'rm -rf "${backupsTmpDir}"'
     '';
   };
 }

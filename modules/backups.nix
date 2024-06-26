@@ -1,6 +1,5 @@
 {
   config,
-  vars,
   lib,
   utils,
   ...
@@ -10,6 +9,8 @@ with lib;
 let
   cfg = config.ldryt-infra.backups;
   inherit (utils.systemdUtils.unitOptions) unitOption;
+
+  storageBox = "u391790-sub3@u391790-sub3.your-storagebox.de";
 in
 {
   options.ldryt-infra.backups = mkOption {
@@ -53,11 +54,9 @@ in
         backupPrepareCommand = conf.backupPrepareCommand;
         paths = conf.paths;
         initialize = true;
-        repository = "sftp:${
-          vars.sensitive.backups.user + "@" + vars.sensitive.backups.host
-        }:restic-repo-${name}";
+        repository = "sftp:${storageBox}:restic-repo-${name}";
         extraOptions = [
-          "sftp.command='ssh ${vars.sensitive.backups.user + "@" + vars.sensitive.backups.host} -p 23 -i ${
+          "sftp.command='ssh ${storageBox} -p 23 -i ${
             config.sops.secrets."backups/restic/sshKey".path
           } -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -s sftp'"
         ];

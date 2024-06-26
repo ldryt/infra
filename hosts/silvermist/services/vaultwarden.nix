@@ -1,21 +1,26 @@
 {
   config,
   pkgs,
-  vars,
+  dns,
   ...
 }:
+let
+  backupsTmpDir = "/tmp/bitwarden_rs_backup";
+  dataDir = "/var/lib/bitwarden_rs";
+in
 {
   services.vaultwarden = {
     enable = true;
     config = {
-      DOMAIN = "https://${vars.services.vaultwarden.subdomain + "." + vars.zone}";
+      DOMAIN = "https://${dns.silvermist.subdomains.vaultwarden}.${dns.silvermist.zone}";
       SIGNUPS_ALLOWED = "true";
       ROCKET_ADDRESS = "127.0.0.1";
       ROCKET_PORT = 44083;
+      DATA_FOLDER = dataDir;
     };
   };
 
-  services.nginx.virtualHosts."${vars.services.vaultwarden.subdomain}.${vars.zone}" = {
+  services.nginx.virtualHosts."${dns.silvermist.subdomains.vaultwarden}.${dns.silvermist.zone}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;
@@ -26,28 +31,28 @@
   };
 
   ldryt-infra.backups.vaultwarden = {
-    paths = [ vars.services.vaultwarden.backups.tmpDir ];
+    paths = [ backupsTmpDir ];
     # https://github.com/NixOS/nixpkgs/blob/592047fc9e4f7b74a4dc85d1b9f5243dfe4899e3/nixos/modules/services/security/vaultwarden/backup.sh
     backupPrepareCommand = ''
       ${pkgs.bash}/bin/bash -c '
-        if ! mkdir -p "${vars.services.vaultwarden.backups.tmpDir}"; then
-          echo "Could not create backup folder '${vars.services.vaultwarden.backups.tmpDir}'" >&2
+        if ! mkdir -p "${backupsTmpDir}"; then
+          echo "Could not create backup folder '${backupsTmpDir}'" >&2
           exit 1
         fi
 
-        if [[ ! -f "${vars.services.vaultwarden.dataDir}"/db.sqlite3 ]]; then
-          echo "Could not find SQLite database file '${vars.services.vaultwarden.dataDir}/db.sqlite3'" >&2
+        if [[ ! -f "${dataDir}"/db.sqlite3 ]]; then
+          echo "Could not find SQLite database file '${dataDir}/db.sqlite3'" >&2
           exit 1
         fi
 
-        ${pkgs.sqlite}/bin/sqlite3 "${vars.services.vaultwarden.dataDir}"/db.sqlite3 ".backup '${vars.services.vaultwarden.backups.tmpDir}/db.sqlite3'"
-        cp "${vars.services.vaultwarden.dataDir}"/rsa_key.{der,pem,pub.der} "${vars.services.vaultwarden.backups.tmpDir}"
-        cp -r "${vars.services.vaultwarden.dataDir}"/attachments "${vars.services.vaultwarden.backups.tmpDir}"
-        cp -r "${vars.services.vaultwarden.dataDir}"/sends "${vars.services.vaultwarden.backups.tmpDir}"
+        ${pkgs.sqlite}/bin/sqlite3 "${dataDir}"/db.sqlite3 ".backup '${backupsTmpDir}/db.sqlite3'"
+        cp "${dataDir}"/rsa_key.{der,pem,pub.der} "${backupsTmpDir}"
+        cp -r "${dataDir}"/attachments "${backupsTmpDir}"
+        cp -r "${dataDir}"/sends "${backupsTmpDir}"
       '
     '';
     backupCleanupCommand = ''
-      ${pkgs.bash}/bin/bash -c 'rm -rf "${vars.services.vaultwarden.backups.tmpDir}"'
+      ${pkgs.bash}/bin/bash -c 'rm -rf "${backupsTmpDir}"'
     '';
   };
 }

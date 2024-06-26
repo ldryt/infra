@@ -1,6 +1,6 @@
-{ vars, ... }:
+{ dns, ... }:
 {
-  services.nginx.virtualHosts."${vars.zone}" = {
+  services.nginx.virtualHosts."${dns.silvermist.zone}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;

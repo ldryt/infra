@@ -1,6 +1,5 @@
 {
   config,
-  vars,
   modulesPath,
   ...
 }:
@@ -42,7 +41,7 @@
       isNormalUser = true;
       extraGroups = [ "wheel" ];
       hashedPasswordFile = config.sops.secrets."users/colon/hashedPassword".path;
-      openssh.authorizedKeys.keys = [ vars.sensitive.users.colon.sshPubKey ];
+      openssh.authorizedKeys.keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHuxxbBzmH4ucWtoGEfpmnRiM9kVOo1uanhSZdVY6vDZ" ];
     };
   };
   security.sudo.wheelNeedsPassword = false;

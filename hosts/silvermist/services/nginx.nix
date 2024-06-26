@@ -1,8 +1,8 @@
-{ pkgs, vars, ... }:
+{ pkgs, ... }:
 {
   security.acme = {
     acceptTerms = true;
-    defaults.email = vars.sensitive.services.acme.email;
+    defaults.email = "useless@useless.com";
   };
 
   networking.firewall.allowedTCPPorts = [

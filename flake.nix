@@ -16,6 +16,9 @@
       disko,
       ...
     }@inputs:
+    let
+      dns = builtins.fromJSON (builtins.readFile ./dns.json);
+    in
     {
       devShells.x86_64-linux =
         let
@@ -37,69 +40,47 @@
           };
         };
       nixosConfigurations = {
-        tinkerbell =
-          let
-            vars =
-              (builtins.fromJSON (builtins.readFile ./hosts/tinkerbell/vars.json))
-              // (builtins.fromJSON (builtins.readFile ./hosts/tinkerbell/vars.gitcrypt.json));
-          in
-          nixpkgs.lib.nixosSystem {
-            specialArgs = {
-              inherit inputs;
-              inherit vars;
-            };
-            system = "x86_64-linux";
-            modules = [
-              ./hosts/tinkerbell
-              sops-nix.nixosModules.sops
-              home-manager.nixosModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.users.ldryt = import ./users/ldryt;
-                home-manager.extraSpecialArgs = {
-                  inherit vars;
-                };
-                home-manager.sharedModules = [ sops-nix.homeManagerModules.sops ];
-              }
-            ];
+        tinkerbell = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs;
           };
-        silvermist =
-          let
-            vars =
-              (builtins.fromJSON (builtins.readFile ./hosts/silvermist/vars.json))
-              // (builtins.fromJSON (builtins.readFile ./hosts/silvermist/vars.gitcrypt.json));
-          in
-          nixpkgs.lib.nixosSystem {
-            specialArgs = {
-              inherit inputs;
-              inherit vars;
-            };
-            system = "x86_64-linux";
-            modules = [
-              ./hosts/silvermist
-              sops-nix.nixosModules.sops
-              disko.nixosModules.disko
-            ];
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/tinkerbell
+            sops-nix.nixosModules.sops
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.ldryt = import ./users/ldryt;
+              home-manager.sharedModules = [ sops-nix.homeManagerModules.sops ];
+            }
+          ];
+        };
+        silvermist = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs;
+            inherit dns;
           };
-        zarina =
-          let
-            vars =
-              (builtins.fromJSON (builtins.readFile ./hosts/zarina/vars.json))
-              // (builtins.fromJSON (builtins.readFile ./hosts/zarina/vars.gitcrypt.json));
-          in
-          nixpkgs.lib.nixosSystem {
-            specialArgs = {
-              inherit inputs;
-              inherit vars;
-            };
-            system = "x86_64-linux";
-            modules = [
-              ./hosts/zarina
-              sops-nix.nixosModules.sops
-              disko.nixosModules.disko
-            ];
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/silvermist
+            sops-nix.nixosModules.sops
+            disko.nixosModules.disko
+          ];
+        };
+        zarina = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs;
+            inherit dns;
           };
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/zarina
+            sops-nix.nixosModules.sops
+            disko.nixosModules.disko
+          ];
+        };
       };
     };
 }
