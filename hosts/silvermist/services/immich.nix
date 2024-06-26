@@ -1,10 +1,6 @@
-{
-  config,
-  pkgs,
-  dns,
-  ...
-}:
+{ config, pkgs, ... }:
 let
+  dns = builtins.fromJSON (builtins.readFile ../dns.json);
   dataDir = "/mnt/immich-library";
   oidcID = "immich-clients";
   podmanNetwork = "immich-network";
@@ -90,7 +86,7 @@ in
     ];
   };
 
-  services.nginx.virtualHosts."${dns.silvermist.subdomains.immich}.${dns.silvermist.zone}" = {
+  services.nginx.virtualHosts."${dns.subdomains.immich}.${dns.zone}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;
@@ -220,12 +216,12 @@ in
       "oauth": {
         "autoLaunch": true,
         "autoRegister": true,
-        "buttonText": "Login with ${dns.silvermist.subdomains.keycloak}.${dns.silvermist.zone}",
+        "buttonText": "Login with ${dns.subdomains.keycloak}.${dns.zone}",
         "clientId": "${oidcID}",
         "clientSecret": "STFOR2hVQzMl3v0ckIYjzGlpbjEznstV",
         "defaultStorageQuota": 0,
         "enabled": true,
-        "issuerUrl": "https://${dns.silvermist.subdomains.keycloak}.${dns.silvermist.zone}/realms/master",
+        "issuerUrl": "https://${dns.subdomains.keycloak}.${dns.zone}/realms/master",
         "mobileOverrideEnabled": false,
         "mobileRedirectUri": "",
         "scope": "openid email profile",
@@ -270,7 +266,7 @@ in
         }
       },
       "server": {
-        "externalDomain": "https://${dns.silvermist.subdomains.immich}.${dns.silvermist.zone}",
+        "externalDomain": "https://${dns.subdomains.immich}.${dns.zone}",
         "loginPageMessage": ""
       },
       "notifications": {

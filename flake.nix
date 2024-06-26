@@ -16,9 +16,6 @@
       disko,
       ...
     }@inputs:
-    let
-      dns = builtins.fromJSON (builtins.readFile ./dns.json);
-    in
     {
       devShells.x86_64-linux =
         let
@@ -60,7 +57,6 @@
         silvermist = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
-            inherit dns;
           };
           system = "x86_64-linux";
           modules = [
@@ -72,7 +68,6 @@
         zarina = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
-            inherit dns;
           };
           system = "x86_64-linux";
           modules = [

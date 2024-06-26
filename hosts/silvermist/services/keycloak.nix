@@ -1,10 +1,6 @@
-{
-  config,
-  pkgs,
-  dns,
-  ...
-}:
+{ config, pkgs, ... }:
 let
+  dns = builtins.fromJSON (builtins.readFile ../dns.json);
   backupsTmpDir = "/tmp/keycloak_backup";
 in
 {
@@ -14,7 +10,7 @@ in
     enable = true;
     initialAdminPassword = "matchbook-purse3";
     settings = {
-      hostname = "${dns.silvermist.subdomains.keycloak}.${dns.silvermist.zone}";
+      hostname = "${dns.subdomains.keycloak}.${dns.zone}";
       hostname-strict-backchannel = true;
       http-host = "127.0.0.1";
       http-port = 44085;
@@ -27,7 +23,7 @@ in
     };
   };
 
-  services.nginx.virtualHosts."${dns.silvermist.subdomains.keycloak}.${dns.silvermist.zone}" = {
+  services.nginx.virtualHosts."${dns.subdomains.keycloak}.${dns.zone}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;

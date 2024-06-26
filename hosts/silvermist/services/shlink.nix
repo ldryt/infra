@@ -1,10 +1,6 @@
-{
-  config,
-  pkgs,
-  dns,
-  ...
-}:
+{ config, pkgs, ... }:
 let
+  dns = builtins.fromJSON (builtins.readFile ../dns.json);
   subfolder = "link";
   podmanNetwork = "shlink-network";
   internalPort = "44086";
@@ -32,7 +28,7 @@ in
       hostname = "shlink-server";
       image = "ghcr.io/shlinkio/shlink:4.1.1@sha256:b8b6cce3f3ec840f8b8acbfb96b1fea0546f0780f3ebd326d60d3f92bb10c7e6"; # https://github.com/shlinkio/shlink/pkgs/container/shlink/219894946?tag=4.1.1
       environment = {
-        DEFAULT_DOMAIN = dns.silvermist.zone;
+        DEFAULT_DOMAIN = dns.zone;
         IS_HTTPS_ENABLED = "true";
         BASE_PATH = "/${subfolder}";
         DB_DRIVER = "postgres";
@@ -61,7 +57,7 @@ in
     };
   };
 
-  services.nginx.virtualHosts."${dns.silvermist.zone}" = {
+  services.nginx.virtualHosts."${dns.zone}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;

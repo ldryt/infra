@@ -1,10 +1,6 @@
-{
-  config,
-  pkgs,
-  dns,
-  ...
-}:
+{ config, pkgs, ... }:
 let
+  dns = builtins.fromJSON (builtins.readFile ../dns.json);
   dataDir = "/mnt/ocis-data";
   internalPort = "44082";
 in
@@ -21,9 +17,9 @@ in
       ];
       environment = {
         PROXY_HTTP_ADDR = "0.0.0.0:9200";
-        OCIS_URL = "https://${dns.silvermist.subdomains.ocis}.${dns.silvermist.zone}";
+        OCIS_URL = "https://${dns.subdomains.ocis}.${dns.zone}";
 
-        OCIS_OIDC_ISSUER = "https://${dns.silvermist.subdomains.keycloak}.${dns.silvermist.zone}/realms/master";
+        OCIS_OIDC_ISSUER = "https://${dns.subdomains.keycloak}.${dns.zone}/realms/master";
         WEB_OIDC_CLIENT_ID = "ocis-web";
         PROXY_TLS = "false";
         PROXY_AUTOPROVISION_ACCOUNTS = "true";
@@ -53,7 +49,7 @@ in
     ];
   };
 
-  services.nginx.virtualHosts."${dns.silvermist.subdomains.ocis}.${dns.silvermist.zone}" = {
+  services.nginx.virtualHosts."${dns.subdomains.ocis}.${dns.zone}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;

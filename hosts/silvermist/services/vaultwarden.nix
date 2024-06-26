@@ -1,10 +1,6 @@
-{
-  config,
-  pkgs,
-  dns,
-  ...
-}:
+{ config, pkgs, ... }:
 let
+  dns = builtins.fromJSON (builtins.readFile ../dns.json);
   backupsTmpDir = "/tmp/bitwarden_rs_backup";
   dataDir = "/var/lib/bitwarden_rs";
 in
@@ -12,7 +8,7 @@ in
   services.vaultwarden = {
     enable = true;
     config = {
-      DOMAIN = "https://${dns.silvermist.subdomains.vaultwarden}.${dns.silvermist.zone}";
+      DOMAIN = "https://${dns.subdomains.vaultwarden}.${dns.zone}";
       SIGNUPS_ALLOWED = "true";
       ROCKET_ADDRESS = "127.0.0.1";
       ROCKET_PORT = 44083;
@@ -20,7 +16,7 @@ in
     };
   };
 
-  services.nginx.virtualHosts."${dns.silvermist.subdomains.vaultwarden}.${dns.silvermist.zone}" = {
+  services.nginx.virtualHosts."${dns.subdomains.vaultwarden}.${dns.zone}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;

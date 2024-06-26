@@ -1,6 +1,9 @@
-{ dns, ... }:
+{ ... }:
+let
+  dns = builtins.fromJSON (builtins.readFile ../dns.json);
+in
 {
-  services.nginx.virtualHosts."${dns.silvermist.zone}" = {
+  services.nginx.virtualHosts."${dns.zone}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;
