@@ -28,6 +28,9 @@
       ms-pyright.pyright
       ms-python.black-formatter
       ms-python.isort
+
+      # Terraform support
+      hashicorp.terraform
     ];
 
     enableExtensionUpdateCheck = false;
