@@ -1,16 +1,19 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+
+    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
 
     home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     sops-nix.url = "github:mic92/sops-nix";
-    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs-stable";
   };
   outputs =
     {
-      nixpkgs,
+      nixpkgs-unstable,
+      nixpkgs-stable,
       home-manager,
       sops-nix,
       disko,
@@ -19,7 +22,7 @@
     {
       devShells.x86_64-linux =
         let
-          pkgs = import nixpkgs {
+          pkgs = import nixpkgs-stable {
             config.allowUnfree = true;
             system = "x86_64-linux";
           };
@@ -37,7 +40,7 @@
           };
         };
       nixosConfigurations = {
-        tinkerbell = nixpkgs.lib.nixosSystem {
+        tinkerbell = nixpkgs-unstable.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
           };
@@ -54,7 +57,7 @@
             }
           ];
         };
-        silvermist = nixpkgs.lib.nixosSystem {
+        silvermist = nixpkgs-stable.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
           };
@@ -65,7 +68,7 @@
             disko.nixosModules.disko
           ];
         };
-        zarina = nixpkgs.lib.nixosSystem {
+        zarina = nixpkgs-stable.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
           };
