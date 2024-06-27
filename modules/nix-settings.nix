@@ -1,7 +1,6 @@
-{ inputs, ... }:
+{ ... }:
 {
   nix = {
-    registry.nixpkgs.flake = inputs.nixpkgs-unstable;
     settings = {
       experimental-features = [
         "nix-command"
