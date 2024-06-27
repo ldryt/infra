@@ -3,7 +3,6 @@
   imports = [
     ./disk-config.nix
 
-    ./services/nginx.nix
     ./services/ocis.nix
     ./services/vaultwarden.nix
     ./services/immich.nix
@@ -11,6 +10,7 @@
     ./services/frontpage.nix
     ./services/shlink.nix
 
+    ../../modules/nginx.nix
     ../../modules/fail2ban.nix
     ../../modules/openssh.nix
     ../../modules/podman.nix
