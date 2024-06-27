@@ -14,10 +14,8 @@
 
     # gui programs
     libreoffice
-    spotify
     discord
     prismlauncher
     owncloud-client
-    beeper
   ];
 }
