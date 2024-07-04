@@ -37,10 +37,14 @@
               sops
               terraform
               jq
+              go
+              delve
             ];
             shellHook = ''
               export SOPS_AGE_KEY_FILE=~/.keyring/sops_age_ldryt.key
             '';
+            # https://github.com/go-delve/delve/issues/3085
+            hardeningDisable = [ "fortify" ];
           };
         };
       nixosConfigurations = {
