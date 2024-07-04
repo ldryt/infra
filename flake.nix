@@ -9,6 +9,9 @@
 
     sops-nix.url = "github:mic92/sops-nix";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs-stable";
+
+    nixos-generators.url = "github:nix-community/nixos-generators";
+    nixos-generators.inputs.nixpkgs.follows = "nixpkgs-stable";
   };
   outputs =
     {
@@ -17,6 +20,7 @@
       home-manager,
       sops-nix,
       disko,
+      nixos-generators,
       ...
     }@inputs:
     {
@@ -77,6 +81,19 @@
             ./hosts/zarina
             sops-nix.nixosModules.sops
             disko.nixosModules.disko
+          ];
+        };
+      };
+      packages.x86_64-linux = {
+        zarina = nixos-generators.nixosGenerate {
+          system = "x86_64-linux";
+          format = "gce";
+          specialArgs = {
+            inherit inputs;
+          };
+          modules = [
+            ./hosts/zarina
+            sops-nix.nixosModules.sops
           ];
         };
       };
