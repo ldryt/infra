@@ -2,6 +2,7 @@
 {
   home.sessionVariables."NIXOS_OZONE_WL" = "1";
   home.packages = with pkgs; [
+    direnv
     nil
     nixfmt-rfc-style
   ];
@@ -11,7 +12,6 @@
     package = pkgs.vscodium;
     extensions = with pkgs.vscode-extensions; [
       # VSCode utilities
-      # vscodevim.vim
       mkhl.direnv
 
       # VSCode Theme
@@ -31,6 +31,12 @@
 
       # Terraform support
       hashicorp.terraform
+
+      # Go support
+      golang.go
+
+      # Rust support
+      rust-lang.rust-analyzer
     ];
 
     enableExtensionUpdateCheck = false;
