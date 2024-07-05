@@ -4,6 +4,20 @@
   networking.networkmanager.ensureProfiles = {
     environmentFiles = [ config.sops.secrets."system/NetworkManager/profiles/env".path ];
     profiles = {
+      LYS = {
+        connection = {
+          id = "$LYS_SSID";
+          type = "wifi";
+        };
+        wifi = {
+          mode = "infrastructure";
+          ssid = "$LYS_SSID";
+        };
+        wifi-security = {
+          key-mgmt = "wpa-psk";
+          psk = "$LYS_PWD";
+        };
+      };
       GNB = {
         connection = {
           id = "$GNB_SSID";
