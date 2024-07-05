@@ -1,4 +1,4 @@
-module main.go
+module mcredir
 
 go 1.22.4
 

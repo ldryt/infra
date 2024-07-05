@@ -72,7 +72,7 @@ func handleHandshake(r io.Reader) (h HandshakeData, err error) {
 	return h, nil
 }
 
-func handleStatus(r io.Reader) (err error) {
+func handleStatusRequest(r io.Reader) (err error) {
 	var p Packet
 
 	p, err = ReadPacket(r)
@@ -86,7 +86,7 @@ func handleStatus(r io.Reader) (err error) {
 	return nil
 }
 
-func sendStatus(w io.Writer, conf ServerListConfig) (err error) {
+func sendStatusResponse(w io.Writer, conf Config) (err error) {
 	var p Packet
 	var sr StatusResponse
 	var srMarshalled []byte
@@ -98,15 +98,15 @@ func sendStatus(w io.Writer, conf ServerListConfig) (err error) {
 			Name     string `json:"name"`
 			Protocol int    `json:"protocol"`
 		}{
-			Name:     conf.Version,
-			Protocol: conf.Protocol,
+			Name:     conf.Minecraft.Version,
+			Protocol: conf.Minecraft.Protocol,
 		},
 		Description: struct {
 			Text string `json:"text"`
 		}{
-			Text: conf.Motd,
+			Text: conf.Minecraft.Motd,
 		},
-		Favicon: slconf.FaviconB64,
+		Favicon: conf.Minecraft.FaviconB64,
 	}
 
 	srMarshalled, err = json.Marshal(sr)
@@ -127,7 +127,7 @@ func sendStatus(w io.Writer, conf ServerListConfig) (err error) {
 	return nil
 }
 
-func handlePing(r io.Reader) (pl int64, err error) {
+func handlePingRequest(r io.Reader) (pl int64, err error) {
 	var p Packet
 
 	p, err = ReadPacket(r)
@@ -146,7 +146,7 @@ func handlePing(r io.Reader) (pl int64, err error) {
 	return pl, nil
 }
 
-func sendPong(w io.Writer, pl int64) (err error) {
+func sendPongResponse(w io.Writer, pl int64) (err error) {
 	var p Packet
 
 	p.ID = 1
@@ -164,7 +164,7 @@ func sendPong(w io.Writer, pl int64) (err error) {
 	return nil
 }
 
-func handleLogin(r io.Reader) (pr PlayerData, err error) {
+func handleLoginStart(r io.Reader) (pr PlayerData, err error) {
 	var p Packet
 
 	p, err = ReadPacket(r)
