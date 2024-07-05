@@ -2,7 +2,7 @@
 {
   imports = [
     ./nmprofiles.nix
-    ../../../modules/dnscrypt.nix
+    ../../../modules/dns.nix
     ../../../modules/chrony.nix
   ];
   networking = {

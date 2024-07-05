@@ -1,18 +1,21 @@
 { ... }:
 {
   networking.nameservers = [
-    "1.1.1.1"
-    "9.9.9.9"
-    "8.8.8.8"
+    "9.9.9.11#dns.quad9.net"
+    "149.112.112.112#dns.quad9.net"
+    "2620:fe::fe#dns.quad9.net"
+    "2620:fe::9#dns.quad9.net"
   ];
 
-  # No nameservers overrides
-  networking.networkmanager.dns = "none";
-  networking.dhcpcd.extraConfig = "nohook resolv.conf";
-  services.resolved.enable = false;
-  networking.resolvconf.enable = false;
+  services.resolved = {
+    enable = true;
+    dnsovertls = "true";
+    dnssec = "true";
+    domains = [ "~." ];
+    fallbackDns = [ "1.1.1.1#one.one.one.one" "1.0.0.1#one.one.one.one" ];
+  };
 
-  # Enable mDNS resolving
+  # mDNS resolving
   services.avahi = {
     enable = true;
     ipv6 = true;
