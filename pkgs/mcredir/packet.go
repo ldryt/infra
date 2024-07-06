@@ -14,7 +14,6 @@ type Packet struct {
 
 func ReadPacket(r io.Reader) (p Packet, err error) {
 	var PacketLength int32
-	var PacketBuf []byte
 
 	PacketLength, err = ReadVarInt(r)
 	if err != nil {
@@ -26,39 +25,28 @@ func ReadPacket(r io.Reader) (p Packet, err error) {
 		return Packet{}, err
 	}
 
-	PacketBuf = make([]byte, PacketLength-int32(VarIntSize(p.ID)))
-	_, err = io.ReadFull(r, PacketBuf)
+	_, err = io.CopyN(&p.Data, r, int64(PacketLength-int32(VarIntSize(p.ID))))
 	if err != nil {
 		return Packet{}, err
 	}
-
-	p.Data = *bytes.NewBuffer(PacketBuf)
 
 	return p, nil
 }
 
 func SendPacket(w io.Writer, p Packet) (err error) {
-	var PacketLength int
-	var PacketBuf bytes.Buffer
-
-	err = WriteVarInt(&PacketBuf, p.ID)
-	if err != nil {
-		return err
-	}
-
-	_, err = PacketBuf.ReadFrom(&p.Data)
-	if err != nil {
-		return err
-	}
-
-	PacketLength = PacketBuf.Len()
+	var PacketLength int = VarIntSize(p.ID) + p.Data.Len()
 
 	err = WriteVarInt(w, int32(PacketLength))
 	if err != nil {
 		return err
 	}
 
-	_, err = io.Copy(w, &PacketBuf)
+	err = WriteVarInt(w, p.ID)
+	if err != nil {
+		return err
+	}
+
+	_, err = p.Data.WriteTo(w)
 	if err != nil {
 		return err
 	}

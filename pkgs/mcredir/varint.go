@@ -1,29 +1,30 @@
 package main
 
 import (
-	"encoding/binary"
 	"errors"
 	"io"
 )
 
 // https://wiki.vg/Protocol#Type:VarInt
 
-var segmentBits byte = 0x7F
-var continueBit byte = 0x80
+const (
+	segmentBits int32 = 0x7F
+	continueBit int32 = 0x80
+)
 
 func ReadVarInt(r io.Reader) (value int32, err error) {
 	var position int
-	var currentByte byte
+	var currentByte []byte = make([]byte, 1)
 
 	for {
-		err = binary.Read(r, binary.BigEndian, &currentByte)
+		_, err = r.Read(currentByte)
 		if err != nil {
 			return 0, err
 		}
 
-		value |= int32(currentByte&segmentBits) << position
+		value |= int32(currentByte[0]) & segmentBits << position
 
-		if (currentByte & continueBit) == 0 {
+		if (int32(currentByte[0]) & continueBit) == 0 {
 			break
 		}
 
@@ -39,12 +40,12 @@ func ReadVarInt(r io.Reader) (value int32, err error) {
 
 func WriteVarInt(w io.Writer, value int32) (err error) {
 	for {
-		if (value & int32(^segmentBits)) == 0 {
+		if (value & ^segmentBits) == 0 {
 			_, err = w.Write([]byte{byte(value)})
 			return err
 		}
 
-		_, err := w.Write([]byte{byte(value)&segmentBits | continueBit})
+		_, err = w.Write([]byte{byte((value & segmentBits) | continueBit)})
 		if err != nil {
 			return err
 		}
@@ -54,15 +55,13 @@ func WriteVarInt(w io.Writer, value int32) (err error) {
 }
 
 func VarIntSize(value int32) (size int) {
-	var i int
-
 	for {
-		i++
+		size++
 		value >>= 7
 		if value == 0 {
 			break
 		}
 	}
 
-	return i
+	return size
 }
