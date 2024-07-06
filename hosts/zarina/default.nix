@@ -1,8 +1,6 @@
 { config, modulesPath, ... }:
 {
   imports = [
-    ./disk-config.nix
-
     ./services/mc.nix
 
     ../../modules/fail2ban.nix
@@ -27,6 +25,7 @@
     hostName = "zarina";
     useDHCP = false;
     interfaces."eth0".useDHCP = true;
+    firewall.enable = true;
   };
 
   sops.secrets."users/colon/hashedPassword".neededForUsers = true;

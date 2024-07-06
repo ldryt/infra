@@ -76,17 +76,6 @@
             disko.nixosModules.disko
           ];
         };
-        zarina = nixpkgs-stable.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs;
-          };
-          system = "x86_64-linux";
-          modules = [
-            ./hosts/zarina
-            sops-nix.nixosModules.sops
-            disko.nixosModules.disko
-          ];
-        };
       };
       packages.x86_64-linux = {
         zarina = nixos-generators.nixosGenerate {
