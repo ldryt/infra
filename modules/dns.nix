@@ -9,17 +9,13 @@
 
   services.resolved = {
     enable = true;
-    dnsovertls = "true";
-    dnssec = "true";
+    llmnr = "false";
+    dnsovertls = "opportunistic";
+    dnssec = "allow-downgrade";
     domains = [ "~." ];
     fallbackDns = [ "1.1.1.1#one.one.one.one" "1.0.0.1#one.one.one.one" ];
-  };
-
-  # mDNS resolving
-  services.avahi = {
-    enable = true;
-    ipv6 = true;
-    nssmdns6 = true;
-    nssmdns4 = true;
+    extraConfig = ''
+      MulticastDNS=yes
+    '';
   };
 }
