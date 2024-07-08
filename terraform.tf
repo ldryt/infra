@@ -18,5 +18,9 @@ terraform {
       version = "~>2.3.0"
       source  = "go-gandi/gandi"
     }
+    google = {
+      source  = "hashicorp/google"
+      version = "~>5.36.0"
+    }
   }
 }

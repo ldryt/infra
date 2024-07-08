@@ -1,89 +1,84 @@
-resource "hcloud_firewall" "zarina_firewall" {
-  labels = {
-    "zarina" : true
+variable "create_zarina_instance" {
+  type = bool
+}
+
+locals {
+  keynames = [
+    "ssh_host_rsa_key",
+    "ssh_host_rsa_key.pub",
+    "ssh_host_ed25519_key",
+    "ssh_host_ed25519_key.pub"
+  ]
+}
+
+resource "google_compute_network" "zarina_network" {
+  provider = google
+
+  name = "zarina"
+}
+
+resource "google_compute_firewall" "zarina_firewall" {
+  provider = google
+
+  name    = "zarina"
+  network = google_compute_network.zarina_network.self_link
+
+  source_ranges = ["0.0.0.0/0"]
+
+  allow {
+    protocol = "icmp"
   }
-  name = "zarina_firewall"
-  rule {
-    direction = "in"
-    protocol  = "icmp"
-    source_ips = [
-      "0.0.0.0/0"
-    ]
-  }
-  rule {
-    direction = "in"
-    protocol  = "tcp"
-    port      = "80"
-    source_ips = [
-      "0.0.0.0/0"
-    ]
-  }
-  rule {
-    direction = "in"
-    protocol  = "tcp"
-    port      = "443"
-    source_ips = [
-      "0.0.0.0/0"
-    ]
-  }
-  rule {
-    direction = "in"
-    protocol  = "tcp"
-    port      = "22"
-    source_ips = [
-      "0.0.0.0/0"
-    ]
-  }
-  rule {
-    direction = "in"
-    protocol  = "tcp"
-    port      = "25565"
-    source_ips = [
-      "0.0.0.0/0"
-    ]
-  }
-  rule {
-    direction = "in"
-    protocol  = "udp"
-    port      = "24454"
-    source_ips = [
-      "0.0.0.0/0"
-    ]
+
+  allow {
+    protocol = "tcp"
+    ports    = ["22", "25565"]
   }
 }
 
-resource "hcloud_primary_ip" "zarina_ipv4" {
-  labels = {
-    "zarina" : true
-  }
-  name          = "zarina_ipv4"
-  datacenter    = "fsn1-dc14"
-  type          = "ipv4"
-  assignee_type = "server"
-  auto_delete   = true
-}
+resource "google_compute_instance" "zarina_instance" {
+  count    = var.create_zarina_instance ? 1 : 0
+  provider = google-beta
 
-resource "hcloud_ssh_key" "zarina_ssh_key" {
-  labels = {
-    "zarina" : true
-  }
-  name       = "zarina_ssh_key"
-  public_key = data.sops_file.zarina_secrets.data["users.colon.sshPubKey"]
-}
-
-resource "hcloud_server" "zarina_server" {
-  labels = {
-    "zarina" = true
-  }
   name         = "zarina"
-  image        = "debian-12"
-  server_type  = "cx32"
-  datacenter   = "fsn1-dc14"
-  firewall_ids = [hcloud_firewall.zarina_firewall.id]
-  ssh_keys     = [hcloud_ssh_key.zarina_ssh_key.id]
-  public_net {
-    ipv4_enabled = true
-    ipv4         = hcloud_primary_ip.zarina_ipv4.id
-    ipv6_enabled = false
+  machine_type = "c2d-standard-2"
+  zone         = "europe-west1-d"
+
+  boot_disk {
+    initialize_params {
+      size  = "30"
+      type  = "pd-ssd"
+      image = google_compute_image.zarina_image.self_link
+    }
   }
+
+  network_interface {
+    network = google_compute_network.zarina_network.self_link
+    access_config {}
+  }
+
+  scheduling {
+    instance_termination_action = "DELETE"
+    max_run_duration {
+      seconds = 60 * 60 * 12 // 12 hours
+    }
+  }
+
+  metadata_startup_script = <<-EOT
+    if [ ! -f /var/startup_script_success ]; then
+      touch /var/startup_script_success
+
+      ${join("\n", [for _, keyname in local.keynames : <<-SCRIPT
+        if [[ ${keyname} == *.pub ]]; then
+          umask 0133
+        else
+          umask 0177
+        fi
+        echo "${base64encode(data.sops_file.zarina_secrets.data["system.ssh.${keyname}"])}" \
+          | base64 --decode > /etc/ssh/${keyname}
+      SCRIPT
+])}
+
+      reboot
+    fi
+  EOT
 }

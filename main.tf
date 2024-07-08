@@ -16,15 +16,24 @@ provider "gandi" {
 
 provider "sops" {}
 
-variable "create_zarina" {
+provider "google" {
+  project = "tidy-arena-428113-b3"
+}
+
+provider "google-beta" {
+  project = "tidy-arena-428113-b3"
+}
+
+variable "zarina" {
   description = "Flag to create or not host zarina"
   type        = bool
   default     = false
 }
 
 module "zarina" {
-  count  = var.create_zarina ? 1 : 0
   source = "./hosts/zarina"
+
+  create_zarina_instance = var.zarina
 }
 
 module "silvermist" {

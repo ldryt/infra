@@ -42,6 +42,7 @@
             ];
             shellHook = ''
               export SOPS_AGE_KEY_FILE=~/.keyring/sops_age_ldryt.key
+              export GCLOUD_KEYFILE_JSON=~/.keyring/gcloud-key-tidy-arena-428113-b3-2f902b588b01.json
             '';
             # https://github.com/go-delve/delve/issues/3085
             hardeningDisable = [ "fortify" ];
