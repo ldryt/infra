@@ -84,6 +84,7 @@
           format = "gce";
           specialArgs = {
             inherit inputs;
+            system = "x86_64-linux";
           };
           modules = [
             ./hosts/zarina
