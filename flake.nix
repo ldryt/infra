@@ -89,6 +89,7 @@
             sops-nix.nixosModules.sops
           ];
         };
+        mcredir = nixpkgs-stable.legacyPackages."x86_64-linux".callPackage ./pkgs/mcredir { };
       };
     };
 }
