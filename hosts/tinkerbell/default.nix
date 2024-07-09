@@ -94,23 +94,27 @@
     };
     desktopManager.gnome.enable = true;
   };
-  environment.gnome.excludePackages = with pkgs.gnome; [
-    cheese
-    epiphany
-    yelp
-    file-roller
-    geary
-    seahorse
-    gnome-characters
-    gnome-contacts
-    gnome-font-viewer
-    gnome-logs
-    gnome-maps
-    gnome-music
-    pkgs.gnome-photos
-    gnome-system-monitor
-    pkgs.gnome-tour
-  ];
+  environment.gnome.excludePackages =
+    with pkgs;
+    [
+      cheese
+      epiphany
+      yelp
+      file-roller
+      geary
+      seahorse
+      gnome-font-viewer
+      gnome-system-monitor
+    ]
+    ++ (with pkgs.gnome; [
+      gnome-characters
+      gnome-contacts
+      gnome-logs
+      gnome-maps
+      gnome-music
+      gnome-photos
+      gnome-tour
+    ]);
 
   # Battery savings
   services.power-profiles-daemon.enable = lib.mkForce false;
