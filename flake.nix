@@ -15,6 +15,7 @@
   };
   outputs =
     {
+      self,
       nixpkgs-unstable,
       nixpkgs-stable,
       home-manager,
@@ -80,17 +81,22 @@
             }
           ];
         };
-        silvermist = nixpkgs-stable.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs;
+        silvermist =
+          let
+            system = "x86_64-linux";
+          in
+          nixpkgs-stable.lib.nixosSystem {
+            specialArgs = {
+              inherit inputs;
+              flakePackages = self.packages.${system};
+            };
+            inherit system;
+            modules = [
+              ./hosts/silvermist
+              sops-nix.nixosModules.sops
+              disko.nixosModules.disko
+            ];
           };
-          system = "x86_64-linux";
-          modules = [
-            ./hosts/silvermist
-            sops-nix.nixosModules.sops
-            disko.nixosModules.disko
-          ];
-        };
       };
       packages = forAllSystems (
         system:

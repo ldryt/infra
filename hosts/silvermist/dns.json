@@ -4,6 +4,7 @@
     "immich": "pics",
     "ocis": "files",
     "keycloak": "auth",
-    "vaultwarden": "pass"
+    "vaultwarden": "pass",
+    "mcredir": "mc"
   }
 }
