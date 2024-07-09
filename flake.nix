@@ -36,30 +36,32 @@
       forAllSystems = nixpkgs-stable.lib.genAttrs systems;
     in
     {
-
-      devShells = forAllSystems (
+      packages = forAllSystems (
         system:
         let
-          pkgs = import nixpkgs-stable {
-            config.allowUnfree = true;
-            inherit system;
-          };
+          pkgs = import nixpkgs-stable { inherit system; };
+          pkgs-unstable = import nixpkgs-unstable { inherit system; };
         in
         {
-          default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              sops
-              terraform
-              jq
-              go
-              delve
+          zarina = nixos-generators.nixosGenerate {
+            inherit system;
+            format = "gce";
+            specialArgs = {
+              inherit inputs;
+              inherit pkgs-unstable;
+            };
+            modules = [
+              ./hosts/zarina
+              sops-nix.nixosModules.sops
             ];
-            shellHook = ''
-              export SOPS_AGE_KEY_FILE=~/.keyring/sops_age_ldryt.key
-              export GCLOUD_KEYFILE_JSON=~/.keyring/gcloud-key-tidy-arena-428113-b3-2f902b588b01.json
-            '';
-            # https://github.com/go-delve/delve/issues/3085
-            hardeningDisable = [ "fortify" ];
+          };
+          mcredir = pkgs.buildGoModule {
+            pname = "mcredir";
+            version = "0.1.2";
+
+            src = ./pkgs/mcredir;
+
+            vendorHash = "sha256-g+yaVIx4jxpAQ/+WrGKxhVeliYx7nLQe/zsGpxV4Fn4=";
           };
         }
       );
@@ -98,32 +100,29 @@
             ];
           };
       };
-      packages = forAllSystems (
+      devShells = forAllSystems (
         system:
         let
-          pkgs = import nixpkgs-stable { inherit system; };
-          pkgs-unstable = import nixpkgs-unstable { inherit system; };
+          pkgs = import nixpkgs-stable {
+            config.allowUnfree = true;
+            inherit system;
+          };
         in
         {
-          zarina = nixos-generators.nixosGenerate {
-            inherit system;
-            format = "gce";
-            specialArgs = {
-              inherit inputs;
-              inherit pkgs-unstable;
-            };
-            modules = [
-              ./hosts/zarina
-              sops-nix.nixosModules.sops
+          default = pkgs.mkShell {
+            buildInputs = with pkgs; [
+              sops
+              terraform
+              jq
+              go
+              delve
             ];
-          };
-          mcredir = pkgs.buildGoModule {
-            pname = "mcredir";
-            version = "0.1.2";
-
-            src = ./pkgs/mcredir;
-
-            vendorHash = "sha256-g+yaVIx4jxpAQ/+WrGKxhVeliYx7nLQe/zsGpxV4Fn4=";
+            shellHook = ''
+              export SOPS_AGE_KEY_FILE=~/.keyring/sops_age_ldryt.key
+              export GCLOUD_KEYFILE_JSON=~/.keyring/gcloud-key-tidy-arena-428113-b3-2f902b588b01.json
+            '';
+            # https://github.com/go-delve/delve/issues/3085
+            hardeningDisable = [ "fortify" ];
           };
         }
       );
