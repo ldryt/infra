@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	listener, err := net.Listen("tcp", getConfig().ListenAddress)
+	listener, err := net.Listen("tcp4", getConfig().ListenAddress)
 	if err != nil {
 		log.Fatalln("An error occurred while creating listener:", err)
 	}
