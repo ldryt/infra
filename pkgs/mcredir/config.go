@@ -11,13 +11,18 @@ import (
 type Config struct {
 	ListenAddress string `yaml:"listen-address"`
 
-	Minecraft struct {
-		Version     string `yaml:"version"`
-		Protocol    int    `yaml:"protocol"`
-		Motd        string `yaml:"motd"`
-		FaviconPath string `yaml:"favicon_path"`
-		FaviconB64  string
-	} `yaml:"mc"`
+	Version struct {
+		Name     string `yaml:"name"`
+		Protocol int    `yaml:"protocol"`
+	} `yaml:"version"`
+
+	Motds struct {
+		NotStarted string `yaml:"not_started"`
+		Starting   string `yaml:"starting"`
+	}
+
+	FaviconPath string `yaml:"favicon"`
+	FaviconB64  string
 }
 
 func getConfig() (conf Config) {
@@ -36,7 +41,7 @@ func getConfig() (conf Config) {
 	if err != nil {
 		log.Fatalln("Failed to parse config:", err)
 	}
-	conf.Minecraft.FaviconB64, err = encodeFavicon(conf.Minecraft.FaviconPath)
+	conf.FaviconB64, err = encodeFavicon(conf.FaviconPath)
 	if err != nil {
 		log.Println("Failed to encode favicon:", err)
 	}

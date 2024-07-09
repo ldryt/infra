@@ -4,10 +4,15 @@ let
   mcredirConfig = pkgs.writeText "mcredirConfig" ''
     listen-address: "0.0.0.0:${toString mcredirPort}"
 
-    mc:
-      version: "1.21"
+    version:
+      name: "1.21"
       protocol: 767
-      motd: "Click here to start the server."
+
+    motds:
+      not_started: "Click here to start the server"
+      starting: "Please wait..."
+
+    favicon: ${../../../pkgs/mcredir/assets/server-icon.png}
   '';
 in
 {

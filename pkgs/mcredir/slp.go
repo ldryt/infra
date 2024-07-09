@@ -98,15 +98,15 @@ func sendStatusResponse(w io.Writer, conf Config) (err error) {
 			Name     string `json:"name"`
 			Protocol int    `json:"protocol"`
 		}{
-			Name:     conf.Minecraft.Version,
-			Protocol: conf.Minecraft.Protocol,
+			Name:     conf.Version.Name,
+			Protocol: conf.Version.Protocol,
 		},
 		Description: struct {
 			Text string `json:"text"`
 		}{
-			Text: conf.Minecraft.Motd,
+			Text: conf.Motds.NotStarted,
 		},
-		Favicon: conf.Minecraft.FaviconB64,
+		Favicon: conf.FaviconB64,
 	}
 
 	srMarshalled, err = json.Marshal(sr)

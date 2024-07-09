@@ -1,7 +1,11 @@
 listen-address: "0.0.0.0:25565"
 
-mc:
-  version: "1.21"
+version:
+  name: "1.21"
   protocol: 767
-  motd: "Jipiii!"
-  favicon_path: "./assets/server-icon.png"
+
+motds:
+  not_started: "Click here to start the server"
+  starting: "Please wait..."
+
+favicon: "./assets/server-icon.png"
