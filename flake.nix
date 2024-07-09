@@ -98,7 +98,7 @@
           format = "gce";
           specialArgs = {
             inherit inputs;
-            inherit system;
+            pkgs-unstable = nixpkgs-unstable.legacyPackages."${system}";
           };
           modules = [
             ./hosts/zarina
