@@ -23,12 +23,25 @@
       nixos-generators,
       ...
     }@inputs:
+    let
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+        "i686-linux"
+        "x86_64-darwin"
+        "aarch64-darwin"
+      ];
+
+      forAllSystems = nixpkgs-stable.lib.genAttrs systems;
+    in
     {
-      devShells.x86_64-linux =
+
+      devShells = forAllSystems (
+        system:
         let
           pkgs = import nixpkgs-stable {
             config.allowUnfree = true;
-            system = "x86_64-linux";
+            inherit system;
           };
         in
         {
@@ -47,7 +60,8 @@
             # https://github.com/go-delve/delve/issues/3085
             hardeningDisable = [ "fortify" ];
           };
-        };
+        }
+      );
       nixosConfigurations = {
         tinkerbell = nixpkgs-unstable.lib.nixosSystem {
           specialArgs = {
@@ -78,20 +92,20 @@
           ];
         };
       };
-      packages.x86_64-linux = {
+      packages = forAllSystems (system: {
         zarina = nixos-generators.nixosGenerate {
-          system = "x86_64-linux";
+          inherit system;
           format = "gce";
           specialArgs = {
             inherit inputs;
-            system = "x86_64-linux";
+            inherit system;
           };
           modules = [
             ./hosts/zarina
             sops-nix.nixosModules.sops
           ];
         };
-        mcredir = nixpkgs-stable.legacyPackages."x86_64-linux".callPackage ./pkgs/mcredir { };
-      };
+        mcredir = nixpkgs-stable.legacyPackages."${system}".callPackage ./pkgs/mcredir { };
+      });
     };
 }
