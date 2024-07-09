@@ -16,6 +16,7 @@
     ../../modules/podman.nix
     ../../modules/nix-settings.nix
     ../../modules/backups.nix
+    ../../modules/net_tuning.nix
 
     (modulesPath + "/installer/scan/not-detected.nix")
     (modulesPath + "/profiles/qemu-guest.nix")
