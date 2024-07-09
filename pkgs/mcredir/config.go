@@ -8,8 +8,6 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-var ConfigPath string = "./config.yml"
-
 type Config struct {
 	ListenAddress string `yaml:"listen-address"`
 
@@ -23,6 +21,12 @@ type Config struct {
 }
 
 func getConfig() (conf Config) {
+	var ConfigPath string = "./config.yml"
+
+	if len(os.Args) != 1 {
+		ConfigPath = os.Args[1]
+	}
+
 	yamlFile, err := os.ReadFile(ConfigPath)
 	if err != nil {
 		log.Fatalln("Failed to load config:", err)
