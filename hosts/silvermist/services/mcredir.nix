@@ -15,6 +15,7 @@ in
   systemd.services.mcredir = {
     wants = [ "network-online.target" ];
     after = [ "network-online.target" ];
+    wantedBy = [ "multi-user.target" ];
     serviceConfig = {
       ExecStart = "${flakePackages.mcredir}/bin/mcredir ${mcredirConfig}";
     };
