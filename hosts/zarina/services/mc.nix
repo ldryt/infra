@@ -17,6 +17,6 @@
 
   ldryt-infra.backups.mc = {
     paths = [ config.services.minecraft-server.dataDir ];
-    timerConfig.OnCalendar = "*/5 * * * *"; # every 5 minutes
+    timerConfig.OnCalendar = "*-*-* *:*/5:00"; # every 5 minutes
   };
 }
