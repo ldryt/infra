@@ -92,20 +92,34 @@
           ];
         };
       };
-      packages = forAllSystems (system: {
-        zarina = nixos-generators.nixosGenerate {
-          inherit system;
-          format = "gce";
-          specialArgs = {
-            inherit inputs;
-            pkgs-unstable = nixpkgs-unstable.legacyPackages."${system}";
+      packages = forAllSystems (
+        system:
+        let
+          pkgs = import nixpkgs-stable { inherit system; };
+          pkgs-unstable = import nixpkgs-unstable { inherit system; };
+        in
+        {
+          zarina = nixos-generators.nixosGenerate {
+            inherit system;
+            format = "gce";
+            specialArgs = {
+              inherit inputs;
+              inherit pkgs-unstable;
+            };
+            modules = [
+              ./hosts/zarina
+              sops-nix.nixosModules.sops
+            ];
           };
-          modules = [
-            ./hosts/zarina
-            sops-nix.nixosModules.sops
-          ];
-        };
-        mcredir = nixpkgs-stable.legacyPackages."${system}".callPackage ./pkgs/mcredir { };
-      });
+          mcredir = pkgs.buildGoModule {
+            pname = "mcredir";
+            version = "0.1.1";
+
+            src = ./pkgs/mcredir;
+
+            vendorHash = "sha256-g+yaVIx4jxpAQ/+WrGKxhVeliYx7nLQe/zsGpxV4Fn4=";
+          };
+        }
+      );
     };
 }
