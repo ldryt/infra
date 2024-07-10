@@ -25,28 +25,21 @@ type Config struct {
 	FaviconB64  string
 }
 
-func getConfig() (conf Config) {
-	var ConfigPath string = "./config.yml"
-
-	if len(os.Args) != 1 {
-		ConfigPath = os.Args[1]
-	}
-
+func LoadConfig() {
 	yamlFile, err := os.ReadFile(ConfigPath)
 	if err != nil {
 		log.Fatalln("Failed to load config:", err)
 	}
 
-	err = yaml.Unmarshal(yamlFile, &conf)
+	err = yaml.Unmarshal(yamlFile, &GlobalConfig)
 	if err != nil {
 		log.Fatalln("Failed to parse config:", err)
 	}
-	conf.FaviconB64, err = encodeFavicon(conf.FaviconPath)
+
+	GlobalConfig.FaviconB64, err = encodeFavicon(GlobalConfig.FaviconPath)
 	if err != nil {
 		log.Println("Failed to encode favicon:", err)
 	}
-
-	return conf
 }
 
 func encodeFavicon(path string) (result string, err error) {

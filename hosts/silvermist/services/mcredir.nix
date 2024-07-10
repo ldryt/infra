@@ -22,7 +22,7 @@ in
     after = [ "network-online.target" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
-      ExecStart = "${flakePackages.mcredir}/bin/mcredir ${mcredirConfig}";
+      ExecStart = "${flakePackages.mcredir}/bin/mcredir -config=${mcredirConfig}";
     };
   };
 }

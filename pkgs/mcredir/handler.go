@@ -39,7 +39,7 @@ func HandleStatus(conn net.Conn) {
 	}
 	log.Printf("Received status request on %s", conn.RemoteAddr())
 
-	err = sendStatusResponse(conn, getConfig())
+	err = sendStatusResponse(conn)
 	if err != nil {
 		logError("sending status response", conn.RemoteAddr(), err)
 		return

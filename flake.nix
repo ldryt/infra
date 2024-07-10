@@ -57,7 +57,7 @@
           };
           mcredir = pkgs.buildGoModule {
             pname = "mcredir";
-            version = "0.2.1";
+            version = "0.3.0";
 
             src = ./pkgs/mcredir;
 

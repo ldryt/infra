@@ -86,7 +86,7 @@ func handleStatusRequest(r io.Reader) (err error) {
 	return nil
 }
 
-func sendStatusResponse(w io.Writer, conf Config) (err error) {
+func sendStatusResponse(w io.Writer) (err error) {
 	var p Packet
 	var sr StatusResponse
 	var srMarshalled []byte
@@ -98,15 +98,15 @@ func sendStatusResponse(w io.Writer, conf Config) (err error) {
 			Name     string `json:"name"`
 			Protocol int    `json:"protocol"`
 		}{
-			Name:     conf.Version.Name,
-			Protocol: conf.Version.Protocol,
+			Name:     GlobalConfig.Version.Name,
+			Protocol: GlobalConfig.Version.Protocol,
 		},
 		Description: struct {
 			Text string `json:"text"`
 		}{
-			Text: conf.Motds.NotStarted,
+			Text: GlobalConfig.Motds.NotStarted,
 		},
-		Favicon: conf.FaviconB64,
+		Favicon: GlobalConfig.FaviconB64,
 	}
 
 	srMarshalled, err = json.Marshal(sr)

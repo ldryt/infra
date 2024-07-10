@@ -1,12 +1,24 @@
 package main
 
 import (
+	"flag"
 	"log"
 	"net"
 )
 
+var ConfigPath string
+var GlobalConfig Config
+
 func main() {
-	listener, err := net.Listen("tcp4", getConfig().ListenAddress)
+	ConfigPathPTR := flag.String("config", "./config.yml", "a path to the configuration file")
+
+	flag.Parse()
+
+	ConfigPath = *ConfigPathPTR
+
+	LoadConfig()
+
+	listener, err := net.Listen("tcp4", GlobalConfig.ListenAddress)
 	if err != nil {
 		log.Fatalln("An error occurred while creating listener:", err)
 	}
