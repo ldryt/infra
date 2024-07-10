@@ -36,6 +36,10 @@ func LoadConfig() (err error) {
 		return fmt.Errorf("couldn't parse config: %v", err)
 	}
 
+	if GlobalConfig.FaviconPath == "" {
+		return nil
+	}
+
 	GlobalConfig.FaviconB64, err = encodeFavicon(GlobalConfig.FaviconPath)
 	if err != nil {
 		return fmt.Errorf("couldn't encode favicon: %v", err)
