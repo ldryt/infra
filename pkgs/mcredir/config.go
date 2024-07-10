@@ -2,7 +2,7 @@ package main
 
 import (
 	"encoding/base64"
-	"log"
+	"fmt"
 	"os"
 
 	"gopkg.in/yaml.v3"
@@ -25,21 +25,23 @@ type Config struct {
 	FaviconB64  string
 }
 
-func LoadConfig() {
+func LoadConfig() (err error) {
 	yamlFile, err := os.ReadFile(ConfigPath)
 	if err != nil {
-		log.Fatalln("Failed to load config:", err)
+		return fmt.Errorf("couldn't load config: %v", err)
 	}
 
 	err = yaml.Unmarshal(yamlFile, &GlobalConfig)
 	if err != nil {
-		log.Fatalln("Failed to parse config:", err)
+		return fmt.Errorf("couldn't parse config: %v", err)
 	}
 
 	GlobalConfig.FaviconB64, err = encodeFavicon(GlobalConfig.FaviconPath)
 	if err != nil {
-		log.Println("Failed to encode favicon:", err)
+		return fmt.Errorf("couldn't encode favicon: %v", err)
 	}
+
+	return nil
 }
 
 func encodeFavicon(path string) (result string, err error) {

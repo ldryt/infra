@@ -16,7 +16,10 @@ func main() {
 
 	ConfigPath = *ConfigPathPTR
 
-	LoadConfig()
+	err := LoadConfig()
+	if err != nil {
+		log.Fatalln("An error occurred while loading configuration:", err)
+	}
 
 	listener, err := net.Listen("tcp4", GlobalConfig.ListenAddress)
 	if err != nil {
