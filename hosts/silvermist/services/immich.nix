@@ -26,7 +26,7 @@ in
   virtualisation.oci-containers.containers = {
     "immich-server" = {
       hostname = "immich-server";
-      image = "ghcr.io/immich-app/immich-server:v1.106.4@sha256:ad971367766f6b5386fbb80637073aa558eb1cd0a4a3e412c5d5c6457e0df0d5"; # https://github.com/immich-app/immich/pkgs/container/immich-server/229694705?tag=v1.106.4
+      image = "ghcr.io/immich-app/immich-server:v1.107.2@sha256:66050b1aaa86366bef629a31dff95c1303ef5c9b7783863a48456704a56d5640"; # https://github.com/immich-app/immich/pkgs/container/immich-server/238448195?tag=v1.107.2
       environment = {
         IMMICH_CONFIG_FILE = "/etc/immich-config.json";
         DB_HOSTNAME = "immich-db";
@@ -51,7 +51,7 @@ in
     };
     "immich-machine-learning" = {
       hostname = "immich-machine-learning";
-      image = "ghcr.io/immich-app/immich-machine-learning:v1.106.4@sha256:1dcebde9a0c02c7f90ea93f64f883423f8067eef297ff2330d65001e32ce12fd"; # https://github.com/immich-app/immich/pkgs/container/immich-machine-learning/229687734?tag=v1.106.4
+      image = "ghcr.io/immich-app/immich-machine-learning:v1.107.2@sha256:0258120fb043754327190cb50c8d7d6f3160579009a9386509689532470be252"; # https://github.com/immich-app/immich/pkgs/container/immich-machine-learning/238446999?tag=v1.107.2
       volumes = [ "immich-ml-cache:/cache" ];
       extraOptions = [ "--network=${podmanNetwork}" ];
     };
