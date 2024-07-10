@@ -1,7 +1,3 @@
-variable "create_zarina_instance" {
-  type = bool
-}
-
 locals {
   keynames = [
     "ssh_host_rsa_key",
@@ -36,7 +32,7 @@ resource "google_compute_firewall" "zarina_firewall" {
 }
 
 resource "google_compute_instance" "zarina_instance" {
-  count    = var.create_zarina_instance ? 1 : 0
+  count    = var.ignore_instance_zarina ? 0 : 1
   provider = google-beta
 
   name         = "zarina"

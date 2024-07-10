@@ -1,5 +1,5 @@
 locals {
-  dns = jsondecode(file("${path.module}/dns.json"))
+  dns = jsondecode(file("${path.module}/../dns.json"))
 }
 
 resource "gandi_livedns_record" "silvermist_A_record" {

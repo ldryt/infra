@@ -1,14 +1,14 @@
 locals {
-  nix_build_result_path = module.nix-build.result["out"]
+  nix_build_result_path     = module.zarina-build.result["out"]
   zarina_image_matching_set = fileset(local.nix_build_result_path, "nixos-image-*-x86_64-linux.raw.tar.gz")
-  zarina_image_filename = tolist(local.zarina_image_matching_set)[0]
-  zarina_image_path = join("/", [local.nix_build_result_path, local.zarina_image_filename])
+  zarina_image_filename     = tolist(local.zarina_image_matching_set)[0]
+  zarina_image_path         = join("/", [local.nix_build_result_path, local.zarina_image_filename])
 }
 
-module "nix-build" {
-  source              = "github.com/nix-community/nixos-anywhere?ref=1.2.0//terraform/nix-build"
+module "zarina-build" {
+  source = "github.com/nix-community/nixos-anywhere?ref=1.2.0//terraform/nix-build"
 
-  attribute           = "github:ldryt/infra#zarina"
+  attribute = "github:ldryt/infra#zarina"
 }
 
 resource "google_storage_bucket" "zarina_bucket" {
