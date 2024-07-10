@@ -21,7 +21,14 @@ func HandleClient(conn net.Conn) {
 		return
 	}
 
-	logHandshakeDetails(conn.RemoteAddr(), hd)
+	log.Printf(
+		"Handshaked with %v: [Protocol: %v] [Address: %v] [Port: %v] [Next State: %v]\n",
+		conn.RemoteAddr(),
+		hd.ProtocolVersion,
+		hd.ServerAddress,
+		hd.ServerPort,
+		hd.NextState,
+	)
 
 	switch hd.NextState {
 	case 1:
@@ -51,17 +58,22 @@ func HandleStatus(conn net.Conn) {
 		logError("handling ping request", conn.RemoteAddr(), err)
 		return
 	}
-	log.Printf("Received ping request on %s", conn.RemoteAddr())
-	log.Println(" -- Payload:", payload)
+	log.Printf(
+		"Received ping request on %s: [Payload: %v]\n",
+		conn.RemoteAddr(),
+		payload,
+	)
 
 	err = sendPongResponse(conn, payload)
 	if err != nil {
 		logError("sending pong response", conn.RemoteAddr(), err)
-		log.Println(" -- Payload:", payload)
 		return
 	}
-	log.Printf("Sent pong response on %s", conn.RemoteAddr())
-	log.Println(" -- Payload:", payload)
+	log.Printf(
+		"Sent pong response on %s: [Payload: %v]\n",
+		conn.RemoteAddr(),
+		payload,
+	)
 }
 
 func HandleLogin(conn net.Conn) {
@@ -70,9 +82,12 @@ func HandleLogin(conn net.Conn) {
 		logError("handling login start request", conn.RemoteAddr(), err)
 		return
 	}
-	log.Println("Received login request on:", conn.RemoteAddr())
-	log.Println(" -- Username:", player.Name)
-	log.Printf(" -- UUID: %s", ConvertToUUID(player.UUID.MSB, player.UUID.LSB))
+	log.Printf(
+		"Received login request on %v: [Username: %v] [UUID: %v]\n",
+		conn.RemoteAddr(),
+		player.Name,
+		ConvertToUUID(player.UUID.MSB, player.UUID.LSB),
+	)
 
 	err = sendDisconnect(conn)
 	if err != nil {
@@ -92,12 +107,4 @@ func ConvertToUUID(a, b uint64) string {
 
 func logError(action string, remoteAddr net.Addr, err error) {
 	log.Printf("An error occurred while %s on %s: %s\n", action, remoteAddr, err)
-}
-
-func logHandshakeDetails(remoteAddr net.Addr, hd HandshakeData) {
-	log.Printf("Handshaked with %s:", remoteAddr)
-	log.Printf(" -- Protocol Version: %d", hd.ProtocolVersion)
-	log.Printf(" -- Server Address: %s", hd.ServerAddress)
-	log.Printf(" -- Server Port: %d", hd.ServerPort)
-	log.Printf(" -- Next State: %d", hd.NextState)
 }
