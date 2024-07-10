@@ -32,7 +32,7 @@ in
   environment.etc."fail2ban/filter.d/mcscan.conf".text = ''
     [Definition]
     failregex = ^.*Handshaked with <HOST>:\d.*Address: (?!${FQDNRegex}).*$
-                ^.*An error occurred while handling ping request on <HOST>:.*$
+                ^.*An error occurred while .* on <HOST>:\d.*$
     journalmatch = _SYSTEMD_UNIT=mcredir.service
     ignoreregex =
   '';
