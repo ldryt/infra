@@ -95,6 +95,14 @@ func HandleLogin(conn net.Conn) {
 		return
 	}
 	log.Println("Sent login disconnect on:", conn.RemoteAddr())
+
+	log.Printf("Client %v triggered server deployment\n", conn.RemoteAddr())
+	err = ApplyTF()
+	if err != nil {
+		log.Println("An error occurred while applying the terraform configuration:", err)
+	} else {
+		log.Println("Server successfully deployed")
+	}
 }
 
 func ConvertToUUID(a, b uint64) string {
