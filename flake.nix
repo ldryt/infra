@@ -12,6 +12,9 @@
 
     nixos-generators.url = "github:nix-community/nixos-generators";
     nixos-generators.inputs.nixpkgs.follows = "nixpkgs-stable";
+
+    lanzaboote.url = "github:nix-community/lanzaboote";
+    lanzaboote.inputs.nixpkgs.follows = "nixpkgs-stable";
   };
   outputs =
     {
@@ -22,6 +25,7 @@
       sops-nix,
       disko,
       nixos-generators,
+      lanzaboote,
       ...
     }@inputs:
     let
@@ -74,6 +78,7 @@
           modules = [
             ./hosts/tinkerbell
             sops-nix.nixosModules.sops
+            lanzaboote.nixosModules.lanzaboote
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
