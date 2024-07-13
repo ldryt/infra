@@ -78,3 +78,7 @@ resource "google_compute_instance" "zarina_instance" {
     fi
   EOT
 }
+
+output "zarina_ipv4" {
+  value = var.ignore_instance_zarina ? "" : google_compute_instance.zarina_instance[0].network_interface[0].access_config[0].nat_ip
+}
