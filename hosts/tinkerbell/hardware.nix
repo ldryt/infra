@@ -16,6 +16,8 @@
     };
 
     initrd = {
+      systemd.enable = true;
+
       luks.devices = {
         luksroot = {
           device = "/dev/disk/by-uuid/2a5e5a55-e8ba-49f4-8e78-9f0eaacc2dca";
@@ -35,7 +37,10 @@
       kernelModules = [ "dm-snapshot" ];
     };
 
-    kernelModules = [ "kvm-intel" "btusb" ];
+    kernelModules = [
+      "kvm-intel"
+      "btusb"
+    ];
   };
 
   fileSystems."/" = {
@@ -69,7 +74,7 @@
   fileSystems."/boot" = {
     device = "/dev/disk/by-uuid/AE23-3471";
     fsType = "vfat";
-    options = ["umask=0077"];
+    options = [ "umask=0077" ];
   };
 
   swapDevices = [ { device = "/dev/disk/by-uuid/b773adaa-3466-4383-bd8e-170d670f41b6"; } ];
