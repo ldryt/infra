@@ -41,6 +41,7 @@
       "kvm-intel"
       "btusb"
     ];
+    kernelParams = [ "quiet" ];
   };
 
   fileSystems."/" = {
