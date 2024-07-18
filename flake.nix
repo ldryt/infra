@@ -43,7 +43,6 @@
       packages = forAllSystems (
         system:
         let
-          pkgs = import nixpkgs-stable { inherit system; };
           pkgs-unstable = import nixpkgs-unstable { inherit system; };
         in
         {
@@ -58,14 +57,6 @@
               ./hosts/zarina
               sops-nix.nixosModules.sops
             ];
-          };
-          mcredir = pkgs.buildGoModule {
-            pname = "mcredir";
-            version = "0.4.0";
-
-            src = ./pkgs/mcredir;
-
-            vendorHash = "sha256-g+yaVIx4jxpAQ/+WrGKxhVeliYx7nLQe/zsGpxV4Fn4=";
           };
         }
       );
