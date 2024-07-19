@@ -1,39 +1,39 @@
-{ pkgs, flakePackages, ... }:
+{ pkgs, ... }:
 let
   dns = builtins.fromJSON (builtins.readFile ../dns.json);
   FQDN = dns.subdomains.mcredir + "." + dns.zone;
   FQDNRegex = builtins.replaceStrings [ "." ] [ ''\.'' ] FQDN;
-  mcredirPort = 25565;
-  mcredirConfig = pkgs.writeText "mcredirConfig" ''
-    listen-address: "0.0.0.0:${toString mcredirPort}"
+  mcpulsePorts = {
+    slp = 25565;
+    pulser = 9065;
+  };
+  mcpulseConfig = pkgs.writeText "mcpulseConfig" ''
+    slp:
+      listen-address: "0.0.0.0:${toString mcpulsePorts.slp}"
+      version:
+        name: "1.21"
+        protocol: 767
+      motd: "Click here to start the server"
 
-    version:
-      name: "1.21"
-      protocol: 767
-
-    motds:
-      not_started: "Click here to start the server"
-      starting: "Please wait..."
-
-    favicon: ${../../../pkgs/mcredir/assets/server-icon.png}
+    pulser:
+      listen-address: "0.0.0.0:${toString mcpulsePorts.pulser}"
   '';
 in
 {
-  networking.firewall.allowedTCPPorts = [ mcredirPort ];
-  systemd.services.mcredir = {
+  networking.firewall.allowedTCPPorts = [ mcpulsePorts.slp ];
+  systemd.services.mcpulse = {
     wants = [ "network-online.target" ];
     after = [ "network-online.target" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig = {
-      ExecStart = "${flakePackages.mcredir}/bin/mcredir -config=${mcredirConfig}";
+      ExecStart = "${pkgs.mcpulse}/bin/mcpulse -config=${mcpulseConfig}";
     };
   };
 
   environment.etc."fail2ban/filter.d/mcscan.conf".text = ''
     [Definition]
     failregex = ^.*Handshaked with <HOST>:\d.*Address: (?!${FQDNRegex}).*$
-                ^.*An error occurred while .* on <HOST>:\d.*$
-    journalmatch = _SYSTEMD_UNIT=mcredir.service
+    journalmatch = _SYSTEMD_UNIT=mcpulse.service
     ignoreregex =
   '';
   services.fail2ban.jails."mcscan".settings = {

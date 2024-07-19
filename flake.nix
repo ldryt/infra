@@ -15,6 +15,8 @@
 
     lanzaboote.url = "github:nix-community/lanzaboote";
     lanzaboote.inputs.nixpkgs.follows = "nixpkgs-stable";
+
+    mcpulse.url = "github:ldryt/mcpulse";
   };
   outputs =
     {
@@ -26,6 +28,7 @@
       disko,
       nixos-generators,
       lanzaboote,
+      mcpulse,
       ...
     }@inputs:
     let
@@ -82,11 +85,15 @@
         silvermist =
           let
             system = "x86_64-linux";
+            pkgs = import nixpkgs-stable {
+              inherit system;
+              overlays = [ (self: super: { mcpulse = mcpulse.packages.${system}.default; }) ];
+            };
           in
           nixpkgs-stable.lib.nixosSystem {
             specialArgs = {
               inherit inputs;
-              flakePackages = self.packages.${system};
+              inherit pkgs;
             };
             inherit system;
             modules = [

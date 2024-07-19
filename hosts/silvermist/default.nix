@@ -9,7 +9,7 @@
     ./services/keycloak.nix
     ./services/frontpage.nix
     ./services/shlink.nix
-    # ./services/mcredir.nix
+    ./services/mcredir.nix
 
     ../../modules/nginx.nix
     ../../modules/fail2ban.nix
