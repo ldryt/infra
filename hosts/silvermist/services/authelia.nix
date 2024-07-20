@@ -35,10 +35,7 @@ in
     settings = {
       theme = "auto";
 
-      log = {
-        format = "text";
-        level = "trace";
-      };
+      log.format = "text";
 
       server.address = "tcp://localhost:44092/";
 
