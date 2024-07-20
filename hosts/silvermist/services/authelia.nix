@@ -39,7 +39,7 @@ in
 
       server.address = "tcp://localhost:44092/";
 
-      storage.local.path = "/var/lib/${config.services.authelia.instances.main.name}/db.sqlite3";
+      storage.local.path = "/var/lib/authelia-${config.services.authelia.instances.main.name}/db.sqlite3";
 
       session.cookies = [
         {
