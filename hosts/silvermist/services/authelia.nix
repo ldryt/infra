@@ -44,16 +44,12 @@ in
 
       storage.local.path = "/var/lib/authelia/db.sqlite3";
 
-      session = {
-        name = "${builtins.replaceStrings [ "-" ] [ ''_'' ] config.services.instances.main.name}_session";
-        remember_me = "3M";
-        cookies = [
-          {
-            domain = autheliaPublicFQDN;
-            authelia_url = "https://${autheliaPublicFQDN}";
-          }
-        ];
-      };
+      session.cookies = [
+        {
+          domain = autheliaPublicFQDN;
+          authelia_url = "https://${autheliaPublicFQDN}";
+        }
+      ];
 
       access_control.default_policy = "two_factor";
 
