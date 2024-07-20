@@ -94,6 +94,7 @@
             specialArgs = {
               inherit inputs;
               inherit pkgs;
+              pkgs-unstable = import nixpkgs-unstable { inherit system; };
             };
             inherit system;
             modules = [

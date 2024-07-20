@@ -9,6 +9,7 @@
     ./services/keycloak.nix
     ./services/frontpage.nix
     ./services/shlink.nix
+    ./services/authelia.nix
     ./services/mcredir.nix
 
     ../../modules/nginx.nix

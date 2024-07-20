@@ -3,7 +3,8 @@
   "subdomains": {
     "immich": "pics",
     "ocis": "files",
-    "keycloak": "auth",
+    "keycloak": "auth-old",
+    "authelia": "auth",
     "vaultwarden": "pass",
     "mcredir": "mc"
   }
