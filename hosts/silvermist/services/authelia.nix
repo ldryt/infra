@@ -55,6 +55,8 @@ in
         ];
       };
 
+      access_control.default_policy = "two_factor";
+
       authentication_backend = {
         file.path = config.sops.secrets."services/authelia/users".path;
         password_reset.disable = true;
