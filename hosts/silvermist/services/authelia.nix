@@ -7,6 +7,7 @@
 let
   dns = builtins.fromJSON (builtins.readFile ../dns.json);
   autheliaPublicFQDN = "${dns.subdomains.authelia}.${dns.zone}";
+  autheliaInternalAddress = "localhost:44092";
 in
 {
   imports = [ "${inputs.nixpkgs-unstable}/nixos/modules/services/security/authelia.nix" ];
@@ -37,7 +38,7 @@ in
 
       log.format = "text";
 
-      server.address = "tcp://localhost:44092/";
+      server.address = "tcp://${autheliaInternalAddress}/";
 
       storage.local.path = "/var/lib/authelia-${config.services.authelia.instances.main.name}/db.sqlite3";
 
@@ -65,5 +66,12 @@ in
         sender = "auth@ldryt.dev";
       };
     };
+  };
+
+  services.nginx.virtualHosts."${dns.subdomains.authelia}.${dns.zone}" = {
+    enableACME = true;
+    forceSSL = true;
+    kTLS = true;
+    locations."/".proxyPass = "http://${autheliaInternalAddress}";
   };
 }
