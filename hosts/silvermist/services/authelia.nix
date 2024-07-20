@@ -1,14 +1,16 @@
-{ config, pkgs-unstable, inputs, ... }:
+{
+  config,
+  pkgs-unstable,
+  inputs,
+  ...
+}:
 let
   dns = builtins.fromJSON (builtins.readFile ../dns.json);
+  autheliaPublicFQDN = "${dns.subdomains.authelia}.${dns.zone}";
 in
 {
-  imports = [
-    "${inputs.nixpkgs-unstable}/nixos/modules/services/security/authelia.nix"
-  ];
-  disabledModules = [
-    "services/security/authelia.nix"
-  ];
+  imports = [ "${inputs.nixpkgs-unstable}/nixos/modules/services/security/authelia.nix" ];
+  disabledModules = [ "services/security/authelia.nix" ];
 
   sops.secrets."services/authelia/users".owner = config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/smtpPassword".owner = config.services.authelia.instances.main.user;
@@ -42,6 +44,17 @@ in
 
       storage.local.path = "/var/lib/authelia/db.sqlite3";
 
+      session = {
+        name = "${builtins.replaceStrings [ "-" ] [ ''_'' ] config.services.instances.main.name}_session";
+        remember_me = "3M";
+        cookies = [
+          {
+            domain = autheliaPublicFQDN;
+            authelia_url = "https://${autheliaPublicFQDN}";
+          }
+        ];
+      };
+
       authentication_backend = {
         file.path = config.sops.secrets."services/authelia/users".path;
         password_reset.disable = true;
@@ -49,7 +62,7 @@ in
 
       duo_api.disable = true;
       webauthn.disable = true;
-      totp.issuer = "${dns.subdomains.authelia}.${dns.zone}";
+      totp.issuer = autheliaPublicFQDN;
 
       notifier.smtp = {
         address = "smtp://in-v3.mailjet.com:587";
