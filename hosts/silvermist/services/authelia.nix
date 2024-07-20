@@ -38,10 +38,7 @@ in
         level = "trace";
       };
 
-      server = {
-        host = "localhost";
-        port = 44092;
-      };
+      server.address = "tcp://localhost:44092/";
 
       storage.local.path = "/var/lib/authelia/db.sqlite3";
 
