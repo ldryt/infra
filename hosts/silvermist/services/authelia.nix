@@ -1,8 +1,15 @@
-{ config, pkgs-unstable, ... }:
+{ config, pkgs-unstable, inputs, ... }:
 let
   dns = builtins.fromJSON (builtins.readFile ../dns.json);
 in
 {
+  imports = [
+    "${inputs.nixpkgs-unstable}/nixos/modules/services/security/authelia.nix"
+  ];
+  disabledModules = [
+    "services/security/authelia.nix"
+  ];
+
   sops.secrets."services/authelia/users".owner = config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/smtpPassword".owner = config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/jwtSecret".owner = config.services.authelia.instances.main.user;
