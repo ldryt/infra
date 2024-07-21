@@ -7,6 +7,7 @@ in
   services.postfix = {
     enable = true;
     hostname = dns.zone;
+    domain = dns.zone;
     config = {
       inet_interfaces = "loopback-only";
 
@@ -26,7 +27,7 @@ in
     user = config.services.postfix.user;
     group = config.services.postfix.group;
     selector = "main";
-    domains = config.services.postfix.domain;
+    domains = "csl:${config.services.postfix.domain}";
     socket = "local:${opendkimSocket}";
   };
 }
