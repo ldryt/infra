@@ -14,9 +14,9 @@ terraform {
       source  = "carlpett/sops"
       version = "~>1.0.0"
     }
-    gandi = {
-      version = "~>2.3.0"
-      source  = "go-gandi/gandi"
+    cloudflare = {
+      version = "~>4.37.0"
+      source  = "cloudflare/cloudflare"
     }
   }
 }
@@ -31,16 +31,16 @@ variable "hcloud_token_file" {
   type        = string
 }
 
-variable "gandi_token_file" {
-  description = "Gandi Personal Access Token. Can be loaded using environment variable 'TF_VAR_gandi_token_file'"
+variable "cloudflare_token_file" {
+  description = "Cloudflare API Token. Can be loaded using environment variable 'TF_VAR_cloudflare_token_file'"
   type        = string
 }
 
 
 provider "sops" {}
 
-provider "gandi" {
-  personal_access_token = file(var.gandi_token_file)
+provider "cloudflare" {
+  api_token = file(var.cloudflare_token_file)
 }
 
 provider "hcloud" {
