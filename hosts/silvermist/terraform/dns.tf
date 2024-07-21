@@ -33,6 +33,7 @@ resource "cloudflare_record" "root_MX_record" {
   name    = "@"
   value   = local.dns.zone
   type    = "MX"
+  priority = 10
 }
 
 resource "cloudflare_record" "root_TXT_record__SPF" {
