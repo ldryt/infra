@@ -21,6 +21,10 @@ terraform {
   }
 }
 
+locals {
+  dns = jsondecode(file("${path.module}/../dns.json"))
+}
+
 
 variable "hcloud_token_file" {
   description = "Hetzner Cloud API Token. Can be loaded using environment variable 'TF_VAR_hcloud_token_file'"

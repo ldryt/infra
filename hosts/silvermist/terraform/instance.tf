@@ -32,3 +32,9 @@ resource "hcloud_server" "silvermist_server" {
     ipv6_enabled = false
   }
 }
+
+resource "hcloud_rdns" "silvermist_rdns" {
+  server_id  = hcloud_server.silvermist_server.id
+  ip_address = hcloud_primary_ip.silvermist_ipv4.ip_address
+  dns_ptr    = local.dns.zone
+}
