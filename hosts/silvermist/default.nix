@@ -10,6 +10,7 @@
     ./services/frontpage.nix
     ./services/shlink.nix
     ./services/mcredir.nix
+    ./services/postfix.nix
 
     ../../modules/nginx.nix
     ../../modules/fail2ban.nix
