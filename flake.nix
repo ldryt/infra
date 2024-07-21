@@ -124,7 +124,7 @@
             shellHook = ''
               export SOPS_AGE_KEY_FILE=~/.keyring/sops_age_ldryt.key
               export GCLOUD_KEYFILE_JSON=~/.keyring/gcloud-key-tidy-arena-428113-b3-2f902b588b01.json
-              export TF_VAR_gandi_token_file=~/.keyring/gandi_token
+              export TF_VAR_cloudflare_token_file=~/.keyring/cloudflare_token
               export TF_VAR_hcloud_token_file=~/.keyring/hcloud_token
             '';
             # https://github.com/go-delve/delve/issues/3085
