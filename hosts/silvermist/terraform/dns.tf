@@ -45,7 +45,14 @@ resource "cloudflare_record" "root_TXT_record__SPF" {
 
 resource "cloudflare_record" "root_TXT_record__DKIM" {
   zone_id = local.zone_id
-  name    = "@"
+  name    = "main._domainkey"
   value   = nonsensitive(data.sops_file.silvermist_secrets.data["services.opendkim.selectors.main.txt"])
+  type    = "TXT"
+}
+
+resource "cloudflare_record" "root_TXT_record__DMARC" {
+  zone_id = local.zone_id
+  name    = "_dmarc"
+  value   = "v=DMARC1; p=reject"
   type    = "TXT"
 }
