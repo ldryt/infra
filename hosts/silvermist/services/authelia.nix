@@ -14,7 +14,6 @@ in
   disabledModules = [ "services/security/authelia.nix" ];
 
   sops.secrets."services/authelia/users".owner = config.services.authelia.instances.main.user;
-  sops.secrets."services/authelia/smtpPassword".owner = config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/jwtSecret".owner = config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/storageEncryptionKey".owner =
     config.services.authelia.instances.main.user;
@@ -24,9 +23,6 @@ in
     enable = true;
     package = pkgs-unstable.authelia;
 
-    environmentVariables = {
-      AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE = config.sops.secrets."services/authelia/smtpPassword".path;
-    };
     secrets = {
       jwtSecretFile = config.sops.secrets."services/authelia/jwtSecret".path;
       storageEncryptionKeyFile = config.sops.secrets."services/authelia/storageEncryptionKey".path;
@@ -61,8 +57,7 @@ in
       totp.issuer = autheliaPublicFQDN;
 
       notifier.smtp = {
-        address = "smtp://in-v3.mailjet.com:587";
-        username = "773c12eb23aff9be95348dc406c73d9d";
+        address = "smtp://localhost:25";
         sender = "auth@ldryt.dev";
       };
     };
