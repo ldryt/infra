@@ -1,6 +1,7 @@
 { config, ... }:
 let
   dns = builtins.fromJSON (builtins.readFile ../dns.json);
+  opendkimSocket = "/run/opendkim/opendkim.sock";
 in
 {
   services.postfix = {
@@ -11,8 +12,8 @@ in
 
       milter_protocol = "6";
       milter_default_action = "accept";
-      smtpd_milters = "unix:${config.services.opendkim.socket}";
-      non_smtpd_milters = "unix:${config.services.opendkim.socket}";
+      smtpd_milters = "unix:${opendkimSocket}";
+      non_smtpd_milters = "unix:${opendkimSocket}";
     };
   };
 
@@ -26,6 +27,6 @@ in
     group = config.services.postfix.group;
     selector = "main";
     domains = config.services.postfix.domain;
-    socket = "/run/opendkim/opendkim.sock";
+    socket = "local:${opendkimSocket}";
   };
 }
