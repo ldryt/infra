@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, ... }:
 let
   dns = builtins.fromJSON (builtins.readFile ../dns.json);
 in
@@ -16,7 +16,10 @@ in
     };
   };
 
-  sops.secrets."services/opendkim/selectors/main/private".owner = config.services.postfix.user;
+  sops.secrets."services/opendkim/selectors/${config.services.opendkim.selector}/private" = {
+    owner = config.services.opendkim.user;
+    path = "${config.services.opendkim.keyPath}/${config.services.opendkim.selector}.private";
+  };
   services.opendkim = {
     enable = true;
     user = config.services.postfix.user;
@@ -25,13 +28,4 @@ in
     domains = config.services.postfix.domain;
     socket = "/run/opendkim/opendkim.sock";
   };
-  systemd.services.opendkim.preStart = lib.mkForce ''
-    install \
-      -o ${config.services.postfix.user} \
-      -g ${config.services.postfix.group} \
-      -m0700 \
-      -D \
-      ${config.sops.secrets."services/opendkim/selectors/main/private".path} \
-      ${config.services.opendkim.keyPath}/${config.services.opendkim.selector}.private
-  '';
 }
