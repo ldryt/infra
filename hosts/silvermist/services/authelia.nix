@@ -59,6 +59,7 @@ in
       notifier.smtp = {
         address = "smtp://localhost:25";
         sender = "auth@ldryt.dev";
+        tls.server_name = "${dns.subdomains.postfix}.${dns.zone}";
       };
     };
   };
