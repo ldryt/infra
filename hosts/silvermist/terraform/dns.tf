@@ -1,7 +1,3 @@
-locals {
-  dns = jsondecode(file("${path.module}/../dns.json"))
-}
-
 resource "gandi_livedns_record" "silvermist_A_record" {
   name   = "silvermist"
   zone   = local.dns.zone
