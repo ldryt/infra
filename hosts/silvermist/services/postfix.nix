@@ -6,7 +6,7 @@ in
 {
   services.postfix = {
     enable = true;
-    hostname = dns.zone;
+    hostname = "${dns.subdomains.postfix}.${dns.zone}";
     domain = dns.zone;
     config = {
       inet_interfaces = "loopback-only";

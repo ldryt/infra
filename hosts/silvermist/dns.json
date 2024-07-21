@@ -6,6 +6,7 @@
     "keycloak": "auth",
     "authelia": "authelia",
     "vaultwarden": "pass",
-    "mcredir": "mc"
+    "mcredir": "mc",
+    "postfix": "mx"
   }
 }
