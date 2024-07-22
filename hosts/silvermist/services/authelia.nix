@@ -18,6 +18,8 @@ in
   sops.secrets."services/authelia/storageEncryptionKey".owner =
     config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/sessionSecret".owner = config.services.authelia.instances.main.user;
+  sops.secrets."services/authelia/oidcHmacSecret".owner =  config.services.authelia.instances.main.user;
+  sops.secrets."services/authelia/oidcIssuerPrivateKey".owner =  config.services.authelia.instances.main.user;
 
   services.authelia.instances.main = {
     enable = true;
@@ -27,6 +29,8 @@ in
       jwtSecretFile = config.sops.secrets."services/authelia/jwtSecret".path;
       storageEncryptionKeyFile = config.sops.secrets."services/authelia/storageEncryptionKey".path;
       sessionSecretFile = config.sops.secrets."services/authelia/sessionSecret".path;
+      oidcHmacSecretFile = config.sops.secrets."services/authelia/oidcHmacSecret".path;
+      oidcIssuerPrivateKeyFile = config.sops.secrets."services/authelia/oidcIssuerPrivateKey".path;
     };
 
     settings = {
