@@ -74,4 +74,8 @@ in
     kTLS = true;
     locations."/".proxyPass = "http://${autheliaInternalAddress}";
   };
+
+  ldryt-infra.backups.authelia = {
+    paths = [config.services.authelia.instances.main.settings.storage.local.path];
+  };
 }
