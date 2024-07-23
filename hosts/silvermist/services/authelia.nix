@@ -18,8 +18,10 @@ in
   sops.secrets."services/authelia/storageEncryptionKey".owner =
     config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/sessionSecret".owner = config.services.authelia.instances.main.user;
-  sops.secrets."services/authelia/oidcHmacSecret".owner =  config.services.authelia.instances.main.user;
-  sops.secrets."services/authelia/oidcIssuerPrivateKey".owner =  config.services.authelia.instances.main.user;
+  sops.secrets."services/authelia/oidcHmacSecret".owner =
+    config.services.authelia.instances.main.user;
+  sops.secrets."services/authelia/oidcIssuerPrivateKey".owner =
+    config.services.authelia.instances.main.user;
 
   services.authelia.instances.main = {
     enable = true;
@@ -76,6 +78,6 @@ in
   };
 
   ldryt-infra.backups.authelia = {
-    paths = [config.services.authelia.instances.main.settings.storage.local.path];
+    paths = [ config.services.authelia.instances.main.settings.storage.local.path ];
   };
 }
