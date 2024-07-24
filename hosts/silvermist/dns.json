@@ -7,6 +7,7 @@
     "authelia": "authelia",
     "vaultwarden": "pass",
     "mcredir": "mc",
-    "postfix": "mx"
+    "postfix": "mx",
+    "nextcloud": "cloud"
   }
 }
