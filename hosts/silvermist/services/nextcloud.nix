@@ -28,10 +28,9 @@ in
 
     settings.cache_path = "${config.services.nextcloud.home}/cache/$user";
     configureRedis = true;
-    notify_push.enable = true;
 
     extraApps = {
-      inherit (config.services.nextcloud.package.packages.apps) user_oidc calendar deck;
+      inherit (config.services.nextcloud.package.packages.apps) user_oidc calendar mail deck notes contacts;
     };
 
     settings.user_oidc = {
@@ -45,7 +44,7 @@ in
     script = ''
       ${config.services.nextcloud.occ}/bin/nextcloud-occ user_oidc:provider authelia-main \
         --clientid="${oidcClientID}" \
-        --clientsecret="$(sudo -u nextcloud cat ${config.sops.secrets."services/nextcloud/oidcSecret".path})" \
+        --clientsecret="$(cat ${config.sops.secrets."services/nextcloud/oidcSecret".path})" \
         --discoveryuri="https://${dns.subdomains.authelia}.${dns.zone}/.well-known/openid-configuration"
 
       ${config.services.nextcloud.occ}/bin/nextcloud-occ config:app:set --value=0 user_oidc allow_multiple_user_backends
@@ -81,9 +80,9 @@ in
     device = "//u391790-sub4.your-storagebox.de/u391790-sub4";
     fsType = "cifs";
     options = [
-      "async,rw,auto,nofail,credentials=${
+      "async,auto,nofail,credentials=${
         config.sops.secrets."system/smb/glouton/nextcloud-data/credentials".path
-      },uid=${toString config.users.users.colon.uid},cache=loose,fsc"
+      },uid=nextcloud,gid=nextcloud,file_mode=0770,dir_mode=0770,cache=loose,fsc,mfsymlinks,sfu"
     ];
   };
 
