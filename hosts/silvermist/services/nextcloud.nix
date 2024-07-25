@@ -14,19 +14,15 @@ in
     package = pkgs.nextcloud29;
 
     hostName = "${dns.subdomains.nextcloud}.${dns.zone}";
+    home = dataDir;
     https = true;
     maxUploadSize = "10G";
-
-    home = "/var/lib/nextcloud";
-    datadir = dataDir;
 
     config.adminpassFile = config.sops.secrets."services/nextcloud/adminPassword".path;
     secretFile = config.sops.secrets."services/nextcloud/secrets".path;
 
     config.dbtype = "pgsql";
     database.createLocally = true;
-
-    settings.cache_path = "${config.services.nextcloud.home}/cache/$user";
     configureRedis = true;
 
     extraApps = {
