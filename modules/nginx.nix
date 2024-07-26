@@ -38,6 +38,8 @@
 
       # Prevent injection of code in other mime types (XSS Attacks)
       add_header X-Content-Type-Options nosniff;
+
+      add_header X-Robots-Tag "noindex, nofollow, nosnippet, noarchive";
     '';
   };
 }

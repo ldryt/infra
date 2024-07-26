@@ -52,6 +52,7 @@ in
       nameValuePair name {
         user = "root";
         backupPrepareCommand = conf.backupPrepareCommand;
+        backupCleanupCommand = conf.backupCleanupCommand;
         paths = conf.paths;
         initialize = true;
         repository = "sftp:${storageBox}:restic-repo-${name}";

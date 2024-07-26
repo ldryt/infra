@@ -3,14 +3,15 @@
   imports = [
     ./disk-config.nix
 
-    ./services/ocis.nix
     ./services/vaultwarden.nix
     ./services/immich.nix
     ./services/keycloak.nix
     ./services/frontpage.nix
     ./services/shlink.nix
+    ./services/authelia.nix
     ./services/mcredir.nix
     ./services/postfix.nix
+    ./services/nextcloud.nix
 
     ../../modules/nginx.nix
     ../../modules/fail2ban.nix

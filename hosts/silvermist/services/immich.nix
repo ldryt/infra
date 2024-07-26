@@ -2,10 +2,12 @@
 let
   dns = builtins.fromJSON (builtins.readFile ../dns.json);
   dataDir = "/mnt/immich-library";
-  oidcID = "immich-clients";
   podmanNetwork = "immich-network";
   internalPort = "44084";
   backupsTmpDir = "/tmp/immich_backups";
+  oidcSigningAlg = "RS256";
+  oidcClientID = "lDGd-h~eVFyILWKT0uvDA1WGMZXboNdLJC8XL.eqW1UbEIjP~6yyCR5Pv1La5zix73LAf38e";
+  immichConfigPath = "/etc/immich.conf";
 in
 {
   systemd.services.init-immich-network = {
@@ -26,9 +28,9 @@ in
   virtualisation.oci-containers.containers = {
     "immich-server" = {
       hostname = "immich-server";
-      image = "ghcr.io/immich-app/immich-server:v1.107.2@sha256:66050b1aaa86366bef629a31dff95c1303ef5c9b7783863a48456704a56d5640"; # https://github.com/immich-app/immich/pkgs/container/immich-server/238448195?tag=v1.107.2
+      image = "ghcr.io/immich-app/immich-server:v1.109.2@sha256:af3c1014e624878c09f0f9e4f7b6f882b5716587f7c802535dbfdd6952afcd4f"; # https://github.com/immich-app/immich/pkgs/container/immich-server/245700591?tag=v1.109.2
       environment = {
-        IMMICH_CONFIG_FILE = "/etc/immich-config.json";
+        IMMICH_CONFIG_FILE = immichConfigPath;
         DB_HOSTNAME = "immich-db";
         DB_USERNAME = config.virtualisation.oci-containers.containers.immich-db.environment.POSTGRES_USER;
         DB_DATABASE_NAME =
@@ -38,7 +40,7 @@ in
       };
       environmentFiles = [ "${config.sops.secrets."services/immich/credentials".path}" ];
       volumes = [
-        "/etc/immich/config.json:/etc/immich-config.json:ro"
+        "${immichConfigPath}:${immichConfigPath}:ro"
         "${dataDir}:/usr/src/app/upload"
         "/etc/localtime:/etc/localtime:ro"
       ];
@@ -51,7 +53,7 @@ in
     };
     "immich-machine-learning" = {
       hostname = "immich-machine-learning";
-      image = "ghcr.io/immich-app/immich-machine-learning:v1.107.2@sha256:0258120fb043754327190cb50c8d7d6f3160579009a9386509689532470be252"; # https://github.com/immich-app/immich/pkgs/container/immich-machine-learning/238446999?tag=v1.107.2
+      image = "ghcr.io/immich-app/immich-machine-learning:v1.109.2@sha256:e40c52aade006a8dd397e31af0566cd72f30a836b832e26b969de3c3c5a19382"; # https://github.com/immich-app/immich/pkgs/container/immich-machine-learning/245702297?tag=v1.109.2
       volumes = [ "immich-ml-cache:/cache" ];
       extraOptions = [ "--network=${podmanNetwork}" ];
     };
@@ -99,6 +101,28 @@ in
     };
   };
 
+  services.authelia.instances.main.settings.identity_providers.oidc.clients = [
+    {
+      client_name = "immich";
+      client_id = oidcClientID;
+      client_secret = "$pbkdf2-sha512$310000$Huutr5ZUtLI/eUqou676MA$p2z9qxBbkkjkDoPni55VAfCP4gO4TzE78Vob2FbLfhAn3syHa6/97NjHhyVsz9B7xWB2lkkiYDtCs6jBC1th4w";
+      public = false;
+      authorization_policy = "two_factor";
+      redirect_uris = [
+        "https://${dns.subdomains.immich}.${dns.zone}/auth/login"
+        "https://${dns.subdomains.immich}.${dns.zone}/user-settings"
+        "app.immich:/"
+      ];
+      scopes = [
+        "openid"
+        "profile"
+        "email"
+      ];
+      userinfo_signed_response_alg = oidcSigningAlg;
+      id_token_signed_response_alg = oidcSigningAlg;
+    }
+  ];
+
   ldryt-infra.backups.immich = {
     paths = [
       backupsTmpDir
@@ -119,173 +143,58 @@ in
     '';
   };
 
-  environment.etc."immich/config.json".text = ''
-    {
-      "ffmpeg": {
-        "crf": 30,
-        "threads": 0,
-        "preset": "medium",
-        "targetVideoCodec": "vp9",
-        "acceptedVideoCodecs": [
-          "vp9"
-        ],
-        "targetAudioCodec": "aac",
-        "acceptedAudioCodecs": [
-          "aac"
-        ],
-        "targetResolution": "720",
-        "maxBitrate": "0",
-        "bframes": -1,
-        "refs": 0,
-        "gopSize": 0,
-        "npl": 0,
-        "temporalAQ": false,
-        "cqMode": "auto",
-        "twoPass": true,
-        "preferredHwDevice": "auto",
-        "transcode": "all",
-        "tonemap": "reinhard",
-        "accel": "disabled"
-      },
-      "job": {
-        "backgroundTask": {
-          "concurrency": 5
-        },
-        "smartSearch": {
-          "concurrency": 2
-        },
-        "metadataExtraction": {
-          "concurrency": 5
-        },
-        "faceDetection": {
-          "concurrency": 2
-        },
-        "search": {
-          "concurrency": 5
-        },
-        "sidecar": {
-          "concurrency": 5
-        },
-        "library": {
-          "concurrency": 5
-        },
-        "migration": {
-          "concurrency": 5
-        },
-        "thumbnailGeneration": {
-          "concurrency": 5
-        },
-        "videoConversion": {
-          "concurrency": 2
-        },
-        "notifications": {
-          "concurrency": 5
-        }
-      },
-      "logging": {
-        "enabled": true,
-        "level": "log"
-      },
-      "machineLearning": {
-        "enabled": true,
-        "url": "http://immich-machine-learning:3003",
-        "clip": {
-          "enabled": true,
-          "modelName": "immich-app/ViT-B-32__openai"
-        },
-        "duplicateDetection": {
-          "enabled": true,
-          "maxDistance": 0.03
-        },
-        "facialRecognition": {
-          "enabled": true,
-          "modelName": "buffalo_l",
-          "minScore": 0.7,
-          "maxDistance": 0.5,
-          "minFaces": 3
-        }
-      },
-      "map": {
-        "enabled": true,
-        "lightStyle": "",
-        "darkStyle": ""
-      },
-      "reverseGeocoding": {
-        "enabled": true
-      },
-      "oauth": {
-        "autoLaunch": true,
-        "autoRegister": true,
-        "buttonText": "Login with ${dns.subdomains.keycloak}.${dns.zone}",
-        "clientId": "${oidcID}",
-        "clientSecret": "STFOR2hVQzMl3v0ckIYjzGlpbjEznstV",
-        "defaultStorageQuota": 0,
-        "enabled": true,
-        "issuerUrl": "https://${dns.subdomains.keycloak}.${dns.zone}/realms/master",
-        "mobileOverrideEnabled": false,
-        "mobileRedirectUri": "",
-        "scope": "openid email profile",
-        "signingAlgorithm": "RS256",
-        "storageLabelClaim": "preferred_username",
-        "storageQuotaClaim": "immich_quota"
-      },
-      "passwordLogin": {
-        "enabled": false
-      },
-      "storageTemplate": {
-        "enabled": true,
-        "hashVerificationEnabled": true,
-        "template": "{{y}}/{{MMMM}}/{{y}}{{MM}}{{dd}}-{{HH}}{{mm}}{{ss}}"
-      },
-      "image": {
-        "thumbnailFormat": "webp",
-        "thumbnailSize": 200,
-        "previewFormat": "webp",
-        "previewSize": 1080,
-        "quality": 83,
-        "colorspace": "p3",
-        "extractEmbedded": false
-      },
-      "newVersionCheck": {
-        "enabled": false
-      },
-      "trash": {
-        "enabled": true,
-        "days": 30
-      },
-      "theme": {
-        "customCss": ""
-      },
-      "library": {
-        "scan": {
-          "enabled": true,
-          "cronExpression": "0 0 * * *"
-        },
-        "watch": {
-          "enabled": false
-        }
-      },
-      "server": {
-        "externalDomain": "https://${dns.subdomains.immich}.${dns.zone}",
-        "loginPageMessage": ""
-      },
-      "notifications": {
-        "smtp": {
-          "enabled": false,
-          "from": "",
-          "replyTo": "",
-          "transport": {
-            "ignoreCert": false,
-            "host": "",
-            "port": 587,
-            "username": "",
-            "password": ""
-          }
-        }
-      },
-      "user": {
-        "deleteDelay": 7
-      }
-    }
-  '';
+  sops.secrets."services/immich/oidc/clientSecret".owner = config.users.users.colon.name;
+  systemd.services."${config.virtualisation.oci-containers.backend}-immich-server".serviceConfig.ExecStartPre =
+    let
+      oauthClientSecretPlaceholder = "SUPPOSED_TO_BE_REPLACED_AUTOMATICALLY";
+      immichConfig = pkgs.writeText "immich-config.json" ''
+        ffmpeg:
+          transcode: all
+          crf: 30
+          preset: medium
+          targetVideoCodec: vp9
+          targetAudioCodec: libopus
+          targetResolution: '720'
+          twoPass: true
+          tonemap: reinhard
+        oauth:
+          enabled: true
+          issuerUrl: https://${dns.subdomains.authelia}.${dns.zone}/.well-known/openid-configuration
+          clientId: ${oidcClientID}
+          clientSecret: ${oauthClientSecretPlaceholder}
+          signingAlgorithm: ${oidcSigningAlg}
+          profileSigningAlgorithm: ${oidcSigningAlg}
+          scope: openid email profile
+          storageLabelClaim: preferred_username
+          storageQuotaClaim: immich_quota
+          buttonText: Login with ${dns.subdomains.authelia}.${dns.zone}
+          defaultStorageQuota: 0
+          autoRegister: true
+        passwordLogin:
+          enabled: false
+        storageTemplate:
+          enabled: true
+          hashVerificationEnabled: true
+          template: '{{y}}/{{MMMM}}/{{y}}{{MM}}{{dd}}-{{HH}}{{mm}}{{ss}}'
+        image:
+          quality: 85
+        server:
+          externalDomain: https://${dns.subdomains.immich}.${dns.zone}
+        notifications:
+          smtp:
+            enabled: true
+            from: pics@ldryt.dev
+            replyTo: noreply@ldryt.dev
+            transport:
+              host: localhost
+              port: 25
+      '';
+    in
+    [
+      (pkgs.writeShellScript "immich-config-inject-secrets.sh" ''
+        oauth_client_secret=$(cat ${config.sops.secrets."services/immich/oidc/clientSecret".path})
+        install -D -o ${config.users.users.colon.name} -m 0400 "${immichConfig}" "${immichConfigPath}"
+        ${pkgs.busybox}/bin/sed -i 's/${oauthClientSecretPlaceholder}/'"$oauth_client_secret"'/g' "${immichConfigPath}"
+      '')
+    ];
 }
