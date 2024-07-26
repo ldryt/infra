@@ -3,7 +3,6 @@
   imports = [
     ./disk-config.nix
 
-    ./services/ocis.nix
     ./services/vaultwarden.nix
     ./services/immich.nix
     ./services/keycloak.nix
