@@ -26,12 +26,19 @@ in
     configureRedis = true;
 
     extraApps = {
-      inherit (config.services.nextcloud.package.packages.apps) user_oidc calendar mail deck notes contacts;
+      inherit (config.services.nextcloud.package.packages.apps)
+        user_oidc
+        calendar
+        mail
+        deck
+        notes
+        contacts
+        ;
     };
 
     settings.user_oidc = {
-        use_pkce = true;
-        soft_auto_provision = false;
+      use_pkce = true;
+      soft_auto_provision = false;
     };
   };
 
