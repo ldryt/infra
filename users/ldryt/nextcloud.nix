@@ -2,12 +2,45 @@
 let
   silvermistDNS = builtins.fromJSON (builtins.readFile ../../hosts/silvermist/dns.json);
   nextcloudInstanceURL = "https://${silvermistDNS.subdomains.nextcloud}.${silvermistDNS.zone}";
-  syncPathMap = {
-    "/documents" = "${config.home.homeDirectory}/Documents";
-    "/pictures" = "${config.home.homeDirectory}/Pictures";
-    "/videos" = "${config.home.homeDirectory}/Videos";
-    "/music" = "${config.home.homeDirectory}/Music";
-  };
+  paths = [
+    "/Documents"
+    "/Music"
+    "/Pictures"
+    "/Videos"
+  ];
+  excludes = pkgs.writeText "nextcloudcmd-excludes" ''
+    *.git
+    .git
+    .terraform
+    *~
+    ~$*
+    .~lock.*
+    ~*.tmp
+    ]*.~*
+    ]Icon\r*
+    ].DS_Store
+    ].ds_store
+    ._*
+    ]Thumbs.db
+    System Volume Information
+    .*.sw?
+    .*.*sw?
+    ].TemporaryItems
+    ].Trashes
+    ].DocumentRevisions-V100
+    ].Trash-*
+    .fseventd
+    .apdisk
+    .directory
+    *.part
+    *.filepart
+    *.crdownload
+    *.kate-swp
+    *.gnucash.tmp-*
+  '';
+  syncCmd =
+    path:
+    "${pkgs.nextcloud-client}/bin/nextcloudcmd -n -h --exclude ${excludes} --path ${path} ${config.home.homeDirectory}${path} ${nextcloudInstanceURL}";
 in
 {
   sops.secrets."netrc".path = "${config.home.homeDirectory}/.netrc";
@@ -20,12 +53,14 @@ in
       };
       Service = {
         Type = "simple";
-        ExecStart = "${pkgs.nextcloud-client}/bin/nextcloudcmd -h -n --path ${syncPathMap} ${nextcloudInstanceURL}";
-        TimeoutStopSec = "3*60";
+        ExecStart = pkgs.writeShellScript "nextcloudcmd-sync-script" ''
+          ${builtins.concatStringsSep "\n" (map syncCmd paths)}
+        '';
+        TimeoutStopSec = "180";
         KillMode = "process";
         KillSignal = "SIGINT";
       };
-      Install.WantedBy = [ "multi-user.target" ];
+      Install.WantedBy = [ "default.target" ];
     };
     timers.nextcloud-autosync = {
       Unit.Description = "Automatic sync files with Nextcloud when booted up after 1 minute then rerun every 15 minutes";
