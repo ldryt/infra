@@ -15,6 +15,5 @@
     libreoffice
     discord
     prismlauncher
-    owncloud-client
   ];
 }
