@@ -85,7 +85,7 @@ in
     options = [
       "async,auto,nofail,credentials=${
         config.sops.secrets."system/smb/glouton/nextcloud-data/credentials".path
-      },uid=nextcloud,gid=nextcloud,file_mode=0770,dir_mode=0770,cache=loose,fsc,mfsymlinks,sfu"
+      },uid=nextcloud,gid=nextcloud,file_mode=0770,dir_mode=0770,cache=loose,fsc,mfsymlinks"
     ];
   };
 
