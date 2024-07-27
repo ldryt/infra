@@ -108,10 +108,10 @@ in
 
       ${config.services.nextcloud.occ}/bin/nextcloud-occ maintenance:mode --on
 
-      ${pkgs.postgresql}/bin/pg_dump ${config.services.nextcloud.config.dbname} \
-        --host ${config.services.nextcloud.config.dbhost} \
-        --username ${config.services.nextcloud.config.dbuser} \
-        | ${pkgs.gzip}/bin/gzip > "${backupsTmpDir}/nextcloud-db-dump.sql.gz"
+      /run/wrappers/bin/sudo -u postgres \
+        ${pkgs.postgresql}/bin/pg_dumpall \
+          --host ${config.services.nextcloud.config.dbhost} \
+          | ${pkgs.gzip}/bin/gzip > "${backupsTmpDir}/nextcloud-db-dump.sql.gz"
     '';
     backupCleanupCommand = ''
       rm -rf "${backupsTmpDir}"
