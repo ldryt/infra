@@ -77,15 +77,37 @@ in
     }
   ];
 
+  systemd.services.nextcloud-setup.unitConfig.RequiresMountsFor = [ dataDir ];
+  services.cachefilesd.enable = true;
   sops.secrets."system/smb/glouton/nextcloud-data/credentials" = { };
   environment.systemPackages = [ pkgs.cifs-utils ];
   fileSystems."${dataDir}" = {
     device = "//u391790-sub4.your-storagebox.de/u391790-sub4";
     fsType = "cifs";
     options = [
-      "async,auto,nofail,credentials=${
-        config.sops.secrets."system/smb/glouton/nextcloud-data/credentials".path
-      },uid=nextcloud,gid=nextcloud,file_mode=0770,dir_mode=0770,cache=loose,fsc,mfsymlinks"
+      "cred=${config.sops.secrets."system/smb/glouton/nextcloud-data/credentials".path}"
+
+      "uid=nextcloud"
+      "forceuid"
+      "gid=nextcloud"
+      "forcegid"
+      "file_mode=0770"
+      "dir_mode=0770"
+
+      "vers=3.1.1"
+      "sec=ntlmsspi"
+      "seal"
+      "hard"
+      "mfsymlinks"
+
+      "async"
+      "noatime"
+      "cache=loose"
+      "actimeo=3600"
+      "locallease"
+      "rsize=4194304"
+      "wsize=4194304"
+      "fsc"
     ];
   };
 
