@@ -147,7 +147,7 @@ handle_deploy() {
 }
 
 # Parse command-line options
-while getopts hda:t:r opt; do
+while getopts hxr:i:nd: opt; do
 	case $opt in
 	h)
 		show_help
