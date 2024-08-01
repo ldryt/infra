@@ -7,6 +7,7 @@ umask 077
 destroy_mode=false
 dry_run=false
 target_resource_address="google_compute_instance.zarina_instance[0]"
+terraform_directory="./."
 ignore_tag="ignore_instance_zarina"
 expected_format_version="1.2"
 plan_path=$(mktemp)
@@ -14,7 +15,7 @@ trap 'rm -f "$plan_path"' EXIT
 
 show_help() {
 	cat <<EOF
-Usage: ${0##*/} [-hrd] [-a <target_resource_address>] [-t <ignore_tag>]
+Usage: ${0##*/} [-hrd] [-a <target_resource_address>] [-t <ignore_tag>] [-f <terraform_directory>]
 Terraform wrapper that deploys or destroys a single server and checks for inconsistencies.
 
   -h  Display this help and exit.
@@ -22,6 +23,7 @@ Terraform wrapper that deploys or destroys a single server and checks for incons
   -d  Destroy mode. Will destroy instead of deploy.
   -a  The terraform address of the targeted server. Default: "$target_resource_address"
   -t  The terraform variable tag used to specify whether the target will be ignored (destroyed) or not (deployed). Default: "$ignore_tag"
+  -f  The terraform config directory. Default: "$terraform_directory"
 EOF
 }
 
@@ -45,7 +47,7 @@ tf_apply() {
 		sleep 300 &
 		echo "Warning: Dry-run mode is enabled, emulating a 300s long terraform apply command:" >&2
 	else
-		terraform apply -auto-approve -input=false -no-color "$plan_path" >/dev/null &
+		terraform -chdir="$terraform_directory" apply -auto-approve -input=false -no-color "$plan_path" >/dev/null &
 	fi
 	pid=$!
 
@@ -152,6 +154,7 @@ while getopts hda:t:r opt; do
 	a) target_resource_address=$OPTARG ;;
 	t) ignore_tag=$OPTARG ;;
 	r) dry_run=true ;;
+	f) terraform_directory=$OPTARG ;;
 	*)
 		show_help
 		exit 1
@@ -168,8 +171,8 @@ for cmd in terraform jq; do
 done
 
 # Initialize Terraform and create a plan
-terraform init >/dev/null
-terraform plan -out="$plan_path" -var="$ignore_tag=$destroy_mode" >/dev/null
+terraform -chdir="$terraform_directory" init >/dev/null
+terraform -chdir="$terraform_directory" plan -out="$plan_path" -var="$ignore_tag=$destroy_mode" >/dev/null
 plan_json=$(terraform show -json "$plan_path")
 
 # Verify the format version of the plan
