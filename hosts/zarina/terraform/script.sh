@@ -15,15 +15,18 @@ trap 'rm -f "$plan_path"' EXIT
 
 show_help() {
 	cat <<EOF
-Usage: ${0##*/} [-hrd] [-a <target_resource_address>] [-t <ignore_tag>] [-f <terraform_directory>]
-Terraform wrapper that deploys or destroys a single server and checks for inconsistencies.
+Usage: ${0##*/} [-hnx] [-r <target_resource_address>] [-i <ignore_tag>] [-d <terraform_directory>]
 
-  -h  Display this help and exit.
-  -r  Dry-run mode. Will not apply the terraform plan.
-  -d  Destroy mode. Will destroy instead of deploy.
-  -a  The terraform address of the targeted server. Default: "$target_resource_address"
-  -t  The terraform variable tag used to specify whether the target will be ignored (destroyed) or not (deployed). Default: "$ignore_tag"
-  -f  The terraform config directory. Default: "$terraform_directory"
+Description:
+  Terraform wrapper script for deploying or destroying a single server and checking for inconsistencies.
+
+Options:
+  -h  Display this help message and exit.
+  -n  Enable dry-run mode. This will not apply the Terraform plan.
+  -x  Enable destroy mode. This will destroy the specified resource instead of deploying it.
+  -r  Specify the Terraform address of the target resource. Default: "$target_resource_address"
+  -i  Specify the Terraform variable tag used to indicate whether the target will be skipped (destroyed) or included (deployed). Default: "$ignore_tag"
+  -d  Specify the directory containing the Terraform configuration files. Default: "$terraform_directory"
 EOF
 }
 
@@ -150,11 +153,11 @@ while getopts hda:t:r opt; do
 		show_help
 		exit 0
 		;;
-	d) destroy_mode=true ;;
-	a) target_resource_address=$OPTARG ;;
-	t) ignore_tag=$OPTARG ;;
-	r) dry_run=true ;;
-	f) terraform_directory=$OPTARG ;;
+	x) destroy_mode=true ;;
+	r) target_resource_address=$OPTARG ;;
+	i) ignore_tag=$OPTARG ;;
+	n) dry_run=true ;;
+	d) terraform_directory=$OPTARG ;;
 	*)
 		show_help
 		exit 1
