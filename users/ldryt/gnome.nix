@@ -52,32 +52,6 @@
       };
       "org/gnome/desktop/wm/keybindings" = {
         toggle-fullscreen = [ "<Super>f" ];
-        switch-to-workspace-left = [ "<Super><Shift>Left" ];
-        switch-to-workspace-right = [ "<Super><Shift>Right" ];
-        move-to-workspace-left = [ "<Super><Ctrl>Left" ];
-        move-to-workspace-right = [ "<Super><Ctrl>Right" ];
-      };
-      "org/gnome/settings-daemon/plugins/media-keys" = {
-        custom-keybindings = [
-          "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/"
-          "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1/"
-          "/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2/"
-        ];
-      };
-      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0" = {
-        binding = "<Super>Return";
-        command = "kgx";
-        name = "open-terminal";
-      };
-      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom1" = {
-        binding = "<Super>b";
-        command = "firefox";
-        name = "open-browser";
-      };
-      "org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom2" = {
-        binding = "<Super>e";
-        command = "nautilus";
-        name = "open-file-browser";
       };
     };
   };
