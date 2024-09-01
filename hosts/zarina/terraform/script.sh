@@ -9,13 +9,14 @@ dry_run=false
 target_resource_address="google_compute_instance.zarina_instance[0]"
 terraform_directory="./."
 ignore_tag="ignore_instance_zarina"
+ip_tag="zarina_ipv4"
 expected_format_version="1.2"
 plan_path=$(mktemp)
 trap 'rm -f "$plan_path"' EXIT
 
 show_help() {
 	cat <<EOF
-Usage: ${0##*/} [-hnx] [-r <target_resource_address>] [-i <ignore_tag>] [-d <terraform_directory>]
+Usage: ${0##*/} [-hnx] [-r <target_resource_address>] [-i <ignore_tag>] [-p <ip_tag>] [-d <terraform_directory>]
 
 Description:
   Terraform wrapper script for deploying or destroying a single server and checking for inconsistencies.
@@ -25,7 +26,8 @@ Options:
   -n  Enable dry-run mode. This will not apply the Terraform plan.
   -x  Enable destroy mode. This will destroy the specified resource instead of deploying it.
   -r  Specify the Terraform address of the target resource. Default: "$target_resource_address"
-  -i  Specify the Terraform variable tag used to indicate whether the target will be skipped (destroyed) or included (deployed). Default: "$ignore_tag"
+  -i  Specify the Terraform variable name used to indicate whether the target will be skipped (destroyed) or included (deployed). Default: "$ignore_tag"
+  -p  Specify the Terraform output name storing the IP address of the target resource. Default: "$ip_tag"
   -d  Specify the directory containing the Terraform configuration files. Default: "$terraform_directory"
 EOF
 }
@@ -42,30 +44,71 @@ get_target_resource_index_in() {
 	done
 }
 
+tfwrap() {
+	export TF_IN_AUTOMATION=true
+	export TF_INPUT=false
+	terraform -chdir="$terraform_directory" "$@" "-no-color"
+}
+
+# Prints an approximated progress percentage
+progress() {
+	cmd=$1
+	message=$2
+	expected_duration=$3
+
+	refresh_rate=2
+	start_timestamp=$(date +%s)
+
+	stderr_file=$(mktemp)
+	$cmd >/dev/null 2>"$stderr_file" &
+	pid=$!
+	child_pid=$(ps --ppid $pid -o pid= || true)
+	if [ -n "$child_pid" ]; then
+		name=$(cat /proc/"$child_pid"/comm)
+	else
+		name=$(cat /proc/"$pid"/comm)
+	fi
+
+	while ps -p "$pid" >/dev/null; do
+		printf "%s " "$message"
+		progress=$((($(date +%s) - start_timestamp) * 100 / expected_duration))
+		if [ $progress -le 100 ]; then
+			printf "%d%%\n" $progress
+		else
+			printf "Elapsed: %ds\n" $(($(date +%s) - start_timestamp))
+		fi
+		sleep "$refresh_rate"
+	done
+
+	printf "%s " "$message"
+	if wait "$pid"; then
+		printf "Done.\n"
+	else
+		status=$?
+		stderr_first_line=$(
+			if [ "$name" = "terraform" ]; then
+				head -n 2 "$stderr_file" | tail -n 1
+			else
+				head -n 1 "$stderr_file"
+			fi
+		)
+		printf "Error: %s exited with status %s: %s\n" "$name" "$status" "$stderr_first_line" >&2
+		exit 1
+	fi
+
+	rm -f "$stderr_file"
+}
+
 # Applies the terraform plan with an approximated live percentage
 tf_apply() {
-	message=$1
-
+	msg=$1
 	if $dry_run; then
-		sleep 300 &
+		cmd="sleep 300"
 		echo "Warning: Dry-run mode is enabled, emulating a 300s long terraform apply command:" >&2
 	else
-		terraform -chdir="$terraform_directory" apply -auto-approve -input=false -no-color "$plan_path" >/dev/null &
+		cmd="tfwrap apply -auto-approve $plan_path"
 	fi
-	pid=$!
-
-	start_timestamp=$(date +%s)
-	expected_duration=27
-	refresh_rate=0.3
-	while kill -0 $pid 2>/dev/null; do
-		progress=$((($(date +%s) - start_timestamp) * 100 / expected_duration))
-		if [ $progress -lt 100 ]; then
-			printf "%s %d%%\r" "$message" $progress
-		else
-			printf "%s Elapsed: %ds\r" "$message" $(( $(date +%s) - start_timestamp ))
-		fi
-		sleep $refresh_rate
-	done
+	progress "$cmd" "$msg" 26
 }
 
 # Handles the destroy logic based on the actions
@@ -174,9 +217,10 @@ for cmd in terraform jq; do
 done
 
 # Initialize Terraform and create a plan
-terraform -chdir="$terraform_directory" init >/dev/null
-terraform -chdir="$terraform_directory" plan -out="$plan_path" -var="$ignore_tag=$destroy_mode" >/dev/null
-plan_json=$(terraform show -json "$plan_path")
+progress "tfwrap init" "Initializing environment..." 3
+
+progress "tfwrap plan -out=$plan_path -var=$ignore_tag=$destroy_mode" "Preparing environment..." 13
+plan_json=$(tfwrap show -json "$plan_path")
 
 # Verify the format version of the plan
 format_version=$(echo "$plan_json" | jq -r '.format_version')
@@ -205,4 +249,5 @@ if $destroy_mode; then
 	handle_destroy
 else
 	handle_deploy
+	tfwrap output -json | jq -r '.outputs.'"$ip_tag"'.value'
 fi
