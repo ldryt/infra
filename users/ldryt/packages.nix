@@ -15,5 +15,6 @@
     libreoffice
     discord
     prismlauncher
+    signal-desktop
   ];
 }
