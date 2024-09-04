@@ -2,7 +2,6 @@
   "zone": "ldryt.dev",
   "subdomains": {
     "immich": "pics",
-    "keycloak": "auth",
     "authelia": "authelia",
     "vaultwarden": "pass",
     "mcredir": "mc",
