@@ -5,7 +5,6 @@
 
     ./services/vaultwarden.nix
     ./services/immich.nix
-    ./services/keycloak.nix
     ./services/frontpage.nix
     ./services/shlink.nix
     ./services/authelia.nix
