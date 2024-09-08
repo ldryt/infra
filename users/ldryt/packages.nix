@@ -13,7 +13,7 @@
 
     # gui programs
     libreoffice
-    discord
+    vesktop
     prismlauncher
     signal-desktop
   ];
