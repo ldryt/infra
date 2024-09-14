@@ -100,8 +100,6 @@
       seahorse
       gnome-font-viewer
       gnome-system-monitor
-    ]
-    ++ (with pkgs.gnome; [
       gnome-characters
       gnome-contacts
       gnome-logs
@@ -109,7 +107,7 @@
       gnome-music
       gnome-photos
       gnome-tour
-    ]);
+    ];
 
   # Battery savings
   services.power-profiles-daemon.enable = lib.mkForce false;
