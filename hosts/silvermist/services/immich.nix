@@ -111,7 +111,7 @@ in
       redirect_uris = [
         "https://${dns.subdomains.immich}.${dns.zone}/auth/login"
         "https://${dns.subdomains.immich}.${dns.zone}/user-settings"
-        "app.immich:/"
+        "app.immich:///oauth-callback"
       ];
       scopes = [
         "openid"
