@@ -170,6 +170,9 @@ in
           buttonText: Login with ${dns.subdomains.authelia}.${dns.zone}
           defaultStorageQuota: 0
           autoRegister: true
+        machineLearning:
+          clip:
+            modelName: ViT-B-16-SigLIP-384__webli
         passwordLogin:
           enabled: false
         storageTemplate:
