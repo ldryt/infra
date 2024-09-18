@@ -23,6 +23,10 @@
     hostName = "tinkerbell";
     networkmanager = {
       enable = true;
+      settings = {
+        connection.ipv6.ip6-privacy = 2;
+        connection-mac-randomization.wifi.cloned-mac-address = "stable";
+      };
       dns = "systemd-resolved";
     };
     timeServers = [
@@ -89,25 +93,23 @@
     };
     desktopManager.gnome.enable = true;
   };
-  environment.gnome.excludePackages =
-    with pkgs;
-    [
-      cheese
-      epiphany
-      yelp
-      file-roller
-      geary
-      seahorse
-      gnome-font-viewer
-      gnome-system-monitor
-      gnome-characters
-      gnome-contacts
-      gnome-logs
-      gnome-maps
-      gnome-music
-      gnome-photos
-      gnome-tour
-    ];
+  environment.gnome.excludePackages = with pkgs; [
+    cheese
+    epiphany
+    yelp
+    file-roller
+    geary
+    seahorse
+    gnome-font-viewer
+    gnome-system-monitor
+    gnome-characters
+    gnome-contacts
+    gnome-logs
+    gnome-maps
+    gnome-music
+    gnome-photos
+    gnome-tour
+  ];
 
   # Battery savings
   services.power-profiles-daemon.enable = lib.mkForce false;
