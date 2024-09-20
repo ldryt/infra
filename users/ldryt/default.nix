@@ -1,9 +1,10 @@
 { config, ... }:
 {
   imports = [
+    ../commons/bash.nix
+    ../commons/helix.nix
+
     ./packages.nix
-    ./helix.nix
-    ./bash.nix
     ./git.nix
     ./ssh.nix
     ./gnome.nix

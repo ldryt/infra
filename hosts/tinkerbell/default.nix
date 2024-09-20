@@ -23,10 +23,6 @@
     hostName = "tinkerbell";
     networkmanager = {
       enable = true;
-      settings = {
-        connection.ipv6.ip6-privacy = 2;
-        connection-mac-randomization.wifi.cloned-mac-address = "stable";
-      };
       dns = "systemd-resolved";
     };
     timeServers = [
