@@ -7,6 +7,7 @@
 {
   imports = [
     ./hardware.nix
+    ./nmprofiles.nix
 
     ../../modules/podman.nix
     ../../modules/nix-settings.nix
@@ -24,6 +25,11 @@
     networkmanager = {
       enable = true;
       dns = "systemd-resolved";
+      wifi = {
+        powersave = true;
+        macAddress = "random";
+      };
+      logLevel = "INFO";
     };
     timeServers = [
       "europe.pool.ntp.org"
