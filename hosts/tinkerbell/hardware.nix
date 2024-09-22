@@ -1,11 +1,20 @@
 {
-  config,
+  pkgs,
   lib,
-  modulesPath,
   ...
 }:
 {
-  imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
+  services.fwupd.enable = true;
+
+  # https://nixos.org/manual/nixos/unstable/index.html#sec-gpu-accel-vulkan
+  hardware.opengl = {
+    extraPackages = with pkgs; [
+      amdvlk
+    ];
+    extraPackages32 = with pkgs; [
+      driversi686Linux.amdvlk
+    ];
+  };
 
   boot = {
     loader.systemd-boot.enable = false;
@@ -81,7 +90,4 @@
   swapDevices = [ { device = "/dev/disk/by-uuid/b773adaa-3466-4383-bd8e-170d670f41b6"; } ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-
-  hardware.enableRedistributableFirmware = true;
-  hardware.cpu.intel.updateMicrocode = config.hardware.enableRedistributableFirmware;
 }

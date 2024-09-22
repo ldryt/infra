@@ -9,7 +9,6 @@
     ../../modules/gnome.nix
     ../../modules/podman.nix
     ../../modules/nix-settings.nix
-    ../../modules/battery.nix
 
     ./services/windows-dockur.nix
   ];

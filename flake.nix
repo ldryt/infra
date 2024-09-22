@@ -17,6 +17,8 @@
     lanzaboote.inputs.nixpkgs.follows = "nixpkgs-stable";
 
     mcpulse.url = "github:ldryt/mcpulse";
+
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
   outputs =
     {
@@ -29,6 +31,7 @@
       nixos-generators,
       lanzaboote,
       mcpulse,
+      nixos-hardware,
       ...
     }@inputs:
     let
@@ -71,6 +74,7 @@
           system = "x86_64-linux";
           modules = [
             ./hosts/tinkerbell
+            nixos-hardware.nixosModules.framework-13-7040-amd
             sops-nix.nixosModules.sops
             lanzaboote.nixosModules.lanzaboote
             home-manager.nixosModules.home-manager
