@@ -4,7 +4,7 @@
   networking.networkmanager.ensureProfiles = {
     environmentFiles = [ config.sops.secrets."system/NetworkManager/profiles/env".path ];
     profiles = {
-      SFR_AFA3 = {
+      LYS = {
         connection = {
           id = "$LYS_ssid";
           secondaries =
@@ -12,20 +12,7 @@
           type = "wifi";
           uuid = "8ce486c4-3f49-4a0d-8049-29006d1cfb7f";
         };
-        ipv4 = {
-          dhcp-send-hostname = "false";
-          ignore-auto-dns = "true";
-          method = "auto";
-        };
-        ipv6 = {
-          addr-gen-mode = "default";
-          dhcp-send-hostname = "false";
-          ignore-auto-dns = "true";
-          method = "auto";
-        };
-        proxy = { };
         wifi = {
-          cloned-mac-address = "random";
           mode = "infrastructure";
           ssid = "$LYS_ssid";
         };
@@ -37,7 +24,6 @@
       GNB = {
         connection = {
           id = "$GNB_ssid";
-          interface-name = "wlo1";
           type = "wifi";
           uuid = "f735668e-a38a-4c47-a072-1445aa7c44ce";
         };
@@ -48,7 +34,6 @@
           addr-gen-mode = "default";
           method = "auto";
         };
-        proxy = { };
         wifi = {
           mode = "infrastructure";
           ssid = "$GNB_ssid";
@@ -66,14 +51,6 @@
           type = "vpn";
           uuid = "8f02cd11-8df7-440d-bbe0-efa27cad96fd";
         };
-        ipv4 = {
-          method = "auto";
-        };
-        ipv6 = {
-          addr-gen-mode = "default";
-          method = "auto";
-        };
-        proxy = { };
         vpn = {
           ca = "${config.sops."system/NetworkManager/profiles/mullvad_fr_par/ca".path}";
           challenge-response-flags = "2";
@@ -98,18 +75,9 @@
       rosetta = {
         connection = {
           id = "rosetta";
-          interface-name = "wlo1";
           type = "wifi";
           uuid = "1517904d-776e-4633-ac49-a808c5d3215e";
         };
-        ipv4 = {
-          method = "auto";
-        };
-        ipv6 = {
-          addr-gen-mode = "default";
-          method = "auto";
-        };
-        proxy = { };
         wifi = {
           mode = "infrastructure";
           ssid = "rosetta";
@@ -129,18 +97,9 @@
         };
         connection = {
           id = "IONIS";
-          interface-name = "wlo1";
           type = "wifi";
           uuid = "eb59f995-a011-4665-a063-e572861080de";
         };
-        ipv4 = {
-          method = "auto";
-        };
-        ipv6 = {
-          addr-gen-mode = "default";
-          method = "auto";
-        };
-        proxy = { };
         wifi = {
           mode = "infrastructure";
           ssid = "IONIS";
