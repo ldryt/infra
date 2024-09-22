@@ -5,6 +5,9 @@ in
 {
   programs.git = {
     enable = true;
+    extraConfig = {
+      push.autoSetupRemote = true;
+    };
     userName = "${sensitive.name} ${sensitive.surname}";
     userEmail = "git@ldryt.anonaddy.me";
     includes = [
