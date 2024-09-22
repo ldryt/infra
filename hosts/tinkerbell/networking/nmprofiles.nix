@@ -1,6 +1,7 @@
 { config, ... }:
 {
   sops.secrets."system/NetworkManager/profiles/env" = { };
+  sops.secrets."system/NetworkManager/profiles/mullvad_fr_par/ca" = { };
   networking.networkmanager.ensureProfiles = {
     environmentFiles = [ config.sops.secrets."system/NetworkManager/profiles/env".path ];
     profiles = {
@@ -61,7 +62,7 @@
           uuid = "8f02cd11-8df7-440d-bbe0-efa27cad96fd";
         };
         vpn = {
-          ca = "${config.sops."system/NetworkManager/profiles/mullvad_fr_par/ca".path}";
+          ca = config.sops.secrets."system/NetworkManager/profiles/mullvad_fr_par/ca".path;
           challenge-response-flags = "2";
           cipher = "AES-256-GCM";
           connection-type = "password";
