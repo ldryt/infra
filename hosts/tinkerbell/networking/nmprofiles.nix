@@ -12,7 +12,16 @@
           type = "wifi";
           uuid = "8ce486c4-3f49-4a0d-8049-29006d1cfb7f";
         };
+        ipv4 = {
+          dhcp-send-hostname = "false";
+          ignore-auto-dns = "true";
+        };
+        ipv6 = {
+          dhcp-send-hostname = "false";
+          ignore-auto-dns = "true";
+        };
         wifi = {
+          cloned-mac-address = "random";
           mode = "infrastructure";
           ssid = "$LYS_ssid";
         };
