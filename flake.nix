@@ -19,6 +19,9 @@
     mcpulse.url = "github:ldryt/mcpulse";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs-stable";
   };
   outputs =
     {
@@ -77,6 +80,7 @@
             nixos-hardware.nixosModules.framework-13-7040-amd
             sops-nix.nixosModules.sops
             lanzaboote.nixosModules.lanzaboote
+            disko.nixosModules.disko
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;

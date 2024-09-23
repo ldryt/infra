@@ -1,10 +1,10 @@
 { ... }:
 {
   imports = [
-    ./hardware.nix
+    ./hardware
+    ./networking
     ./users.nix
     ./locales.nix
-    ./networking
 
     ../../modules/gnome.nix
     ../../modules/podman.nix
