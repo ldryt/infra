@@ -3,7 +3,7 @@
   disko.devices = {
     disk = {
       main = {
-        device = "TODO";
+        device = "/dev/nvme0n1";
         type = "disk";
         content = {
           type = "gpt";
@@ -23,7 +23,7 @@
                 type = "luks";
                 name = "crypted";
                 askPassword = true;
-                postCreateHook = "systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+2+7+12 ${config.disko.devices.disk.main.device}";
+                postCreateHook = "systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+2+7+12 /dev/nvme0n1p2";
                 settings.allowDiscards = true;
                 content = {
                   type = "btrfs";
