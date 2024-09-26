@@ -11,7 +11,6 @@
     ./firefox.nix
     ./thunderbird.nix
     ./vscodium.nix
-    ./nextcloud.nix
   ];
 
   programs.home-manager.enable = true;

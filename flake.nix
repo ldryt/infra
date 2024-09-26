@@ -17,6 +17,11 @@
     lanzaboote.inputs.nixpkgs.follows = "nixpkgs-stable";
 
     mcpulse.url = "github:ldryt/mcpulse";
+
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+
+    disko.url = "github:nix-community/disko";
+    disko.inputs.nixpkgs.follows = "nixpkgs-stable";
   };
   outputs =
     {
@@ -29,6 +34,7 @@
       nixos-generators,
       lanzaboote,
       mcpulse,
+      nixos-hardware,
       ...
     }@inputs:
     let
@@ -71,8 +77,10 @@
           system = "x86_64-linux";
           modules = [
             ./hosts/tinkerbell
+            nixos-hardware.nixosModules.framework-13-7040-amd
             sops-nix.nixosModules.sops
             lanzaboote.nixosModules.lanzaboote
+            disko.nixosModules.disko
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
@@ -107,9 +115,7 @@
       homeConfigurations."lucas.ladreyt" = forAllSystems (
         system:
         let
-          pkgs = import nixpkgs-unstable {
-            inherit system;
-          };
+          pkgs = import nixpkgs-unstable { inherit system; };
         in
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
