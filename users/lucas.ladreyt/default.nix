@@ -3,6 +3,7 @@
   imports = [
     ../commons/helix.nix
     ../commons/bash.nix
+    ../commons/alacritty.nix
   ];
 
   programs.home-manager.enable = true;
