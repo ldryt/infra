@@ -112,16 +112,15 @@
             ];
           };
       };
-      homeConfigurations."lucas.ladreyt" = forAllSystems (
-        system:
+      homeConfigurations."lucas.ladreyt" =
         let
-          pkgs = import nixpkgs-unstable { inherit system; };
+          system = "x86_64-linux";
+          pkgs = nixpkgs-unstable.legacyPackages.${system};
         in
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
           modules = [ ./users/lucas.ladreyt ];
-        }
-      );
+        };
       devShells = forAllSystems (
         system:
         let
