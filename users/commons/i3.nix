@@ -24,7 +24,7 @@ in
         { command = "alacritty"; }
       ];
       keybindings = lib.mkOptionDefault {
-        "${mod}+l" = "exec ${pkgs.scrot}/bin/scrot - | ${pkgs.imagemagick}/bin/magick convert /dev/stdin RGB:- | ${pkgs.i3lock-color}/bin/i3lock-color --raw $(${pkgs.xorg.xrandr}/bin/xrandr | ${pkgs.gnugrep}/bin/grep '*' | ${pkgs.gawk}/bin/awk {'print $1'}):rgb --image /dev/stdin";
+        "${mod}+l" = "exec ${pkgs.scrot}/bin/scrot - | ${pkgs.imagemagick}/bin/magick convert /dev/stdin RGB:- | ${pkgs.i3lock-color}/bin/i3lock-color -C ${i3lock-color-config} --raw $(${pkgs.xorg.xrandr}/bin/xrandr | ${pkgs.gnugrep}/bin/grep '*' | ${pkgs.gawk}/bin/awk {'print $1'}):rgb --image /dev/stdin";
       };
     };
   };
