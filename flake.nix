@@ -24,6 +24,9 @@
     disko.inputs.nixpkgs.follows = "nixpkgs-stable";
 
     impermanence.url = "github:nix-community/impermanence";
+
+    firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+    firefox-addons.inputs.nixpkgs.follows = "nixpkgs-stable";
   };
   outputs =
     {
@@ -94,6 +97,9 @@
                 sops-nix.homeManagerModules.sops
                 (inputs.impermanence + "/home-manager.nix")
               ];
+              home-manager.extraSpecialArgs = {
+                firefox-addons = inputs.firefox-addons;
+              };
             }
           ];
         };

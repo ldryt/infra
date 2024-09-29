@@ -1,4 +1,4 @@
-{ ... }:
+{ firefox-addons, ... }:
 {
   home.file."firefox-gnome-theme" = {
     target = ".mozilla/firefox/default/chrome/firefox-gnome-theme";
@@ -13,6 +13,12 @@
   programs.firefox = {
     enable = true;
     profiles.default = {
+      extensions = with firefox-addons.packages."x86_64-linux"; [
+        bitwarden
+        ublock-origin
+        sponsorblock
+        youtube-shorts-block
+      ];
       search = {
         default = "Google";
         force = true;
