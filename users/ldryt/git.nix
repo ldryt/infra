@@ -1,19 +1,16 @@
 { ... }:
-let
-  sensitive = import ./sensitive.gitcrypt.nix;
-in
 {
   programs.git = {
     enable = true;
     extraConfig = {
       push.autoSetupRemote = true;
     };
-    userName = "${sensitive.name} ${sensitive.surname}";
+    userName = "Lucas Ladreyt";
     userEmail = "git@ldryt.anonaddy.me";
     includes = [
       {
-        contents.user.email = sensitive.workEmail;
-        condition = "hasconfig:remote.*.url:*@${sensitive.workGit}:**/**";
+        contents.user.email = lucas.ladreyt@epita.fr;
+        condition = "hasconfig:remote.*.url:*@git.forge.epita.fr:**/**";
       }
     ];
   };

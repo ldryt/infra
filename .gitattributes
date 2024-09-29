@@ -1,1 +1,0 @@
-**/*.gitcrypt.* filter=git-crypt diff=git-crypt

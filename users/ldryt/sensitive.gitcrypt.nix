@@ -1,6 +1,0 @@
-{
-  name = "Lucas";
-  surname = "Ladreyt";
-  workEmail = "lucas.ladreyt@epita.fr";
-  workGit = "git.forge.epita.fr";
-}
