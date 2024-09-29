@@ -27,4 +27,19 @@
     defaultSymlinkPath = "${config.home.homeDirectory}/.sops/secrets";
     defaultSecretsMountPoint = "${config.home.homeDirectory}/.sops/secrets.d";
   };
+
+  home.persistence."/nix/persist/home/ldryt" = {
+    allowOther = true;
+    directories = [
+      "Documents"
+      "Downloads"
+      "Music"
+      "Pictures"
+      "Videos"
+      "VirtualBox VMs"
+      ".ssh"
+      ".local/share/direnv"
+      ".local/share/keyrings"
+    ];
+  };
 }

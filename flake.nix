@@ -22,6 +22,8 @@
 
     disko.url = "github:nix-community/disko";
     disko.inputs.nixpkgs.follows = "nixpkgs-stable";
+
+    impermanence.url = "github:nix-community/impermanence";
   };
   outputs =
     {
@@ -35,6 +37,7 @@
       lanzaboote,
       mcpulse,
       nixos-hardware,
+      impermanence,
       ...
     }@inputs:
     let
@@ -81,12 +84,16 @@
             sops-nix.nixosModules.sops
             lanzaboote.nixosModules.lanzaboote
             disko.nixosModules.disko
+            impermanence.nixosModules.impermanence
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
               home-manager.users.ldryt = import ./users/ldryt;
-              home-manager.sharedModules = [ sops-nix.homeManagerModules.sops ];
+              home-manager.sharedModules = [
+                sops-nix.homeManagerModules.sops
+                (inputs.impermanence + "/home-manager.nix")
+              ];
             }
           ];
         };
