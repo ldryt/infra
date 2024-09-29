@@ -9,7 +9,6 @@
     iftop
     ripgrep
     git-crypt
-    wl-clipboard
 
     # gui programs
     libreoffice

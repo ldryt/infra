@@ -7,7 +7,7 @@
     ./packages.nix
     ./git.nix
     ./ssh.nix
-    ./gnome.nix
+    ./sway.nix
     ./firefox.nix
     ./thunderbird.nix
     ./vscodium.nix
