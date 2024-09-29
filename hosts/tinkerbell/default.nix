@@ -25,6 +25,7 @@
       "/var/lib/bluetooth"
       "/var/lib/nixos"
       "/var/lib/systemd/coredump"
+      "/etc/secureboot"
     ];
     files = [
       "/etc/machine-id"

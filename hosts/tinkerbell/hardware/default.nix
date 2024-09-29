@@ -39,12 +39,12 @@
     loader.efi.canTouchEfiVariables = true;
 
     # Lanzaboote currently replaces the systemd-boot module.
-    loader.systemd-boot.enable = true;
-    #    initrd.systemd.enable = true;
-    #   lanzaboote = {
-    #    enable = true;
-    #   pkiBundle = "/etc/secureboot";
-    #};
+    loader.systemd-boot.enable = false;
+    initrd.systemd.enable = true;
+    lanzaboote = {
+      enable = true;
+      pkiBundle = "/etc/secureboot";
+    };
   };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
