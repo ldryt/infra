@@ -4,8 +4,8 @@
     target = ".mozilla/firefox/default/chrome/firefox-gnome-theme";
     source = (
       fetchTarball {
-        url = "https://github.com/rafaelmardojai/firefox-gnome-theme/archive/refs/tags/v126.tar.gz";
-        sha256 = "1r6vvhzk8gwhs78k54ppsxzfkw7lbldjivydy87ij6grj3cf6mld";
+        url = "https://github.com/rafaelmardojai/firefox-gnome-theme/archive/refs/tags/v129.tar.gz";
+        sha256 = "14x0vp66i8b14q6c9n75sa88fcwy9jd9lik8sjnab2rnwlskvq9h";
       }
     );
   };
