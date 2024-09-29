@@ -14,7 +14,7 @@
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
-  sops.age.keyFile = "/var/lib/sops/sops_age_tinkerbell.key";
+  sops.age.keyFile = "/nix/persist/sops_age_tinkerbell.key";
 
   system.stateVersion = "23.05";
 }

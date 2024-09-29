@@ -1,4 +1,4 @@
-{ config, ... }:
+{ ... }:
 {
   disko.devices = {
     disk = {
@@ -36,16 +36,9 @@
                         "noatime"
                       ];
                     };
-                    "/persist" = {
-                      mountpoint = "/persist";
-                      mountOptions = [
-                        "compress=zstd"
-                        "noatime"
-                      ];
-                    };
                     "/swap" = {
                       mountpoint = "/swap";
-                      swap.swapfile.size = "8G";
+                      swap.swapfile.size = "48G";
                     };
                   };
                 };
