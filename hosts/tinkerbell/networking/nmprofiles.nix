@@ -14,10 +14,12 @@
           uuid = "8ce486c4-3f49-4a0d-8049-29006d1cfb7f";
         };
         ipv4 = {
+          method = "auto";
           dhcp-send-hostname = "false";
           ignore-auto-dns = "true";
         };
         ipv6 = {
+          method = "auto";
           dhcp-send-hostname = "false";
           ignore-auto-dns = "true";
         };
