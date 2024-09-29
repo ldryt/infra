@@ -4,8 +4,8 @@
     target = ".thunderbird/main/chrome/thunderbird-gnome-theme";
     source = (
       fetchTarball {
-        url = "https://github.com/rafaelmardojai/thunderbird-gnome-theme/archive/65d5c03fc9172d549a3ea72fd366d544981a002b.tar.gz";
-        sha256 = "1l295w61h5469328qkjggny3mjq1x0q3zr9p8pz5sq5pypc7604x";
+        url = "https://github.com/rafaelmardojai/thunderbird-gnome-theme/archive/628fcccb7788e3e0ad34f67114f563c87ac8c1dc.tar.gz";
+        sha256 = "0ypf3z17brvbkx6vhy31l786ap753r3ly1ffcc3jpn3xbj7bsx84";
       }
     );
   };
