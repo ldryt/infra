@@ -38,6 +38,7 @@
       "Videos"
       "VirtualBox VMs"
       ".ssh"
+      ".keyring"
       ".local/share/direnv"
       ".local/share/keyrings"
     ];
