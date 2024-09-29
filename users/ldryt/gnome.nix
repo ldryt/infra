@@ -24,14 +24,6 @@
       "org/gnome/desktop/sound" = {
         event-sounds = false;
       };
-      "org/gnome/desktop/input-sources" = {
-        sources = [
-          (lib.hm.gvariant.mkTuple [
-            "xkb"
-            "fr"
-          ])
-        ];
-      };
       "system/locale" = {
         region = "fr_FR.UTF-8";
       };
