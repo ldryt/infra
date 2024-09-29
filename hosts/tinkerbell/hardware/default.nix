@@ -18,6 +18,8 @@
 
   services.fwupd.enable = true;
 
+  services.fprintd.enable = true;
+
   # https://nixos.org/manual/nixos/unstable/index.html#sec-gpu-accel-vulkan
   hardware.graphics = {
     extraPackages = with pkgs; [ amdvlk ];
