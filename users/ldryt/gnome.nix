@@ -8,11 +8,11 @@
         two-finger-scrolling-enabled = true;
       };
       "org/gnome/desktop/interface" = {
+        text-scaling-factor = 1.25;
         color-scheme = "prefer-dark";
         enable-hot-corners = true;
       };
       "org/gnome/mutter" = {
-        experimental-features = [ "scale-monitor-framebuffer" ];
         edge-tiling = true;
         dynamic-workspaces = true;
       };
