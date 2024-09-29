@@ -7,7 +7,7 @@
     profiles = {
       LYS = {
         connection = {
-          id = "$LYS_ssid";
+          id = "$LYS_SSID";
           secondaries =
             config.networking.networkmanager.ensureProfiles.profiles.mullvad_fr_par.connection.uuid;
           type = "wifi";
@@ -24,16 +24,16 @@
         wifi = {
           cloned-mac-address = "random";
           mode = "infrastructure";
-          ssid = "$LYS_ssid";
+          ssid = "$LYS_SSID";
         };
         wifi-security = {
           key-mgmt = "wpa-psk";
-          psk = "$LYS_pwd";
+          psk = "$LYS_PWD";
         };
       };
       GNB = {
         connection = {
-          id = "$GNB_ssid";
+          id = "$GNB_SSID";
           type = "wifi";
           uuid = "f735668e-a38a-4c47-a072-1445aa7c44ce";
         };
@@ -46,12 +46,12 @@
         };
         wifi = {
           mode = "infrastructure";
-          ssid = "$GNB_ssid";
+          ssid = "$GNB_SSID";
         };
         wifi-security = {
           auth-alg = "open";
           key-mgmt = "wpa-psk";
-          psk = "$GNB_pwd";
+          psk = "$GNB_PWD";
         };
       };
       mullvad_fr_par = {
@@ -95,14 +95,14 @@
         wifi-security = {
           auth-alg = "open";
           key-mgmt = "wpa-psk";
-          psk = "$rosetta_pwd";
+          psk = "$ROSETTA_PWD";
         };
       };
       IONIS = {
         "802-1x" = {
           eap = "peap;";
-          identity = "$IONIS_id";
-          password = "$IONIS_pwd";
+          identity = "$IONIS_ID";
+          password = "$IONIS_PWD";
           phase2-auth = "mschapv2";
         };
         connection = {
