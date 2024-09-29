@@ -1,7 +1,7 @@
 { config, ... }:
 {
   imports = [
-    ../commons/helix.nix
+    ../commons/vim.nix
     ../commons/bash.nix
     ../commons/alacritty.nix
     ../commons/i3.nix

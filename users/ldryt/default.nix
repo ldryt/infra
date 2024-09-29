@@ -2,7 +2,7 @@
 {
   imports = [
     ../commons/bash.nix
-    ../commons/helix.nix
+    ../commons/vim.nix
 
     ./packages.nix
     ./git.nix
