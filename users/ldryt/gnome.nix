@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ ... }:
 {
   dconf = {
     enable = true;
@@ -24,9 +24,6 @@
       };
       "org/gnome/desktop/sound" = {
         event-sounds = false;
-      };
-      "system/locale" = {
-        region = "fr_FR.UTF-8";
       };
       "org/gnome/settings-daemon/plugins/power" = {
         power-button-action = "hibernate";
