@@ -10,6 +10,7 @@
     extraConfig = ''
       set background=dark
       colorscheme gruvbox
+      let g:gruvbox_termcolors=16
       
       filetype plugin indent on
       " show existing tab with 4 spaces width
