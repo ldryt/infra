@@ -1,11 +1,11 @@
 { config, pkgs, ... }:
 {
-  home.packages = with pkgs; [
-    valgrind
-    gcc
-    gdb
-    libclang
-  ];
+#  home.packages = with pkgs; [
+#    valgrind
+#    gcc
+#    gdb
+#    libclang
+#  ];
   home.file."${config.home.homeDirectory}/.clang-format".text = ''
     AccessModifierOffset: -4
     AlignAfterOpenBracket: Align
