@@ -10,11 +10,6 @@
     ripgrep
     git-crypt
     wl-clipboard
-
-    # gui programs
-    libreoffice
     vesktop
-    prismlauncher
-    signal-desktop
   ];
 }
