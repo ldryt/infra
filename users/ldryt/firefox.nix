@@ -1,5 +1,9 @@
 { firefox-addons, ... }:
 {
+  home.persistence."/nix/persist/home/ldryt".directories = [
+    ".mozilla"
+  ];
+
   home.file."firefox-gnome-theme" = {
     target = ".mozilla/firefox/default/chrome/firefox-gnome-theme";
     source = (
@@ -23,12 +27,6 @@
         default = "Google";
         force = true;
         engines = {
-          "Phind" = {
-            urls = [ { template = "https://www.phind.com/search?q={searchTerms}&ignoreSearchResults=false"; } ];
-            iconUpdateURL = "https://www.phind.com/images/favicon.png";
-            updateInterval = 7 * 24 * 60 * 60 * 1000;
-            definedAliases = [ "p" ];
-          };
           "GitHub" = {
             urls = [ { template = "https://github.com/search?q={searchTerms}"; } ];
             iconUpdateURL = "https://github.com/fluidicon.png";
@@ -47,11 +45,17 @@
             updateInterval = 7 * 24 * 60 * 60 * 1000;
             definedAliases = [ "nx" ];
           };
-          "Noogle" = {
-            urls = [ { template = "https://noogle.dev/q?term={searchTerms}"; } ];
-            iconUpdateURL = "https://noogle.dev/favicon.png";
+          "Perplexity" = {
+            urls = [ { template = "https://www.perplexity.ai/?q={searchTerms}"; } ];
+            iconUpdateURL = "https://www.perplexity.ai/favicon.ico";
             updateInterval = 7 * 24 * 60 * 60 * 1000;
-            definedAliases = [ "no" ];
+            definedAliases = [ "p" ];
+          };
+          "Phind" = {
+            urls = [ { template = "https://www.phind.com/search?q={searchTerms}&ignoreSearchResults=false"; } ];
+            iconUpdateURL = "https://www.phind.com/images/favicon.png";
+            updateInterval = 7 * 24 * 60 * 60 * 1000;
+            definedAliases = [ "ph" ];
           };
         };
       };
