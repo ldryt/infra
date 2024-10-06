@@ -25,9 +25,6 @@
       "org/gnome/desktop/sound" = {
         event-sounds = false;
       };
-      "org/gnome/settings-daemon/plugins/power" = {
-        power-button-action = "hibernate";
-      };
       "org/gnome/shell" = {
         enabled-extensions = [ "launch-new-instance@gnome-shell-extensions.gcampax.github.com" ];
         favorite-apps = [
