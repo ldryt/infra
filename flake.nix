@@ -80,19 +80,24 @@
           specialArgs = {
             inherit inputs;
           };
-        system = "x86_64-linux";
-        modules = [
-          ({ modulesPath, ... }: {
-            imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-graphical-gnome.nix") ];
-          })
+          system = "x86_64-linux";
+          modules = [
+            (
+              { modulesPath, ... }:
+              {
+                imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-graphical-gnome.nix") ];
+              }
+            )
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
               home-manager.useUserPackages = true;
-              home-manager.users.nixos = { pkgs,... }: {
-                imports = [ ./users/ldryt ];
-                home.username = pkgs.lib.mkForce "nixos";
-              };
+              home-manager.users.nixos =
+                { pkgs, ... }:
+                {
+                  imports = [ ./users/ldryt ];
+                  home.username = pkgs.lib.mkForce "nixos";
+                };
               home-manager.sharedModules = [
                 sops-nix.homeManagerModules.sops
                 (inputs.impermanence + "/home-manager.nix")
@@ -101,8 +106,8 @@
                 firefox-addons = inputs.firefox-addons;
               };
             }
-        ];
-      };
+          ];
+        };
         tinkerbell = nixpkgs-unstable.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
