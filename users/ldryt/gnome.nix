@@ -50,6 +50,8 @@
       };
       "org/gnome/desktop/wm/keybindings" = {
         toggle-fullscreen = [ "<Super>f" ];
+        switch-applications = [ ];
+        switch-windows = [ "<Alt>Tab" ];
       };
     };
   };
