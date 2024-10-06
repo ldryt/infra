@@ -30,6 +30,14 @@
       };
       "org/gnome/shell" = {
         enabled-extensions = [ "launch-new-instance@gnome-shell-extensions.gcampax.github.com" ];
+        favorite-apps = [
+          "org.gnome.Nautilus.desktop"
+          "org.gnome.Console.desktop"
+          "firefox.desktop"
+          "thunderbird.desktop"
+          "org.gnome.Calculator.desktop"
+          "org.gnome.TextEditor.desktop"
+        ];
       };
       "org/gnome/desktop/background" = {
         picture-uri = "file://" + ./wallpaper.jpg;
