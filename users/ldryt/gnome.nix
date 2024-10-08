@@ -37,11 +37,11 @@
         ];
       };
       "org/gnome/desktop/background" = {
-        picture-uri = "file://" + ./wallpaper.jpg;
-        picture-uri-dark = "file://" + ./wallpaper.jpg;
+        picture-uri = "file://" + ../wallpaper.jpg;
+        picture-uri-dark = "file://" + ../wallpaper.jpg;
       };
       "org/gnome/desktop/screensaver" = {
-        picture-uri = "file://" + ./wallpaper.jpg;
+        picture-uri = "file://" + ../wallpaper.jpg;
         primary-color = "#191724";
         secondary-color = "#000000";
       };
