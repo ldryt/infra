@@ -17,6 +17,7 @@ in
     };
     extraConfig = ''
       exec_always feh --bg-scale --zoom fill ${./wallpaper.jpg}
+      exec_always ${pkgs.picom}/bin/picom
     '';
   };
 }

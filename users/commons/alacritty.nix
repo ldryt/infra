@@ -10,6 +10,7 @@ in
     enable = true;
     settings = {
       import = [ gruvbox-dark-theme ];
+      window.opacity = 0.9;
     };
   };
 }

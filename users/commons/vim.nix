@@ -11,6 +11,7 @@
       set background=dark
       colorscheme gruvbox
       let g:gruvbox_termcolors=16
+      autocmd vimenter * hi Normal guibg=NONE ctermbg=NONE
 
       filetype plugin indent on
       " show existing tab with 4 spaces width
