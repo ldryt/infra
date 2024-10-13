@@ -112,7 +112,7 @@
       bindsym Print exec slurp
 
       # set wallpaper using swaybg
-      output "*" bg ${./wallpaper.jpg} fill
+      output "*" bg ${../commons/wallpaper.jpg} fill
 
       # HiDPi scaling
       output "*" scale 1.5
