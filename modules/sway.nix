@@ -7,8 +7,12 @@
   xdg.portal = {
     enable = true;
     xdgOpenUsePortal = true;
+    config = {
+      common = {
+        default = "wlr";
+      };
+    };
     wlr.enable = true;  # adds pkgs.xdg-desktop-portal-wlr to extraPortals
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
   # allow swaylock
