@@ -7,7 +7,6 @@
   home.packages = with pkgs; [
     swaylock # screen locker
     swayidle # screen timer
-    i3status # status bar
     slurp # screenshot utility
     swaybg # wallpaper utility
     wl-clipboard # clipboard utility
@@ -15,6 +14,12 @@
     bemenu # program launcher
     brightnessctl # screen brightness
   ];
+
+  programs.i3status = {
+    enable = true;
+    general = {
+      colors = false;
+    };
 
   wayland.windowManager.sway = {
     enable = true;
@@ -38,12 +43,20 @@
       bindsym $mod+j focus down
       bindsym $mod+k focus up
       bindsym $mod+l focus right
+      bindsym $mod+Left focus left
+      bindsym $mod+Down focus down
+      bindsym $mod+Up focus up
+      bindsym $mod+Right focus right
 
       # move focused window
       bindsym $mod+Shift+h move left
       bindsym $mod+Shift+j move down
       bindsym $mod+Shift+k move up
       bindsym $mod+Shift+l move right
+      bindsym $mod+Shift+Left move left
+      bindsym $mod+Shift+Down move down
+      bindsym $mod+Shift+Up move up
+      bindsym $mod+Shift+Right move right
 
       # split in horizontal orientation
       bindsym $mod+c split h
