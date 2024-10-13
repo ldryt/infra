@@ -5,5 +5,6 @@
       gcc
       gdb
       libclang
+      gnumake
     ];
 }
