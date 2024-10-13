@@ -1,7 +1,10 @@
 { pkgs, ... }:
 {
+  imports = [
+    ../commons/alacritty.nix
+  ];
+
   home.packages = with pkgs; [
-    alacritty # terminal emulator
     swaylock # screen locker
     swayidle # screen timer
     slurp # screenshot utility
