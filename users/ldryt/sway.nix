@@ -20,6 +20,7 @@
     general = {
       colors = false;
     };
+  };
 
   wayland.windowManager.sway = {
     enable = true;
