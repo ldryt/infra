@@ -12,7 +12,7 @@
         default = "wlr";
       };
     };
-    wlr.enable = true;  # adds pkgs.xdg-desktop-portal-wlr to extraPortals
+    wlr.enable = true; # adds pkgs.xdg-desktop-portal-wlr to extraPortals
   };
 
   # allow swaylock
