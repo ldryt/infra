@@ -10,6 +10,7 @@ in
     enable = true;
     settings = {
       import = [ gruvbox-dark-theme ];
+      font.size = 13;
     };
   };
 }

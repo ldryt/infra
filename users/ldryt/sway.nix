@@ -30,6 +30,9 @@
       # set modifier (super key)
       set $mod Mod4
 
+      # set font
+      font pango:monospace 11
+
       # start alacritty
       bindsym $mod+Return exec alacritty
 
@@ -129,7 +132,8 @@
       output "*" bg ${../commons/wallpaper.jpg} fill
 
       # HiDPi scaling
-      output "*" scale 1.5
+      output "*" scale 1.3
+      output "*" scale_filter smart
 
       # touchpad tap-to-click and natural scrolling
       input type:touchpad {
