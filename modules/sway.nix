@@ -7,7 +7,7 @@
   xdg.portal = {
     enable = true;
     xdgOpenUsePortal = true;
-    wlr.enable = true;
+    wlr.enable = true;  # adds pkgs.xdg-desktop-portal-wlr to extraPortals
     extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   };
 
@@ -16,13 +16,12 @@
     text = "auth include login";
   };
 
-  security.rtkit.enable = true;
+  security.rtkit.enable = true; # this is required for pipewire real-time access
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    jack.enable = true;
   };
 
   programs.dconf.enable = true;

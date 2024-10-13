@@ -9,6 +9,7 @@
     wl-clipboard # clipboard utility
     clipman # clipboard manager
     wofi # program launcher
+    brightnessctl # screen brightness
   ];
 
   wayland.windowManager.sway = {
@@ -132,11 +133,9 @@
       # output "*" color_profile icc ${./fw13.icm}
 
       bar {
-        position top
-        status_command waybar
+        position bottom
+        status_command swaybar
       }
     '';
   };
-
-  programs.waybar.enable = true;
 }

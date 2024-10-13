@@ -9,7 +9,6 @@
         "wheel"
         "networkmanager"
         "vboxusers"
-        "audio"
         "libvirtd"
       ];
       hashedPasswordFile = config.sops.secrets."users/ldryt/hashedPassword".path;
