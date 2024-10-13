@@ -10,6 +10,7 @@
     ../../modules/sway.nix
     ../../modules/podman.nix
     ../../modules/nix-settings.nix
+    ../../modules/suspend-then-hibernate.nix
 
     ./services/windows-dockur.nix
   ];
