@@ -12,7 +12,7 @@
     swaybg # wallpaper utility
     wl-clipboard # clipboard utility
     clipman # clipboard manager
-    rofi # program launcher
+    bemenu # program launcher
     brightnessctl # screen brightness
   ];
 
@@ -31,7 +31,7 @@
       bindsym $mod+Shift+q kill
 
       # program launcher
-      bindsym $mod+d exec rofi
+      bindsym $mod+d exec bemenu-run
 
       # change focus
       bindsym $mod+h focus left
@@ -100,10 +100,9 @@
       bindsym $mod+Shift+r restart
 
       # adjust volume via pulseaudio
-      bindsym --locked XF86AudioMute exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
-      bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume \@DEFAULT_SINK@ -5%
-      bindsym --locked XF86AudioRaiseVolume exec pactl set-sink-volume \@DEFAULT_SINK@ +5%
-      bindsym --locked XF86AudioMicMute exec pactl set-source-mute \@DEFAULT_SOURCE@ toggle
+      bindsym --locked XF86AudioMute exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle
+      bindsym --locked XF86AudioLowerVolume exec wpctl set-volume @DEFAULT_SINK@ 5%-
+      bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_SINK@ 5%+
 
       # adjust brightness via brightnessctl
       bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
@@ -115,8 +114,8 @@
       # set wallpaper using swaybg
       output "*" bg ${../commons/wallpaper.jpg} fill
 
-      ## HiDPi scaling
-      # output "*" scale 1.5
+      # HiDPi scaling
+      output "*" scale 1.5
 
       # touchpad tap-to-click and natural scrolling
       input type:touchpad {
