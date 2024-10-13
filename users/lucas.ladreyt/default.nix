@@ -5,7 +5,7 @@
     ../commons/bash.nix
     ../commons/alacritty.nix
     ../commons/i3.nix
-    ../commons/c.nix
+    ../commons/clang-format.nix
   ];
 
   programs.home-manager.enable = true;
