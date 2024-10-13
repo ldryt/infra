@@ -43,6 +43,8 @@
       ".keyring"
       ".local/share/direnv"
       ".local/share/keyrings"
+      ".config/vesktop"
+      ".thunderbird"
     ];
   };
 }

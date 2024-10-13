@@ -9,6 +9,7 @@
     ../../modules/greetd.nix
     ../../modules/sway.nix
     ../../modules/podman.nix
+    ../../modules/power.nix
     ../../modules/nix-settings.nix
     ../../modules/suspend-then-hibernate.nix
 
@@ -27,6 +28,7 @@
       "/var/lib/bluetooth"
       "/var/lib/nixos"
       "/var/lib/systemd/coredump"
+      "/var/cache/powertop"
       "/etc/secureboot"
     ];
     files = [
