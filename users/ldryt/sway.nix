@@ -7,11 +7,12 @@
   home.packages = with pkgs; [
     swaylock # screen locker
     swayidle # screen timer
+    i3status # status bar
     slurp # screenshot utility
     swaybg # wallpaper utility
     wl-clipboard # clipboard utility
     clipman # clipboard manager
-    wofi # program launcher
+    rofi # program launcher
     brightnessctl # screen brightness
   ];
 
@@ -23,17 +24,14 @@
       # set modifier (super key)
       set $mod Mod4
 
-      # set font
-      font pango:Ionicons 9, Poppins Regular 9
-
       # start alacritty
       bindsym $mod+Return exec alacritty
 
       # kill focused window
       bindsym $mod+Shift+q kill
 
-      # start wofi program launcher
-      bindsym $mod+d exec wofi
+      # program launcher
+      bindsym $mod+d exec rofi
 
       # change focus
       bindsym $mod+h focus left
@@ -117,8 +115,8 @@
       # set wallpaper using swaybg
       output "*" bg ${../commons/wallpaper.jpg} fill
 
-      # HiDPi scaling
-      output "*" scale 1.5
+      ## HiDPi scaling
+      # output "*" scale 1.5
 
       # touchpad tap-to-click and natural scrolling
       input type:touchpad {
@@ -132,12 +130,12 @@
       # tell at a glance which windows are using Xwayland
       for_window [shell="xwayland"] title_format "[XWayland] %title"
 
-      # framework 13 color profile
+      ## framework 13 color profile
       # output "*" color_profile icc ${./fw13.icm}
 
       bar {
         position bottom
-        status_command swaybar
+        status_command i3status
       }
     '';
   };
