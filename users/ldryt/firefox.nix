@@ -4,16 +4,6 @@
     ".mozilla"
   ];
 
-  home.file."firefox-gnome-theme" = {
-    target = ".mozilla/firefox/default/chrome/firefox-gnome-theme";
-    source = (
-      fetchTarball {
-        url = "https://github.com/rafaelmardojai/firefox-gnome-theme/archive/refs/tags/v129.tar.gz";
-        sha256 = "14x0vp66i8b14q6c9n75sa88fcwy9jd9lik8sjnab2rnwlskvq9h";
-      }
-    );
-  };
-
   programs.firefox = {
     enable = true;
     profiles.default = {
@@ -117,17 +107,7 @@
         "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features" = false; # Do not recommend features
         "extensions.htmlaboutaddons.recommendations.enabled" = false; # Do not recommend extensions
         "layout.spellcheckDefault" = 0; # Spellcheck off
-
-        # firefox-gnome-theme
-        "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
-        "svg.context-properties.content.enabled" = true;
       };
-      userChrome = ''
-        @import "firefox-gnome-theme/userChrome.css";
-      '';
-      userContent = ''
-        @import "firefox-gnome-theme/userContent.css";
-      '';
     };
   };
 }
