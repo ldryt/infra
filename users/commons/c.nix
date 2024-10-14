@@ -6,5 +6,6 @@
     gdb
     libclang
     gnumake
+    criterion
   ];
 }
