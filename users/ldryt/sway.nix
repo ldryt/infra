@@ -155,9 +155,9 @@ in
       # set wallpaper using swaybg
       output "*" bg ${../commons/wallpaper.jpg} fill
 
-      # HiDPi scaling
-      output "*" scale 1.3
-      output "*" scale_filter smart
+      # HiDPi scaling for internal display
+      output "eDP-1" scale 1.3
+      output "eDP-1" scale_filter smart
 
       # touchpad tap-to-click and natural scrolling
       input type:touchpad {
