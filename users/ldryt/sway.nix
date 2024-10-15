@@ -1,11 +1,23 @@
 { pkgs, ... }:
+let
+  swaylock-cfg = pkgs.writeText "swaylock-cfg" ''
+    daemonize
+    show-failed-attempts
+    ignore-empty-password
+    indicator-idle-visible
+    indicator-radius=150
+    color=000000
+    ring-color=ffffff
+    inside-ver-color=000000
+  '';
+  lock = "${pkgs.swaylock}/bin/swaylock --config=${swaylock-cfg}";
+in
 {
   imports = [
     ../commons/alacritty.nix
   ];
 
   home.packages = with pkgs; [
-    swayidle # screen timer
     slurp # screenshot utility
     swaybg # wallpaper utility
     wl-clipboard # clipboard utility
@@ -15,22 +27,27 @@
   ];
 
   programs = {
-    swaylock = {
-      enable = true;
-      settings = {
-        daemonize = true;
-        ready-fd = true;
-        show-failed-attempts = true;
-        indicator-idle-visible = true;
-        indicator-radius = 100;
-        color = "000000";
-      };
-    };
     i3status = {
       enable = true;
       general = {
         colors = false;
       };
+    };
+  };
+
+  services = {
+    swayidle = {
+      enable = true;
+      events = [
+        {
+          event = "lock";
+          command = lock;
+        }
+        {
+          event = "before-sleep";
+          command = lock;
+        }
+      ];
     };
   };
 
@@ -46,7 +63,7 @@
       font pango:monospace 11
 
       # lock the screen
-      bindsym $mod+l exec swaylock
+      bindsym $mod+l exec ${lock}
 
       # start alacritty
       bindsym $mod+Return exec alacritty
