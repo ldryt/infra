@@ -104,6 +104,11 @@ in
         }
       ];
     };
+    wlsunset = {
+      enable = true;
+      sunrise = "07:00";
+      sunset = "20:00";
+    };
   };
 
   wayland.windowManager.sway = {
