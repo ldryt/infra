@@ -5,7 +5,6 @@
   ];
 
   home.packages = with pkgs; [
-    swaylock # screen locker
     swayidle # screen timer
     slurp # screenshot utility
     swaybg # wallpaper utility
@@ -15,10 +14,23 @@
     brightnessctl # screen brightness
   ];
 
-  programs.i3status = {
-    enable = true;
-    general = {
-      colors = false;
+  programs = {
+    swaylock = {
+      enable = true;
+      settings = {
+        daemonize = true;
+        ready-fd = true;
+        show-failed-attempts = true;
+        indicator-idle-visible = true;
+        indicator-radius = 100;
+        color = "000000";
+      };
+    };
+    i3status = {
+      enable = true;
+      general = {
+        colors = false;
+      };
     };
   };
 
@@ -33,6 +45,9 @@
       # set font
       font pango:monospace 11
 
+      # lock the screen
+      bindsym $mod+l exec swaylock
+
       # start alacritty
       bindsym $mod+Return exec alacritty
 
@@ -43,20 +58,12 @@
       bindsym $mod+d exec bemenu-run
 
       # change focus
-      bindsym $mod+h focus left
-      bindsym $mod+j focus down
-      bindsym $mod+k focus up
-      bindsym $mod+l focus right
       bindsym $mod+Left focus left
       bindsym $mod+Down focus down
       bindsym $mod+Up focus up
       bindsym $mod+Right focus right
 
       # move focused window
-      bindsym $mod+Shift+h move left
-      bindsym $mod+Shift+j move down
-      bindsym $mod+Shift+k move up
-      bindsym $mod+Shift+l move right
       bindsym $mod+Shift+Left move left
       bindsym $mod+Shift+Down move down
       bindsym $mod+Shift+Up move up
