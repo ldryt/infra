@@ -23,8 +23,9 @@
     enableNTS = true;
     servers = [
       "nts.netnod.se"
-      "ntp.trifence.ch"
+      "nts.teambelgium.net"
       "time.cloudflare.com"
+      "ntp.3eck.net"
     ];
   };
 
