@@ -19,6 +19,7 @@ in
 
   home.packages = with pkgs; [
     slurp # screenshot utility
+    grim
     swaybg # wallpaper utility
     wl-clipboard # clipboard utility
     clipman # clipboard manager
@@ -203,8 +204,8 @@ in
       bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
       bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
 
-      # take a screenshot via slurp
-      bindsym Print exec slurp
+      # take a screenshot to clipboard
+      bindsym Print exec grim -g "$(slurp)" - | wl-copy
 
       # set wallpaper using swaybg
       output "*" bg ${../commons/wallpaper.jpg} fill
