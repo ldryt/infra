@@ -10,5 +10,6 @@
     git-crypt
     wl-clipboard
     vesktop
+    bluetuith
   ];
 }

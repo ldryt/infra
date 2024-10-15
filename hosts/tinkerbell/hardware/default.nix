@@ -22,7 +22,6 @@
 
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
-  services.blueman.enable = true;
 
   # https://nixos.org/manual/nixos/unstable/index.html#sec-gpu-accel-vulkan
   hardware.graphics = {
