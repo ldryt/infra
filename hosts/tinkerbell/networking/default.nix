@@ -27,6 +27,9 @@
       "time.cloudflare.com"
       "ntp.3eck.net"
     ];
+    extraConfig = ''
+      makestep 1 -1
+    '';
   };
 
   services.dnscrypt-proxy2 = {
