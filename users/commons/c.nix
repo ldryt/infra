@@ -7,5 +7,12 @@
     libclang
     gnumake
     criterion
+    man-pages
+    man-pages-posix
   ];
+
+  programs.man = {
+    enable = true;
+    generateCaches = true;
+  };
 }
