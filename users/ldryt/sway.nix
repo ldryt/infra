@@ -122,11 +122,8 @@ in
       # set font
       font pango:monospace 11
 
-      # disable borders
-      default_border pixel 0
-
-      # set gaps
-      gaps inner 10
+      # custom borders
+      default_border pixel 1
 
       # lock the screen
       bindsym $mod+l exec ${lock}
