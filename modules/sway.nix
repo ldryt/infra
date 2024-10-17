@@ -22,8 +22,13 @@
 
   # decrease latency
   security.pam.loginLimits = [
-  { domain = "@users"; item = "rtprio"; type = "-"; value = 1; }
-];
+    {
+      domain = "@users";
+      item = "rtprio";
+      type = "-";
+      value = 1;
+    }
+  ];
 
   security.rtkit.enable = true; # this is required for pipewire real-time access
   services.pipewire = {
