@@ -27,6 +27,16 @@ in
     brightnessctl # screen brightness
   ];
 
+  home.pointerCursor = {
+    name = "Adwaita";
+    package = pkgs.gnome.adwaita-icon-theme;
+    size = 34;
+    x11 = {
+      enable = true;
+      defaultCursor = "Adwaita";
+    };
+  };
+
   programs = {
     i3status = {
       enable = true;
