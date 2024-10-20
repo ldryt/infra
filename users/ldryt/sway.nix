@@ -18,17 +18,16 @@ in
   ];
 
   home.packages = with pkgs; [
-    slurp # screenshot utility
+    slurp # screenshot utilities
     grim
     swaybg # wallpaper utility
     wl-clipboard # clipboard utility
     clipman # clipboard manager
-    brightnessctl # screen brightness
   ];
 
   home.pointerCursor = {
     name = "Adwaita";
-    package = pkgs.gnome.adwaita-icon-theme;
+    package = pkgs.adwaita-icon-theme;
     size = 34;
     x11 = {
       enable = true;
@@ -218,8 +217,8 @@ in
       bindsym --locked XF86AudioRaiseVolume exec wpctl set-volume @DEFAULT_SINK@ 5%+
 
       # adjust brightness via brightnessctl
-      bindsym --locked XF86MonBrightnessDown exec brightnessctl set 5%-
-      bindsym --locked XF86MonBrightnessUp exec brightnessctl set 5%+
+      bindsym --locked XF86MonBrightnessDown exec ${pkgs.brightnessctl}/bin/brightnessctl set 5%-
+      bindsym --locked XF86MonBrightnessUp exec ${pkgs.brightnessctl}/bin/brightnessctl set 5%+
 
       # take a screenshot to clipboard
       bindsym Print exec grim -g "$(slurp)" - | wl-copy
