@@ -23,7 +23,6 @@ in
     swaybg # wallpaper utility
     wl-clipboard # clipboard utility
     clipman # clipboard manager
-    bemenu # program launcher
     brightnessctl # screen brightness
   ];
 
@@ -145,7 +144,7 @@ in
       bindsym $mod+Shift+q kill
 
       # program launcher
-      bindsym $mod+d exec bemenu-run
+      bindsym $mod+d exec ${pkgs.dmenu-wayland}/bin/dmenu-wl_run
 
       # change focus
       bindsym $mod+Left focus left
