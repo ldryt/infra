@@ -16,6 +16,8 @@
 
   fileSystems."/nix".neededForBoot = true;
 
+  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+
   services.fwupd.enable = true;
 
   services.fprintd.enable = true;

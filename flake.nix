@@ -108,6 +108,17 @@
             }
           ];
         };
+        rpi = nixpkgs-unstable.lib.nixosSystem {
+          system = "aarch64-linux";
+          modules = [
+            ({
+              sdImage.compressImage = false;
+            })
+            "${nixpkgs-unstable}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
+            ./hosts/rpi
+            sops-nix.nixosModules.sops
+          ];
+        };
         tinkerbell = nixpkgs-unstable.lib.nixosSystem {
           specialArgs = {
             inherit inputs;

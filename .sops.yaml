@@ -2,6 +2,7 @@ keys:
   - &tinkerbell age18gc6nka7mveyup3he02ff08dl96f7uf9nd4c4rgcq04qwpc95djs8f75p2
   - &silvermist age1c9rgv24qanzvk0qllq6lu94wjxugffawppeeehawfya7fhvdqfeqse4d48
   - &zarina age1mn4uc8yxqmgcxhcgcjsrk3en7mhjtkwev287whgfmn8c9p3szv7s888pxj
+  - &rpi age1e5s0ad958hfq7cs790cut6yampvy9wggj6dhal53a586u5w2mfxsgkq3hc
   - &ldryt age1d7d0ed4268h2gdew58c62gcpac2y9tn9ke03kdkr5c93alvzm5rqn2zg2j
 creation_rules:
   - path_regex: hosts/silvermist/secrets.yaml$
@@ -18,6 +19,11 @@ creation_rules:
     key_groups:
       - age:
         - *zarina
+        - *ldryt
+  - path_regex: hosts/rpi/secrets.yaml$
+    key_groups:
+      - age:
+        - *rpi
         - *ldryt
   - path_regex: users/ldryt/secrets.yaml$
     key_groups:
