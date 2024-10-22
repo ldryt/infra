@@ -10,8 +10,6 @@
           id = "$LYS_SSID";
           type = "wifi";
           uuid = "8ce486c4-3f49-4a0d-8049-29006d1cfb7f";
-          secondaries =
-            config.networking.networkmanager.ensureProfiles.profiles.mullvad_fr_par.connection.uuid;
         };
         ipv4 = {
           method = "auto";
