@@ -117,6 +117,12 @@
             "${nixpkgs-unstable}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
             ./hosts/rpi
             sops-nix.nixosModules.sops
+            home-manager.nixosModules.home-manager
+            {
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.users.colon = import ./users/colon;
+            }
           ];
         };
         tinkerbell = nixpkgs-unstable.lib.nixosSystem {
