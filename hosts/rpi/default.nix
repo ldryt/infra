@@ -2,7 +2,7 @@
 {
   imports = [
     ./hardware.nix
-    ./networking.nix
+    ./networking
     ./users.nix
 
     ../../modules/nix-settings.nix
