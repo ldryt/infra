@@ -1,11 +1,17 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    which
-    tree
     btop
     iotop
     iftop
+    nmap
+
+    usbutils
+    pciutils
+
+    which
+    tree
     ripgrep
+    git-crypt
   ];
 }

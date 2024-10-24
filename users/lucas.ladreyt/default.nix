@@ -6,6 +6,7 @@
     ../commons/alacritty.nix
     ../commons/i3.nix
     ../commons/clang-format.nix
+    ../commons/packages/cli.nix
   ];
 
   programs.home-manager.enable = true;
