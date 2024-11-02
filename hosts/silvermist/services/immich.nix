@@ -28,14 +28,14 @@ in
   virtualisation.oci-containers.containers = {
     "immich-server" = {
       hostname = "immich-server";
-      image = "ghcr.io/immich-app/immich-server:v1.115.0@sha256:8164e1bece154c7178e734031a41e1cb315debdf36ab0fdd23cd0e32732721fd"; # https://github.com/immich-app/immich/pkgs/container/immich-server/272818199?tag=v1.115.0
+      image = "ghcr.io/immich-app/immich-server:v1.119.1@sha256:1c3e5b355ec1eb7b16478cd26347c2fe7aaac0db5af5b0c9eb0b6883836f8370";
       environment = {
         IMMICH_CONFIG_FILE = immichConfigPath;
         DB_HOSTNAME = "immich-db";
         DB_USERNAME = config.virtualisation.oci-containers.containers.immich-db.environment.POSTGRES_USER;
         DB_DATABASE_NAME =
           config.virtualisation.oci-containers.containers.immich-db.environment.POSTGRES_DB;
-        DB_PASSWORD = "\${DB_PASSWORD:?error message}";
+        DB_PASSWORD = "\${DB_PASSWORD:?error db password needed}";
         REDIS_HOSTNAME = "immich-redis";
       };
       environmentFiles = [ "${config.sops.secrets."services/immich/credentials".path}" ];
@@ -44,7 +44,7 @@ in
         "${dataDir}:/usr/src/app/upload"
         "/etc/localtime:/etc/localtime:ro"
       ];
-      ports = [ "127.0.0.1:${internalPort}:3001" ];
+      ports = [ "127.0.0.1:${internalPort}:2283" ];
       dependsOn = [
         "immich-redis"
         "immich-db"
@@ -53,7 +53,7 @@ in
     };
     "immich-machine-learning" = {
       hostname = "immich-machine-learning";
-      image = "ghcr.io/immich-app/immich-machine-learning:v1.115.0@sha256:0bf8e076df9d5eead006131b51fc10643eb88f164b0a96a30ba701ac00cc3a87"; # https://github.com/immich-app/immich/pkgs/container/immich-machine-learning/272818162?tag=v1.115.0
+      image = "ghcr.io/immich-app/immich-machine-learning:v1.119.1@sha256:21652fbeebe8e07f36e202f53ce42460c93b40f3bf08e1e113559761191149da";
       volumes = [ "immich-ml-cache:/cache" ];
       extraOptions = [ "--network=${podmanNetwork}" ];
     };
@@ -61,7 +61,7 @@ in
       hostname = "immich-db";
       image = "docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0";
       environment = {
-        POSTGRES_PASSWORD = "\${DB_PASSWORD:?error message}";
+        POSTGRES_PASSWORD = "\${DB_PASSWORD:?error db password needed}";
         POSTGRES_USER = "postgres";
         POSTGRES_DB = "immich";
       };
@@ -180,7 +180,10 @@ in
           hashVerificationEnabled: true
           template: '{{y}}/{{MMMM}}/{{y}}{{MM}}{{dd}}-{{HH}}{{mm}}{{ss}}'
         image:
-          quality: 85
+          thumbnail:
+            quality: 85
+          preview:
+            quality: 85
         server:
           externalDomain: https://${dns.subdomains.immich}.${dns.zone}
         notifications:
