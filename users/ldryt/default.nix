@@ -43,6 +43,7 @@
       ".keyring"
       ".local/share/direnv"
       ".local/share/keyrings"
+      ".local/share/atuin"
       ".config/vesktop"
       ".thunderbird"
     ];
