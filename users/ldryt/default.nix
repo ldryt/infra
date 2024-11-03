@@ -1,10 +1,10 @@
 { config, ... }:
 {
   imports = [
-    ../commons/bash.nix
-    ../commons/vim.nix
-    ../commons/clang-format.nix
-    ../commons/c.nix
+    ../common/bash.nix
+    ../common/vim.nix
+    ../common/clang-format.nix
+    ../common/c.nix
 
     ./packages.nix
     ./git.nix

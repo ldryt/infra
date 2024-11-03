@@ -1,12 +1,12 @@
 { config, ... }:
 {
   imports = [
-    ../commons/vim.nix
-    ../commons/bash.nix
-    ../commons/alacritty.nix
-    ../commons/i3.nix
-    ../commons/clang-format.nix
-    ../commons/packages/cli.nix
+    ../common/vim.nix
+    ../common/bash.nix
+    ../common/alacritty.nix
+    ../common/i3.nix
+    ../common/clang-format.nix
+    ../common/packages/cli.nix
   ];
 
   programs.home-manager.enable = true;

@@ -2,7 +2,7 @@
 {
   imports = [
     ./swaylock.nix
-    ../commons/alacritty.nix
+    ../common/alacritty.nix
   ];
 
   home.packages = with pkgs; [
@@ -126,7 +126,7 @@
       };
       output = {
         "*" = {
-          bg = "${../commons/wallpaper.jpg} fill";
+          bg = "${../common/wallpaper.jpg} fill";
         };
         "eDP-1" = {
           scale = "1.3";

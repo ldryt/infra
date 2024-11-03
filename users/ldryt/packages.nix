@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   imports = [
-    ../commons/packages/cli.nix
+    ../common/packages/cli.nix
   ];
 
   home.packages = with pkgs; [

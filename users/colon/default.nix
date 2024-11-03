@@ -1,9 +1,9 @@
 { config, ... }:
 {
   imports = [
-    ../commons/bash.nix
-    ../commons/vim.nix
-    ../commons/packages/cli.nix
+    ../common/bash.nix
+    ../common/vim.nix
+    ../common/packages/cli.nix
   ];
 
   programs.home-manager.enable = true;
