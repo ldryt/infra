@@ -24,7 +24,6 @@ in
     '';
   };
 
-  sops.secrets."services/immich/credentials".owner = config.users.users.colon.name;
   virtualisation.oci-containers.containers = {
     "immich-server" = {
       hostname = "immich-server";
@@ -35,10 +34,9 @@ in
         DB_USERNAME = config.virtualisation.oci-containers.containers.immich-db.environment.POSTGRES_USER;
         DB_DATABASE_NAME =
           config.virtualisation.oci-containers.containers.immich-db.environment.POSTGRES_DB;
-        DB_PASSWORD = "\${DB_PASSWORD:?error db password needed}";
+        DB_PASSWORD = config.virtualisation.oci-containers.containers.immich-db.environment.POSTGRES_PASSWORD;
         REDIS_HOSTNAME = "immich-redis";
       };
-      environmentFiles = [ "${config.sops.secrets."services/immich/credentials".path}" ];
       volumes = [
         "${immichConfigPath}:${immichConfigPath}:ro"
         "${dataDir}:/usr/src/app/upload"
@@ -61,12 +59,11 @@ in
       hostname = "immich-db";
       image = "docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0";
       environment = {
-        POSTGRES_PASSWORD = "\${DB_PASSWORD:?error db password needed}";
+        POSTGRES_PASSWORD = "postgres";
         POSTGRES_USER = "postgres";
         POSTGRES_DB = "immich";
       };
       volumes = [ "immich-db-data:/var/lib/postgresql/data" ];
-      environmentFiles = config.virtualisation.oci-containers.containers.immich-server.environmentFiles;
       extraOptions = [ "--network=${podmanNetwork}" ];
     };
     "immich-redis" = {
