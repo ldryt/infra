@@ -12,6 +12,7 @@
         ublock-origin
         sponsorblock
         youtube-shorts-block
+        gruvbox-dark-theme
       ];
       search = {
         default = "Google";
