@@ -14,6 +14,4 @@
     ripgrep
     git-crypt
   ];
-
-  programs.atuin.enable = true;
 }

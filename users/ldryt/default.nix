@@ -5,6 +5,7 @@
     ../common/vim.nix
     ../common/clang-format.nix
     ../common/c.nix
+    ../common/atuin.nix
 
     ./packages.nix
     ./git.nix
