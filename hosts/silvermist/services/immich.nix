@@ -34,7 +34,8 @@ in
         DB_USERNAME = config.virtualisation.oci-containers.containers.immich-db.environment.POSTGRES_USER;
         DB_DATABASE_NAME =
           config.virtualisation.oci-containers.containers.immich-db.environment.POSTGRES_DB;
-        DB_PASSWORD = config.virtualisation.oci-containers.containers.immich-db.environment.POSTGRES_PASSWORD;
+        DB_PASSWORD =
+          config.virtualisation.oci-containers.containers.immich-db.environment.POSTGRES_PASSWORD;
         REDIS_HOSTNAME = "immich-redis";
       };
       volumes = [

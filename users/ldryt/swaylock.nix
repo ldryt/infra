@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   swaylock-cfg = pkgs.writeText "swaylock-cfg" ''
     daemonize
@@ -27,9 +32,11 @@ in
     ];
   };
 
-  wayland.windowManager.sway.config.keybindings = let
-  mod = config.wayland.windowManager.sway.config.modifier;
-in lib.mkOptionDefault {
+  wayland.windowManager.sway.config.keybindings =
+    let
+      mod = config.wayland.windowManager.sway.config.modifier;
+    in
+    lib.mkOptionDefault {
       "${mod}+l" = "exec ${lock}";
     };
 }

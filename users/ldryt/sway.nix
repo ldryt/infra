@@ -1,8 +1,17 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  colorscheme = import ../common/i3/colors.nix;
+in
 {
   imports = [
     ./swaylock.nix
     ../common/alacritty.nix
+    ../common/i3/i3status.nix
   ];
 
   home.packages = with pkgs; [
@@ -23,69 +32,6 @@
     };
   };
 
-  programs = {
-    i3status = {
-      enable = true;
-      enableDefault = false;
-      general = {
-        colors = false;
-      };
-      modules = {
-        "time" = {
-          position = 7;
-          settings = {
-            format = "%Y-%m-%d %H:%M";
-          };
-        };
-        "memory" = {
-          position = 6;
-          settings = {
-            format = "%free";
-          };
-        };
-        "load" = {
-          position = 5;
-          settings = {
-            format = "%5min";
-          };
-        };
-        "disk /" = {
-          position = 4;
-          settings = {
-            format = "%avail";
-          };
-        };
-        "disk /nix" = {
-          position = 3;
-          settings = {
-            format = "%avail";
-          };
-        };
-        "battery all" = {
-          position = 2;
-          settings = {
-            format = "%status %percentage";
-            format_percentage = "%.f%s";
-          };
-        };
-        "ethernet _first_" = {
-          position = 1;
-          settings = {
-            format_up = "E: up";
-            format_down = "E: down";
-          };
-        };
-        "wireless _first_" = {
-          position = 0;
-          settings = {
-            format_up = "W: %essid %quality";
-            format_down = "W: down";
-          };
-        };
-      };
-    };
-  };
-
   services.wlsunset = {
     enable = true;
     sunrise = "07:00";
@@ -102,22 +48,24 @@
         hideEdgeBorders = "both";
         border = 1;
       };
-      keybindings = let
-        mod = config.wayland.windowManager.sway.config.modifier;
-      in lib.mkOptionDefault {
-        "${mod}+d" = "exec ${pkgs.dmenu-wayland}/bin/dmenu-wl_run"; 
+      keybindings =
+        let
+          mod = config.wayland.windowManager.sway.config.modifier;
+        in
+        lib.mkOptionDefault {
+          "${mod}+d" = "exec ${pkgs.dmenu-wayland}/bin/dmenu-wl_run";
 
-        "${mod}+f" = "fullscreen";
+          "${mod}+f" = "fullscreen";
 
-        "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-        "XF86AudioLowerVolume" = "exec wpctl set-volume @DEFAULT_SINK@ 5%-";
-        "XF86AudioRaiseVolume" = "exec wpctl set-volume @DEFAULT_SINK@ 5%+";
+          "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+          "XF86AudioLowerVolume" = "exec wpctl set-volume @DEFAULT_SINK@ 5%-";
+          "XF86AudioRaiseVolume" = "exec wpctl set-volume @DEFAULT_SINK@ 5%+";
 
-        "XF86MonBrightnessDown" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 5%-";
-        "XF86MonBrightnessUp" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 5%+";
+          "XF86MonBrightnessDown" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 5%-";
+          "XF86MonBrightnessUp" = "exec ${pkgs.brightnessctl}/bin/brightnessctl set 5%+";
 
-        "Print" = "exec grim -g \"$(slurp)\" - | wl-copy";
-      };
+          "Print" = "exec grim -g \"$(slurp)\" - | wl-copy";
+        };
       input = {
         "type:touchpad" = {
           tap = "enabled";
@@ -133,6 +81,13 @@
           scale_filter = "smart";
         };
       };
+      bars = [
+        {
+          statusCommand = "${pkgs.i3status}/bin/i3status";
+          colors = colorscheme.bar;
+        }
+      ];
+      colors = colorscheme.client;
     };
   };
 }
