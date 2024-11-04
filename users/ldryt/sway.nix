@@ -34,8 +34,8 @@ in
 
   services.wlsunset = {
     enable = true;
-    sunrise = "07:00";
-    sunset = "20:00";
+    latitude = 48.8;
+    longitude = 2.3;
   };
 
   wayland.windowManager.sway = {
