@@ -5,7 +5,6 @@
     ../common/vim.nix
     ../common/clang-format.nix
     ../common/c.nix
-    ../common/atuin.nix
 
     ./packages.nix
     ./git.nix
@@ -45,7 +44,6 @@
       ".keyring"
       ".local/share/direnv"
       ".local/share/keyrings"
-      ".local/share/atuin"
       ".config/vesktop"
       ".thunderbird"
     ];

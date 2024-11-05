@@ -7,7 +7,6 @@
     ../common/i3.nix
     ../common/clang-format.nix
     ../common/packages/cli.nix
-    ../common/atuin.nix
   ];
 
   programs.home-manager.enable = true;
