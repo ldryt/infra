@@ -6,10 +6,10 @@
     ../common/clang-format.nix
     ../common/c.nix
 
+    ./gnome.nix
     ./packages.nix
     ./git.nix
     ./ssh.nix
-    ./sway.nix
     ./firefox.nix
     ./thunderbird.nix
     ./vscodium.nix
