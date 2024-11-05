@@ -8,7 +8,7 @@
         two-finger-scrolling-enabled = true;
       };
       "org/gnome/desktop/interface" = {
-        text-scaling-factor = 1.25;
+        text-scaling-factor = 1.5;
         color-scheme = "prefer-dark";
         enable-hot-corners = true;
       };
@@ -49,6 +49,9 @@
         toggle-fullscreen = [ "<Super>f" ];
         switch-applications = [ ];
         switch-windows = [ "<Alt>Tab" ];
+      };
+      "org/gnome/Console" = {
+        font-scale = 1.1;
       };
     };
   };
