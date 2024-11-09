@@ -116,6 +116,12 @@
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true; # Enables custom stylesheets for user themes
         "svg.context-properties.content.enabled" = true; # Allows SVG filters for custom themes
       };
+      userChrome = ''
+        @import "firefox-gnome-theme/userChrome.css";
+      '';
+      userContent = ''
+        @import "firefox-gnome-theme/userContent.css";
+      '';
     };
   };
 }
