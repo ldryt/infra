@@ -46,6 +46,7 @@
       ".local/share/keyrings"
       ".config/vesktop"
       ".thunderbird"
+      ".terraform.d"
     ];
   };
 }
