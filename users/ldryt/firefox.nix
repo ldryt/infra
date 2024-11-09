@@ -1,8 +1,6 @@
 { firefox-addons, ... }:
 {
-  home.persistence."/nix/persist/home/ldryt".directories = [
-    ".mozilla"
-  ];
+  home.persistence."/nix/persist/home/ldryt".directories = [ ".mozilla" ];
 
   programs.firefox = {
     enable = true;

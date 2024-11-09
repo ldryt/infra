@@ -36,7 +36,5 @@ in
     let
       mod = config.wayland.windowManager.sway.config.modifier;
     in
-    lib.mkOptionDefault {
-      "${mod}+l" = "exec ${lock}";
-    };
+    lib.mkOptionDefault { "${mod}+l" = "exec ${lock}"; };
 }

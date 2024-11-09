@@ -29,9 +29,7 @@
       "/var/cache/powertop"
       "/etc/secureboot"
     ];
-    files = [
-      "/etc/machine-id"
-    ];
+    files = [ "/etc/machine-id" ];
   };
 
   system.stateVersion = "23.05";

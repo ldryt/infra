@@ -1,38 +1,41 @@
 {
   inputs = {
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-24.05";
-
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
-
-    sops-nix.url = "github:mic92/sops-nix";
-    sops-nix.inputs.nixpkgs.follows = "nixpkgs-stable";
-
-    nixos-generators.url = "github:nix-community/nixos-generators";
-    nixos-generators.inputs.nixpkgs.follows = "nixpkgs-stable";
-
-    lanzaboote.url = "github:nix-community/lanzaboote";
-    lanzaboote.inputs.nixpkgs.follows = "nixpkgs-stable";
-
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
+    };
+    sops-nix = {
+      url = "github:mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nixos-generators = {
+      url = "github:nix-community/nixos-generators";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    lanzaboote = {
+      url = "github:nix-community/lanzaboote";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    firefox-addons = {
+      url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     mcpulse.url = "github:ldryt/mcpulse";
-
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
-
-    disko.url = "github:nix-community/disko";
-    disko.inputs.nixpkgs.follows = "nixpkgs-stable";
-
     impermanence.url = "github:nix-community/impermanence";
-
-    firefox-addons.url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-    firefox-addons.inputs.nixpkgs.follows = "nixpkgs-stable";
   };
   outputs =
     {
       self,
+      nixpkgs,
       nixpkgs-unstable,
-      nixpkgs-stable,
       home-manager,
       sops-nix,
       disko,
@@ -52,77 +55,44 @@
         "aarch64-darwin"
       ];
 
-      forAllSystems = nixpkgs-stable.lib.genAttrs systems;
+      forAllSystems = nixpkgs.lib.genAttrs systems;
     in
     {
-      packages = forAllSystems (
+      devShells = forAllSystems (
         system:
         let
-          pkgs-unstable = import nixpkgs-unstable { inherit system; };
+          pkgs = import nixpkgs {
+            config.allowUnfree = true;
+            inherit system;
+          };
         in
         {
-          zarina = nixos-generators.nixosGenerate {
-            inherit system;
-            format = "gce";
-            specialArgs = {
-              inherit inputs;
-              inherit pkgs-unstable;
-            };
-            modules = [
-              ./hosts/zarina
-              sops-nix.nixosModules.sops
+          default = pkgs.mkShell {
+            buildInputs = with pkgs; [
+              sops
+              terraform
+              jq
             ];
+            shellHook = ''
+              export SOPS_AGE_KEY_FILE=~/.keyring/sops_age_ldryt.key
+              export TF_VAR_cloudflare_token_file=~/.keyring/cloudflare_token
+              export TF_VAR_hcloud_token_file=~/.keyring/hcloud_token
+            '';
           };
         }
       );
+
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
+
       nixosConfigurations = {
-        liveIso = nixpkgs-unstable.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs;
-          };
-          system = "x86_64-linux";
-          modules = [
-            (
-              { modulesPath, ... }:
-              {
-                imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-graphical-gnome.nix") ];
-              }
-            )
-            home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.nixos =
-                { pkgs, ... }:
-                {
-                  imports = [ ./users/ldryt ];
-                  home.username = pkgs.lib.mkForce "nixos";
-                };
-              home-manager.sharedModules = [
-                sops-nix.homeManagerModules.sops
-                (inputs.impermanence + "/home-manager.nix")
-              ];
-              home-manager.extraSpecialArgs = {
-                firefox-addons = inputs.firefox-addons;
-              };
-            }
-          ];
-        };
         rpi = nixpkgs-unstable.lib.nixosSystem {
           system = "aarch64-linux";
           modules = [
-            ({
-              sdImage.compressImage = false;
-            })
+            ({ sdImage.compressImage = false; })
             "${nixpkgs-unstable}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
             ./hosts/rpi
             sops-nix.nixosModules.sops
             home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.colon = import ./users/colon;
-            }
           ];
         };
         tinkerbell = nixpkgs-unstable.lib.nixosSystem {
@@ -138,29 +108,17 @@
             disko.nixosModules.disko
             impermanence.nixosModules.impermanence
             home-manager.nixosModules.home-manager
-            {
-              home-manager.useGlobalPkgs = true;
-              home-manager.useUserPackages = true;
-              home-manager.users.ldryt = import ./users/ldryt;
-              home-manager.sharedModules = [
-                sops-nix.homeManagerModules.sops
-                (inputs.impermanence + "/home-manager.nix")
-              ];
-              home-manager.extraSpecialArgs = {
-                firefox-addons = inputs.firefox-addons;
-              };
-            }
           ];
         };
         silvermist =
           let
             system = "x86_64-linux";
-            pkgs = import nixpkgs-stable {
+            pkgs = import nixpkgs {
               inherit system;
               overlays = [ (self: super: { mcpulse = mcpulse.packages.${system}.default; }) ];
             };
           in
-          nixpkgs-stable.lib.nixosSystem {
+          nixpkgs.lib.nixosSystem {
             specialArgs = {
               inherit inputs;
               inherit pkgs;
@@ -174,6 +132,7 @@
             ];
           };
       };
+
       homeConfigurations."lucas.ladreyt" =
         let
           system = "x86_64-linux";
@@ -183,33 +142,5 @@
           inherit pkgs;
           modules = [ ./users/lucas.ladreyt ];
         };
-      devShells = forAllSystems (
-        system:
-        let
-          pkgs = import nixpkgs-stable {
-            config.allowUnfree = true;
-            inherit system;
-          };
-        in
-        {
-          default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              sops
-              terraform
-              jq
-              go
-              delve
-            ];
-            shellHook = ''
-              export SOPS_AGE_KEY_FILE=~/.keyring/sops_age_ldryt.key
-              export GCLOUD_KEYFILE_JSON=~/.keyring/gcloud-key-tidy-arena-428113-b3-2f902b588b01.json
-              export TF_VAR_cloudflare_token_file=~/.keyring/cloudflare_token
-              export TF_VAR_hcloud_token_file=~/.keyring/hcloud_token
-            '';
-            # https://github.com/go-delve/delve/issues/3085
-            hardeningDisable = [ "fortify" ];
-          };
-        }
-      );
     };
 }

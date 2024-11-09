@@ -1,5 +1,20 @@
-{ config, ... }:
+{ inputs, config, ... }:
 {
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    users = {
+      ldryt = import ../../users/ldryt;
+    };
+    sharedModules = [
+      inputs.sops-nix.homeManagerModules.sops
+      (inputs.impermanence + "/home-manager.nix")
+    ];
+    extraSpecialArgs = {
+      firefox-addons = inputs.firefox-addons;
+    };
+  };
+
   sops.secrets."users/ldryt/hashedPassword".neededForUsers = true;
   users = {
     mutableUsers = false;
