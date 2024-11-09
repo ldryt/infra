@@ -8,7 +8,7 @@
         two-finger-scrolling-enabled = true;
       };
       "org/gnome/desktop/interface" = {
-        text-scaling-factor = 1.5;
+        text-scaling-factor = 1.3;
         color-scheme = "prefer-dark";
         enable-hot-corners = true;
       };
@@ -29,7 +29,7 @@
         enabled-extensions = [ "launch-new-instance@gnome-shell-extensions.gcampax.github.com" ];
         favorite-apps = [
           "org.gnome.Nautilus.desktop"
-          "org.gnome.Console.desktop"
+          "alacritty.desktop"
           "firefox.desktop"
           "thunderbird.desktop"
           "org.gnome.Calculator.desktop"
