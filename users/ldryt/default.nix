@@ -14,7 +14,6 @@
     ./firefox.nix
     ./thunderbird.nix
     ./vscodium.nix
-    ./darkman.nix
   ];
 
   programs.home-manager.enable = true;
