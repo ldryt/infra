@@ -2,6 +2,16 @@
 {
   home.persistence."/nix/persist/home/ldryt".directories = [ ".mozilla" ];
 
+  home.file."firefox-gnome-theme" = {
+    target = ".mozilla/firefox/default/chrome/firefox-gnome-theme";
+    source = (
+      fetchTarball {
+        url = "https://github.com/rafaelmardojai/firefox-gnome-theme/archive/refs/tags/v132.tar.gz";
+        sha256 = "095sv1ann2v7q5bfy65i118ylhp2vkpbgyf6fz84nd9yrx14rzwm";
+      }
+    );
+  };
+
   programs.firefox = {
     enable = true;
     profiles.default = {
@@ -9,8 +19,6 @@
         bitwarden
         ublock-origin
         sponsorblock
-        youtube-shorts-block
-        gruvbox-dark-theme
       ];
       search = {
         default = "Google";
@@ -49,63 +57,64 @@
         };
       };
       settings = {
-        # telemetry
-        # https://support.mozilla.org/en-US/questions/1197144#question-reply
-        # https://www.howtogeek.com/557929/how-to-see-and-disable-the-telemetry-data-firefox-collects-about-you/
-        "devtools.onboarding.telemetry.logged" = false;
-        "app.shield.optoutstudies.enabled" = false;
-        "browser.newtabpage.activity-stream.feeds.telemetry" = false;
-        "browser.newtabpage.activity-stream.telemetry" = false;
-        "browser.ping-centre.telemetry" = false;
-        "toolkit.telemetry.bhrPing.enabled" = false;
-        "toolkit.telemetry.enabled" = false;
-        "toolkit.telemetry.firstShutdownPing.enabled" = false;
-        "toolkit.telemetry.hybridContent.enabled" = false;
-        "toolkit.telemetry.newProfilePing.enabled" = false;
-        "toolkit.telemetry.reportingpolicy.firstRun" = false;
-        "toolkit.telemetry.shutdownPingSender.enabled" = false;
-        "toolkit.telemetry.unified" = false;
-        "toolkit.telemetry.updatePing.enabled" = false;
-        "toolkit.telemetry.archive.enabled" = false;
-        "datareporting.healthreport.uploadEnabled" = false;
-        "datareporting.policy.dataSubmissionEnabled" = false;
-        "datareporting.sessions.current.clean" = true;
+        # Telemetry settings
+        # Disable various telemetry and data reporting settings to enhance privacy
+        "devtools.onboarding.telemetry.logged" = false; # Disables telemetry for DevTools onboarding
+        "app.shield.optoutstudies.enabled" = false; # Disables Shield studies (experimental features sent via telemetry)
+        "browser.newtabpage.activity-stream.feeds.telemetry" = false; # Disables telemetry on Firefox's new tab page
+        "browser.newtabpage.activity-stream.telemetry" = false; # Disables additional telemetry on the new tab page
+        "browser.ping-centre.telemetry" = false; # Disables Ping Centre telemetry
+        "toolkit.telemetry.bhrPing.enabled" = false; # Disables background hang reports
+        "toolkit.telemetry.enabled" = false; # Disables all telemetry
+        "toolkit.telemetry.firstShutdownPing.enabled" = false; # Disables telemetry ping on the first shutdown
+        "toolkit.telemetry.hybridContent.enabled" = false; # Disables telemetry for hybrid content
+        "toolkit.telemetry.newProfilePing.enabled" = false; # Disables telemetry ping when a new profile is created
+        "toolkit.telemetry.reportingpolicy.firstRun" = false; # Disables telemetry reporting on the first run
+        "toolkit.telemetry.shutdownPingSender.enabled" = false; # Disables shutdown telemetry ping
+        "toolkit.telemetry.unified" = false; # Disables unified telemetry
+        "toolkit.telemetry.updatePing.enabled" = false; # Disables update telemetry ping
+        "toolkit.telemetry.archive.enabled" = false; # Disables telemetry archiving
+        "datareporting.healthreport.uploadEnabled" = false; # Disables health report upload
+        "datareporting.policy.dataSubmissionEnabled" = false; # Disables data submission for reports
+        "datareporting.sessions.current.clean" = true; # Cleans up session data
 
-        # security
-        "dom.security.https_only_mode" = true;
-        "dom.security.https_only_mode_ever_enabled" = true;
+        # Security settings
+        "dom.security.https_only_mode" = true; # Enforces HTTPS-only mode for all connections
+        "dom.security.https_only_mode_ever_enabled" = true; # Tracks if HTTPS-only mode was ever enabled
 
-        # privacy
-        "browser.search.suggest.enabled" = false;
-        "extensions.formautofill.creditCards.enabled" = false;
-        "signon.autofillForms" = false;
-        "browser.formfill.enable" = false;
-        "signon.rememberSignons" = false;
-        "privacy.trackingprotection.emailtracking.enabled" = true;
-        "privacy.trackingprotection.enabled" = true;
-        "privacy.trackingprotection.socialtracking.enabled" = true;
-        "privacy.resistFingerprinting.randomization.enabled" = true;
-        "browser.contentblocking.category" = "strict";
+        # Privacy settings
+        "browser.search.suggest.enabled" = false; # Disables search suggestions
+        "extensions.formautofill.creditCards.enabled" = false; # Disables autofill for credit card data
+        "signon.autofillForms" = false; # Disables automatic form autofill
+        "browser.formfill.enable" = false; # Disables saving and filling forms
+        "signon.rememberSignons" = false; # Disables saving login credentials
+        "privacy.trackingprotection.emailtracking.enabled" = true; # Enables email tracking protection
+        "privacy.trackingprotection.enabled" = true; # Enables tracking protection
+        "privacy.trackingprotection.socialtracking.enabled" = true; # Enables social tracking protection
+        "privacy.resistFingerprinting.randomization.enabled" = true; # Randomizes fingerprinting for increased privacy
+        "browser.contentblocking.category" = "strict"; # Sets content blocking to strict mode
 
-        # misc
-        "browser.aboutwelcome.enabled" = false;
-        "app.update.auto" = false;
-        "identity.fxaccounts.enabled" = false;
-        "extensions.pocket.enabled" = false;
-        "gfx.webrender.all" = true;
-        "media.ffmpeg.vaapi.enabled" = true;
-        "reader.parse-on-load.force-enabled" = true;
-        "privacy.webrtc.legacyGlobalIndicator" = false;
-        "browser.newtabpage.activity-stream.showSponsored" = false;
-        "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
-        "browser.newtabpage.activity-stream.feeds.snippets" = false;
-        "browser.toolbars.bookmarks.visibility" = "never";
-        "browser.download.useDownloadDir" = false; # Ask where to save downloads
-        "browser.translations.enable" = false; # disable translations
-        "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons" = false; # Do not recommend addons
-        "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features" = false; # Do not recommend features
-        "extensions.htmlaboutaddons.recommendations.enabled" = false; # Do not recommend extensions
-        "layout.spellcheckDefault" = 0; # Spellcheck off
+        # Miscellaneous settings
+        "browser.aboutwelcome.enabled" = false; # Disables the welcome screen on first run
+        "app.update.auto" = false; # Disables automatic updates
+        "identity.fxaccounts.enabled" = false; # Disables Firefox account integration
+        "extensions.pocket.enabled" = false; # Disables Pocket integration
+        "gfx.webrender.all" = true; # Enables WebRender for improved graphics performance
+        "media.ffmpeg.vaapi.enabled" = true; # Enables VA-API (hardware acceleration for video on Linux)
+        "reader.parse-on-load.force-enabled" = true; # Enables Reader Mode on all pages
+        "privacy.webrtc.legacyGlobalIndicator" = false; # Disables legacy global indicator for WebRTC
+        "browser.newtabpage.activity-stream.showSponsored" = false; # Disables sponsored content on new tab page
+        "browser.newtabpage.activity-stream.showSponsoredTopSites" = false; # Disables sponsored top sites
+        "browser.newtabpage.activity-stream.feeds.snippets" = false; # Disables snippets on new tab page
+        "browser.toolbars.bookmarks.visibility" = "never"; # Hides bookmarks toolbar
+        "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.addons" = false; # Disables add-on recommendations
+        "browser.newtabpage.activity-stream.asrouter.userprefs.cfr.features" = false; # Disables feature recommendations
+        "extensions.htmlaboutaddons.recommendations.enabled" = false; # Disables add-on recommendations in Add-ons Manager
+        "layout.spellcheckDefault" = 0; # Disables spellcheck
+
+        # Firefox-GNOME Theme settings
+        "toolkit.legacyUserProfileCustomizations.stylesheets" = true; # Enables custom stylesheets for user themes
+        "svg.context-properties.content.enabled" = true; # Allows SVG filters for custom themes
       };
     };
   };
