@@ -6,5 +6,6 @@
     wl-clipboard
     vesktop
     bluetuith
+    super-slicer-beta
   ];
 }

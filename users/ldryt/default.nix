@@ -45,6 +45,7 @@
       ".local/share/direnv"
       ".local/share/keyrings"
       ".config/vesktop"
+      ".config/SuperSlicer"
       ".thunderbird"
       ".terraform.d"
     ];
