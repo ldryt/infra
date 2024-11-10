@@ -16,7 +16,7 @@ in
   options.ldryt-infra.backups = mkOption {
     type = types.attrsOf (
       types.submodule (
-        { config, name, ... }:
+        { ... }:
         {
           options = {
             paths = mkOption {

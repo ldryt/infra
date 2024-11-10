@@ -11,10 +11,6 @@
       url = "github:mic92/sops-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-generators = {
-      url = "github:nix-community/nixos-generators";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     lanzaboote = {
       url = "github:nix-community/lanzaboote";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -33,13 +29,11 @@
   };
   outputs =
     {
-      self,
       nixpkgs,
       nixpkgs-unstable,
       home-manager,
       sops-nix,
       disko,
-      nixos-generators,
       lanzaboote,
       mcpulse,
       nixos-hardware,

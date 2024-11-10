@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 {
   home.file."${config.home.homeDirectory}/.clang-format".text = ''
     AccessModifierOffset: -4
