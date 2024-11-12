@@ -29,7 +29,7 @@
         enabled-extensions = [ "launch-new-instance@gnome-shell-extensions.gcampax.github.com" ];
         favorite-apps = [
           "org.gnome.Nautilus.desktop"
-          "alacritty.desktop"
+          "Alacritty.desktop"
           "firefox.desktop"
           "thunderbird.desktop"
           "org.gnome.Calculator.desktop"
