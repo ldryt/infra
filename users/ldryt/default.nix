@@ -48,6 +48,7 @@
       ".config/SuperSlicer"
       ".thunderbird"
       ".terraform.d"
+      ".config/dconf"
     ];
   };
 }
