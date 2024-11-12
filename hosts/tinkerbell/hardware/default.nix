@@ -45,6 +45,8 @@
 
     loader.efi.canTouchEfiVariables = true;
 
+    plymouth.enable = true;
+
     # Lanzaboote currently replaces the systemd-boot module.
     loader.systemd-boot.enable = false;
     initrd.systemd.enable = true;
