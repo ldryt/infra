@@ -1,5 +1,7 @@
 { ... }:
 {
+  home.file.".face".source = ./face.png;
+
   dconf = {
     enable = true;
     settings = {
