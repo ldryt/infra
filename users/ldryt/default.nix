@@ -50,5 +50,6 @@
       ".terraform.d"
       ".config/dconf"
     ];
+    files = [ ".config/monitors.xml" ];
   };
 }
