@@ -19,6 +19,7 @@
   users = {
     mutableUsers = false;
     users.ldryt = {
+      description = "Lucas Ladreyt";
       isNormalUser = true;
       extraGroups = [
         "wheel"
