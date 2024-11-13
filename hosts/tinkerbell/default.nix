@@ -28,6 +28,7 @@
       "/var/lib/systemd/coredump"
       "/var/cache/powertop"
       "/etc/secureboot"
+      "/var/lib/fprint"
     ];
     files = [ "/etc/machine-id" ];
   };
