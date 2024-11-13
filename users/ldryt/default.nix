@@ -5,7 +5,6 @@
     ../common/vim.nix
     ../common/clang-format.nix
     ../common/c.nix
-    ../common/alacritty.nix
 
     ./gnome.nix
     ./packages.nix
