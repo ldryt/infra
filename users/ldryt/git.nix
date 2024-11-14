@@ -10,7 +10,7 @@
     includes = [
       {
         contents.user.email = "lucas.ladreyt@epita.fr";
-        condition = "hasconfig:remote.*.url:*@git.forge.epita.fr:**/**";
+        condition = "hasconfig:remote.*.url:*@*.epita.fr:**/**";
       }
     ];
   };
