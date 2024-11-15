@@ -104,6 +104,21 @@
             home-manager.nixosModules.home-manager
           ];
         };
+        v03037 = nixpkgs-unstable.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs;
+          };
+          system = "aarch64-linux";
+          modules = [
+            "${nixpkgs-unstable}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
+            ({ sdImage.compressImage = false; })
+
+            sops-nix.nixosModules.sops
+            home-manager.nixosModules.home-manager
+
+            ./hosts/v03037
+          ];
+        };
         silvermist =
           let
             system = "x86_64-linux";
