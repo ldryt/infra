@@ -26,6 +26,7 @@
         "networkmanager"
         "vboxusers"
         "libvirtd"
+        "docker"
       ];
       hashedPasswordFile = config.sops.secrets."users/ldryt/hashedPassword".path;
     };

@@ -7,8 +7,8 @@
     ./locales.nix
 
     ../../modules/gnome.nix
-    ../../modules/podman.nix
     ../../modules/power.nix
+    ../../modules/net1.nix
     ../../modules/nix-settings.nix
 
     ./services/windows-dockur.nix
