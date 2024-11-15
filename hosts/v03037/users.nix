@@ -6,10 +6,7 @@
     users = {
       colon = import ../../users/colon;
     };
-    sharedModules = [
-      inputs.sops-nix.homeManagerModules.sops
-      (inputs.impermanence + "/home-manager.nix")
-    ];
+    sharedModules = [ inputs.sops-nix.homeManagerModules.sops ];
   };
 
   sops.secrets."colonHashedPassword".neededForUsers = true;

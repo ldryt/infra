@@ -29,6 +29,7 @@
   };
   outputs =
     {
+      self,
       nixpkgs,
       nixpkgs-unstable,
       home-manager,
@@ -79,16 +80,6 @@
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
 
       nixosConfigurations = {
-        rpi = nixpkgs-unstable.lib.nixosSystem {
-          system = "aarch64-linux";
-          modules = [
-            ({ sdImage.compressImage = false; })
-            "${nixpkgs-unstable}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
-            ./hosts/rpi
-            sops-nix.nixosModules.sops
-            home-manager.nixosModules.home-manager
-          ];
-        };
         tinkerbell = nixpkgs-unstable.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
@@ -102,21 +93,6 @@
             disko.nixosModules.disko
             impermanence.nixosModules.impermanence
             home-manager.nixosModules.home-manager
-          ];
-        };
-        v03037 = nixpkgs-unstable.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs;
-          };
-          system = "aarch64-linux";
-          modules = [
-            "${nixpkgs-unstable}/nixos/modules/installer/sd-card/sd-image-aarch64.nix"
-            ({ sdImage.compressImage = false; })
-
-            sops-nix.nixosModules.sops
-            home-manager.nixosModules.home-manager
-
-            ./hosts/v03037
           ];
         };
         silvermist =
@@ -140,7 +116,33 @@
               disko.nixosModules.disko
             ];
           };
+        rpi = nixpkgs-unstable.lib.nixosSystem {
+          system = "aarch64-linux";
+          modules = [
+            ./hosts/rpi
+            sops-nix.nixosModules.sops
+            home-manager.nixosModules.home-manager
+          ];
+        };
+        v03037 = nixpkgs-unstable.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs;
+          };
+          system = "aarch64-linux";
+          modules = [
+            ./hosts/v03037
+            sops-nix.nixosModules.sops
+            home-manager.nixosModules.home-manager
+          ];
+        };
       };
+
+      packages = forAllSystems (system: {
+        sdImages = {
+          v03037 = self.nixosConfigurations.v03037.config.system.build.sdImage;
+          rpi = self.nixosConfigurations.rpi.config.system.build.sdImage;
+        };
+      });
 
       homeConfigurations."lucas.ladreyt" =
         let

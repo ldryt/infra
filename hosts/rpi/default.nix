@@ -1,7 +1,8 @@
 { ... }:
 {
   imports = [
-    ./hardware.nix
+    ../../modules/sd-image-aarch64.nix
+
     ./networking
     ./users.nix
 
