@@ -1,16 +1,27 @@
 { ... }:
 {
-  networking = {
-    nameservers = [
-      "127.0.0.1"
-      "1.1.1.1"
-    ];
-    networkmanager.dns = "none";
-  };
+  networking.nameservers = [
+    "::1"
+    "127.0.0.1"
+  ];
+
+  # No nameservers overrides
+  networking.networkmanager.dns = "none";
+  networking.dhcpcd.extraConfig = "nohook resolv.conf";
+  services.resolved.enable = false;
+
+  # Enable mDNS
+  services.avahi.enable = true;
+  system.nssDatabases.hosts = [ "mdns_minimal [NOTFOUND=return]" ];
 
   services.dnscrypt-proxy2 = {
     enable = true;
     settings = {
+      listen_addresses = [
+        "[::1]:53"
+        "127.0.0.1:53"
+      ];
+
       ipv6_servers = true;
       require_dnssec = true;
 
@@ -21,6 +32,7 @@
         ];
         cache_file = "/var/lib/dnscrypt-proxy2/public-resolvers.md";
         minisign_key = "RWQf6LRCGA9i53mlYecO4IzT51TGPpvWucNSCh1CBM0QTaLn73Y7GFO3";
+        refresh_delay = 48;
       };
     };
   };
