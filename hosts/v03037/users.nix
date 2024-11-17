@@ -16,6 +16,9 @@
       isNormalUser = true;
       extraGroups = [ "wheel" ];
       hashedPasswordFile = config.sops.secrets."colonHashedPassword".path;
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMtLuVSXE6lSHCgrr21I3DuC3AO/LyvNTkoboNlxhcrP"
+      ];
     };
   };
   nix.settings.trusted-users = [ config.users.users.colon.name ];
