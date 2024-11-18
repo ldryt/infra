@@ -1,20 +1,54 @@
 { config, ... }:
 {
-  sops.secrets."wpa_supplicant.env" = { };
+  imports = [ ../../modules/dns.nix ];
+
+  sops.secrets."nmprofiles.env" = { };
   networking = {
     hostName = "v03037";
-    wireless = {
+    networkmanager = {
       enable = true;
-      secretsFile = config.sops.secrets."wpa_supplicant.env".path;
-      networks = {
-        "ext:primary_essid".psk = "ext:primary_psk";
-        "ext:secondary_essid".psk = "ext:secondary_psk";
+      wifi.powersave = false;
+      logLevel = "INFO";
+      ensureProfiles = {
+        environmentFiles = [ config.sops.secrets."nmprofiles.env".path ];
+        profiles = {
+          GNB = {
+            connection = {
+              id = "$GNB_SSID";
+              type = "wifi";
+              autoconnect-priority = 10;
+            };
+            wifi.ssid = "$GNB_SSID";
+            wifi-security = {
+              key-mgmt = "wpa-psk";
+              psk = "$GNB_PWD";
+            };
+          };
+          ROS = {
+            connection = {
+              id = "$ROS_SSID";
+              type = "wifi";
+              autoconnect-priority = -10;
+            };
+            wifi.ssid = "$ROS_SSID";
+            wifi-security = {
+              key-mgmt = "wpa-psk";
+              psk = "$ROS_PWD";
+            };
+          };
+        };
       };
     };
   };
 
   services.avahi = {
     enable = true;
+    ipv6 = true;
+    nssmdns6 = true;
     nssmdns4 = true;
+    publish = {
+      enable = true;
+      addresses = true;
+    };
   };
 }
