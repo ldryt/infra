@@ -7,10 +7,8 @@
     ./users.nix
     ./klipper.nix
 
-    ../../modules/nix-settings.nix
     ../../modules/openssh.nix
-    ../../modules/chrony.nix
-    ../../modules/dnscrypt.nix
+    ../../modules/nix-settings.nix
   ];
 
   sops = {
