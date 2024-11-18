@@ -10,9 +10,13 @@
   networking.dhcpcd.extraConfig = "nohook resolv.conf";
   services.resolved.enable = false;
 
-  # Enable mDNS
-  services.avahi.enable = true;
-  system.nssDatabases.hosts = [ "mdns_minimal [NOTFOUND=return]" ];
+  # Enable mDNS resolving
+  services.avahi = {
+    enable = true;
+    ipv6 = true;
+    nssmdns6 = true;
+    nssmdns4 = true;
+  };
 
   services.dnscrypt-proxy2 = {
     enable = true;
