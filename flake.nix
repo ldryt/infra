@@ -138,10 +138,8 @@
       };
 
       packages = forAllSystems (system: {
-        sdImages = {
-          v03037 = self.nixosConfigurations.v03037.config.system.build.sdImage;
-          rpi = self.nixosConfigurations.rpi.config.system.build.sdImage;
-        };
+        sdImage-v03037 = self.nixosConfigurations.v03037.config.system.build.sdImage;
+        sdImage-rpi = self.nixosConfigurations.rpi.config.system.build.sdImage;
       });
 
       homeConfigurations."lucas.ladreyt" =
