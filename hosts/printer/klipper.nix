@@ -2,7 +2,10 @@
 {
   services.klipper = {
     enable = true;
+    user = config.services.moonraker.user;
+    group = config.services.moonraker.group;
     configFile = ./VORON0.2_SKR_PICO_V1.0.ini;
+    logFile = config.services.moonraker.stateDir + "/logs/klippy.log";
   };
 
   security.polkit.enable = true;
@@ -12,13 +15,19 @@
     settings = {
       authorization = {
         trusted_clients = [
-          "::1"
-          "127.0.0.1"
+          "10.0.0.0/8"
+          "127.0.0.0/8"
+          "169.254.0.0/16"
+          "172.16.0.0/12"
+          "192.168.0.0/16"
+          "FE80::/10"
+          "::1/128"
         ];
-        #cors_domains = [ "http://${config.services.avahi.hostName}.${config.services.avahi.domainName}" ];
+        cors_domains = [ "http://${config.services.avahi.hostName}.${config.services.avahi.domainName}" ];
       };
     };
   };
 
+  networking.firewall.allowedTCPPorts = [ 80 ];
   services.mainsail.enable = true;
 }
