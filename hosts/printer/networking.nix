@@ -4,7 +4,7 @@
 
   sops.secrets."nmprofiles.env" = { };
   networking = {
-    hostName = "v03037";
+    hostName = "printer";
     networkmanager = {
       enable = true;
       wifi.powersave = false;

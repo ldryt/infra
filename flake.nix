@@ -124,13 +124,13 @@
             home-manager.nixosModules.home-manager
           ];
         };
-        v03037 = nixpkgs-unstable.lib.nixosSystem {
+        printer = nixpkgs-unstable.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
           };
           system = "aarch64-linux";
           modules = [
-            ./hosts/v03037
+            ./hosts/printer
             sops-nix.nixosModules.sops
             home-manager.nixosModules.home-manager
           ];
@@ -138,7 +138,7 @@
       };
 
       packages = forAllSystems (system: {
-        sdImage-v03037 = self.nixosConfigurations.v03037.config.system.build.sdImage;
+        sdImage-printer = self.nixosConfigurations.printer.config.system.build.sdImage;
         sdImage-rpi = self.nixosConfigurations.rpi.config.system.build.sdImage;
       });
 

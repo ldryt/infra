@@ -13,7 +13,7 @@
 
   sops = {
     defaultSopsFile = ./secrets.yaml;
-    age.keyFile = "/nix/sops_age_v03037.key";
+    age.keyFile = "/nix/sops_age_printer.key";
   };
 
   system.stateVersion = "23.05";

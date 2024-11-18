@@ -11,8 +11,11 @@
     allowSystemControl = true;
     settings = {
       authorization = {
-        trusted_clients = [ "192.168.0.0/16" ];
-        cors_domains = [ "http://${config.services.avahi.hostName}.${config.services.avahi.domainName}" ];
+        trusted_clients = [
+          "::1"
+          "127.0.0.1"
+        ];
+        #cors_domains = [ "http://${config.services.avahi.hostName}.${config.services.avahi.domainName}" ];
       };
     };
   };
