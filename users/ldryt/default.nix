@@ -48,6 +48,7 @@
       ".thunderbird"
       ".terraform.d"
       ".config/dconf"
+      "GNS3"
     ];
     files = [ ".config/monitors.xml" ];
   };
