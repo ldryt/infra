@@ -9,6 +9,7 @@
     criterion
     man-pages
     man-pages-posix
+    meson
   ];
 
   programs.man = {
