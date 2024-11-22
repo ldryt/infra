@@ -2,6 +2,7 @@
 {
   imports = [
     ./hardware.nix
+    ./networking.nix
     ./users.nix
 
     ./services/vaultwarden.nix
@@ -24,13 +25,6 @@
 
   sops.defaultSopsFile = ./secrets.yaml;
   sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
-
-  time.timeZone = "Etc/UTC";
-  networking = {
-    hostName = "silvermist";
-    useDHCP = false;
-    interfaces."eth0".useDHCP = true;
-  };
 
   system.stateVersion = "23.05";
 }
