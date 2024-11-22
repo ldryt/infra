@@ -25,12 +25,6 @@
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
 
-  # https://nixos.org/manual/nixos/unstable/index.html#sec-gpu-accel-vulkan
-  hardware.graphics = {
-    extraPackages = with pkgs; [ amdvlk ];
-    extraPackages32 = with pkgs; [ driversi686Linux.amdvlk ];
-  };
-
   boot = {
     initrd.availableKernelModules = [
       "nvme"
