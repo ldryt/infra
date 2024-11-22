@@ -1,7 +1,5 @@
 {
-  imports = [
-    ../../modules/net_tuning.nix
-  ];
+  imports = [ ../../modules/net_tuning.nix ];
 
   boot.loader.grub = {
     efiSupport = true;

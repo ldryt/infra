@@ -1,7 +1,5 @@
 {
-  imports = [
-    ../../modules/chrony.nix
-  ];
+  imports = [ ../../modules/chrony.nix ];
 
   networking = {
     hostName = "silvermist";
