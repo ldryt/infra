@@ -19,17 +19,12 @@
     ../../modules/nix-settings.nix
     ../../modules/backups.nix
     ../../modules/net_tuning.nix
-
-    (modulesPath + "/installer/scan/not-detected.nix")
-    (modulesPath + "/profiles/qemu-guest.nix")
   ];
 
   boot.loader.grub = {
     efiSupport = true;
     efiInstallAsRemovable = true;
   };
-
-  boot.kernel.sysctl."vm.swappiness" = 10;
 
   sops.defaultSopsFile = ./secrets.yaml;
   sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
