@@ -10,6 +10,7 @@
     man-pages
     man-pages-posix
     meson
+    ninja
   ];
 
   programs.man = {
