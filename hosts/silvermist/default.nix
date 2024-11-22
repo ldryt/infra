@@ -20,7 +20,6 @@
     ../../modules/podman.nix
     ../../modules/nix-settings.nix
     ../../modules/backups.nix
-    ../../modules/net_tuning.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;

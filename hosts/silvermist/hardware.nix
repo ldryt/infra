@@ -1,4 +1,8 @@
 {
+  imports = [
+    ../../modules/net_tuning.nix
+  ];
+
   boot.loader.grub = {
     efiSupport = true;
     efiInstallAsRemovable = true;
