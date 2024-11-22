@@ -1,7 +1,7 @@
 { config, modulesPath, ... }:
 {
   imports = [
-    ./disk-config.nix
+    ./hardware.nix
     ./users.nix
 
     ./services/vaultwarden.nix
@@ -21,11 +21,6 @@
     ../../modules/backups.nix
     ../../modules/net_tuning.nix
   ];
-
-  boot.loader.grub = {
-    efiSupport = true;
-    efiInstallAsRemovable = true;
-  };
 
   sops.defaultSopsFile = ./secrets.yaml;
   sops.age.sshKeyPaths = [ "/etc/ssh/ssh_host_ed25519_key" ];
