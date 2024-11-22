@@ -2,8 +2,6 @@
 {
   home.file.".face".source = ./face.png;
 
-  home.packages = [ pkgs.blackbox-terminal ];
-
   dconf = {
     enable = true;
     settings = {
@@ -33,7 +31,7 @@
         enabled-extensions = [ "launch-new-instance@gnome-shell-extensions.gcampax.github.com" ];
         favorite-apps = [
           "org.gnome.Nautilus.desktop"
-          "com.raggesilver.BlackBox.desktop"
+          "org.gnome.Console.desktop"
           "firefox.desktop"
           "thunderbird.desktop"
           "org.gnome.Calculator.desktop"
