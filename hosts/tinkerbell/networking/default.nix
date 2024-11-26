@@ -11,7 +11,7 @@
       enable = true;
       wifi = {
         powersave = true;
-        macAddress = "random";
+        macAddress = "stable";
       };
       logLevel = "INFO";
     };
