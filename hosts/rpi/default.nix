@@ -8,6 +8,8 @@
 
     ../../modules/nix-settings.nix
     ../../modules/openssh.nix
+
+    ./services/syncthing.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
