@@ -10,6 +10,7 @@
     ../../modules/openssh.nix
 
     ./services/syncthing.nix
+    ./services/syncthing-relay.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
