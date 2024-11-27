@@ -1,7 +1,6 @@
 { config, ... }:
 {
   sops.secrets."system/NetworkManager/profiles/env" = { };
-  sops.secrets."system/NetworkManager/profiles/mullvad_fr_par/ca" = { };
   networking.networkmanager.ensureProfiles = {
     environmentFiles = [ config.sops.secrets."system/NetworkManager/profiles/env".path ];
     profiles = {
