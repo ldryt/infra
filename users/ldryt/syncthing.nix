@@ -18,8 +18,14 @@ in
         "rpi".id = "PRSTEYD-BFS3F7N-6AS245G-SFISD7N-CDZPWIK-MN6U7PN-NPW64SW-UTKRWA5";
       };
       folders = {
-        "~/${dataDir}/documents".devices = [ "rpi" ];
-        "~/${dataDir}/pictures".devices = [ "rpi" ];
+        "~/${dataDir}/documents" = {
+          id = "ldryt-documents";
+          devices = [ "rpi" ];
+        };
+        "~/${dataDir}/pictures" = {
+          id = "ldryt-pictures";
+          devices = [ "rpi" ];
+        };
       };
     };
   };
