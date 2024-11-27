@@ -29,6 +29,7 @@
       "/var/cache/powertop"
       "/etc/secureboot"
       "/var/lib/fprint"
+      "/var/lib/docker"
     ];
     files = [ "/etc/machine-id" ];
   };
