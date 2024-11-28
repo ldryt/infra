@@ -50,6 +50,7 @@
       ".terraform.d"
       ".config/dconf"
       "GNS3"
+      ".local/share/GNS3"
     ];
     files = [ ".config/monitors.xml" ];
   };
