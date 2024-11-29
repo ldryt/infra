@@ -8,7 +8,6 @@
 
     ../../modules/gnome.nix
     ../../modules/power.nix
-    ../../modules/net1.nix
     ../../modules/nix-settings.nix
 
     ./services/windows-dockur.nix
@@ -29,7 +28,6 @@
       "/var/cache/powertop"
       "/etc/secureboot"
       "/var/lib/fprint"
-      "/var/lib/docker"
     ];
     files = [ "/etc/machine-id" ];
   };
