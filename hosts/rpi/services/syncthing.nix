@@ -15,14 +15,12 @@
         "tinkerbell".id = "BRAQOO2-4MD5S4O-ORGTC3X-DEJDE3Q-YRK7V4E-VXXBR32-77PFW7P-G4Z6PAO";
       };
       folders = {
-        "~/ldryt-documents-enc" = {
+        "~/ldryt-documents" = {
           id = "ldryt-documents";
-          type = "receiveencrypted";
           devices = [ "tinkerbell" ];
         };
-        "~/ldryt-pictures-enc" = {
+        "~/ldryt-pictures" = {
           id = "ldryt-pictures";
-          type = "receiveencrypted";
           devices = [ "tinkerbell" ];
         };
       };
