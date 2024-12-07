@@ -30,27 +30,4 @@
     defaultSymlinkPath = "${config.home.homeDirectory}/.sops/secrets";
     defaultSecretsMountPoint = "${config.home.homeDirectory}/.sops/secrets.d";
   };
-
-  home.persistence."/nix/persist/home/ldryt" = {
-    allowOther = true;
-    directories = [
-      "Documents"
-      "Downloads"
-      "Music"
-      "Pictures"
-      "Videos"
-      "VirtualBox VMs"
-      ".ssh"
-      ".keyring"
-      ".local/share/direnv"
-      ".local/share/keyrings"
-      ".config/vesktop"
-      ".config/SuperSlicer"
-      ".thunderbird"
-      ".terraform.d"
-      ".config/dconf"
-      ".local/share/Steam"
-    ];
-    files = [ ".config/monitors.xml" ];
-  };
 }

@@ -1,7 +1,5 @@
 { firefox-addons, ... }:
 {
-  home.persistence."/nix/persist/home/ldryt".directories = [ ".mozilla" ];
-
   home.file."firefox-gnome-theme" = {
     target = ".mozilla/firefox/default/chrome/firefox-gnome-theme";
     source = (

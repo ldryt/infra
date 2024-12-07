@@ -3,8 +3,6 @@ let
   dataDir = "Sync";
 in
 {
-  home.persistence."/nix/persist/home/ldryt".directories = [ dataDir ];
-
   # BRAQOO2-4MD5S4O-ORGTC3X-DEJDE3Q-YRK7V4E-VXXBR32-77PFW7P-G4Z6PAO
   sops.secrets."services/syncthing/key" = { };
   sops.secrets."services/syncthing/cert" = { };

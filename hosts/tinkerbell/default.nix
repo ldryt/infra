@@ -19,8 +19,6 @@
   sops.defaultSopsFile = ./secrets.yaml;
   sops.age.keyFile = "/nix/persist/sops_age_tinkerbell.key";
 
-  programs.fuse.userAllowOther = true; # needed for home-manager impermanence
-
   environment.persistence."/nix/persist/system" = {
     hideMounts = true;
     directories = [
@@ -33,6 +31,32 @@
       "/var/lib/fprint"
     ];
     files = [ "/etc/machine-id" ];
+  };
+
+  environment.persistence."/nix/persist/home/ldryt" = {
+    users.ldryt = {
+      directories = [
+        "Documents"
+        "Downloads"
+        "Music"
+        "Pictures"
+        "Videos"
+        "VirtualBox VMs"
+        "Sync"
+        ".ssh"
+        ".keyring"
+        ".local/share/direnv"
+        ".local/share/keyrings"
+        ".config/vesktop"
+        ".config/SuperSlicer"
+        ".mozilla"
+        ".thunderbird"
+        ".terraform.d"
+        ".config/dconf"
+        ".local/share/Steam"
+      ];
+      files = [ ".config/monitors.xml" ];
+    };
   };
 
   system.stateVersion = "23.05";

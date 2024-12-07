@@ -7,10 +7,7 @@
     users = {
       ldryt = import ../../users/ldryt;
     };
-    sharedModules = [
-      inputs.sops-nix.homeManagerModules.sops
-      (inputs.impermanence + "/home-manager.nix")
-    ];
+    sharedModules = [ inputs.sops-nix.homeManagerModules.sops ];
     extraSpecialArgs = {
       firefox-addons = inputs.firefox-addons;
     };
