@@ -19,7 +19,7 @@
   sops.defaultSopsFile = ./secrets.yaml;
   sops.age.keyFile = "/nix/persist/sops_age_tinkerbell.key";
 
-  environment.persistence."/nix/persist/system" = {
+  environment.persistence."/nix/persist" = {
     hideMounts = true;
     directories = [
       "/var/log"
@@ -31,9 +31,7 @@
       "/var/lib/fprint"
     ];
     files = [ "/etc/machine-id" ];
-  };
 
-  environment.persistence."/nix/persist/home/ldryt" = {
     users.ldryt = {
       directories = [
         "Documents"
