@@ -49,6 +49,7 @@
       ".thunderbird"
       ".terraform.d"
       ".config/dconf"
+      ".local/share/Steam"
     ];
     files = [ ".config/monitors.xml" ];
   };
