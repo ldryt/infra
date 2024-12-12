@@ -9,10 +9,12 @@
       "steam-original"
       "steam-unwrapped"
       "steam-run"
+      "xow_dongle-firmware"
     ];
 
   environment.systemPackages = with pkgs; [
     steamcmd
     steam-tui
   ];
+  hardware.xone.enable = true;
 }
