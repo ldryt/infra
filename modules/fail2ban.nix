@@ -3,8 +3,13 @@
   services.fail2ban = {
     enable = true;
     ignoreIP = [
-      "10.0.0.0/32"
-      "fe80::/10"
+      "10.0.0.0/8"
+      "127.0.0.0/8"
+      "169.254.0.0/16"
+      "172.16.0.0/12"
+      "192.168.0.0/16"
+      "FE80::/10"
+      "::1/128"
     ];
     extraPackages = [ pkgs.ipset ];
     banaction = "iptables-ipset-proto6-allports";
