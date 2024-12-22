@@ -26,7 +26,9 @@
         "127.0.0.1:53"
       ];
 
-      ipv6_servers = true;
+      # For portable devices, ipv6 is not guaranteed
+      # ipv6_servers = true;
+
       require_dnssec = true;
 
       sources.public-resolvers = {
