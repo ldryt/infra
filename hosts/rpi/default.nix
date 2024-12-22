@@ -7,6 +7,7 @@
     ./users.nix
 
     ../../modules/nix-settings.nix
+    ../../modules/fail2ban.nix
     ../../modules/openssh.nix
 
     ./services/syncthing.nix
