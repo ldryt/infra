@@ -25,6 +25,8 @@
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
 
+  security.rtkit.enable = true;
+
   boot = {
     initrd.availableKernelModules = [
       "nvme"
