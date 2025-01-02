@@ -14,6 +14,7 @@
     ./thunderbird.nix
     ./vscodium.nix
     ./syncthing.nix
+    ./framework-dsp.nix
   ];
 
   programs.home-manager.enable = true;

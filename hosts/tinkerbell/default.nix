@@ -52,6 +52,7 @@
         ".terraform.d"
         ".config/dconf"
         ".local/share/Steam"
+        ".config/easyeffects"
       ];
       files = [ ".config/monitors.xml" ];
     };
