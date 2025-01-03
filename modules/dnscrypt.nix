@@ -2,10 +2,7 @@
 {
   imports = [ ./dns.nix ];
 
-  networking.nameservers = lib.mkForce [
-    "127.0.0.53"
-    "9.9.9.9"
-  ];
+  networking.nameservers = lib.mkBefore [ "127.0.0.53" ];
 
   services.dnscrypt-proxy2 = {
     enable = true;

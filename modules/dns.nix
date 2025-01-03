@@ -10,6 +10,7 @@
   networking.networkmanager.dns = "none";
   networking.dhcpcd.extraConfig = "nohook resolv.conf";
   services.resolved.enable = false;
+  networking.resolvconf.enable = false;
 
   # Enable mDNS resolving
   services.avahi = {
