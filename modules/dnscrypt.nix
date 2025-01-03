@@ -3,24 +3,15 @@
   imports = [ ./dns.nix ];
 
   networking.nameservers = lib.mkForce [
-    "::1"
-    "127.0.0.1"
+    "127.0.0.53"
     "9.9.9.9"
   ];
 
   services.dnscrypt-proxy2 = {
     enable = true;
     settings = {
-      listen_addresses = [
-        "[::1]:53"
-        "127.0.0.1:53"
-      ];
-
-      # For portable devices, ipv6 is not guaranteed
-      # ipv6_servers = true;
-
+      listen_addresses = [ "127.0.0.53:53" ];
       require_dnssec = true;
-
       sources.public-resolvers = {
         urls = [
           "https://raw.githubusercontent.com/DNSCrypt/dnscrypt-resolvers/master/v3/public-resolvers.md"
