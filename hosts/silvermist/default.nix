@@ -13,6 +13,7 @@
     ./services/mcredir.nix
     ./services/postfix.nix
     ./services/nextcloud.nix
+    ./services/ocis.nix
 
     ../../modules/nginx.nix
     ../../modules/fail2ban.nix

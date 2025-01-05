@@ -51,6 +51,22 @@ in
         }
       ];
 
+      identity_providers.oidc = {
+        lifespans = {
+          access_token = "10d";
+          refresh_token = "10d";
+        };
+        cors = {
+          endpoints = [
+            "authorization"
+            "token"
+            "revocation"
+            "introspection"
+          ];
+          allowed_origins_from_client_redirect_uris = true;
+        };
+      };
+
       access_control.default_policy = "two_factor";
 
       authentication_backend = {

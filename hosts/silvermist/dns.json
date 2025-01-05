@@ -6,6 +6,7 @@
     "vaultwarden": "pass",
     "mcredir": "mc",
     "postfix": "mx",
-    "nextcloud": "cloud"
+    "nextcloud": "cloud",
+    "ocis": "files"
   }
 }
