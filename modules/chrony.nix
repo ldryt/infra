@@ -9,8 +9,5 @@
       "ntp.3eck.net"
       "time.cloudflare.com"
     ];
-    extraConfig = ''
-      makestep 1 -1
-    '';
   };
 }
