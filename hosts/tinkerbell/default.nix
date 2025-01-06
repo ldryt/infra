@@ -15,6 +15,7 @@
   ];
 
   virtualisation.virtualbox.host.enable = true;
+  virtualisation.docker.enable = true;
 
   sops.defaultSopsFile = ./secrets.yaml;
   sops.age.keyFile = "/nix/persist/sops_age_tinkerbell.key";
