@@ -22,8 +22,8 @@
       extraGroups = [
         "wheel"
         "networkmanager"
+        "disk"
         "vboxusers"
-        "libvirtd"
         "docker"
       ];
       hashedPasswordFile = config.sops.secrets."users/ldryt/hashedPassword".path;
