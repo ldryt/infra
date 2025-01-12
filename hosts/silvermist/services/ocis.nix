@@ -1,4 +1,9 @@
-{ config, pkgs, pkgs-unstable-unfree, ... }:
+{
+  config,
+  pkgs,
+  pkgs-unstable-unfree,
+  ...
+}:
 let
   dns = builtins.fromJSON (builtins.readFile ../dns.json);
   dataDir = "/mnt/ocis-data";
@@ -83,7 +88,7 @@ in
           "refresh_token"
           "authorization_code"
         ];
-        response_types = ["code"];
+        response_types = [ "code" ];
       }
       {
         client_name = "ownCloud Android";
@@ -103,7 +108,7 @@ in
           "refresh_token"
           "authorization_code"
         ];
-        response_types = ["code"];
+        response_types = [ "code" ];
       }
       {
         client_name = "ownCloud iOS";
@@ -126,7 +131,7 @@ in
           "refresh_token"
           "authorization_code"
         ];
-        response_types = ["code"];
+        response_types = [ "code" ];
       }
     ];
   };

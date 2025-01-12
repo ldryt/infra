@@ -1,11 +1,10 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
-    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
 
     home-manager = {
       url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs-unstable";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
     sops-nix = {
       url = "github:mic92/sops-nix";
@@ -23,7 +22,6 @@
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    mcpulse.url = "github:ldryt/mcpulse";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     impermanence.url = "github:nix-community/impermanence";
   };
@@ -31,12 +29,10 @@
     {
       self,
       nixpkgs,
-      nixpkgs-unstable,
       home-manager,
       sops-nix,
       disko,
       lanzaboote,
-      mcpulse,
       nixos-hardware,
       impermanence,
       ...
@@ -53,6 +49,8 @@
       forAllSystems = nixpkgs.lib.genAttrs systems;
     in
     {
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
+
       devShells = forAllSystems (
         system:
         let
@@ -77,10 +75,8 @@
         }
       );
 
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
-
       nixosConfigurations = {
-        tinkerbell = nixpkgs-unstable.lib.nixosSystem {
+        tinkerbell = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
           };
@@ -95,29 +91,18 @@
             home-manager.nixosModules.home-manager
           ];
         };
-        silvermist =
-          let
-            system = "x86_64-linux";
-            pkgs = import nixpkgs {
-              inherit system;
-              overlays = [ (self: super: { mcpulse = mcpulse.packages.${system}.default; }) ];
-            };
-          in
-          nixpkgs.lib.nixosSystem {
-            specialArgs = {
-              inherit inputs;
-              inherit pkgs;
-              pkgs-unstable = import nixpkgs-unstable { inherit system; };
-              pkgs-unstable-unfree = import nixpkgs-unstable { inherit system; config.allowUnfree = true; };
-            };
-            inherit system;
-            modules = [
-              ./hosts/silvermist
-              sops-nix.nixosModules.sops
-              disko.nixosModules.disko
-            ];
+        silvermist = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs;
           };
-        rpi = nixpkgs-unstable.lib.nixosSystem {
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/silvermist
+            sops-nix.nixosModules.sops
+            disko.nixosModules.disko
+          ];
+        };
+        rpi = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
           modules = [
             ./hosts/rpi
@@ -125,7 +110,7 @@
             home-manager.nixosModules.home-manager
           ];
         };
-        printer = nixpkgs-unstable.lib.nixosSystem {
+        printer = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs;
           };
@@ -146,7 +131,7 @@
       homeConfigurations."lucas.ladreyt" =
         let
           system = "x86_64-linux";
-          pkgs = nixpkgs-unstable.legacyPackages.${system};
+          pkgs = nixpkgs.legacyPackages.${system};
         in
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;

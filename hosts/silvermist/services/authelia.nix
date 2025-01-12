@@ -10,9 +10,6 @@ let
   autheliaInternalAddress = "localhost:44092";
 in
 {
-  imports = [ "${inputs.nixpkgs-unstable}/nixos/modules/services/security/authelia.nix" ];
-  disabledModules = [ "services/security/authelia.nix" ];
-
   sops.secrets."services/authelia/users".owner = config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/jwtSecret".owner = config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/storageEncryptionKey".owner =
