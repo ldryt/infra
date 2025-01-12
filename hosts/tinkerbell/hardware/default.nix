@@ -5,12 +5,17 @@
   ...
 }:
 {
-  # Note: module "framework-13-7040-amd" from https://github.com/NixOS/nixos-hardware is imported in flake
-
   imports = [
     ./disko.nix
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
+
+  # Note: module "framework-13-7040-amd" from https://github.com/NixOS/nixos-hardware is imported in flake
+  hardware.framework.laptop13.audioEnhancement = {
+    enable = true;
+    rawDeviceName = "alsa_output.pci-0000_c1_00.6.analog-stereo";
+    hideRawDevice = true;
+  };
 
   fileSystems."/swap".neededForBoot = true;
 
