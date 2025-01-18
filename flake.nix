@@ -102,10 +102,10 @@
             disko.nixosModules.disko
           ];
         };
-        rpi = nixpkgs.lib.nixosSystem {
+        domus = nixpkgs.lib.nixosSystem {
           system = "aarch64-linux";
           modules = [
-            ./hosts/rpi
+            ./hosts/domus
             sops-nix.nixosModules.sops
             home-manager.nixosModules.home-manager
           ];
@@ -125,7 +125,7 @@
 
       packages = forAllSystems (system: {
         sdImage-printer = self.nixosConfigurations.printer.config.system.build.sdImage;
-        sdImage-rpi = self.nixosConfigurations.rpi.config.system.build.sdImage;
+        sdImage-domus = self.nixosConfigurations.domus.config.system.build.sdImage;
       });
 
       homeConfigurations."lucas.ladreyt" =

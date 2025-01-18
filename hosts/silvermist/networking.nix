@@ -1,6 +1,4 @@
 {
-  imports = [ ../../modules/chrony.nix ];
-
   networking = {
     hostName = "silvermist";
     useDHCP = false;

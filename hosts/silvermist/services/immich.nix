@@ -41,7 +41,6 @@ in
       volumes = [
         "${immichConfigPath}:${immichConfigPath}:ro"
         "${dataDir}:/usr/src/app/upload"
-        "/etc/localtime:/etc/localtime:ro"
       ];
       ports = [ "127.0.0.1:${internalPort}:2283" ];
       dependsOn = [

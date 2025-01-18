@@ -13,7 +13,6 @@
     ./firefox.nix
     ./thunderbird.nix
     ./vscodium.nix
-    ./syncthing.nix
   ];
 
   programs.home-manager.enable = true;

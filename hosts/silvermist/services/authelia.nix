@@ -22,7 +22,6 @@ in
 
   services.authelia.instances.main = {
     enable = true;
-    package = pkgs-unstable.authelia;
 
     secrets = {
       jwtSecretFile = config.sops.secrets."services/authelia/jwtSecret".path;

@@ -12,6 +12,9 @@
     which
     tree
     ripgrep
+    sd
     git-crypt
+    nix-tree
+    restic
   ];
 }
