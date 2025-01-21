@@ -1,5 +1,13 @@
+{ modulesPath, ... }:
 {
-  imports = [ ../../modules/net_tuning.nix ];
+  imports = [ "${modulesPath}/profiles/qemu-guest.nix" ];
+
+  boot.initrd.availableKernelModules = [
+    "xhci_pci"
+    "virtio_pci"
+    "usbhid"
+    "sr_mod"
+  ];
 
   boot.loader.grub = {
     efiSupport = true;
@@ -7,46 +15,52 @@
   };
 
   disko.devices = {
-    disk = {
-      main = {
-        device = "/dev/sda";
-        type = "disk";
-        content = {
-          type = "gpt";
-          partitions = {
-            boot = {
-              name = "boot";
-              size = "1M";
-              type = "EF02";
+    disk.main = {
+      device = "/dev/sda";
+      type = "disk";
+      content = {
+        type = "gpt";
+        partitions = {
+          boot = {
+            size = "1M";
+            type = "EF02"; # for grub MBR
+          };
+          ESP = {
+            name = "ESP";
+            size = "512M";
+            type = "EF00";
+            content = {
+              type = "filesystem";
+              format = "vfat";
+              mountpoint = "/boot";
+              mountOptions = [ "umask=0077" ];
             };
-            esp = {
-              name = "ESP";
-              size = "500M";
-              type = "EF00";
-              content = {
-                type = "filesystem";
-                format = "vfat";
-                mountpoint = "/boot";
-              };
+          };
+          swap = {
+            size = "2G";
+            content = {
+              type = "swap";
+              discardPolicy = "both";
             };
-            swap = {
-              size = "6G";
-              content = {
-                type = "swap";
-                discardPolicy = "both";
-              };
-            };
-            root = {
-              size = "100%";
-              content = {
-                type = "filesystem";
-                format = "ext4";
-                mountpoint = "/";
-              };
+          };
+          nix = {
+            size = "100%";
+            content = {
+              type = "filesystem";
+              format = "ext4";
+              mountpoint = "/nix";
             };
           };
         };
       };
+    };
+    nodev."/" = {
+      fsType = "tmpfs";
+      mountOptions = [
+        "size=512M"
+        "defaults"
+        "mode=755"
+      ];
     };
   };
 }

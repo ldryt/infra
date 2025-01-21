@@ -2,11 +2,9 @@
   "zone": "ldryt.dev",
   "subdomains": {
     "immich": "pics",
-    "authelia": "authelia",
+    "authelia": "auth",
     "vaultwarden": "pass",
-    "mcredir": "mc",
     "postfix": "mx",
-    "nextcloud": "cloud",
     "ocis": "files",
     "domus": "domus"
   }

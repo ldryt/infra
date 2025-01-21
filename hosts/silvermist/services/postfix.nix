@@ -4,6 +4,8 @@ let
   opendkimSocket = "/run/opendkim/opendkim.sock";
 in
 {
+  environment.persistence.silvermist.directories = [ "/var/lib/postfix" ];
+
   sops.secrets."services/postfix/certs/acme/env" = { };
   security.acme.certs."${dns.subdomains.postfix}.${dns.zone}" = {
     dnsProvider = "cloudflare";

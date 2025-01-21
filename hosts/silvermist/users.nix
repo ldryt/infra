@@ -1,10 +1,18 @@
 { config, ... }:
 {
+  home-manager = {
+    useGlobalPkgs = true;
+    useUserPackages = true;
+    users = {
+      colon = import ../../users/colon;
+    };
+  };
+
   sops.secrets."users/colon/hashedPassword".neededForUsers = true;
   users = {
     mutableUsers = false;
     users.colon = {
-      uid = 1000;
+      uid = 1042;
       isNormalUser = true;
       extraGroups = [ "wheel" ];
       hashedPasswordFile = config.sops.secrets."users/colon/hashedPassword".path;
@@ -15,5 +23,4 @@
   };
   security.sudo.wheelNeedsPassword = false;
   nix.settings.trusted-users = [ config.users.users.colon.name ];
-
 }

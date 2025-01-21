@@ -100,6 +100,8 @@
             ./hosts/silvermist
             sops-nix.nixosModules.sops
             disko.nixosModules.disko
+            impermanence.nixosModules.impermanence
+            home-manager.nixosModules.home-manager
           ];
         };
         domus = nixpkgs.lib.nixosSystem {

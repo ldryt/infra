@@ -8,8 +8,11 @@ let
   dns = builtins.fromJSON (builtins.readFile ../dns.json);
   autheliaPublicFQDN = "${dns.subdomains.authelia}.${dns.zone}";
   autheliaInternalAddress = "localhost:44092";
+  dataDir = "/var/lib/authelia-${config.services.authelia.instances.main.name}";
 in
 {
+  environment.persistence.silvermist.directories = [ dataDir ];
+
   sops.secrets."services/authelia/users".owner = config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/jwtSecret".owner = config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/storageEncryptionKey".owner =
@@ -38,7 +41,7 @@ in
 
       server.address = "tcp://${autheliaInternalAddress}/";
 
-      storage.local.path = "/var/lib/authelia-${config.services.authelia.instances.main.name}/db.sqlite3";
+      storage.local.path = "${dataDir}/db.sqlite3";
 
       session.cookies = [
         {
