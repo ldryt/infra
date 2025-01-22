@@ -1,113 +1,51 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 let
-  apIF = "ap0";
-  stationIF = "wlan0";
+  stationIF = "st0";
+  RPI4MAC = "dc:a6:32:34:1a:d2";
+  USB4MAC = "28:87:ba:a4:c3:cd";
+  USB6MAC1 = "90:de:80:88:72:63";
+  USB6MAC2 = "90:de:80:88:72:98";
 in
 {
-  imports = [ ../../modules/mdns-publish.nix ];
-
-  hardware.enableRedistributableFirmware = true;
-  hardware.firmware = [ pkgs.raspberrypiWirelessFirmware ];
-
-  systemd.network.links = {
-    "10-${apIF}" = {
-      matchConfig.PermanentMACAddress = "b8:27:eb:db:1e:3b";
-      linkConfig.Name = apIF;
-    };
-    "10-${stationIF}" = {
-      matchConfig.PermanentMACAddress = "28:87:ba:a4:c3:cd";
-      linkConfig.Name = stationIF;
-    };
-  };
-
   networking = {
     hostName = "domus";
     nameservers = [
       "9.9.9.9"
       "149.112.112.112"
     ];
-    dhcpcd.enable = false;
-    wireless.iwd = {
-      enable = true;
-      # https://man.archlinux.org/man/iwd.config.5
-      settings = {
-        General = {
-          EnableNetworkConfiguration = true;
-          AddressRandomization = "network";
-          Country = "FR";
-        };
-        Network = {
-          EnableIPv6 = false;
-        };
+    enableIPv6 = false;
+    useNetworkd = true;
+  };
+
+  services.resolved.llmnr = "false";
+  networking.firewall.allowedUDPPorts = [ 5353 ];
+
+  systemd.network = {
+    links."10-${stationIF}" = {
+      matchConfig.PermanentMACAddress = USB6MAC2;
+      linkConfig.Name = stationIF;
+    };
+    networks."10-${stationIF}" = {
+      matchConfig.Name = stationIF;
+      DHCP = "ipv4";
+      networkConfig.MulticastDNS = "yes";
+    };
+  };
+
+  sops.secrets."system/networking/wpa_supplicant/secrets.conf" = { };
+  networking.wireless = {
+    enable = true;
+    interfaces = [ stationIF ];
+    secretsFile = config.sops.secrets."system/networking/wpa_supplicant/secrets.conf".path;
+    networks = {
+      rosetta = {
+        pskRaw = "ext:secrets_psk_rosetta";
+        priority = 99;
+      };
+      SFR_AFA3 = {
+        pskRaw = "ext:secrets_psk_SFR_AFA3";
+        priority = 10;
       };
     };
-    nat = {
-      enable = true;
-      externalInterface = stationIF;
-      internalInterfaces = [ apIF ];
-    };
-    firewall.allowedUDPPorts = [ 67 ]; # DHCP
   };
-  boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
-
-  systemd.tmpfiles.rules =
-    let
-      rosetta = (
-        pkgs.writeText "iwd_rosetta.psk" ''
-          [Security]
-          PreSharedKey=80eb518e636de9d2d275f79083aed5399a0cadf520e1a1cb49a384bac878ad7c
-        ''
-      );
-    in
-    [
-      "C /var/lib/iwd/rosetta.psk 0600 root root - ${rosetta}"
-    ];
-
-  systemd.services."iwd-start-ap" =
-    let
-      domusAPconf = (
-        pkgs.writeText "iwd_domus.ap" ''
-          [General]
-          DisableHT=true
-
-          [Security]
-          Passphrase=escalier
-
-          [IPv4]
-          Address=10.10.10.10
-          Gateway=10.10.10.10
-          Netmask=255.255.255.0
-          DNSList=9.9.9.9,149.112.112.112
-        ''
-      );
-    in
-    {
-      description = "iwd AP on ${apIF}";
-      requires = [ "sys-subsystem-net-devices-${apIF}.device" ];
-      after = [
-        "iwd.service"
-        "sys-subsystem-net-devices-${apIF}.device"
-      ];
-      wantedBy = [ "multi-user.target" ];
-      path = [
-        pkgs.iwd
-        pkgs.iw
-        pkgs.busybox
-      ];
-      script = ''
-        set -xeu
-
-        ln -s ${domusAPconf} /var/lib/iwd/ap/domus.ap
-
-        if ! iw dev ${apIF} info | grep -q "type AP"
-        then
-          iwctl device ${apIF} set-property Mode ap
-        fi
-
-        if ! iw dev ${apIF} info | grep -q "ssid"
-        then
-          iwctl ap ${apIF} start-profile domus
-        fi
-      '';
-    };
 }

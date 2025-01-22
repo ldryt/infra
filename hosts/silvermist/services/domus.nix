@@ -12,27 +12,24 @@ in
   sops.secrets."system/networking/wireguard/privateKey".owner = "systemd-network";
   networking.firewall.allowedUDPPorts = [ wireguardPort ];
   systemd.network = {
-    enable = true;
-    netdevs = {
-      "10-${wireguardIF}" = {
-        netdevConfig = {
-          Kind = "wireguard";
-          Name = wireguardIF;
-        };
-        wireguardConfig = {
-          PrivateKeyFile = config.sops.secrets."system/networking/wireguard/privateKey".path;
-          ListenPort = wireguardPort;
-        };
-        wireguardPeers = [
-          {
-            # domus
-            PublicKey = domusPublicKey;
-            AllowedIPs = [ domusIp ];
-          }
-        ];
+    netdevs."10-${wireguardIF}" = {
+      netdevConfig = {
+        Kind = "wireguard";
+        Name = wireguardIF;
       };
+      wireguardConfig = {
+        PrivateKeyFile = config.sops.secrets."system/networking/wireguard/privateKey".path;
+        ListenPort = wireguardPort;
+      };
+      wireguardPeers = [
+        {
+          # domus
+          PublicKey = domusPublicKey;
+          AllowedIPs = [ domusIp ];
+        }
+      ];
     };
-    networks."${wireguardIF}" = {
+    networks."10-${wireguardIF}" = {
       matchConfig.Name = wireguardIF;
       address = [ "${wgIp}.1/24" ];
       networkConfig = {
@@ -46,6 +43,9 @@ in
     enableACME = true;
     forceSSL = true;
     kTLS = true;
-    locations."/".proxyPass = "http://${domusIp}:${toString domusPort}";
+    locations."/" = {
+      proxyPass = "http://${domusIp}:${toString domusPort}";
+      proxyWebsockets = true;
+    };
   };
 }
