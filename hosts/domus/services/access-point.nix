@@ -21,6 +21,7 @@ in
         DHCPServer = "yes";
         IPMasquerade = "ipv4";
         IPv4Forwarding = "yes";
+        MulticastDNS = "yes";
       };
       dhcpServerConfig = {
         PoolOffset = 100;
@@ -46,4 +47,6 @@ in
       };
     };
   };
+  # BindTo and After are set to sys-subsystem-net-devices-${accesspointIF}.device by default
+  systemd.services."hostapd".wantedBy = [ "sys-subsystem-net-devices-${accesspointIF}.device" ];
 }
