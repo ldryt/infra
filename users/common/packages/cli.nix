@@ -5,6 +5,8 @@
     iotop
     iftop
     nmap
+    tcpdump
+    iperf3
 
     usbutils
     pciutils
