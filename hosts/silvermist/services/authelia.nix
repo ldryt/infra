@@ -73,8 +73,6 @@ in
         password_reset.disable = true;
       };
 
-      duo_api.disable = true;
-      webauthn.disable = true;
       totp.issuer = autheliaPublicFQDN;
 
       notifier.smtp = {
