@@ -2,6 +2,7 @@
 let
   wireguardIF = "domustunnel";
   wgIp = "10.22.22";
+  selfWgIp = "${wgIp}.22";
   silvermistIp = "${wgIp}.1";
   silvermistEndpoint = "domus.ldryt.dev:62879";
   silvermistPublicKey = "silv6SFoJoB7njsaIRTi55CaTb1RkRcM6pVx/WE5m38=";
@@ -31,7 +32,7 @@ in
     };
     networks."10-${wireguardIF}" = {
       matchConfig.Name = wireguardIF;
-      address = [ "${wgIp}.22/24" ];
+      address = [ "${selfWgIp}/24" ];
     };
   };
 
@@ -48,7 +49,6 @@ in
   };
 
   users.users.colon.extraGroups = [ "dialout" ];
-  networking.firewall.allowedTCPPorts = [ 8123 ];
   virtualisation.oci-containers = {
     backend = "podman";
     containers.home-assistant = {
@@ -58,8 +58,8 @@ in
         "home-assistant:/config"
         "${backupsDir}:/config/backups"
       ];
+      ports = [ "${selfWgIp}:8123:8123" ];
       extraOptions = [
-        "--network=host"
         "--device=/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0:/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0"
       ];
     };
