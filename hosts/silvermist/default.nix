@@ -5,12 +5,13 @@
     ./networking.nix
     ./users.nix
 
+    ./services/postfix.nix
+    ./services/lldap.nix
+    ./services/authelia.nix
     ./services/vaultwarden.nix
     ./services/immich.nix
     ./services/frontpage.nix
     ./services/shlink.nix
-    ./services/authelia.nix
-    ./services/postfix.nix
     ./services/ocis.nix
     ./services/domus.nix
 

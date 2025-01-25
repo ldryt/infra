@@ -13,7 +13,6 @@ in
 {
   environment.persistence.silvermist.directories = [ dataDir ];
 
-  sops.secrets."services/authelia/users".owner = config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/jwtSecret".owner = config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/storageEncryptionKey".owner =
     config.services.authelia.instances.main.user;
@@ -22,6 +21,7 @@ in
     config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/oidcIssuerPrivateKey".owner =
     config.services.authelia.instances.main.user;
+  sops.secrets."services/authelia/ldapPassword".owner = config.services.authelia.instances.main.user;
 
   services.authelia.instances.main = {
     enable = true;
@@ -33,6 +33,9 @@ in
       oidcHmacSecretFile = config.sops.secrets."services/authelia/oidcHmacSecret".path;
       oidcIssuerPrivateKeyFile = config.sops.secrets."services/authelia/oidcIssuerPrivateKey".path;
     };
+
+    environmentVariables.AUTHELIA_AUTHENTICATION_BACKEND_LDAP_PASSWORD_FILE =
+      config.sops.secrets."services/authelia/ldapPassword".path;
 
     settings = {
       theme = "auto";
@@ -69,8 +72,17 @@ in
       access_control.default_policy = "two_factor";
 
       authentication_backend = {
-        file.path = config.sops.secrets."services/authelia/users".path;
-        password_reset.disable = true;
+        password_reset.disable = false;
+        refresh_interval = "1m";
+        ldap = {
+          implementation = "lldap";
+          address = "ldap://localhost:3890";
+          base_dn = "dc=ldryt,dc=dev";
+          user = "uid=authelia,ou=people,dc=ldryt,dc=dev";
+
+          # To allow sign in with BOTH username and email
+          users_filter = "(&(|({username_attribute}={input})({mail_attribute}={input}))(objectClass=person))";
+        };
       };
 
       duo_api.disable = true;

@@ -6,6 +6,7 @@
     "vaultwarden": "pass",
     "postfix": "mx",
     "ocis": "files",
-    "domus": "domus"
+    "domus": "domus",
+    "lldap": "id"
   }
 }

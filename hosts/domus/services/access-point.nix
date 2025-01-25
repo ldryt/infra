@@ -41,7 +41,7 @@ in
         channel = 36;
         networks."${accesspointIF}" = {
           ssid = "domus";
-          authentication.saePasswords = [{ password = "escalier"; }];
+          authentication.saePasswords = [ { password = "escalier"; } ];
         };
       };
     };
