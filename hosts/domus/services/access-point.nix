@@ -21,7 +21,6 @@ in
         DHCPServer = "yes";
         IPMasquerade = "ipv4";
         IPv4Forwarding = "yes";
-        MulticastDNS = "yes";
       };
       dhcpServerConfig = {
         PoolOffset = 100;
@@ -42,7 +41,7 @@ in
         channel = 36;
         networks."${accesspointIF}" = {
           ssid = "domus";
-          authentication.saePasswords = [{ password = "escalier"; }];
+          authentication.saePasswords = [ { password = "escalier"; } ];
         };
       };
     };

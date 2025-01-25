@@ -19,6 +19,14 @@ in
 
   services.resolved.llmnr = "false";
   networking.firewall.allowedUDPPorts = [ 5353 ];
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
+    publish = {
+      enable = true;
+      addresses = true;
+    };
+  };
 
   systemd.network = {
     links."10-${stationIF}" = {
@@ -28,7 +36,10 @@ in
     networks."10-${stationIF}" = {
       matchConfig.Name = stationIF;
       DHCP = "ipv4";
-      networkConfig.MulticastDNS = "yes";
+      dhcpV4Config = {
+        UseDNS = false;
+        Anonymize = false;
+      };
     };
   };
 
