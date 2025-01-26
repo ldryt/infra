@@ -23,7 +23,7 @@ resource "cloudflare_record" "silvermist_subdomains" {
 resource "cloudflare_record" "root_MX_record" {
   zone_id  = local.zone_id
   name     = "@"
-  value    = "${local.dns.subdomains.postfix}.${local.dns.zone}"
+  value    = "${local.dns.subdomains.mailserver}.${local.dns.zone}"
   type     = "MX"
   priority = 10
 }
@@ -31,20 +31,13 @@ resource "cloudflare_record" "root_MX_record" {
 resource "cloudflare_record" "root_TXT_record__SPF" {
   zone_id = local.zone_id
   name    = "@"
-  value   = "v=spf1 mx ~all"
-  type    = "TXT"
-}
-
-resource "cloudflare_record" "root_TXT_record__DKIM" {
-  zone_id = local.zone_id
-  name    = "main._domainkey"
-  value   = nonsensitive(data.sops_file.silvermist_secrets.data["services.opendkim.selectors.main.txt"])
+  value   = "\"v=spf1 a:${local.dns.subdomains.mailserver}.${local.dns.zone} -all\""
   type    = "TXT"
 }
 
 resource "cloudflare_record" "root_TXT_record__DMARC" {
   zone_id = local.zone_id
   name    = "_dmarc"
-  value   = "v=DMARC1; p=reject;"
+  value   = "\"v=DMARC1; p=reject;\""
   type    = "TXT"
 }

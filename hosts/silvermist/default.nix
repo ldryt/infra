@@ -10,9 +10,9 @@
     ./services/frontpage.nix
     ./services/shlink.nix
     ./services/authelia.nix
-    ./services/postfix.nix
     ./services/ocis.nix
     ./services/domus.nix
+    ./services/mailserver.nix
 
     ../../modules/nginx.nix
     ../../modules/fail2ban.nix

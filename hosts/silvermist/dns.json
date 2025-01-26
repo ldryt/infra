@@ -4,7 +4,7 @@
     "immich": "pics",
     "authelia": "auth",
     "vaultwarden": "pass",
-    "postfix": "mx",
+    "mailserver": "mx",
     "ocis": "files",
     "domus": "domus"
   }

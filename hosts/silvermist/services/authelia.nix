@@ -22,9 +22,16 @@ in
     config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/oidcIssuerPrivateKey".owner =
     config.services.authelia.instances.main.user;
+  sops.secrets."services/mailserver/users/auth/clearPassword".owner =
+    config.services.authelia.instances.main.user;
 
   services.authelia.instances.main = {
     enable = true;
+
+    environmentVariables = {
+      AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE =
+        config.sops.secrets."services/mailserver/users/auth/clearPassword".path;
+    };
 
     secrets = {
       jwtSecretFile = config.sops.secrets."services/authelia/jwtSecret".path;
@@ -76,9 +83,10 @@ in
       totp.issuer = autheliaPublicFQDN;
 
       notifier.smtp = {
-        address = "smtp://localhost:25";
-        sender = "auth@ldryt.dev";
-        tls.server_name = "${dns.subdomains.postfix}.${dns.zone}";
+        address = "submissions://${dns.subdomains.mailserver}.${dns.zone}:465";
+        identifier = "${dns.subdomains.mailserver}.${dns.zone}";
+        sender = "Authelia <auth@ldryt.dev>";
+        username = "auth@ldryt.dev";
       };
     };
   };

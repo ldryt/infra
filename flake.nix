@@ -24,6 +24,7 @@
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     impermanence.url = "github:nix-community/impermanence";
+    mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-24.05";
   };
   outputs =
     {
@@ -35,6 +36,7 @@
       lanzaboote,
       nixos-hardware,
       impermanence,
+      mailserver,
       ...
     }@inputs:
     let
@@ -102,6 +104,7 @@
             disko.nixosModules.disko
             impermanence.nixosModules.impermanence
             home-manager.nixosModules.home-manager
+            mailserver.nixosModules.mailserver
           ];
         };
         domus = nixpkgs.lib.nixosSystem {

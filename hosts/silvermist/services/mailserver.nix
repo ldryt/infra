@@ -1,0 +1,79 @@
+{ config, lib, ... }:
+let
+  dns = builtins.fromJSON (builtins.readFile ../dns.json);
+in
+{
+  sops.secrets."services/mailserver/users/ldryt/password" = { };
+  sops.secrets."services/mailserver/users/auth/password" = { };
+  sops.secrets."services/postfix/certs/acme/env" = { };
+
+  environment.persistence.silvermist.directories = [
+    config.mailserver.mailDirectory
+    config.mailserver.indexDir
+    { directory = config.mailserver.dkimKeyDirectory;
+    user = "opendkim";
+    group = "opendkim";
+    mode = "0750";
+  }
+  ];
+
+  security.acme.certs."${dns.subdomains.mailserver}.${dns.zone}" = {
+    dnsProvider = "cloudflare";
+    environmentFile = config.sops.secrets."services/postfix/certs/acme/env".path;
+    group = config.services.postfix.group;
+  };
+
+  mailserver = {
+    enable = true;
+    fqdn = "${dns.subdomains.mailserver}.${dns.zone}";
+    domains = [
+      "ldryt.dev"
+      "lucasladreyt.eu"
+    ];
+
+    loginAccounts = {
+      "ldryt@ldryt.dev" = {
+        hashedPasswordFile = config.sops.secrets."services/mailserver/users/ldryt/password".path;
+        aliases = [
+          "hello@ldryt.dev"
+          "security@ldryt.dev"
+          "postmaster@ldryt.dev"
+        ];
+      };
+      "auth@ldryt.dev" = {
+        hashedPasswordFile = config.sops.secrets."services/mailserver/users/auth/password".path;
+        sendOnly = true;
+      };
+      "ldryt@lucasladreyt.eu" = {
+        hashedPasswordFile = config.sops.secrets."services/mailserver/users/ldryt/password".path;
+        aliases = [
+          "hello@lucasladreyt.eu"
+          "postmaster@lucasladreyt.eu"
+        ];
+      };
+    };
+
+    # https://nixos-mailserver.readthedocs.io/en/latest/options.html#cmdoption-arg-mailserver.certificateScheme
+    certificateScheme = "acme";
+
+    dkimKeyBits = 4096;
+
+    fullTextSearch = {
+      enable = true;
+      autoIndex = true;
+      indexAttachments = true;
+      enforced = "body";
+    };
+    indexDir = "/var/lib/dovecot/indices";
+  };
+
+  security.acme.acceptTerms = true;
+  security.acme.defaults.email = lib.mkForce "security@ldryt.dev";
+
+  ldryt-infra.backups.mailserver = {
+    paths = [
+    config.mailserver.mailDirectory
+    config.mailserver.dkimKeyDirectory
+    ];
+  };
+}
