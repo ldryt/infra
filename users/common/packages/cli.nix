@@ -7,6 +7,7 @@
     nmap
     tcpdump
     iperf3
+    iw
 
     usbutils
     pciutils
