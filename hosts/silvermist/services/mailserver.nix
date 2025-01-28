@@ -10,11 +10,12 @@ in
   environment.persistence.silvermist.directories = [
     config.mailserver.mailDirectory
     config.mailserver.indexDir
-    { directory = config.mailserver.dkimKeyDirectory;
-    user = "opendkim";
-    group = "opendkim";
-    mode = "0750";
-  }
+    {
+      directory = config.mailserver.dkimKeyDirectory;
+      user = "opendkim";
+      group = "opendkim";
+      mode = "0750";
+    }
   ];
 
   security.acme.certs."${dns.subdomains.mailserver}.${dns.zone}" = {
@@ -72,8 +73,8 @@ in
 
   ldryt-infra.backups.mailserver = {
     paths = [
-    config.mailserver.mailDirectory
-    config.mailserver.dkimKeyDirectory
+      config.mailserver.mailDirectory
+      config.mailserver.dkimKeyDirectory
     ];
   };
 }

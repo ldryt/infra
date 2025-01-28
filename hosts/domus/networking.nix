@@ -17,8 +17,14 @@ in
     useNetworkd = true;
   };
 
-  services.resolved.llmnr = "false";
+  # Avahi is more stable...
   networking.firewall.allowedUDPPorts = [ 5353 ];
+  services.resolved = {
+    llmnr = "false";
+    extraConfig = ''
+      MulticastDNS=no
+    '';
+  };
   services.avahi = {
     enable = true;
     nssmdns4 = true;
