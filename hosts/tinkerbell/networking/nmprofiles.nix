@@ -9,6 +9,16 @@
           id = "$LYS_SSID";
           type = "wifi";
         };
+        ipv4 = {
+          method = "auto";
+          dhcp-send-hostname = false;
+        };
+        ipv6 = {
+          method = "auto";
+          ip6-privacy = "2";
+          dhcp-duid = "stable-uuid";
+          dhcp-send-hostname = false;
+        };
         wifi = {
           mode = "infrastructure";
           ssid = "$LYS_SSID";
