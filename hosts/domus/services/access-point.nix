@@ -20,7 +20,7 @@ let
   ap1 = {
     mac = macs.onchip;
     intf = "ap1";
-    vmac = "da:ba:d0:0c:cc:99";
+    vmac = "de:ad:d0:0d:cc:c9";
     ip = "10.99.99.1";
   };
 in
@@ -77,11 +77,11 @@ in
   networking.firewall.interfaces = {
     "${ap0.intf}" = {
       allowedTCPPorts = [ 53 ];
-      allowedUDPPorts = [ 67 ];
+      allowedUDPPorts = [ 53 67 ];
     };
     "${ap1.intf}" = {
       allowedTCPPorts = [ 53 ];
-      allowedUDPPorts = [ 67 ];
+      allowedUDPPorts = [ 53 67 ];
     };
   };
   services.dnsmasq = {
@@ -113,10 +113,13 @@ in
       "${ap1.intf}" = {
         countryCode = "FR";
         band = "2g";
-        channel = 1;
+        channel = 11;
         networks."${ap1.intf}" = {
-          ssid = "domus-open";
-          authentication.mode = "none";
+          ssid = "i";
+          authentication = {
+            mode = "wpa2-sha1";
+            wpaPasswordFile = config.sops.secrets."services/hostapd/password".path;
+          };
         };
       };
     };
