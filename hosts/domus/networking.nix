@@ -1,10 +1,7 @@
 { config, pkgs, ... }:
 let
+  macs = builtins.fromJSON (builtins.readFile ./macs.json);
   stationIF = "st0";
-  RPI4MAC = "dc:a6:32:34:1a:d2";
-  USB4MAC = "28:87:ba:a4:c3:cd";
-  USB6MAC1 = "90:de:80:88:72:63";
-  USB6MAC2 = "90:de:80:88:72:98";
 in
 {
   networking = {
@@ -17,10 +14,17 @@ in
     useNetworkd = true;
   };
 
-  services.resolved.llmnr = "false";
+  # Avahi is more stable...
   networking.firewall.allowedUDPPorts = [ 5353 ];
+  services.resolved = {
+    llmnr = "false";
+    extraConfig = ''
+      MulticastDNS=no
+    '';
+  };
   services.avahi = {
     enable = true;
+    allowInterfaces = [stationIF];
     nssmdns4 = true;
     publish = {
       enable = true;
@@ -30,15 +34,18 @@ in
 
   systemd.network = {
     links."10-${stationIF}" = {
-      matchConfig.PermanentMACAddress = USB6MAC2;
-      linkConfig.Name = stationIF;
+      matchConfig.PermanentMACAddress = macs.mt7921aun_st;
+      linkConfig = {
+        Name = stationIF;
+        MACAddress = "5a:f6:d6:96:07:35";
+      };
     };
     networks."10-${stationIF}" = {
       matchConfig.Name = stationIF;
       DHCP = "ipv4";
       dhcpV4Config = {
         UseDNS = false;
-        Anonymize = false;
+        Anonymize = true;
       };
     };
   };
@@ -47,16 +54,9 @@ in
   networking.wireless = {
     enable = true;
     interfaces = [ stationIF ];
+    userControlled.enable = true;
+    allowAuxiliaryImperativeNetworks = true;
     secretsFile = config.sops.secrets."system/networking/wpa_supplicant/secrets.conf".path;
-    networks = {
-      rosetta = {
-        pskRaw = "ext:secrets_psk_rosetta";
-        priority = 99;
-      };
-      SFR_AFA3 = {
-        pskRaw = "ext:secrets_psk_SFR_AFA3";
-        priority = 10;
-      };
-    };
+    networks.rosetta.pskRaw = "ext:secrets_psk_rosetta";
   };
 }

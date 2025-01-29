@@ -1,51 +1,124 @@
-{ ... }:
+# https://www.mankier.com/5/systemd.network
+# https://gist.github.com/gearhead/1941ae3a0efcf219efa97de7be2e9bc2
+# https://man.archlinux.org/man/extra/iwd/iwd.ap.5.en
+# https://www.mankier.com/5/tmpfiles.d
+# https://www.mankier.com/5/systemd.netdev
+# https://www.mankier.com/7/udev
+# https://forum.archive.openwrt.org/viewtopic.php?id=68576
+# https://en.wikipedia.org/wiki/Hexspeak
+
+{ config, pkgs, ... }:
 let
-  stationIF = "st0";
-  accesspointIF = "ap0";
-  apIp = "10.10.10.1";
-  RPI4MAC = "dc:a6:32:34:1a:d2";
-  USB4MAC = "28:87:ba:a4:c3:cd";
-  USB6MAC1 = "90:de:80:88:72:63";
-  USB6MAC2 = "90:de:80:88:72:98";
+  macs = builtins.fromJSON (builtins.readFile ../macs.json);
+
+  ap0 = {
+    mac = macs.mt7921aun_ap;
+    intf = "ap0";
+    vmac = "da:ba:d0:0c:cc:01";
+    ip = "10.1.1.1";
+  };
+  ap1 = {
+    mac = macs.onchip;
+    intf = "ap1";
+    vmac = "da:ba:d0:0c:cc:99";
+    ip = "10.99.99.1";
+  };
 in
 {
   systemd.network = {
-    links."10-${accesspointIF}" = {
-      matchConfig.PermanentMACAddress = USB6MAC1;
-      linkConfig.Name = accesspointIF;
-    };
-    networks."10-${accesspointIF}" = {
-      matchConfig.Name = accesspointIF;
-      networkConfig = {
-        Address = "${apIp}/24";
-        DHCPServer = "yes";
-        IPMasquerade = "ipv4";
-        IPv4Forwarding = "yes";
+    links = {
+      "10-${ap0.intf}" = {
+        matchConfig.PermanentMACAddress = ap0.mac;
+        linkConfig = {
+          Name = ap0.intf;
+          MACAddress = ap0.vmac;
+        };
       };
-      dhcpServerConfig = {
-        PoolOffset = 100;
-        PoolSize = 64;
-        EmitDNS = "yes";
-        DNS = "9.9.9.9";
+      "10-${ap1.intf}" = {
+        matchConfig.PermanentMACAddress = ap1.mac;
+        linkConfig = {
+          Name = ap1.intf;
+          MACAddress = ap1.vmac;
+        };
       };
     };
-  };
-  boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
-  networking.firewall.interfaces."${accesspointIF}".allowedUDPPorts = [ 67 ];
-
-  services.hostapd = {
-    enable = true;
-    radios = {
-      "${accesspointIF}" = {
-        band = "5g";
-        channel = 36;
-        networks."${accesspointIF}" = {
-          ssid = "domus";
-          authentication.saePasswords = [ { password = "escalier"; } ];
+    networks = {
+      "10-${ap0.intf}" = {
+        matchConfig.Name = ap0.intf;
+        networkConfig = {
+          Address = "${ap0.ip}/24";
+          DHCPServer = "yes";
+          IPMasquerade = "ipv4";
+          IPv4Forwarding = "yes";
+        };
+        dhcpServerConfig = {
+          PoolOffset = 100;
+          PoolSize = 64;
+          EmitDNS = "yes";
+          DNS = ap0.ip;
+        };
+      };
+      "10-${ap1.intf}" = {
+        matchConfig.Name = ap1.intf;
+        networkConfig = {
+          Address = "${ap1.ip}/24";
+          DHCPServer = "yes";
+        };
+        dhcpServerConfig = {
+          PoolOffset = 100;
+          PoolSize = 64;
+          EmitDNS = "yes";
+          DNS = ap1.ip;
         };
       };
     };
   };
-  # BindTo and After are set to sys-subsystem-net-devices-${accesspointIF}.device by default
-  systemd.services."hostapd".wantedBy = [ "sys-subsystem-net-devices-${accesspointIF}.device" ];
+  boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
+  networking.firewall.interfaces = {
+    "${ap0.intf}" = {
+      allowedTCPPorts = [ 53 ];
+      allowedUDPPorts = [ 67 ];
+    };
+    "${ap1.intf}" = {
+      allowedTCPPorts = [ 53 ];
+      allowedUDPPorts = [ 67 ];
+    };
+  };
+  services.dnsmasq = {
+    enable = true;
+    resolveLocalQueries = false;
+    settings = {
+      listen-address = [
+        ap0.ip
+        ap1.ip
+      ];
+      bind-interfaces = true;
+    };
+  };
+
+  sops.secrets."services/hostapd/password" = { };
+  services.hostapd = {
+    enable = true;
+    radios = {
+      "${ap0.intf}" = {
+        countryCode = "FR";
+        band = "5g";
+        channel = 36;
+        wifi6.enable = true;
+        networks."${ap0.intf}" = {
+          ssid = "domus";
+          authentication.saePasswordsFile = config.sops.secrets."services/hostapd/password".path;
+        };
+      };
+      "${ap1.intf}" = {
+        countryCode = "FR";
+        band = "2g";
+        channel = 1;
+        networks."${ap1.intf}" = {
+          ssid = "domus-open";
+          authentication.mode = "none";
+        };
+      };
+    };
+  };
 }
