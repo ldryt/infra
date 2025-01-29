@@ -5,63 +5,48 @@
 # https://www.mankier.com/5/systemd.netdev
 # https://www.mankier.com/7/udev
 # https://forum.archive.openwrt.org/viewtopic.php?id=68576
+# https://en.wikipedia.org/wiki/Hexspeak
 
 { config, pkgs, ... }:
 let
-  ap = {
-    mac = USB6MAC1;
-    intf = "ap0";
-    phyintf = "phy37";
-    private = {
-      vintf = "ap0-private";
-      vmac = "aa:ff:ff:ff:ff:01";
-      ip = "10.1.1.1";
-    };
-    open = {
-      vintf = "ap0-open";
-      vmac = "aa:ff:ff:ff:ff:99";
-      ip = "10.99.99.1";
-    };
-  };
+  macs = builtins.fromJSON (builtins.readFile ../macs.json);
 
-  RPI4MAC = "dc:a6:32:34:1a:d2";
-  USB4MAC = "28:87:ba:a4:c3:cd";
-  USB6MAC1 = "90:de:80:88:72:63";
-  USB6MAC2 = "90:de:80:88:72:98";
+  ap0 = {
+    mac = macs.mt7921aun_ap;
+    intf = "ap0";
+    vmac = "da:ba:d0:0c:cc:01";
+    ip = "10.1.1.1";
+  };
+  ap1 = {
+    mac = macs.onchip;
+    intf = "ap1";
+    vmac = "da:ba:d0:0c:cc:99";
+    ip = "10.99.99.1";
+  };
 in
 {
   systemd.network = {
-    netdevs = {
-      "10-${ap.private.vintf}" = {
-        netdevConfig = {
-          Name = ap.private.vintf;
-          MACAddress = ap.private.vmac;
-          Kind = "wlan";
-        };
-        wlanConfig = {
-          #PhysicalDevice = ap.phyintf;
-          PhysicalDevice = "phy2";
-          Type = "ap";
+    links = {
+      "10-${ap0.intf}" = {
+        matchConfig.PermanentMACAddress = ap0.mac;
+        linkConfig = {
+          Name = ap0.intf;
+          MACAddress = ap0.vmac;
         };
       };
-      "10-${ap.open.vintf}" = {
-        netdevConfig = {
-          Name = ap.open.vintf;
-          MACAddress = ap.open.vmac;
-          Kind = "wlan";
-        };
-        wlanConfig = {
-          #PhysicalDevice = ap.phyintf;
-          PhysicalDevice = "phy2";
-          Type = "ap";
+      "10-${ap1.intf}" = {
+        matchConfig.PermanentMACAddress = ap1.mac;
+        linkConfig = {
+          Name = ap1.intf;
+          MACAddress = ap1.vmac;
         };
       };
     };
     networks = {
-      "10-${ap.private.vintf}" = {
-        matchConfig.Name = ap.private.vintf;
+      "10-${ap0.intf}" = {
+        matchConfig.Name = ap0.intf;
         networkConfig = {
-          Address = "${ap.private.ip}/24";
+          Address = "${ap0.ip}/24";
           DHCPServer = "yes";
           IPMasquerade = "ipv4";
           IPv4Forwarding = "yes";
@@ -70,32 +55,66 @@ in
           PoolOffset = 100;
           PoolSize = 64;
           EmitDNS = "yes";
-          DNS = "9.9.9.9";
+          DNS = ap0.ip;
+        };
+      };
+      "10-${ap1.intf}" = {
+        matchConfig.Name = ap1.intf;
+        networkConfig = {
+          Address = "${ap1.ip}/24";
+          DHCPServer = "yes";
+        };
+        dhcpServerConfig = {
+          PoolOffset = 100;
+          PoolSize = 64;
+          EmitDNS = "yes";
+          DNS = ap1.ip;
         };
       };
     };
   };
   boot.kernel.sysctl."net.ipv4.ip_forward" = 1;
-  networking.firewall.interfaces."${ap.private.vintf}".allowedUDPPorts = [ 67 ];
+  networking.firewall.interfaces = {
+    "${ap0.intf}" = {
+      allowedTCPPorts = [ 53 ];
+      allowedUDPPorts = [ 67 ];
+    };
+    "${ap1.intf}" = {
+      allowedTCPPorts = [ 53 ];
+      allowedUDPPorts = [ 67 ];
+    };
+  };
+  services.dnsmasq = {
+    enable = true;
+    resolveLocalQueries = false;
+    settings = {
+      listen-address = [
+        ap0.ip
+        ap1.ip
+      ];
+      bind-interfaces = true;
+    };
+  };
 
   sops.secrets."services/hostapd/password" = { };
   services.hostapd = {
     enable = true;
     radios = {
-      "${ap.private.vintf}" = {
+      "${ap0.intf}" = {
         countryCode = "FR";
         band = "5g";
         channel = 36;
-        networks."${ap.private.vintf}" = {
+        wifi6.enable = true;
+        networks."${ap0.intf}" = {
           ssid = "domus";
           authentication.saePasswordsFile = config.sops.secrets."services/hostapd/password".path;
         };
       };
-      "${ap.open.vintf}" = {
+      "${ap1.intf}" = {
         countryCode = "FR";
         band = "2g";
         channel = 1;
-        networks."${ap.open.vintf}" = {
+        networks."${ap1.intf}" = {
           ssid = "domus-open";
           authentication.mode = "none";
         };
