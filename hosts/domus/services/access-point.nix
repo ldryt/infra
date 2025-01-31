@@ -95,6 +95,7 @@ in
       bind-interfaces = true;
     };
   };
+  systemd.services.dnsmasq.serviceConfig.RestartSec = "10s";
 
   sops.secrets."services/hostapd/password" = { };
   services.hostapd = {
