@@ -6,6 +6,7 @@
     "vaultwarden": "pass",
     "mailserver": "mx",
     "ocis": "files",
-    "domus": "domus"
+    "domus": "domus",
+    "radicale": "cal"
   }
 }

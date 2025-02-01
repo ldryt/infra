@@ -13,6 +13,7 @@
     ./services/ocis.nix
     ./services/domus.nix
     ./services/mailserver.nix
+    ./services/radicale.nix
 
     ../../modules/nginx.nix
     ../../modules/fail2ban.nix
