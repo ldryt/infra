@@ -14,6 +14,11 @@
     ./services/windows-dockur.nix
   ];
 
+  nixpkgs.config = {
+    allowUnfree = true;
+    allowUnfreePredicate = _: true;
+  };
+
   virtualisation.virtualbox.host.enable = true;
   virtualisation.docker.enable = true;
 
@@ -53,6 +58,7 @@
         ".terraform.d"
         ".config/dconf"
         ".local/share/Steam"
+        ".config/JetBrains"
       ];
       files = [ ".config/monitors.xml" ];
     };

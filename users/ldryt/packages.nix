@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   imports = [ ../common/packages/cli.nix ];
 
@@ -8,5 +8,11 @@
     vesktop
     bluetuith
     super-slicer-beta
+    jetbrains.idea-ultimate
   ];
+
+  nixpkgs.config = {
+    allowUnfree = true;
+    allowUnfreePredicate = _: true;
+  };
 }
