@@ -15,7 +15,6 @@ in
   };
 
   # Avahi is more stable...
-  networking.firewall.allowedUDPPorts = [ 5353 ];
   services.resolved = {
     llmnr = "false";
     extraConfig = ''
@@ -24,6 +23,7 @@ in
   };
   services.avahi = {
     enable = true;
+    openFirewall = true;
     allowInterfaces = [stationIF];
     nssmdns4 = true;
     publish = {
