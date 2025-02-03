@@ -1,50 +1,28 @@
 { config, ... }:
 {
-  imports = [ ../../modules/dns.nix ];
-
-  sops.secrets."nmprofiles.env" = { };
+  sops.secrets."wpa.env" = { };
   networking = {
     hostName = "printer";
-    networkmanager = {
+    nameservers = [
+      "9.9.9.9"
+      "149.112.112.112"
+      "2620:fe::fe"
+      "2620:fe::9"
+    ];
+    wireless = {
       enable = true;
-      wifi.powersave = false;
-      logLevel = "INFO";
-      ensureProfiles = {
-        environmentFiles = [ config.sops.secrets."nmprofiles.env".path ];
-        profiles = {
-          GNB = {
-            connection = {
-              id = "$GNB_SSID";
-              type = "wifi";
-              autoconnect-priority = 10;
-            };
-            wifi.ssid = "$GNB_SSID";
-            wifi-security = {
-              key-mgmt = "wpa-psk";
-              psk = "$GNB_PWD";
-            };
-          };
-          ROS = {
-            connection = {
-              id = "$ROS_SSID";
-              type = "wifi";
-              autoconnect-priority = -10;
-            };
-            wifi.ssid = "$ROS_SSID";
-            wifi-security = {
-              key-mgmt = "wpa-psk";
-              psk = "$ROS_PWD";
-            };
-          };
-        };
+      userControlled.enable = true;
+      allowAuxiliaryImperativeNetworks = true;
+      secretsFile = config.sops.secrets."wpa.env".path;
+      networks = {
+        rosetta.pskRaw = "ext:secrets_psk_rosetta";
+        domus.pskRaw = "ext:secrets_psk_domus";
       };
     };
   };
 
   services.avahi = {
     enable = true;
-    ipv6 = true;
-    nssmdns6 = true;
     nssmdns4 = true;
     publish = {
       enable = true;
