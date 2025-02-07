@@ -11,7 +11,7 @@
     ./services/shlink.nix
     ./services/authelia.nix
     ./services/ocis.nix
-    ./services/domus.nix
+    ./services/tunnel.nix
     ./services/mailserver.nix
     ./services/radicale.nix
 
