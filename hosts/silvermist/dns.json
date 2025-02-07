@@ -7,6 +7,7 @@
     "mailserver": "mx",
     "ocis": "files",
     "domus": "domus",
+    "printer": "printer",
     "radicale": "cal"
   }
 }

@@ -52,7 +52,7 @@ in
 
       session.cookies = [
         {
-          domain = autheliaPublicFQDN;
+          domain = dns.zone;
           authelia_url = "https://${autheliaPublicFQDN}";
         }
       ];

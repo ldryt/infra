@@ -22,6 +22,5 @@
       };
     };
   };
-  security.sudo.wheelNeedsPassword = false;
   nix.settings.trusted-users = [ config.users.users.colon.name ];
 }
