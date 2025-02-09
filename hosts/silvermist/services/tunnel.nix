@@ -9,6 +9,7 @@ let
   domusPublicKey = "domucc9r8SkBuN3voZDs4KDj3TUQJiH08zQ2djO68g8=";
   printerIp = "${wgIp}.122";
   printerPort = "80";
+  printerWebcamPort = "9999";
   printerPublicKey = "prINTGfGjKLhBAByRVQwE4hA/yWq9waKh3NrjzqsyDo=";
 in
 {
@@ -116,10 +117,19 @@ in
     forceSSL = true;
     kTLS = true;
     extraConfig = "include ${autheliaLocation};";
-    locations."/" = {
+    locations = {
+        "/" = {
         proxyPass = "http://${printerIp}:${toString printerPort}";
         proxyWebsockets = true;
         extraConfig = "include ${autheliaRequest};";
+      };
+        "/webcam" = {
+        proxyPass = "http://${printerIp}:${toString printerWebcamPort}";
+        extraConfig = ''
+          include ${autheliaRequest};
+          rewrite ^/webcam(/.*)?$ $1 break;
+        '';
+      };
     };
   };
 }

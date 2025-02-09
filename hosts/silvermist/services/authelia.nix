@@ -44,7 +44,10 @@ in
     settings = {
       theme = "auto";
 
-      log.format = "text";
+      log = {
+        level = "info";
+        format = "text";
+      };
 
       server.address = "tcp://${autheliaInternalAddress}/";
 

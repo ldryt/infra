@@ -1,48 +1,22 @@
 { config, ... }:
 {
-  sops.secrets."wpa.env" = { };
   networking = {
     hostName = "printer";
     nameservers = [
       "9.9.9.9"
       "149.112.112.112"
-      "2620:fe::fe"
-      "2620:fe::9"
     ];
-    wireless = {
-      enable = true;
-      userControlled.enable = true;
-      allowAuxiliaryImperativeNetworks = true;
-      secretsFile = config.sops.secrets."wpa.env".path;
-      networks = {
-        rosetta.pskRaw = "ext:secrets_psk_rosetta";
-        domus.pskRaw = "ext:secrets_psk_domus";
-      };
-    };
+    enableIPv6 = false;
+    useNetworkd = true;
   };
 
-  sops.secrets."wgkey" = { };
-  networking.firewall.allowedUDPPorts = [ 51820 ];
-  networking.wireguard = {
-    enable = true;
-    interfaces = {
-      printertunnel = {
-        ips = [ "10.22.22.122/24" ];
-        listenPort = 51820;
-        privateKeyFile = config.sops.secrets."wgkey".path;
-        peers = [
-          {
-          # silvermist
-          publicKey = "silv6SFoJoB7njsaIRTi55CaTb1RkRcM6pVx/WE5m38=";
-          allowedIPs = [ "10.22.22.1" ];
-          endpoint = "printer.ldryt.dev:62879";
-          persistentKeepalive = 2;
-        }
-      ];
-    };
+  # Avahi is more stable...
+  services.resolved = {
+    llmnr = "false";
+    extraConfig = ''
+      MulticastDNS=no
+    '';
   };
-};
-
   services.avahi = {
     enable = true;
     openFirewall = true;
@@ -50,6 +24,56 @@
     publish = {
       enable = true;
       addresses = true;
+    };
+  };
+
+  systemd.network = {
+    networks."10-wlan0" = {
+      matchConfig.Name = "wlan0";
+      DHCP = "ipv4";
+      dhcpV4Config = {
+        UseDNS = false;
+        Anonymize = true;
+      };
+    };
+  };
+
+  sops.secrets."wpa.env" = { };
+  networking.wireless = {
+    enable = true;
+    userControlled.enable = true;
+    allowAuxiliaryImperativeNetworks = true;
+    secretsFile = config.sops.secrets."wpa.env".path;
+    networks = {
+      rosetta.pskRaw = "ext:secrets_psk_rosetta";
+      domus.pskRaw = "ext:secrets_psk_domus";
+    };
+  };
+
+  sops.secrets."wgkey".owner = "systemd-network";
+  systemd.network = {
+    netdevs."10-printertunnel" = {
+      netdevConfig = {
+        Kind = "wireguard";
+        Name = "printertunnel";
+      };
+      wireguardConfig = {
+        PrivateKeyFile = config.sops.secrets."wgkey".path;
+        ListenPort = 61495;
+      };
+      wireguardPeers = [
+        {
+          # silvermist
+          PublicKey = "silv6SFoJoB7njsaIRTi55CaTb1RkRcM6pVx/WE5m38=";
+          AllowedIPs = [ "10.22.22.1" ];
+          Endpoint = "printer.ldryt.dev:62879";
+          PersistentKeepalive = 2;
+        }
+      ];
+    };
+    networks."10-printertunnel" = {
+      matchConfig.Name = "printertunnel";
+      address = [ "10.22.22.122/24" ];
     };
   };
 }
