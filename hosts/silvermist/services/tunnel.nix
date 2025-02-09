@@ -121,7 +121,10 @@ in
         "/" = {
         proxyPass = "http://${printerIp}:${toString printerPort}";
         proxyWebsockets = true;
-        extraConfig = "include ${autheliaRequest};";
+        extraConfig = ''
+          include ${autheliaRequest};
+          proxy_cache off;
+        '';
       };
         "/webcam" = {
         proxyPass = "http://${printerIp}:${toString printerWebcamPort}";
