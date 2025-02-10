@@ -28,6 +28,10 @@
   };
 
   systemd.network = {
+    links."10-wlan0" = {
+      matchConfig.PermanentMACAddress = "b8:27:eb:db:1e:3b";
+      linkConfig.MACAddress = "de:ad:be:ef:00:01";
+    };
     networks."10-wlan0" = {
       matchConfig.Name = "wlan0";
       DHCP = "ipv4";

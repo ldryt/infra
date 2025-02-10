@@ -23,6 +23,8 @@
     })
   ];
 
+  services.journald.console = "/dev/tty1";
+
   sops = {
     defaultSopsFile = ./secrets.yaml;
     age.keyFile = "/nix/sops_age_printer.key";
@@ -49,23 +51,31 @@
           "0.0.0.0/0"
         ];
         cors_domains = [
-          "http://${config.services.avahi.hostName}.${config.services.avahi.domainName}"
           "https://printer.ldryt.dev"
         ];
       };
     };
   };
 
-  networking.firewall.allowedTCPPorts = [ 80 9999 ];
+  networking.firewall.interfaces."printertunnel".allowedTCPPorts = [ 80 9999 ];
   services.mainsail.enable = true;
 
   services.ustreamer = {
     enable = true;
     listenAddress = "0.0.0.0:9999";
     extraArgs = [
+      "--resolution=1024x768"
+      "--format=jpeg"
+      "--quality=72"
+
       "--image-default"
       "--sharpness=80"
-      "--resolution=1024x768"
+      "--brightness=55"
+      "--contrast=5"
+      "--saturation=5"
+
+      "--buffers=3"
+      "--device-timeout=5"
     ];
   };
 }
