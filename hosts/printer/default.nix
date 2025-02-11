@@ -36,6 +36,7 @@
     enable = true;
     user = config.services.moonraker.user;
     group = config.services.moonraker.group;
+    configDir = config.services.moonraker.stateDir + "/config";
     configFile = ./VORON0.2_SKR_PICO_V1.0.cfg;
     mutableConfig = true;
     logFile = config.services.moonraker.stateDir + "/logs/klippy.log";
