@@ -59,6 +59,8 @@
         ".config/dconf"
         ".local/share/Steam"
         ".config/JetBrains"
+        ".config/evolution"
+        ".config/goa-1.0"
       ];
       files = [ ".config/monitors.xml" ];
     };
