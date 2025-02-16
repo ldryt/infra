@@ -8,7 +8,6 @@
     vesktop
     bluetuith
     super-slicer-beta
-    jetbrains.idea-ultimate
     texliveFull
   ];
 
