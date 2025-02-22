@@ -8,6 +8,9 @@
     tcpdump
     iperf3
     iw
+    unzip
+    wget
+    inotify-tools
 
     usbutils
     pciutils

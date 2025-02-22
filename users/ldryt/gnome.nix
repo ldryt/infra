@@ -10,7 +10,7 @@
         two-finger-scrolling-enabled = true;
       };
       "org/gnome/desktop/interface" = {
-        text-scaling-factor = 1.3;
+        text-scaling-factor = 1.2;
         color-scheme = "prefer-dark";
         enable-hot-corners = true;
       };
@@ -53,7 +53,7 @@
         switch-windows = [ "<Alt>Tab" ];
       };
       "org/gnome/Console" = {
-        font-scale = 1.1;
+        font-scale = 1.15;
       };
     };
   };
