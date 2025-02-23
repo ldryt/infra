@@ -81,7 +81,7 @@ in
     options = [
       "async,rw,auto,nofail,credentials=${
         config.sops.secrets."system/smb/glouton/immich-library/credentials".path
-      },uid=${toString config.users.users.colon.uid},cache=loose,fsc"
+      },uid=${toString config.users.users.colon.uid},fsc,noauto,x-systemd.automount,x-systemd.idle-timeout=60,x-systemd.mount-timeout=5s"
     ];
   };
 

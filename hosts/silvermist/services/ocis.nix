@@ -169,6 +169,11 @@ in
       "rsize=4194304"
       "wsize=4194304"
       "fsc"
+
+      "noauto"
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=60"
+      "x-systemd.mount-timeout=5s"
     ];
   };
 
