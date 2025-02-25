@@ -3,8 +3,8 @@
   imports = [
     ../common/vim.nix
     ../common/bash.nix
-    ../common/alacritty.nix
     ../common/i3/i3.nix
+    ../common/alacritty.nix
     ../common/clang-format.nix
     ../common/packages/cli.nix
   ];
