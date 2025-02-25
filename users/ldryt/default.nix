@@ -5,10 +5,10 @@
     ../common/vim.nix
     ../common/clang-format.nix
     ../common/c.nix
+    ../common/git.nix
 
     ./gnome.nix
     ./packages.nix
-    ./git.nix
     ./ssh.nix
     ./firefox.nix
     ./thunderbird.nix
