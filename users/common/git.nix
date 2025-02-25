@@ -4,7 +4,7 @@
     enable = true;
     extraConfig = {
       push = {
-        default = simple;
+        default = "simple";
         autoSetupRemote = true;
         followTags = true;
       };
