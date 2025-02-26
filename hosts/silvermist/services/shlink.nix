@@ -26,7 +26,7 @@ in
   virtualisation.oci-containers.containers = {
     "shlink-server" = {
       hostname = "shlink-server";
-      image = "ghcr.io/shlinkio/shlink:4.1.1@sha256:b8b6cce3f3ec840f8b8acbfb96b1fea0546f0780f3ebd326d60d3f92bb10c7e6"; # https://github.com/shlinkio/shlink/pkgs/container/shlink/219894946?tag=4.1.1
+      image = "ghcr.io/shlinkio/shlink:4.4.4@sha256:e18718817487520b686da3ec27545c3c6e328390351124fe5b3daf7177bb9a5c ";
       environment = {
         DEFAULT_DOMAIN = dns.zone;
         IS_HTTPS_ENABLED = "true";
