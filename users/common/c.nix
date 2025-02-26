@@ -8,16 +8,13 @@
     valgrind
     gcc
     gdb
-    libclang
+    clang-tools
     gnumake
     criterion
     man-pages
     man-pages-posix
     meson
     ninja
-    clang_12
-    llvmPackages_12.llvm
-    llvmPackages_12.lld
   ];
 
   home.sessionVariables = {
