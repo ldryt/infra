@@ -1,10 +1,8 @@
 { pkgs, ... }:
 {
-  home.sessionVariables.EDITOR = "hx";
-  home.shellAliases."vim" = "hx";
+  imports = [ ./minimal.nix ../c.nix ];
 
   programs.helix = {
-    enable = true;
     extraPackages =
       with pkgs;
       with nodePackages;
@@ -13,16 +11,13 @@
         # TeX
         texlab
         texliveMedium
+        evince
 
         # Rust
         rust-analyzer
         rustfmt
         clang-tools
         lldb
-
-        # Nix
-        nil
-        nixfmt-rfc-style
 
         # GO
         gopls
@@ -39,12 +34,6 @@
         black
         pyright
 
-        # YAML
-        yaml-language-server
-
-        # TOML
-        taplo-lsp
-
         # Markdown
         marksman
 
@@ -54,13 +43,6 @@
         # Misc
         vscode-langservers-extracted
       ];
-    settings = {
-      editor = {
-        soft-wrap.enable = true;
-        cursor-shape.insert = "bar";
-      };
-      theme = "gruvbox";
-    };
     languages = {
       language-server = {
         texlab.config.texlab = {
@@ -91,11 +73,6 @@
         {
           name = "rust";
           formatter.command = "rustfmt";
-          auto-format = true;
-        }
-        {
-          name = "nix";
-          formatter.command = "nixfmt";
           auto-format = true;
         }
         {

@@ -15,6 +15,9 @@
     man-pages-posix
     meson
     ninja
+    clang_12
+    llvmPackages_12.llvm
+    llvmPackages_12.lld
   ];
 
   home.sessionVariables = {

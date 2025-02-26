@@ -2,6 +2,7 @@
 {
   imports = [
     ../common/vim.nix
+    ../common/helix/minimal.nix
     ../common/git.nix
     ../common/bash.nix
     ../common/i3/i3.nix

@@ -3,6 +3,7 @@
   imports = [
     ../common/bash.nix
     ../common/vim.nix
+    ../common/helix/full.nix
     ../common/clang-format.nix
     ../common/c.nix
     ../common/git.nix
