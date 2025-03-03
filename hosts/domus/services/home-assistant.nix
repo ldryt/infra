@@ -64,4 +64,5 @@ in
       ];
     };
   };
+  systemd.services."podman-home-assistant".serviceConfig.RestartSec = "15s";
 }
