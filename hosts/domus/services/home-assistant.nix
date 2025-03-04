@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ config, ... }:
 let
   wireguardIF = "domustunnel";
   wgIp = "10.22.22";
@@ -36,18 +36,6 @@ in
     };
   };
 
-  sops.secrets."system/cifs/glouton/home-assistant/credentials" = { };
-  environment.systemPackages = [ pkgs.cifs-utils ];
-  fileSystems."${backupsDir}" = {
-    device = "//u391790-sub5.your-storagebox.de/u391790-sub5";
-    fsType = "cifs";
-    options = [
-      "async,rw,auto,nofail,credentials=${
-        config.sops.secrets."system/cifs/glouton/home-assistant/credentials".path
-      },uid=${toString config.users.users.colon.uid}"
-    ];
-  };
-
   users.users.colon.extraGroups = [ "dialout" ];
   virtualisation.oci-containers = {
     backend = "podman";
@@ -58,11 +46,15 @@ in
         "home-assistant:/config"
         "${backupsDir}:/config/backups"
       ];
-      ports = [ "${selfWgIp}:8123:8123" ];
+      ports = [ "0.0.0.0:8123:8123" ];
       extraOptions = [
         "--device=/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0:/dev/serial/by-id/usb-1a86_USB_Serial-if00-port0"
       ];
     };
   };
   systemd.services."podman-home-assistant".serviceConfig.RestartSec = "15s";
+
+  ldryt-infra.backups.home-assistant = {
+    paths = [ backupsDir ];
+  };
 }

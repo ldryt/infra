@@ -1,4 +1,4 @@
-{ pkgs, modulesPath, ... }:
+{ ... }:
 {
   imports = [
     ../../modules/sd-image-aarch64.nix
@@ -9,6 +9,7 @@
     ./services/home-assistant.nix
     ./services/access-point.nix
 
+    ../../modules/backups.nix
     ../../modules/openssh.nix
     ../../modules/nix-settings.nix
   ];
