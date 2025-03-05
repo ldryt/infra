@@ -9,9 +9,4 @@
     super-slicer-beta
     evolution
   ];
-
-  nixpkgs.config = {
-    allowUnfree = true;
-    allowUnfreePredicate = _: true;
-  };
 }
