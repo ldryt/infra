@@ -12,7 +12,6 @@
     ./packages.nix
     ./ssh.nix
     ./firefox.nix
-    ./vscodium.nix
   ];
 
   programs.home-manager.enable = true;
