@@ -16,10 +16,13 @@
       # TOML
       taplo-lsp
     ];
-    languages = [
+    languages.language = [
       {
         name = "c";
-        file-types = [ "c" "h" ];
+        file-types = [
+          "c"
+          "h"
+        ];
         formatter.command = "clang-format";
         auto-format = true;
       }
