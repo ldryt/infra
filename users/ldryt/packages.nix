@@ -6,9 +6,7 @@
     nix-tree
     wl-clipboard
     vesktop
-    bluetuith
     super-slicer-beta
-    texliveFull
     evolution
   ];
 
