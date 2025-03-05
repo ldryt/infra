@@ -1,9 +1,4 @@
-{
-  config,
-  pkgs-unstable,
-  inputs,
-  ...
-}:
+{ config, ... }:
 let
   dns = builtins.fromJSON (builtins.readFile ../dns.json);
   autheliaPublicFQDN = "${dns.subdomains.authelia}.${dns.zone}";
@@ -22,15 +17,12 @@ in
     config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/oidcIssuerPrivateKey".owner =
     config.services.authelia.instances.main.user;
-  sops.secrets."services/mailserver/users/auth/clearPassword".owner =
-    config.services.authelia.instances.main.user;
-
   services.authelia.instances.main = {
     enable = true;
 
     environmentVariables = {
       AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE =
-        config.sops.secrets."services/mailserver/users/auth/clearPassword".path;
+        config.sops.secrets."services/authelia/mail/clearPassword".path;
     };
 
     secrets = {
@@ -92,6 +84,15 @@ in
         username = "auth@ldryt.dev";
       };
     };
+  };
+
+  sops.secrets."services/authelia/mail/clearPassword".owner =
+    config.services.authelia.instances.main.user;
+
+  sops.secrets."services/authelia/mail/hashedPassword" = { };
+  mailserver.loginAccounts."auth@ldryt.dev" = {
+    hashedPasswordFile = config.sops.secrets."services/authelia/mail/hashedPassword".path;
+    sendOnly = true;
   };
 
   services.nginx.virtualHosts."${dns.subdomains.authelia}.${dns.zone}" = {

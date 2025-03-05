@@ -102,7 +102,7 @@ in
   };
 
   sops.secrets."services/grafana/adminPassword".owner = "grafana";
-  sops.secrets."services/grafana/smtpPassword".owner = "grafana";
+  sops.secrets."services/grafana/mail/clearPassword".owner = "grafana";
   sops.secrets."services/grafana/oidc/clientSecret".owner = "grafana";
   services.grafana = {
     enable = true;
@@ -135,7 +135,7 @@ in
         enabled = true;
         host = "${dns.subdomains.mailserver}.${dns.zone}:465";
         user = "graph@ldryt.dev";
-        password = "$__file{${config.sops.secrets."services/grafana/smtpPassword".path}}";
+        password = "$__file{${config.sops.secrets."services/grafana/mail/clearPassword".path}}";
         from_address = "graph@ldryt.dev";
         from_name = "Grafana - ldryt.dev";
       };
@@ -157,6 +157,12 @@ in
         }
       ];
     };
+  };
+
+  sops.secrets."services/grafana/mail/hashedPassword" = { };
+  mailserver.loginAccounts."graph@ldryt.dev" = {
+    hashedPasswordFile = config.sops.secrets."services/grafana/mail/hashedPassword".path;
+    sendOnly = true;
   };
 
   # https://www.authelia.com/integration/openid-connect/grafana/

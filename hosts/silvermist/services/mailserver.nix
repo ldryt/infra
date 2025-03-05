@@ -4,7 +4,6 @@ let
 in
 {
   sops.secrets."services/mailserver/users/ldryt/password" = { };
-  sops.secrets."services/mailserver/users/auth/password" = { };
   sops.secrets."services/postfix/certs/acme/env" = { };
 
   environment.persistence.silvermist.directories = [
@@ -41,14 +40,11 @@ in
           "postmaster@ldryt.dev"
         ];
       };
-      "auth@ldryt.dev" = {
-        hashedPasswordFile = config.sops.secrets."services/mailserver/users/auth/password".path;
-        sendOnly = true;
-      };
       "ldryt@lucasladreyt.eu" = {
         hashedPasswordFile = config.sops.secrets."services/mailserver/users/ldryt/password".path;
         aliases = [
           "hello@lucasladreyt.eu"
+          "security@lucasladreyt.eu"
           "postmaster@lucasladreyt.eu"
         ];
       };
