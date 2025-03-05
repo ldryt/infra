@@ -12,7 +12,6 @@
     ./packages.nix
     ./ssh.nix
     ./firefox.nix
-    ./thunderbird.nix
     ./vscodium.nix
   ];
 

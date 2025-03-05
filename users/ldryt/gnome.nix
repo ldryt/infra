@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ ... }:
 {
   home.file.".face".source = ./face.png;
 
@@ -33,7 +33,6 @@
           "org.gnome.Nautilus.desktop"
           "org.gnome.Console.desktop"
           "firefox.desktop"
-          "thunderbird.desktop"
           "org.gnome.Calculator.desktop"
           "org.gnome.TextEditor.desktop"
         ];

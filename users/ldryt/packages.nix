@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ pkgs, ... }:
 {
   imports = [ ../common/packages/cli.nix ];
 
@@ -9,6 +9,7 @@
     bluetuith
     super-slicer-beta
     texliveFull
+    evolution
   ];
 
   nixpkgs.config = {
