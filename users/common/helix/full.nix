@@ -1,6 +1,9 @@
 { pkgs, ... }:
 {
-  imports = [ ./minimal.nix ../c.nix ];
+  imports = [
+    ./minimal.nix
+    ../c.nix
+  ];
 
   programs.helix = {
     extraPackages =
@@ -10,7 +13,6 @@
       [
         # TeX
         texlab
-        texliveMedium
         evince
 
         # Rust
