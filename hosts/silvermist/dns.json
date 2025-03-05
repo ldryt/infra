@@ -8,6 +8,7 @@
     "ocis": "files",
     "domus": "domus",
     "printer": "printer",
-    "radicale": "cal"
+    "radicale": "cal",
+    "grafana": "graph"
   }
 }

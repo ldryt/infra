@@ -1,4 +1,4 @@
-{ config, ... }:
+{ ... }:
 {
   imports = [
     ./hardware.nix
@@ -14,6 +14,7 @@
     ./services/tunnel.nix
     ./services/mailserver.nix
     ./services/radicale.nix
+    ./services/monitoring.nix
 
     ../../modules/nginx.nix
     ../../modules/fail2ban.nix
