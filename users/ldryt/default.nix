@@ -12,6 +12,7 @@
     ./packages.nix
     ./ssh.nix
     ./firefox.nix
+    ./thunderbird.nix
   ];
 
   programs.home-manager.enable = true;
