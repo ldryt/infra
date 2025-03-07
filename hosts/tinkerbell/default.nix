@@ -62,7 +62,10 @@
         ".config/evolution"
         ".config/goa-1.0"
       ];
-      files = [ ".config/monitors.xml" ];
+      files = [
+        ".config/monitors.xml"
+        ".config/mimeapps.list"
+      ];
     };
   };
 
