@@ -4,6 +4,16 @@
     enable = true;
     settings = {
       theme = "gruvbox";
+      editor = {
+        mouse = false;
+        soft-wrap.enable = true;
+        cursor-shape = {
+          insert = "bar";
+          normal = "block";
+          select = "underline";
+        };
+        lsp.display-messages = true;
+      };
     };
     extraPackages = with pkgs; [
       # Nix
