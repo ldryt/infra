@@ -13,6 +13,7 @@
       [
         # TeX
         texlab
+        ltex-ls
         evince
 
         # Rust
@@ -51,6 +52,13 @@
           build = {
             onSave = true;
             forwardSearchAfter = true;
+            executable = "latexmk";
+            args = [
+              "-interaction=nonstopmode"
+              "-pdf"
+              "-lualatex"
+              "%f"
+            ];
           };
           forwardSearch = {
             executable = "evince";
@@ -65,6 +73,10 @@
       language = [
         {
           name = "latex";
+          language-servers = [
+            "texlab"
+            "ltex"
+          ];
           auto-format = true;
           auto-pairs = {
             "(" = ")";
