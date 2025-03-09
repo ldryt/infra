@@ -61,6 +61,7 @@
         ".config/JetBrains"
         ".config/evolution"
         ".config/goa-1.0"
+        ".cache/tracker3"
       ];
       files = [
         ".config/monitors.xml"
