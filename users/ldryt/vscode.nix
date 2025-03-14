@@ -9,7 +9,7 @@
 
   programs.vscode = {
     enable = true;
-    package = pkgs.vscodium;
+    package = pkgs.vscode;
     extensions = with pkgs.vscode-extensions; [
       # VSCode utilities
       mkhl.direnv
@@ -19,6 +19,10 @@
 
       # Nix support
       jnoortheen.nix-ide
+
+      # C++ support
+      ms-vscode.cpptools
+      xaver.clang-format
 
       # MD support
       yzhang.markdown-all-in-one
@@ -47,9 +51,10 @@
       "workbench.colorTheme" = "Gruvbox Dark Hard";
       "vim.useSystemClipboard" = true;
       "window.zoomLevel" = 1;
-      "nix.formatterPath" = "nixfmt";
+      "nil.formatting.command" = "nixfmt";
       "nix.enableLanguageServer" = true;
       "nix.serverPath" = "nil";
+      "editor.formatOnSave" = true;
     };
   };
 }

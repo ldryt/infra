@@ -10,6 +10,7 @@
 
     ./gnome.nix
     ./packages.nix
+    ./vscode.nix
     ./ssh.nix
     ./firefox.nix
     ./thunderbird.nix
