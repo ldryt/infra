@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 let
   macs = builtins.fromJSON (builtins.readFile ./macs.json);
   stationIF = "st0";
@@ -24,7 +24,6 @@ in
   services.avahi = {
     enable = true;
     openFirewall = true;
-    allowInterfaces = [stationIF];
     nssmdns4 = true;
     publish = {
       enable = true;
