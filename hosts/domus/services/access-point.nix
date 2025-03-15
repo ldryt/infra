@@ -7,10 +7,10 @@
 # https://forum.archive.openwrt.org/viewtopic.php?id=68576
 # https://en.wikipedia.org/wiki/Hexspeak
 
-{ config, pkgs, ... }:
+{ config, ... }:
 let
   macs = builtins.fromJSON (builtins.readFile ../macs.json);
-
+  ssid = "domus";
   ap0 = {
     mac = macs.mt7921aun_ap;
     intf = "ap0";
@@ -63,6 +63,8 @@ in
         networkConfig = {
           Address = "${ap1.ip}/24";
           DHCPServer = "yes";
+          IPMasquerade = "ipv4";
+          IPv4Forwarding = "yes";
         };
         dhcpServerConfig = {
           PoolOffset = 100;
@@ -77,11 +79,17 @@ in
   networking.firewall.interfaces = {
     "${ap0.intf}" = {
       allowedTCPPorts = [ 53 ];
-      allowedUDPPorts = [ 53 67 ];
+      allowedUDPPorts = [
+        53
+        67
+      ];
     };
     "${ap1.intf}" = {
       allowedTCPPorts = [ 53 ];
-      allowedUDPPorts = [ 53 67 ];
+      allowedUDPPorts = [
+        53
+        67
+      ];
     };
   };
   services.dnsmasq = {
@@ -104,10 +112,10 @@ in
       "${ap0.intf}" = {
         countryCode = "FR";
         band = "5g";
-        channel = 36;
+        channel = 48;
         wifi6.enable = true;
         networks."${ap0.intf}" = {
-          ssid = "domus";
+          inherit ssid;
           authentication.saePasswordsFile = config.sops.secrets."services/hostapd/password".path;
         };
       };
@@ -116,7 +124,7 @@ in
         band = "2g";
         channel = 11;
         networks."${ap1.intf}" = {
-          ssid = "i";
+          inherit ssid;
           authentication = {
             mode = "wpa2-sha1";
             wpaPasswordFile = config.sops.secrets."services/hostapd/password".path;
