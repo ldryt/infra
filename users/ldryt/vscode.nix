@@ -24,6 +24,9 @@
       ms-vscode.cpptools
       xaver.clang-format
 
+      # Flex and Bison support
+      daohong-emilio.yash
+
       # MD support
       yzhang.markdown-all-in-one
 
@@ -47,14 +50,20 @@
     enableUpdateCheck = false;
 
     userSettings = {
-      "git.confirmSync" = false;
       "workbench.colorTheme" = "Gruvbox Dark Hard";
-      "vim.useSystemClipboard" = true;
       "window.zoomLevel" = 1;
+      "editor.minimap.enabled" = false;
+
+      "git.confirmSync" = false;
+      "editor.formatOnSave" = true;
+
       "nil.formatting.command" = "nixfmt";
       "nix.enableLanguageServer" = true;
       "nix.serverPath" = "nil";
-      "editor.formatOnSave" = true;
+
+      "[cpp]" = {
+        "editor.defaultFormatter" = "xaver.clang-format";
+      };
     };
   };
 }
