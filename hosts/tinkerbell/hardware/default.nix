@@ -1,9 +1,4 @@
-{
-  pkgs,
-  lib,
-  modulesPath,
-  ...
-}:
+{ lib, modulesPath, ... }:
 {
   imports = [
     ./disko.nix
@@ -14,7 +9,7 @@
   hardware.framework.laptop13.audioEnhancement = {
     enable = true;
     rawDeviceName = "alsa_output.pci-0000_c1_00.6.analog-stereo";
-    hideRawDevice = true;
+    hideRawDevice = false;
   };
 
   fileSystems."/swap".neededForBoot = true;
