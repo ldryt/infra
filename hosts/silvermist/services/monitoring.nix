@@ -172,7 +172,7 @@ in
       client_id = oidcClientID;
       client_secret = "$pbkdf2-sha512$310000$JcOWa7BjnZ.spylrhrwBUA$1ztZ/nyYgD1Ke2VQ09WNAh5Cc0ORSYw7vm4Icg7xO5l3AcvpZ1tI9P3uyvGzYhxNVko0fmXtJxalCIvwF5eGcA";
       public = false;
-      authorization_policy = "two_factor";
+      authorization_policy = "one_factor";
       require_pkce = true;
       pkce_challenge_method = "S256";
       redirect_uris = [

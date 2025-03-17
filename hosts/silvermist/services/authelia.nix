@@ -68,7 +68,7 @@ in
         };
       };
 
-      access_control.default_policy = "two_factor";
+      access_control.default_policy = "one_factor";
 
       authentication_backend = {
         file.path = config.sops.secrets."services/authelia/users".path;
