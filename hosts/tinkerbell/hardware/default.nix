@@ -1,4 +1,9 @@
-{ lib, modulesPath, ... }:
+{
+  pkgs,
+  lib,
+  modulesPath,
+  ...
+}:
 {
   imports = [
     ./disko.nix
@@ -21,6 +26,15 @@
   services.fwupd.enable = true;
 
   services.fprintd.enable = true;
+
+  services.xserver.xkb = {
+    layout = "qwerty-fr,us,fr";
+    extraLayouts.qwerty-fr = {
+      description = "US layout with French accents";
+      languages = [ "eng" ];
+      symbolsFile = "${pkgs.qwerty-fr}/share/X11/xkb/symbols/us_qwerty-fr";
+    };
+  };
 
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
