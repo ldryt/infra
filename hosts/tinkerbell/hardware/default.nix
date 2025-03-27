@@ -36,6 +36,11 @@
     };
   };
 
+  services.udev.extraRules = ''
+    # Disable Logitech G703 autosuspend (avoiding 1s wake-up delay)
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="c539", ATTR{power/autosuspend}="-1"
+  '';
+
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
 
