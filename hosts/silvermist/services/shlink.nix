@@ -26,7 +26,7 @@ in
   virtualisation.oci-containers.containers = {
     "shlink-server" = {
       hostname = "shlink-server";
-      image = "ghcr.io/shlinkio/shlink:4.4.4@sha256:e18718817487520b686da3ec27545c3c6e328390351124fe5b3daf7177bb9a5c ";
+      image = "ghcr.io/shlinkio/shlink:4.4.6";
       environment = {
         DEFAULT_DOMAIN = dns.zone;
         IS_HTTPS_ENABLED = "true";
@@ -46,7 +46,7 @@ in
     };
     "shlink-db" = {
       hostname = "shlink-db";
-      image = "docker.io/library/postgres:16.2@sha256:07572430dbcd821f9f978899c3ab3a727f5029be9298a41662e1b5404d5b73e0"; # https://hub.docker.com/layers/library/postgres/16.2/images/sha256-07572430dbcd821f9f978899c3ab3a727f5029be9298a41662e1b5404d5b73e0?context=explore
+      image = "docker.io/library/postgres:16.2";
       environment = {
         POSTGRES_USER = "postgres";
         POSTGRES_DB = "shlink";
