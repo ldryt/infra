@@ -1,4 +1,4 @@
-{ config, ... }:
+{ inputs, config, ... }:
 let
   dataDir = "Sync";
 in
@@ -7,22 +7,52 @@ in
   sops.secrets."services/syncthing/key" = { };
   sops.secrets."services/syncthing/cert" = { };
 
+  # workaround to use options from master for syncthing while staying on 24.11
+  imports = [ (inputs.home-manager-unstable + "/modules/services/syncthing.nix") ];
+  disabledModules = [ "services/syncthing.nix" ];
+
+  # workaround to avoid syncthing-init.service dependency failure on boot
+  systemd.user.services."syncthing".Unit.After = [ "sops-nix.service" ];
+
   services.syncthing = {
     enable = true;
     key = config.sops.secrets."services/syncthing/key".path;
     cert = config.sops.secrets."services/syncthing/cert".path;
     settings = {
+      options = {
+        localAnnounceEnabled = false;
+        urAccepted = -1;
+        crashReportingEnabled = false;
+      };
       devices = {
-        "rpi".id = "PRSTEYD-BFS3F7N-6AS245G-SFISD7N-CDZPWIK-MN6U7PN-NPW64SW-UTKRWA5";
+        "domus".id = "PRSTEYD-BFS3F7N-6AS245G-SFISD7N-CDZPWIK-MN6U7PN-NPW64SW-UTKRWA5";
+        "rosetta".id = "27GKCTR-KWK6GEH-RQSNP6R-MENWWMA-XPKMLIN-HAKD2FC-BC5BBKX-HGVV2QX";
+        "silvermist".id = "DURUBGK-S45UN27-6QQSHDA-7FWX3OS-4VCM4TD-NYMK6TV-JTEF742-VBTF7AZ";
       };
       folders = {
+        "~/ldryt-notes" = {
+          id = "ldryt-notes";
+          devices = [
+            "silvermist"
+            "domus"
+            "rosetta"
+          ];
+        };
         "~/${dataDir}/documents" = {
           id = "ldryt-documents";
-          devices = [ "rpi" ];
+          devices = [
+            "silvermist"
+            "domus"
+            "rosetta"
+          ];
         };
         "~/${dataDir}/pictures" = {
           id = "ldryt-pictures";
-          devices = [ "rpi" ];
+          devices = [
+            "silvermist"
+            "domus"
+            "rosetta"
+          ];
         };
       };
     };

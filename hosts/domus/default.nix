@@ -8,6 +8,7 @@
 
     ./services/home-assistant.nix
     ./services/access-point.nix
+    ./services/syncthing.nix
 
     ../../modules/backups.nix
     ../../modules/openssh.nix

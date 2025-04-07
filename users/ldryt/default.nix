@@ -14,6 +14,7 @@
     ./ssh.nix
     ./firefox.nix
     ./thunderbird.nix
+    ./syncthing.nix
   ];
 
   programs.home-manager.enable = true;

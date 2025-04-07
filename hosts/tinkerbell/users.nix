@@ -9,6 +9,7 @@
     };
     sharedModules = [ inputs.sops-nix.homeManagerModules.sops ];
     extraSpecialArgs = {
+      inherit inputs;
       firefox-addons = inputs.firefox-addons;
     };
   };
