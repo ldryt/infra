@@ -58,7 +58,8 @@ in
     };
   };
 
-  services.nginx.virtualHosts."${dns.subdomains.printer}.${dns.zone}" = let 
+  services.nginx.virtualHosts."${dns.subdomains.printer}.${dns.zone}" =
+    let
       autheliaLocation = pkgs.writeText "authelia-location.conf" ''
         ## Virtual endpoint created by nginx to forward auth requests.
         location /internal/authelia/authz {
@@ -111,28 +112,32 @@ in
         ## When there is a 401 response code from the authz endpoint redirect to the $redirection_url.
         error_page 401 =302 $redirection_url;
       '';
-  in
-  {
-    enableACME = true;
-    forceSSL = true;
-    kTLS = true;
-    extraConfig = "include ${autheliaLocation};";
-    locations = {
+    in
+    {
+      enableACME = true;
+      forceSSL = true;
+      kTLS = true;
+      extraConfig = "include ${autheliaLocation};";
+      locations = {
         "/" = {
-        proxyPass = "http://${printerIp}:${toString printerPort}";
-        proxyWebsockets = true;
-        extraConfig = ''
-          include ${autheliaRequest};
-          proxy_cache off;
-        '';
-      };
+          proxyPass = "http://${printerIp}:${toString printerPort}";
+          proxyWebsockets = true;
+          extraConfig = ''
+            include ${autheliaRequest};
+            proxy_cache off;
+          '';
+        };
         "/webcam" = {
-        proxyPass = "http://${printerIp}:${toString printerWebcamPort}";
-        extraConfig = ''
-          include ${autheliaRequest};
-          rewrite ^/webcam(/.*)?$ $1 break;
-        '';
+          proxyPass = "http://${printerIp}:${toString printerWebcamPort}";
+          extraConfig = ''
+            include ${autheliaRequest};
+            rewrite ^/webcam(/.*)?$ $1 break;
+
+            postpone_output 0;
+            proxy_buffering off;
+            proxy_ignore_headers X-Accel-Buffering;
+          '';
+        };
       };
     };
-  };
 }
