@@ -16,7 +16,6 @@
     ./services/radicale.nix
     ./services/monitoring.nix
     ./services/syncthing.nix
-    ./services/coturn.nix
 
     ../../modules/nginx.nix
     ../../modules/fail2ban.nix
