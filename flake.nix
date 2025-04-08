@@ -1,6 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager-unstable.url = "github:nix-community/home-manager";
     home-manager = {
       url = "github:nix-community/home-manager/release-24.11";
@@ -30,6 +31,7 @@
     {
       self,
       nixpkgs,
+      nixpkgs-unstable,
       home-manager,
       sops-nix,
       disko,
@@ -115,17 +117,22 @@
             home-manager.nixosModules.home-manager
           ];
         };
-        printer = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs;
+        printer =
+          let
+            system = "aarch64-linux";
+          in
+          nixpkgs.lib.nixosSystem {
+            specialArgs = {
+              inherit inputs;
+              pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
+            };
+            inherit system;
+            modules = [
+              ./hosts/printer
+              sops-nix.nixosModules.sops
+              home-manager.nixosModules.home-manager
+            ];
           };
-          system = "aarch64-linux";
-          modules = [
-            ./hosts/printer
-            sops-nix.nixosModules.sops
-            home-manager.nixosModules.home-manager
-          ];
-        };
       };
 
       packages = forAllSystems (system: {
