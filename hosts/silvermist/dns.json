@@ -9,6 +9,8 @@
     "domus": "domus",
     "printer": "printer",
     "radicale": "cal",
-    "grafana": "graph"
+    "grafana": "graph",
+    "stun": "stun",
+    "turn": "turn"
   }
 }
