@@ -1,7 +1,4 @@
 { inputs, config, ... }:
-let
-  dataDir = "Sync";
-in
 {
   # BRAQOO2-4MD5S4O-ORGTC3X-DEJDE3Q-YRK7V4E-VXXBR32-77PFW7P-G4Z6PAO
   sops.secrets."services/syncthing/key" = { };
@@ -30,7 +27,7 @@ in
         "silvermist".id = "DURUBGK-S45UN27-6QQSHDA-7FWX3OS-4VCM4TD-NYMK6TV-JTEF742-VBTF7AZ";
       };
       folders = {
-        "~/ldryt-notes" = {
+        "~/Notes" = {
           id = "ldryt-notes";
           devices = [
             "silvermist"
@@ -38,7 +35,7 @@ in
             "rosetta"
           ];
         };
-        "~/${dataDir}/documents" = {
+        "~/Documents" = {
           id = "ldryt-documents";
           devices = [
             "silvermist"
@@ -46,7 +43,7 @@ in
             "rosetta"
           ];
         };
-        "~/${dataDir}/pictures" = {
+        "~/Pictures" = {
           id = "ldryt-pictures";
           devices = [
             "silvermist"
