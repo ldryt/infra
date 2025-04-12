@@ -8,9 +8,7 @@
     ./services/vaultwarden.nix
     ./services/immich.nix
     ./services/frontpage.nix
-    ./services/shlink.nix
     ./services/authelia.nix
-    ./services/ocis.nix
     ./services/tunnel.nix
     ./services/mailserver.nix
     ./services/radicale.nix
