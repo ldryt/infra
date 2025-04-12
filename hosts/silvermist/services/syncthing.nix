@@ -32,6 +32,14 @@ in
             "rosetta"
           ];
         };
+        "~/ldryt-vault" = {
+          id = "ldryt-vault";
+          devices = [
+            "tinkerbell"
+            "domus"
+            "rosetta"
+          ];
+        };
         "~/ldryt-documents" = {
           id = "ldryt-documents";
           devices = [

@@ -27,7 +27,15 @@
         "silvermist".id = "DURUBGK-S45UN27-6QQSHDA-7FWX3OS-4VCM4TD-NYMK6TV-JTEF742-VBTF7AZ";
       };
       folders = {
-        "~/Notes" = {
+        "~/Sync/Vault" = {
+          id = "ldryt-vault";
+          devices = [
+            "silvermist"
+            "domus"
+            "rosetta"
+          ];
+        };
+        "~/Sync/Notes" = {
           id = "ldryt-notes";
           devices = [
             "silvermist"

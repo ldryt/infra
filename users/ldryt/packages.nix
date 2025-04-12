@@ -8,5 +8,6 @@
     vesktop
     super-slicer-beta
     evolution
+    keepassxc
   ];
 }
