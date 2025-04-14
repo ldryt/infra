@@ -14,12 +14,11 @@
     enable = true;
     profiles.default = {
       extensions = with firefox-addons.packages."x86_64-linux"; [
-        bitwarden
         ublock-origin
         sponsorblock
       ];
       search = {
-        default = "Google";
+        default = "DuckDuckGo";
         force = true;
         engines = {
           "GitHub" = {
