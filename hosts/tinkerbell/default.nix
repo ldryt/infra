@@ -64,6 +64,7 @@
         ".config/evolution"
         ".config/goa-1.0"
         ".cache/tracker3"
+        ".config/keepassxc"
       ];
       files = [
         ".config/monitors.xml"
