@@ -49,6 +49,7 @@
         "Videos"
         "VirtualBox VMs"
         "Sync"
+        ".local/state/syncthing"
         ".ssh"
         ".keyring"
         ".local/share/direnv"
