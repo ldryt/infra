@@ -1,6 +1,9 @@
 { pkgs, ... }:
 {
-  imports = [ ../common/packages/cli.nix ];
+  imports = [
+    ../common/packages/cli.nix
+    ./keypassxc.nix
+  ];
 
   home.packages = with pkgs; [
     nix-tree
@@ -8,6 +11,5 @@
     vesktop
     super-slicer-beta
     evolution
-    keepassxc
   ];
 }
