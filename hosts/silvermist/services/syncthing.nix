@@ -1,17 +1,21 @@
 { pkgs, config, ... }:
 let
   dataDir = "/mnt/syncthing-data";
+  configDir = "/var/lib/syncthing";
 in
 {
   # DURUBGK-S45UN27-6QQSHDA-7FWX3OS-4VCM4TD-NYMK6TV-JTEF742-VBTF7AZ
   sops.secrets."services/syncthing/key".owner = config.services.syncthing.user;
   sops.secrets."services/syncthing/cert".owner = config.services.syncthing.user;
 
+  # config directory contains huge db
+  environment.persistence.silvermist.directories = [ configDir ];
+
   services.syncthing = {
     enable = true;
     openDefaultPorts = true;
     inherit dataDir;
-    configDir = "/var/lib/syncthing";
+    inherit configDir;
     key = config.sops.secrets."services/syncthing/key".path;
     cert = config.sops.secrets."services/syncthing/cert".path;
     settings = {
