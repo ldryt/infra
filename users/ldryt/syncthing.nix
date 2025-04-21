@@ -17,7 +17,6 @@
     cert = config.sops.secrets."services/syncthing/cert".path;
     settings = {
       options = {
-        localAnnounceEnabled = false;
         urAccepted = -1;
         crashReportingEnabled = false;
       };
