@@ -65,6 +65,7 @@
         ".config/goa-1.0"
         ".cache/tracker3"
         ".config/keepassxc"
+        ".cache/keepassxc"
         ".config/obsidian"
       ];
       files = [
