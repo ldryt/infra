@@ -29,6 +29,20 @@
           psk = "$LYS_PWD";
         };
       };
+      VNO = {
+        connection = {
+          id = "$VNO_SSID";
+          type = "wifi";
+        };
+        wifi = {
+          mode = "infrastructure";
+          ssid = "$VNO_SSID";
+        };
+        wifi-security = {
+          key-mgmt = "wpa-psk";
+          psk = "$VNO_PWD";
+        };
+      };
       GNB = {
         connection = {
           id = "$GNB_SSID";
