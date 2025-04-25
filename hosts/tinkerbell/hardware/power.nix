@@ -4,9 +4,14 @@
   powerManagement.powertop.enable = true;
 
   services.logind = {
-    powerKey = "suspend";
+    powerKey = "suspend-then-hibernate";
     powerKeyLongPress = "poweroff";
     lidSwitch = config.services.logind.powerKey;
     lidSwitchDocked = "ignore";
+    lidSwitchExternalPower = "ignore";
+  };
+
+  services.upower = {
+    percentageLow = 75;
   };
 }

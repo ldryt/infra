@@ -7,7 +7,6 @@
     ./locales.nix
 
     ../../modules/gnome.nix
-    ../../modules/power.nix
     ../../modules/steam.nix
     ../../modules/nix-settings.nix
 

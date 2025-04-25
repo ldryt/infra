@@ -6,7 +6,9 @@
 }:
 {
   imports = [
+    ./power.nix
     ./disko.nix
+
     (modulesPath + "/installer/scan/not-detected.nix")
   ];
 
