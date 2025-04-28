@@ -58,5 +58,7 @@
     "/var/tmp"
   ];
 
+  time.timeZone = "Europe/Paris";
+
   system.stateVersion = "23.05";
 }
