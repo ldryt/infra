@@ -7,10 +7,10 @@
     ../common/clang-format.nix
     ../common/c.nix
     ../common/git.nix
+    ../common/vscode.nix
 
     ./gnome.nix
     ./packages.nix
-    ./vscode.nix
     ./ssh.nix
     ./firefox.nix
     ./thunderbird.nix

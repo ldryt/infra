@@ -9,6 +9,7 @@
     ../common/alacritty.nix
     ../common/clang-format.nix
     ../common/packages/cli.nix
+    ../common/vscode.nix
   ];
 
   programs.home-manager.enable = true;
