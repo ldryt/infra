@@ -30,6 +30,7 @@ in
       folders = {
         "~/ldryt-notes" = {
           id = "ldryt-notes";
+          ignorePerms = true;
           devices = [
             "tinkerbell"
             "domus"
@@ -38,6 +39,7 @@ in
         };
         "~/ldryt-vault" = {
           id = "ldryt-vault";
+          ignorePerms = true;
           devices = [
             "tinkerbell"
             "domus"
@@ -46,6 +48,7 @@ in
         };
         "~/ldryt-documents" = {
           id = "ldryt-documents";
+          ignorePerms = true;
           devices = [
             "tinkerbell"
             "domus"
