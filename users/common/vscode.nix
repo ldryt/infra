@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   home.sessionVariables."NIXOS_OZONE_WL" = "1";
   home.packages = with pkgs; [
@@ -7,9 +7,17 @@
     nil
     nixfmt-rfc-style
 
+    yarn
     eslint
     nodejs
   ];
+
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "vscode"
+      "vscode-extension-ms-vscode-cpptools"
+    ];
 
   programs.vscode = {
     enable = true;
