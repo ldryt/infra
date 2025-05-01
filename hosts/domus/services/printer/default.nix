@@ -31,7 +31,7 @@
     };
   };
 
-  networking.firewall.interfaces."printertunnel".allowedTCPPorts = [
+  networking.firewall.interfaces."domustunnel".allowedTCPPorts = [
     80
     9999
   ];
