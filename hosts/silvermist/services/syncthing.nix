@@ -59,7 +59,6 @@ in
           id = "ldryt-pictures";
           devices = [
             "tinkerbell"
-            "domus"
             "rosetta"
           ];
         };

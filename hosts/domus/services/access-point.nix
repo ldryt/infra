@@ -111,12 +111,15 @@ in
     radios = {
       "${ap0.intf}" = {
         countryCode = "FR";
-        band = "5g";
-        channel = 48;
+        band = "2g";
+        channel = 1;
         wifi6.enable = true;
         networks."${ap0.intf}" = {
           inherit ssid;
-          authentication.saePasswordsFile = config.sops.secrets."services/hostapd/password".path;
+          authentication = {
+            mode = "wpa2-sha1";
+            wpaPasswordFile = config.sops.secrets."services/hostapd/password".path;
+          };
         };
       };
       "${ap1.intf}" = {

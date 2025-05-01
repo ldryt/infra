@@ -109,14 +109,22 @@
             mailserver.nixosModules.mailserver
           ];
         };
-        domus = nixpkgs.lib.nixosSystem {
-          system = "aarch64-linux";
-          modules = [
-            ./hosts/domus
-            sops-nix.nixosModules.sops
-            home-manager.nixosModules.home-manager
-          ];
-        };
+        domus =
+          let
+            system = "aarch64-linux";
+          in
+          nixpkgs.lib.nixosSystem {
+            specialArgs = {
+              inherit inputs;
+              pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
+            };
+            inherit system;
+            modules = [
+              ./hosts/domus
+              sops-nix.nixosModules.sops
+              home-manager.nixosModules.home-manager
+            ];
+          };
         printer =
           let
             system = "aarch64-linux";

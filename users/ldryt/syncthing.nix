@@ -54,7 +54,6 @@
           id = "ldryt-pictures";
           devices = [
             "silvermist"
-            "domus"
             "rosetta"
           ];
         };

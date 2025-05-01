@@ -7,10 +7,9 @@ let
   domusIp = "${wgIp}.22";
   domusPort = 8123;
   domusPublicKey = "domucc9r8SkBuN3voZDs4KDj3TUQJiH08zQ2djO68g8=";
-  printerIp = "${wgIp}.122";
+  printerIp = domusIp;
   printerPort = "80";
   printerWebcamPort = "9999";
-  printerPublicKey = "prINTGfGjKLhBAByRVQwE4hA/yWq9waKh3NrjzqsyDo=";
 in
 {
   sops.secrets."system/networking/wireguard/privateKey".owner = "systemd-network";
@@ -30,11 +29,6 @@ in
           # domus
           PublicKey = domusPublicKey;
           AllowedIPs = [ domusIp ];
-        }
-        {
-          # printer
-          PublicKey = printerPublicKey;
-          AllowedIPs = [ printerIp ];
         }
       ];
     };

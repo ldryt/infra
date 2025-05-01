@@ -6,8 +6,8 @@
 
   services.syncthing = {
     enable = true;
-    dataDir = "/mnt/ssd1/syncthing_data";
-    configDir = "/var/lib/syncthing";
+    dataDir = "/var/lib/syncthing/data";
+    configDir = "/var/lib/syncthing/config";
     openDefaultPorts = true;
     key = config.sops.secrets."services/syncthing/key".path;
     cert = config.sops.secrets."services/syncthing/cert".path;
@@ -39,14 +39,6 @@
         };
         "~/ldryt-documents" = {
           id = "ldryt-documents";
-          devices = [
-            "tinkerbell"
-            "silvermist"
-            "rosetta"
-          ];
-        };
-        "~/ldryt-pictures" = {
-          id = "ldryt-pictures";
           devices = [
             "tinkerbell"
             "silvermist"
