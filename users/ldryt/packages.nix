@@ -18,5 +18,6 @@
     super-slicer-beta
     evolution
     obsidian
+    telegram-desktop
   ];
 }
