@@ -19,7 +19,7 @@ in
     grim
     swaybg
     wl-clipboard
-    clipmam
+    clipman
   ];
 
   home.pointerCursor = {
