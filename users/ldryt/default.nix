@@ -9,7 +9,7 @@
     ../common/git.nix
     ../common/vscode.nix
 
-    ./gnome.nix
+    ./sway.nix
     ./packages.nix
     ./ssh.nix
     ./firefox.nix
