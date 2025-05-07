@@ -6,7 +6,8 @@
     ./users.nix
     ./locales.nix
 
-    ../../modules/gnome.nix
+    ../../modules/greetd.nix
+    ../../modules/sway.nix
     ../../modules/steam.nix
     ../../modules/nix-settings.nix
 
