@@ -10,16 +10,16 @@ in
 {
   imports = [
     ./swaylock.nix
-    ../common/alacritty.nix
+    ../common/foot.nix
     ../common/i3/i3status.nix
   ];
 
   home.packages = with pkgs; [
-    slurp # screenshot utilities
+    slurp
     grim
-    swaybg # wallpaper utility
-    wl-clipboard # clipboard utility
-    clipman # clipboard manager
+    swaybg
+    wl-clipboard
+    clipmam
   ];
 
   home.pointerCursor = {
@@ -43,7 +43,7 @@ in
     checkConfig = true;
     config = {
       modifier = "Mod4";
-      terminal = "alacritty";
+      terminal = "foot";
       window = {
         hideEdgeBorders = "both";
         border = 1;
@@ -77,7 +77,7 @@ in
           bg = "${../common/wallpaper.jpg} fill";
         };
         "eDP-1" = {
-          scale = "1.3";
+          scale = "1.33";
           scale_filter = "smart";
         };
       };
