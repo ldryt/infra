@@ -129,7 +129,7 @@ in
         networks."${ap1.intf}" = {
           inherit ssid;
           authentication = {
-            mode = "wpa2-sha256";
+            mode = "wpa2-sha1";
             wpaPasswordFile = config.sops.secrets."services/hostapd/password".path;
           };
         };
