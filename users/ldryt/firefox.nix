@@ -1,15 +1,5 @@
 { firefox-addons, ... }:
 {
-  home.file."firefox-gnome-theme" = {
-    target = ".mozilla/firefox/default/chrome/firefox-gnome-theme";
-    source = (
-      fetchTarball {
-        url = "https://github.com/rafaelmardojai/firefox-gnome-theme/archive/refs/tags/v137.tar.gz";
-        sha256 = "089cin1ilxb1gz34z8fhlaf8nlqgkpfq64jn66n2kvzafl6cn8d2";
-      }
-    );
-  };
-
   programs.firefox = {
     enable = true;
     profiles.default = {
@@ -113,12 +103,6 @@
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true; # Enables custom stylesheets for user themes
         "svg.context-properties.content.enabled" = true; # Allows SVG filters for custom themes
       };
-      userChrome = ''
-        @import "firefox-gnome-theme/userChrome.css";
-      '';
-      userContent = ''
-        @import "firefox-gnome-theme/userContent.css";
-      '';
     };
   };
 }
