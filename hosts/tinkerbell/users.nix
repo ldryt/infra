@@ -1,4 +1,9 @@
-{ inputs, config, ... }:
+{
+  inputs,
+  config,
+  pkgs-unstable,
+  ...
+}:
 {
   home-manager = {
     backupFileExtension = "backup";
@@ -10,6 +15,7 @@
     sharedModules = [ inputs.sops-nix.homeManagerModules.sops ];
     extraSpecialArgs = {
       inherit inputs;
+      inherit pkgs-unstable;
       firefox-addons = inputs.firefox-addons;
     };
   };

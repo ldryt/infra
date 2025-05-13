@@ -80,21 +80,26 @@
       );
 
       nixosConfigurations = {
-        tinkerbell = nixpkgs.lib.nixosSystem {
-          specialArgs = {
-            inherit inputs;
+        tinkerbell =
+          let
+            system = "x86_64-linux";
+          in
+          nixpkgs.lib.nixosSystem {
+            specialArgs = {
+              inherit inputs;
+              pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
+            };
+            inherit system;
+            modules = [
+              ./hosts/tinkerbell
+              nixos-hardware.nixosModules.framework-13-7040-amd
+              sops-nix.nixosModules.sops
+              lanzaboote.nixosModules.lanzaboote
+              disko.nixosModules.disko
+              impermanence.nixosModules.impermanence
+              home-manager.nixosModules.home-manager
+            ];
           };
-          system = "x86_64-linux";
-          modules = [
-            ./hosts/tinkerbell
-            nixos-hardware.nixosModules.framework-13-7040-amd
-            sops-nix.nixosModules.sops
-            lanzaboote.nixosModules.lanzaboote
-            disko.nixosModules.disko
-            impermanence.nixosModules.impermanence
-            home-manager.nixosModules.home-manager
-          ];
-        };
         silvermist = nixpkgs.lib.nixosSystem {
           specialArgs = {
             inherit inputs;

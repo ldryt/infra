@@ -2,6 +2,8 @@
   lib,
   config,
   pkgs,
+  pkgs-unstable,
+  inputs,
   ...
 }:
 let
@@ -23,6 +25,8 @@ in
   imports = [
     ../common/foot.nix
     ../common/i3/i3status.nix
+
+    (inputs.home-manager-unstable + "/modules/services/wluma.nix")
   ];
 
   home.packages = with pkgs; [
@@ -84,6 +88,7 @@ in
 
   services.wluma = {
     enable = true;
+    package = pkgs-unstable.wluma;
     settings = {
       als.iio = {
         path = "";
@@ -95,6 +100,9 @@ in
           "80" = "dim";
           "800" = "outdoors";
         };
+      };
+      output.backlight = {
+        name = "";
       };
     };
   };
