@@ -52,8 +52,6 @@
 
   security.rtkit.enable = true;
 
-  hardware.sensor.iio.enable = true;
-
   environment.systemPackages = [
     pkgs.fw-ectool
     pkgs.framework-tool
@@ -70,6 +68,7 @@
     ];
     kernelModules = [
       "kvm-amd"
+      "ddcci-backlight"
     ];
     kernelParams = [
       # For Power consumption
