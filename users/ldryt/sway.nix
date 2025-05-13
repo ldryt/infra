@@ -149,6 +149,7 @@ in
 
   wayland.windowManager.sway = {
     enable = true;
+    wrapperFeatures.gtk = true;
     checkConfig = true;
     extraConfig = ''
       # No titlebars
