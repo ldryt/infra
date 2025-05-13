@@ -72,6 +72,7 @@
         ".config/keepassxc"
         ".cache/keepassxc"
         ".config/obsidian"
+        ".local/share/wluma"
       ];
       files = [
         ".config/monitors.xml"
