@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   modulesPath,
@@ -48,6 +49,13 @@
 
   security.rtkit.enable = true;
 
+  hardware.sensor.iio.enable = true;
+
+  environment.systemPackages = [
+    pkgs.fw-ectool
+    pkgs.framework-tool
+  ];
+
   boot = {
     initrd.availableKernelModules = [
       "nvme"
@@ -57,12 +65,21 @@
       "usb_storage"
       "sd_mod"
     ];
-    kernelModules = [ "kvm-amd" ];
-    kernelParams = [ "quiet" ];
+    kernelModules = [
+      "kvm-amd"
+
+      # https://github.com/DHowett/framework-laptop-kmod?tab=readme-ov-file#usage
+      "cros_ec"
+      "cros_ec_lpcs"
+    ];
+    extraModulePackages = with config.boot.kernelPackages; [ framework-laptop-kmod ];
+    kernelParams = [
+      # For Power consumption
+      # https://community.frame.work/t/linux-battery-life-tuning/6665/156
+      "nvme.noacpi=1"
+    ];
 
     loader.efi.canTouchEfiVariables = true;
-
-    plymouth.enable = true;
 
     # Lanzaboote currently replaces the systemd-boot module.
     loader.systemd-boot.enable = false;
