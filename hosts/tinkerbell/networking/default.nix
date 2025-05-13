@@ -1,10 +1,11 @@
-{ pkgs, ... }:
+{ ... }:
 {
   imports = [
     ./nmprofiles.nix
     ../../../modules/dns.nix
     ../../../modules/chrony.nix
   ];
+
   networking = {
     hostName = "tinkerbell";
     networkmanager = {
@@ -15,5 +16,9 @@
       };
       logLevel = "INFO";
     };
+    firewall.allowedTCPPorts = [
+      # Syncthing LAN
+      22000
+    ];
   };
 }
