@@ -38,6 +38,9 @@
       "/var/lib/fprint"
       "/var/lib/containers"
       "/var/lib/docker"
+
+      # Quick and dirty fix for large nix builds
+      "/tmp"
     ];
     files = [ "/etc/machine-id" ];
 
