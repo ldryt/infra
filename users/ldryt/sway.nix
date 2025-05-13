@@ -83,6 +83,30 @@ in
     enable = true;
     enableVerboseLogging = true;
     provider = "geoclue2";
+    # fallback
+    latitude = 48.8;
+    longitude = 2.3;
+  };
+
+  # Automatically switches dark-mode
+  services.darkman = {
+    enable = true;
+    settings = {
+      usegeoclue = true;
+      # fallback
+      lat = 48.8;
+      lng = 2.3;
+    };
+    darkModeScripts = {
+      gtk-theme = ''
+        ${pkgs.dconf}/bin/dconf write /org/gnome/desktop/interface/color-scheme "'prefer-dark'"
+      '';
+    };
+    lightModeScripts = {
+      gtk-theme = ''
+        ${pkgs.dconf}/bin/dconf write /org/gnome/desktop/interface/color-scheme "'prefer-light'"
+      '';
+    };
   };
 
   services.wluma = {
