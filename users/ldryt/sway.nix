@@ -162,9 +162,9 @@ in
           "XF86MonBrightnessUp" = "exec brightnessctl set 5%+ ${brightnessctlToWob}";
           "Print" = "exec grim -g \"$(slurp)\" - | wl-copy";
         };
-      startup = {
-        "audio-inhibit".command = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit";
-      };
+      startup = [
+        { command = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"; }
+      ];
       input = {
         "type:touchpad" = {
           tap = "enabled";
