@@ -103,12 +103,12 @@ in
       output = {
         backlight = [
           {
-            name = "eDP-1";
+            name = "BOE 0x0BCA";
             path = "/sys/class/backlight/amdgpu_bl1";
             capturer = "wayland";
           }
           {
-            name = "DP-3";
+            name = "G3N0018101Q";
             path = "/sys/class/backlight/ddcci14";
             capturer = "wayland";
           }
