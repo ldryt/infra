@@ -14,10 +14,13 @@
   ];
 
   # Note: module "framework-13-7040-amd" from https://github.com/NixOS/nixos-hardware is imported in flake
-  hardware.framework.laptop13.audioEnhancement = {
-    enable = true;
-    rawDeviceName = "alsa_output.pci-0000_c1_00.6.analog-stereo";
-    hideRawDevice = false;
+  hardware.framework = {
+    enableKmod = true;
+    laptop13.audioEnhancement = {
+      enable = true;
+      rawDeviceName = "alsa_output.pci-0000_c1_00.6.analog-stereo";
+      hideRawDevice = false;
+    };
   };
 
   fileSystems."/swap".neededForBoot = true;
@@ -67,17 +70,13 @@
     ];
     kernelModules = [
       "kvm-amd"
-
-      # https://github.com/DHowett/framework-laptop-kmod?tab=readme-ov-file#usage
-      "cros_ec"
-      "cros_ec_lpcs"
     ];
-    extraModulePackages = with config.boot.kernelPackages; [ framework-laptop-kmod ];
     kernelParams = [
       # For Power consumption
       # https://community.frame.work/t/linux-battery-life-tuning/6665/156
       "nvme.noacpi=1"
     ];
+    extraModulePackages = with config.boot.kernelPackages; [ ddcci-driver ];
 
     loader.efi.canTouchEfiVariables = true;
 
