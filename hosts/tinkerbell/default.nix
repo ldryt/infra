@@ -8,6 +8,7 @@
 
     ../../modules/greetd.nix
     ../../modules/sway.nix
+    ../../modules/geoclue.nix
     ../../modules/steam.nix
     ../../modules/nix-settings.nix
 
