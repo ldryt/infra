@@ -12,7 +12,6 @@ let
   swaylock-cfg = pkgs.writeText "swaylock-cfg" ''
     daemonize
     show-failed-attempts
-    ignore-empty-password
     indicator-idle-visible
     indicator-radius=120
     color=000000
@@ -52,11 +51,11 @@ in
     ];
     timeouts = [
       {
-        timeout = 1 * 60;
+        timeout = 15 * 60;
         command = lock-cmd;
       }
       {
-        timeout = 2 * 60;
+        timeout = 20 * 60;
         command = "cat /sys/class/power_supply/BAT1/status | grep -q 'Discharging' && systemctl suspend-then-hibernate";
       }
     ];
@@ -91,7 +90,7 @@ in
     package = pkgs-unstable.wluma;
     settings = {
       als.iio = {
-        path = "";
+        path = "/sys/bus/iio/devices";
         thresholds = {
           "0" = "night";
           "20" = "dark";
@@ -101,9 +100,26 @@ in
           "800" = "outdoors";
         };
       };
-      output.backlight = {
-        name = "";
+      output = {
+        backlight = [
+          {
+            name = "eDP-1";
+            path = "/sys/class/backlight/amdgpu_bl1";
+            capturer = "wayland";
+          }
+          {
+            name = "DP-3";
+            path = "/sys/class/backlight/ddcci14";
+            capturer = "wayland";
+          }
+        ];
       };
+      keyboard = [
+        {
+          name = "framework-keyboard";
+          path = "/sys/class/leds/framework_laptop::kbd_backlight";
+        }
+      ];
     };
   };
 
@@ -146,6 +162,9 @@ in
           "XF86MonBrightnessUp" = "exec brightnessctl set 5%+ ${brightnessctlToWob}";
           "Print" = "exec grim -g \"$(slurp)\" - | wl-copy";
         };
+      startup = {
+        "audio-inhibit".command = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit";
+      };
       input = {
         "type:touchpad" = {
           tap = "enabled";
