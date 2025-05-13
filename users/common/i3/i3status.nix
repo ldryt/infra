@@ -3,6 +3,7 @@
     enable = true;
     enableDefault = false;
     general = {
+      interval = 5;
       colors = false;
     };
     modules = {

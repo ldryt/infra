@@ -36,6 +36,8 @@ in
     clipman
     # Screen brightness
     brightnessctl
+    # Control media players
+    playerctl
   ];
 
   # Idle and locking management
@@ -45,10 +47,6 @@ in
     events = [
     ];
     timeouts = [
-      {
-        timeout = 5;
-        command = "echo 1 >> /tmp/timeouttt";
-      }
       {
         timeout = 1 * 60;
         command = lock-cmd;
@@ -60,6 +58,17 @@ in
     ];
   };
 
+  # Specify cursor
+  home.pointerCursor = {
+    name = "Adwaita";
+    package = pkgs.adwaita-icon-theme;
+    size = 34;
+    x11 = {
+      enable = true;
+      defaultCursor = "Adwaita";
+    };
+  };
+
   # A lightweight overlay volume/backlight/progress/anything bar
   services.wob.enable = true;
 
@@ -67,27 +76,41 @@ in
   services.playerctld.enable = true;
 
   # Day/night gamma adjustments
-  services.wlsunset = {
+  services.gammastep = {
     enable = true;
-    latitude = 48.8;
-    longitude = 2.3;
+    enableVerboseLogging = true;
+    provider = "geoclue2";
+  };
+
+  services.wluma = {
+    enable = true;
+    settings = {
+      als.iio = {
+        path = "";
+        thresholds = {
+          "0" = "night";
+          "20" = "dark";
+          "250" = "normal";
+          "500" = "bright";
+          "80" = "dim";
+          "800" = "outdoors";
+        };
+      };
+    };
   };
 
   wayland.windowManager.sway = {
     enable = true;
     checkConfig = true;
-    extraConfigEarly = ''
+    extraConfig = ''
       # No titlebars
       default_border none
-      default_border normal 0
-      default_floating_border normal 0
-      for_window [title="^.*"] title_format ""
+      default_floating_border none
+      font pango:monospace 0.001
+      titlebar_padding 1
+      titlebar_border_thickness 0
     '';
     config = {
-      window = {
-        hideEdgeBorders = "both";
-        border = 1;
-      };
       bars = [
         {
           statusCommand = "${pkgs.i3status}/bin/i3status";
