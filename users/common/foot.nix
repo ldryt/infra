@@ -5,7 +5,7 @@
     settings = {
       main = {
         term = "xterm-256color";
-        font = "monospace:size=11";
+        font = "monospace:size=8";
         dpi-aware = "yes";
       };
       mouse = {
