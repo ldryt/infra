@@ -47,6 +47,14 @@ in
     enable = true;
     extraArgs = [ "-d" ];
     events = [
+      {
+        event = "before-sleep";
+        command = lock-cmd;
+      }
+      {
+        event = "lock";
+        command = lock-cmd;
+      }
     ];
     timeouts = [
       {
