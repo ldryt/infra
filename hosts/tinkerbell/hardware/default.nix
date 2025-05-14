@@ -29,6 +29,11 @@
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
+  boot.plymouth = {
+    enable = true;
+    logo = null;
+  };
+
   services.fwupd.enable = true;
 
   services.fprintd.enable = true;
@@ -79,7 +84,18 @@
 
     loader.efi.canTouchEfiVariables = true;
 
-    # Lanzaboote currently replaces the systemd-boot module.
+    loader.timeout = 1;
+    loader.systemd-boot = {
+      configurationLimit = 9;
+      consoleMode = "auto";
+      memtest86 = {
+        enable = true;
+        sortKey = "z_memtest86";
+      };
+    };
+
+    # Lanzaboote currently replaces the systemd-boot module
+    # Options from 'config.boot.loader.systemd-boot' are inherited
     loader.systemd-boot.enable = false;
     initrd.systemd.enable = true;
     lanzaboote = {
