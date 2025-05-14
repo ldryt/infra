@@ -74,11 +74,6 @@
       "kvm-amd"
       "ddcci-backlight"
     ];
-    kernelParams = [
-      # For Power consumption
-      # https://community.frame.work/t/linux-battery-life-tuning/6665/156
-      "nvme.noacpi=1"
-    ];
     extraModulePackages = with config.boot.kernelPackages; [ ddcci-driver ];
 
     loader.efi.canTouchEfiVariables = true;
