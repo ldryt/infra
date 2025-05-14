@@ -22,7 +22,6 @@ let
 in
 {
   imports = [
-    ../common/foot.nix
     ../common/i3/i3status.nix
 
     (inputs.home-manager-unstable + "/modules/services/wluma.nix")
@@ -128,6 +127,7 @@ in
     };
   };
 
+  # Automatically adjust brightness
   services.wluma = {
     enable = true;
     package = pkgs-unstable.wluma;
@@ -166,6 +166,14 @@ in
     };
   };
 
+  programs.ghostty = {
+    enable = true;
+    enableBashIntegration = true;
+    settings = {
+      theme = "dark:GitLab-Dark,light:GitLab-Light";
+    };
+  };
+
   wayland.windowManager.sway = {
     enable = true;
     wrapperFeatures.gtk = true;
@@ -187,7 +195,7 @@ in
       ];
       colors = colorscheme.client;
       modifier = "Mod4";
-      terminal = "foot";
+      terminal = "${pkgs.ghostty}/bin/ghostty";
       keybindings =
         let
           mod = config.wayland.windowManager.sway.config.modifier;
