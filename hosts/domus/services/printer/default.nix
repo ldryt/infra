@@ -15,6 +15,11 @@
     logFile = config.services.moonraker.stateDir + "/logs/klippy.log";
   };
 
+  sops.secrets."services/moonraker/secrets" = {
+    owner = config.services.moonraker.user;
+    path = config.services.moonraker.stateDir + "/moonraker.secrets";
+  };
+
   security.polkit.enable = true;
   services.moonraker = {
     enable = true;
@@ -27,6 +32,18 @@
         cors_domains = [
           "https://printer.ldryt.dev"
         ];
+      };
+      "power Power_Supply" = {
+        type = "homeassistant";
+        protocol = "https";
+        address = "domus.ldryt.dev";
+        port = "443";
+        device = "switch.printer";
+        token = "{secrets.home_assistant.token}";
+        off_when_shutdown = true;
+        locked_while_printing = true;
+        restart_klipper_when_powered = true;
+        restart_delay = 3;
       };
     };
   };
