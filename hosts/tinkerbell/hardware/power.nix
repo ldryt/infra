@@ -8,8 +8,11 @@
     powerKeyLongPress = "poweroff";
     lidSwitch = config.services.logind.powerKey;
     lidSwitchDocked = "ignore";
-    lidSwitchExternalPower = "ignore";
   };
+
+  systemd.sleep.extraConfig = ''
+    HibernateDelaySec=3h
+  '';
 
   services.upower = {
     percentageLow = 75;
