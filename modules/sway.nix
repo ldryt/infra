@@ -1,26 +1,13 @@
 { ... }:
 {
   security.polkit.enable = true;
-
   services.dbus.enable = true;
+  programs.dconf.enable = true;
 
-  xdg.portal = {
-    enable = true;
-    xdgOpenUsePortal = true;
-    config = {
-      common = {
-        default = "wlr";
-      };
-    };
-    wlr.enable = true; # adds pkgs.xdg-desktop-portal-wlr to extraPortals
-  };
+  # fingerprint priority in swaylock
+  security.pam.services.swaylock = { };
 
-  # allow swaylock
-  security.pam.services.swaylock = {
-    text = "auth include login";
-  };
-
-  # decrease latency
+  # allow real-time priority requests
   security.pam.loginLimits = [
     {
       domain = "@users";
@@ -37,6 +24,4 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
-
-  programs.dconf.enable = true;
 }
