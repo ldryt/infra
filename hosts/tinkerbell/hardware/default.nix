@@ -31,7 +31,6 @@
 
   boot.plymouth = {
     enable = true;
-    logo = null;
   };
 
   services.fwupd.enable = true;
