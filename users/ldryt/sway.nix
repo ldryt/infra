@@ -27,25 +27,6 @@ in
     (inputs.home-manager-unstable + "/modules/services/wluma.nix")
   ];
 
-  # Portals configuration (used for e.g screensharing, theming)
-  gtk.enable = true;
-  xdg.portal = {
-    enable = true;
-    xdgOpenUsePortal = true;
-    extraPortals = with pkgs; [
-      xdg-desktop-portal-wlr
-      xdg-desktop-portal-gtk
-    ];
-    config = {
-      sway = {
-        default = [
-          "wlr"
-          "gtk"
-        ];
-      };
-    };
-  };
-
   home.packages = with pkgs; [
     # Screenshots
     slurp
@@ -174,6 +155,7 @@ in
     };
   };
 
+  gtk.enable = true;
   wayland.windowManager.sway = {
     enable = true;
     wrapperFeatures.gtk = true;

@@ -1,8 +1,29 @@
-{ ... }:
+{ pkgs, ... }:
 {
   security.polkit.enable = true;
   services.dbus.enable = true;
   programs.dconf.enable = true;
+
+  # Note: this should be in the home-manager config,
+  # but it only works here...
+  xdg.portal = {
+    enable = true;
+    xdgOpenUsePortal = true;
+    wlr.enable = true;
+    extraPortals = with pkgs; [
+      xdg-desktop-portal-gtk
+      darkman
+    ];
+    config = {
+      sway = {
+        default = [
+          "wlr"
+          "gtk"
+        ];
+        "org.freedesktop.impl.portal.Settings" = [ "darkman" ];
+      };
+    };
+  };
 
   # fingerprint priority in swaylock
   security.pam.services.swaylock = { };
