@@ -18,7 +18,7 @@ let
     ring-color=ffffff
     inside-ver-color=000000
   '';
-  lock-cmd = "playerctl pause ; ${pkgs.swaylock}/bin/swaylock --config=${swaylock-cfg}";
+  lock-cmd = "\"playerctl pause ; ${pkgs.swaylock}/bin/swaylock --config=${swaylock-cfg}\"";
 in
 {
   imports = [
