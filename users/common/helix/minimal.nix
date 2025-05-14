@@ -3,7 +3,7 @@
   programs.helix = {
     enable = true;
     settings = {
-      theme = "gruvbox";
+      theme = "base16_transparent";
       editor = {
         mouse = false;
         soft-wrap.enable = true;
