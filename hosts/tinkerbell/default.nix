@@ -38,6 +38,7 @@
       "/var/lib/fprint"
       "/var/lib/containers"
       "/var/lib/docker"
+      "/var/cache/tuigreet"
 
       # Quick and dirty fix for large nix builds
       "/tmp"
