@@ -45,6 +45,13 @@
   ];
 
   # --- Display
+  #
+  # Problem: when both camera and display are connected, the display doesn't function (but the camera does) and the system logs are flooded with this error:
+  #   i2c-bcm2835 fe205000.i2c: i2c transfer timed out
+  #   Goodix-TS 10-0014: Error writing 1 bytes to 0x814e: -110
+  #   Goodix-TS 10-0014: Error reading 10 bytes from 0x814e: -110
+  #
+  # Potential fix: https://forums.raspberrypi.com/viewtopic.php?t=381277
 
   # Add this to config.txt:
   #   dtoverlay=vc4-kms-v3d-pi4,cma-128
