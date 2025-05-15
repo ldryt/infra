@@ -128,6 +128,7 @@
               ./hosts/domus
               sops-nix.nixosModules.sops
               home-manager.nixosModules.home-manager
+              nixos-hardware.nixosModules.raspberry-pi-4
             ];
           };
         printer =
