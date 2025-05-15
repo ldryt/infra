@@ -166,7 +166,7 @@ in
   gtk.enable = true;
   wayland.windowManager.sway = {
     enable = true;
-    checkConfig = true;
+    checkConfig = false;
     wrapperFeatures.gtk = true;
     extraSessionCommands = ''
       export SDL_VIDEODRIVER=wayland
@@ -174,9 +174,8 @@ in
       export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
       # Fix for some Java AWT applications
       export _JAVA_AWT_WM_NONREPARENTING=1
-      # Vulkan needed for ICC color profile
-      # gles2,pixman as fallback
-      export WLR_RENDERER=vulkan,gles2,pixman
+      # Vulkan for ICC color profile
+      export WLR_RENDERER=vulkan
     '';
     extraConfig = ''
       # No titlebars
