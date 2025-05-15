@@ -167,76 +167,92 @@ in
   };
 
   gtk.enable = true;
-  wayland.windowManager.sway = {
-    enable = true;
-    checkConfig = false;
-    wrapperFeatures.gtk = true;
-    extraSessionCommands = ''
-      export SDL_VIDEODRIVER=wayland
-      export QT_QPA_PLATFORM=wayland
-      export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
-      # Fix for some Java AWT applications
-      export _JAVA_AWT_WM_NONREPARENTING=1
-      # Vulkan for ICC color profile
-      export WLR_RENDERER=vulkan
-    '';
-    extraConfig = ''
-      # No titlebars
-      default_border none
-      default_floating_border none
-      font pango:monospace 0.001
-      titlebar_padding 1
-      titlebar_border_thickness 0
-    '';
-    config = {
-      bars = [
-        {
-          statusCommand = "${pkgs.i3status}/bin/i3status";
-          colors = colorscheme.bar;
-        }
-      ];
-      colors = colorscheme.client;
-      modifier = "Mod4";
-      terminal = "${pkgs.ghostty}/bin/ghostty";
-      keybindings =
-        let
-          mod = config.wayland.windowManager.sway.config.modifier;
-          wobSocket = "$XDG_RUNTIME_DIR/wob.sock";
-          wpctlToWob = "&& wpctl get-volume @DEFAULT_SINK@ | awk '/\[MUTED\]/ {print 0; next} {print int($2 * 100)}' > ${wobSocket}";
-          brightnessctlToWob = "| awk '/Current brightness:/ { print int($3 / 255 * 100)}' > ${wobSocket}";
-        in
-        lib.mkOptionDefault {
-          "${mod}+d" = "exec ${pkgs.dmenu-wayland}/bin/dmenu-wl_run";
-          "${mod}+f" = "fullscreen";
-          "${mod}+l" = "exec ${lock-cmd}";
-          "XF86AudioPlay" = "exec playerctl play-pause";
-          "XF86AudioNext" = "exec playerctl next";
-          "XF86AudioPrev" = "exec playerctl previous";
-          "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle ${wpctlToWob}";
-          "XF86AudioLowerVolume" = "exec wpctl set-volume @DEFAULT_SINK@ 5%- ${wpctlToWob}";
-          "XF86AudioRaiseVolume" = "exec wpctl set-volume @DEFAULT_SINK@ 5%+ ${wpctlToWob}";
-          "XF86MonBrightnessDown" = "exec brightnessctl set 5%- ${brightnessctlToWob}";
-          "XF86MonBrightnessUp" = "exec brightnessctl set 5%+ ${brightnessctlToWob}";
-          "Print" = "exec grim -g \"$(slurp)\" - | wl-copy";
+  wayland.windowManager.sway =
+    let
+      mod = "Mod4";
+    in
+    {
+      enable = true;
+      checkConfig = false;
+      wrapperFeatures.gtk = true;
+      extraSessionCommands = ''
+        export SDL_VIDEODRIVER=wayland
+        export QT_QPA_PLATFORM=wayland
+        export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+        # Fix for some Java AWT applications
+        export _JAVA_AWT_WM_NONREPARENTING=1
+        # Vulkan for ICC color profile
+        export WLR_RENDERER=vulkan
+      '';
+      extraConfig = ''
+        # No titlebars
+        default_border none
+        default_floating_border none
+        font pango:monospace 0.001
+        titlebar_padding 1
+        titlebar_border_thickness 0
+
+        # Background apps
+        for_window [app_id="org.keepassxc.KeePassXC"] move scratchpad
+        bindsym ${mod}+p [app_id="org.keepassxc.KeePassXC"] scratchpad show
+        exec --no-startup-id keepassxc
+
+        for_window [app_id="thunderbird"] move scratchpad
+        bindsym ${mod}+m [app_id="thunderbird"] scratchpad show
+        exec --no-startup-id thunderbird
+
+        for_window [app_id="obsidian"] move scratchpad
+        bindsym ${mod}+n [app_id="obsidian"] scratchpad show
+        exec --no-startup-id obsidian
+      '';
+      config = {
+        bars = [
+          {
+            statusCommand = "${pkgs.i3status}/bin/i3status";
+            colors = colorscheme.bar;
+          }
+        ];
+        colors = colorscheme.client;
+        modifier = mod;
+        terminal = "${pkgs.ghostty}/bin/ghostty";
+        keybindings =
+          let
+            wobSocket = "$XDG_RUNTIME_DIR/wob.sock";
+            wpctlToWob = "&& wpctl get-volume @DEFAULT_SINK@ | awk '/\[MUTED\]/ {print 0; next} {print int($2 * 100)}' > ${wobSocket}";
+            brightnessctlToWob = "| awk '/Current brightness:/ { print int($3 / 255 * 100)}' > ${wobSocket}";
+          in
+          lib.mkOptionDefault {
+            "${mod}+d" = "exec ${pkgs.dmenu-wayland}/bin/dmenu-wl_run";
+            "${mod}+f" = "fullscreen";
+            "${mod}+l" = "exec ${lock-cmd}";
+            "XF86AudioPlay" = "exec playerctl play-pause";
+            "XF86AudioNext" = "exec playerctl next";
+            "XF86AudioPrev" = "exec playerctl previous";
+            "XF86AudioMute" = "exec wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle ${wpctlToWob}";
+            "XF86AudioLowerVolume" = "exec wpctl set-volume @DEFAULT_SINK@ 5%- ${wpctlToWob}";
+            "XF86AudioRaiseVolume" = "exec wpctl set-volume @DEFAULT_SINK@ 5%+ ${wpctlToWob}";
+            "XF86MonBrightnessDown" = "exec brightnessctl set 5%- ${brightnessctlToWob}";
+            "XF86MonBrightnessUp" = "exec brightnessctl set 5%+ ${brightnessctlToWob}";
+            "Print" = "exec grim -g \"$(slurp)\" - | wl-copy";
+          };
+        startup = [
+          { command = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"; }
+        ];
+        input = {
+          "type:touchpad" = {
+            tap = "enabled";
+            natural_scroll = "enabled";
+          };
         };
-      startup = [
-        { command = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"; }
-      ];
-      input = {
-        "type:touchpad" = {
-          tap = "enabled";
-          natural_scroll = "enabled";
-        };
-      };
-      output = {
-        "*" = {
-          bg = "${../common/wallpaper.jpg} fill";
-        };
-        "eDP-1" = {
-          scale = "1.25";
-          color_profile = "icc ${./BOE_CQ_______NE135FBM_N41_03.icm}";
+        output = {
+          "*" = {
+            bg = "${../common/wallpaper.jpg} fill";
+          };
+          "eDP-1" = {
+            scale = "1.25";
+            color_profile = "icc ${./BOE_CQ_______NE135FBM_N41_03.icm}";
+          };
         };
       };
     };
-  };
 }
