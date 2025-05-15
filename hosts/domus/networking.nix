@@ -33,7 +33,7 @@ in
 
   systemd.network = {
     links."10-${stationIF}" = {
-      matchConfig.PermanentMACAddress = macs.mt7921aun_st;
+      matchConfig.PermanentMACAddress = macs.onchip;
       linkConfig = {
         Name = stationIF;
         MACAddress = "5a:f6:d6:96:07:35";
