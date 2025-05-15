@@ -166,8 +166,18 @@ in
   gtk.enable = true;
   wayland.windowManager.sway = {
     enable = true;
-    wrapperFeatures.gtk = true;
     checkConfig = true;
+    wrapperFeatures.gtk = true;
+    extraSessionCommands = ''
+      export SDL_VIDEODRIVER=wayland
+      export QT_QPA_PLATFORM=wayland
+      export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
+      # Fix for some Java AWT applications
+      export _JAVA_AWT_WM_NONREPARENTING=1
+      # Vulkan needed for ICC color profile
+      # gles2,pixman as fallback
+      export WLR_RENDERER=vulkan,gles2,pixman
+    '';
     extraConfig = ''
       # No titlebars
       default_border none
@@ -222,7 +232,7 @@ in
         };
         "eDP-1" = {
           scale = "1.25";
-          scale_filter = "smart";
+          color_profile = "icc ${./BOE_CQ_______NE135FBM_N41_03.icm}";
         };
       };
     };

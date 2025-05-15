@@ -12,7 +12,7 @@
                               --remember-user-session \
                               --power-shutdown "/run/current-system/systemd/bin/systemctl poweroff" \
                               --power-reboot "/run/current-system/systemd/bin/systemctl reboot" \
-                              --cmd ${pkgs.sway}/bin/sway'';
+                              --cmd sway'';
       };
     };
   };
