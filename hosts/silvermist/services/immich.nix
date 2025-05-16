@@ -27,7 +27,7 @@ in
   virtualisation.oci-containers.containers = {
     "immich-server" = {
       hostname = "immich-server";
-      image = "ghcr.io/immich-app/immich-server:v1.131.3";
+      image = "ghcr.io/immich-app/immich-server:v1.132.3";
       environment = {
         IMMICH_CONFIG_FILE = immichConfigPath;
         DB_HOSTNAME = "immich-db";
@@ -51,7 +51,7 @@ in
     };
     "immich-machine-learning" = {
       hostname = "immich-machine-learning";
-      image = "ghcr.io/immich-app/immich-machine-learning:v1.131.3";
+      image = "ghcr.io/immich-app/immich-machine-learning:v1.132.3";
       volumes = [ "immich-ml-cache:/cache" ];
       extraOptions = [ "--network=${podmanNetwork}" ];
     };
@@ -68,7 +68,7 @@ in
     };
     "immich-redis" = {
       hostname = "immich-redis";
-      image = "docker.io/library/redis:6.2-alpine@sha256:84882e87b54734154586e5f8abd4dce69fe7311315e2fc6d67c29614c8de2672";
+      image = "docker.io/valkey/valkey:8-bookworm@sha256:42cba146593a5ea9a622002c1b7cba5da7be248650cbb64ecb9c6c33d29794b1";
       extraOptions = [ "--network=${podmanNetwork}" ];
     };
   };
@@ -118,6 +118,9 @@ in
       ];
       userinfo_signed_response_alg = oidcSigningAlg;
       id_token_signed_response_alg = oidcSigningAlg;
+
+      # https://github.com/immich-app/immich/releases/tag/v1.132.3
+      token_endpoint_auth_method = "client_secret_post";
     }
   ];
 
