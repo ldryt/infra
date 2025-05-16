@@ -17,8 +17,9 @@ let
     color=000000
     ring-color=ffffff
     inside-ver-color=000000
+    hide-keyboard-layout
   '';
-  lock-cmd = "\"playerctl pause ; ${pkgs.swaylock}/bin/swaylock --config=${swaylock-cfg}\"";
+  lock-cmd = "playerctl pause ; ${pkgs.swaylock}/bin/swaylock --config=${swaylock-cfg}";
 in
 {
   imports = [
@@ -224,7 +225,7 @@ in
           lib.mkOptionDefault {
             "${mod}+d" = "exec ${pkgs.dmenu-wayland}/bin/dmenu-wl_run";
             "${mod}+f" = "fullscreen";
-            "${mod}+l" = "exec ${lock-cmd}";
+            "${mod}+l" = "exec \"${lock-cmd}\"";
             "XF86AudioPlay" = "exec playerctl play-pause";
             "XF86AudioNext" = "exec playerctl next";
             "XF86AudioPrev" = "exec playerctl previous";
