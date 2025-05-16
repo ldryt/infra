@@ -243,6 +243,9 @@ in
             tap = "enabled";
             natural_scroll = "enabled";
           };
+          "type:keyboard" = {
+            xkb_layout = "qwerty-fr,us,fr";
+          };
         };
         output = {
           "*" = {
