@@ -22,5 +22,7 @@
     git-crypt
     nix-tree
     restic
+
+    bluetuith
   ];
 }
