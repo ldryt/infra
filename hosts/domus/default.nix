@@ -24,15 +24,7 @@
   system.stateVersion = "24.11";
 
   # Remove zfs:
-  boot.supportedFilesystems = lib.mkForce [
-    "btrfs"
-    "cifs"
-    "ext4"
-    "f2fs"
-    "xfs"
-    "vfat"
-    "ntfs"
-  ];
+  boot.supportedFilesystems.zfs = lib.mkForce false;
 
   # Some modules are included by default, but our rpi kernel doesn't
   # include all.
