@@ -138,12 +138,12 @@ in
           {
             name = "BOE 0x0BCA";
             path = "/sys/class/backlight/amdgpu_bl1";
-            capturer = "wayland";
+            capturer = "none";
           }
           {
             name = "G3N0018101Q";
             path = "/sys/class/backlight/ddcci14";
-            capturer = "wayland";
+            capturer = "none";
           }
         ];
       };
