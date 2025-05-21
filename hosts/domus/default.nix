@@ -26,6 +26,8 @@
   # Remove zfs:
   boot.supportedFilesystems.zfs = lib.mkForce false;
 
+  boot.kernelParams = lib.mkForce [ ];
+
   # Some modules are included by default, but our rpi kernel doesn't
   # include all.
   # This overlay ignores missing modules errors
