@@ -27,7 +27,7 @@ in
   virtualisation.oci-containers.containers = {
     "immich-server" = {
       hostname = "immich-server";
-      image = "ghcr.io/immich-app/immich-server:v1.132.3";
+      image = "ghcr.io/immich-app/immich-server:v1.133.0";
       environment = {
         IMMICH_CONFIG_FILE = immichConfigPath;
         DB_HOSTNAME = "immich-db";
@@ -51,17 +51,18 @@ in
     };
     "immich-machine-learning" = {
       hostname = "immich-machine-learning";
-      image = "ghcr.io/immich-app/immich-machine-learning:v1.132.3";
+      image = "ghcr.io/immich-app/immich-machine-learning:v1.133.0";
       volumes = [ "immich-ml-cache:/cache" ];
       extraOptions = [ "--network=${podmanNetwork}" ];
     };
     "immich-db" = {
       hostname = "immich-db";
-      image = "docker.io/tensorchord/pgvecto-rs:pg14-v0.2.0@sha256:90724186f0a3517cf6914295b5ab410db9ce23190a2d9d0b9dd6463e3fa298f0";
+      image = "ghcr.io/immich-app/postgres:14-vectorchord0.3.0-pgvectors0.2.0";
       environment = {
         POSTGRES_PASSWORD = "postgres";
         POSTGRES_USER = "postgres";
         POSTGRES_DB = "immich";
+        POSTGRES_INITDB_ARGS = "--data-checksums";
       };
       volumes = [ "immich-db-data:/var/lib/postgresql/data" ];
       extraOptions = [ "--network=${podmanNetwork}" ];
