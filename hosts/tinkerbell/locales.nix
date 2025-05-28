@@ -1,6 +1,8 @@
-{ ... }:
+{ lib, ... }:
 {
-  time.timeZone = "Europe/Paris";
+  time.timeZone = lib.mkDefault "Europe/Paris";
+  services.automatic-timezoned.enable = true;
+
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
     LC_TIME = "en_US.UTF-8";
