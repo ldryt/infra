@@ -10,6 +10,7 @@
     ../../modules/sway.nix
     ../../modules/geoclue.nix
     ../../modules/steam.nix
+    ../../modules/net1.nix
     ../../modules/nix-settings.nix
 
     ./services/windows-dockur.nix
@@ -76,6 +77,8 @@
         ".cache/keepassxc"
         ".config/obsidian"
         ".local/share/wluma"
+        "GNS3"
+        ".local/share/GNS3"
       ];
       files = [
         ".config/monitors.xml"
