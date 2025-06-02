@@ -1,10 +1,10 @@
 {
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-24.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager-unstable.url = "github:nix-community/home-manager";
     home-manager = {
-      url = "github:nix-community/home-manager/release-24.11";
+      url = "github:nix-community/home-manager/release-25.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sops-nix = {
@@ -25,7 +25,7 @@
     };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     impermanence.url = "github:nix-community/impermanence";
-    mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-24.05";
+    mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-25.05";
   };
   outputs =
     {
@@ -87,7 +87,6 @@
           nixpkgs.lib.nixosSystem {
             specialArgs = {
               inherit inputs;
-              pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
             };
             inherit system;
             modules = [
@@ -156,8 +155,10 @@
 
       homeConfigurations."lucas.ladreyt" =
         let
-          system = "x86_64-linux";
-          pkgs = nixpkgs.legacyPackages.${system};
+          pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            config.allowUnfree = true;
+          };
         in
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;

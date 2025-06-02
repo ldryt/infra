@@ -3,41 +3,41 @@
   programs.firefox = {
     enable = true;
     profiles.default = {
-      extensions = with firefox-addons.packages."x86_64-linux"; [
+      extensions.packages = with firefox-addons.packages."x86_64-linux"; [
         ublock-origin
         sponsorblock
       ];
       search = {
-        default = "DuckDuckGo";
+        default = "ddg";
         force = true;
         engines = {
           "GitHub" = {
             urls = [ { template = "https://github.com/search?q={searchTerms}"; } ];
-            iconUpdateURL = "https://github.com/fluidicon.png";
+            icon = "https://github.com/fluidicon.png";
             updateInterval = 7 * 24 * 60 * 60 * 1000;
             definedAliases = [ "gh" ];
           };
           "WolframAlpha" = {
             urls = [ { template = "https://www.wolframalpha.com/input?i={searchTerms}"; } ];
-            iconUpdateURL = "https://www.wolframalpha.com/_next/static/images/favicon_1zbE9hjk.ico";
+            icon = "https://www.wolframalpha.com/_next/static/images/favicon_1zbE9hjk.ico";
             updateInterval = 7 * 24 * 60 * 60 * 1000;
             definedAliases = [ "wa" ];
           };
           "MyNixOS" = {
             urls = [ { template = "https://mynixos.com/search?q={searchTerms}"; } ];
-            iconUpdateURL = "https://mynixos.com/favicon-dark.svg";
+            icon = "https://mynixos.com/favicon-dark.svg";
             updateInterval = 7 * 24 * 60 * 60 * 1000;
             definedAliases = [ "nx" ];
           };
           "Perplexity" = {
             urls = [ { template = "https://www.perplexity.ai/?q={searchTerms}"; } ];
-            iconUpdateURL = "https://www.perplexity.ai/favicon.ico";
+            icon = "https://www.perplexity.ai/favicon.ico";
             updateInterval = 7 * 24 * 60 * 60 * 1000;
             definedAliases = [ "p" ];
           };
           "Phind" = {
             urls = [ { template = "https://www.phind.com/search?q={searchTerms}&ignoreSearchResults=false"; } ];
-            iconUpdateURL = "https://www.phind.com/images/favicon.png";
+            icon = "https://www.phind.com/images/favicon.png";
             updateInterval = 7 * 24 * 60 * 60 * 1000;
             definedAliases = [ "ph" ];
           };

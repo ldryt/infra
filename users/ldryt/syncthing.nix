@@ -1,12 +1,8 @@
-{ inputs, config, ... }:
+{ config, ... }:
 {
   # BRAQOO2-4MD5S4O-ORGTC3X-DEJDE3Q-YRK7V4E-VXXBR32-77PFW7P-G4Z6PAO
   sops.secrets."services/syncthing/key" = { };
   sops.secrets."services/syncthing/cert" = { };
-
-  # workaround to use options from master for syncthing while staying on 24.11
-  imports = [ (inputs.home-manager-unstable + "/modules/services/syncthing.nix") ];
-  disabledModules = [ "services/syncthing.nix" ];
 
   # workaround to avoid syncthing-init.service dependency failure on boot
   systemd.user.services."syncthing".Unit.After = [ "sops-nix.service" ];

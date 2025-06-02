@@ -16,10 +16,7 @@
     ./services/windows-dockur.nix
   ];
 
-  nixpkgs.config = {
-    allowUnfree = true;
-    allowUnfreePredicate = _: true;
-  };
+  nixpkgs.config.allowUnfree = true;
 
   virtualisation.virtualbox.host.enable = true;
   virtualisation.docker.enable = true;

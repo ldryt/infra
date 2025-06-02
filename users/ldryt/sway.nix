@@ -1,9 +1,7 @@
 {
   lib,
-  config,
   pkgs,
   pkgs-unstable,
-  inputs,
   ...
 }:
 let
@@ -24,8 +22,6 @@ in
 {
   imports = [
     ../common/i3/i3status.nix
-
-    (inputs.home-manager-unstable + "/modules/services/wluma.nix")
   ];
 
   home.packages = with pkgs; [
@@ -120,7 +116,6 @@ in
   # Automatically adjust brightness
   services.wluma = {
     enable = true;
-    package = pkgs-unstable.wluma;
     settings = {
       als.iio = {
         path = "/sys/bus/iio/devices";

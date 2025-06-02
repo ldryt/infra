@@ -1,5 +1,4 @@
 {
-  inputs,
   config,
   pkgs-unstable,
   ...
@@ -54,11 +53,8 @@
   ];
   services.mainsail.enable = true;
 
-  imports = [ (inputs.nixpkgs-unstable + "/nixos/modules/services/video/ustreamer.nix") ];
-
   services.ustreamer = {
     enable = true;
-    package = pkgs-unstable.ustreamer;
     listenAddress = "0.0.0.0:9999";
     extraArgs = [
       "--resolution=1024x768"
