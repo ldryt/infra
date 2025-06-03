@@ -72,9 +72,7 @@
     ];
     kernelModules = [
       "kvm-amd"
-      "ddcci-backlight"
     ];
-    extraModulePackages = with config.boot.kernelPackages; [ ddcci-driver ];
 
     loader.efi.canTouchEfiVariables = true;
 
