@@ -11,10 +11,6 @@
   };
 
   systemd.sleep.extraConfig = ''
-    HibernateDelaySec=3h
+    HibernateDelaySec=45m
   '';
-
-  services.upower = {
-    percentageLow = 75;
-  };
 }
