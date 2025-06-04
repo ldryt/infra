@@ -1,10 +1,21 @@
 { ... }:
 {
+  services.dnscrypt-proxy2 = {
+    enable = true;
+    settings = {
+      http3 = true;
+      server_names = [ "NextDNS-c1dca3" ];
+      static = {
+        "NextDNS-c1dca3" = {
+          stamp = "sdns://AgEAAAAAAAAAAAAOZG5zLm5leHRkbnMuaW8HL2MxZGNhMw";
+        };
+      };
+    };
+  };
+
   networking.nameservers = [
-    "9.9.9.9"
-    "149.112.112.112"
-    "2620:fe::fe"
-    "2620:fe::9"
+    "127.0.0.1"
+    "::1"
   ];
 
   # No nameservers overrides
