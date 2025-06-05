@@ -1,17 +1,24 @@
-{
-  config,
-  pkgs-unstable,
-  ...
-}:
+{ config, ... }:
 {
   services.klipper = {
     enable = true;
     user = config.services.moonraker.user;
     group = config.services.moonraker.group;
     mutableConfig = true;
-    mutableConfigFolder = config.services.moonraker.stateDir + "/config";
+    configDir = config.services.moonraker.stateDir + "/config";
     configFile = ./VORON0.2_SKR_PICO_V1.0.cfg;
     logFile = config.services.moonraker.stateDir + "/logs/klippy.log";
+  };
+
+  # Add package 'klipper-firmware-*' to system packages
+  services.klipper.firmwares."SKR_PICO_V1.0" = {
+    enable = true;
+    enableKlipperFlash = true;
+    serial = "/dev/null"; # can't flash this mcu
+
+    # To get this config file, run package 'klipper-genconf'
+    # (make sure version match with pkgs.klipper)
+    configFile = ./SKR_PICO_V1.0__firmware.env;
   };
 
   sops.secrets."services/moonraker/secrets" = {
