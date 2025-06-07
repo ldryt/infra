@@ -14,5 +14,6 @@
     obsidian
     telegram-desktop
     parsec-bin
+    libreoffice
   ];
 }
