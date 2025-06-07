@@ -5,7 +5,6 @@
     ./networking.nix
     ./users.nix
 
-    ./services/vaultwarden.nix
     ./services/immich.nix
     ./services/frontpage.nix
     ./services/authelia.nix
