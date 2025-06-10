@@ -22,7 +22,6 @@
         wifi = {
           mode = "infrastructure";
           ssid = "$LYS_SSID";
-          band = "a";
         };
         wifi-security = {
           key-mgmt = "wpa-psk";
