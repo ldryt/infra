@@ -15,5 +15,6 @@
     telegram-desktop
     parsec-bin
     libreoffice
+    slack
   ];
 }
