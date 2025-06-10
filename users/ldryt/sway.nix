@@ -248,7 +248,7 @@ in
             bg = "${../common/wallpaper.jpg} fill";
           };
           "eDP-1" = {
-            scale = "1.25";
+            scale = "1";
             color_profile = "icc ${./BOE_CQ_______NE135FBM_N41_03.icm}";
           };
         };
