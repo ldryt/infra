@@ -76,6 +76,10 @@
         ".local/share/wluma"
         "GNS3"
         ".local/share/GNS3"
+        ".parsec"
+        ".parsec-persistent"
+        ".local/share/TelegramDesktop"
+        ".config/Slack"
       ];
       files = [
         ".config/monitors.xml"
