@@ -11,14 +11,22 @@
   };
 
   # Add package 'klipper-firmware-*' to system packages
-  services.klipper.firmwares."SKR_PICO_V1.0" = {
-    enable = true;
-    enableKlipperFlash = true;
-    serial = "/dev/null"; # can't flash this mcu
+  services.klipper.firmwares = {
+    "SKR_PICO_V1.0" = {
+      enable = true;
+      enableKlipperFlash = true;
+      serial = "/dev/null"; # can't flash this mcu
 
-    # To get this config file, run package 'klipper-genconf'
-    # (make sure version match with pkgs.klipper)
-    configFile = ./SKR_PICO_V1.0__firmware.env;
+      # To get this config file, run package 'klipper-genconf'
+      # (make sure version match with pkgs.klipper)
+      configFile = ./SKR_PICO_V1.0__firmware.env;
+    };
+    "STM32-Klipper-Expander" = {
+      enable = true;
+      enableKlipperFlash = true;
+      serial = "/dev/null";
+      configFile = ./STM32-Klipper-Expander__firmware.env;
+    };
   };
 
   sops.secrets."services/moonraker/secrets" = {
