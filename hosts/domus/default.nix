@@ -7,12 +7,8 @@
     ./networking.nix
     ./users.nix
 
-    ./services/home-assistant.nix
-    ./services/access-point.nix
-    ./services/syncthing.nix
     ./services/printer
 
-    ../../modules/backups.nix
     ../../modules/openssh.nix
     ../../modules/nix-settings.nix
   ];
