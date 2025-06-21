@@ -14,6 +14,7 @@
     ../../modules/nix-settings.nix
 
     ./services/windows-dockur.nix
+    ./services/libvirt-single-gpu-passthrough.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -26,7 +27,8 @@
   sops.defaultSopsFile = ./secrets.yaml;
   sops.age.keyFile = "/nix/persist/sops_age_tinkerbell.key";
 
-  environment.persistence."/nix/persist" = {
+  environment.persistence.tinkerbell = {
+    persistentStoragePath = "/nix/persist";
     hideMounts = true;
     directories = [
       "/var/log"
