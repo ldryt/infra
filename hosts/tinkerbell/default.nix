@@ -55,6 +55,7 @@
         "Pictures"
         "Videos"
         "VirtualBox VMs"
+        ".config/VirtualBox"
         "Sync"
         ".local/state/syncthing"
         ".ssh"
