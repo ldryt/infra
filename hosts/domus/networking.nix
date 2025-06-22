@@ -14,23 +14,6 @@ in
     useNetworkd = true;
   };
 
-  # Avahi is more stable...
-  services.resolved = {
-    llmnr = "false";
-    extraConfig = ''
-      MulticastDNS=no
-    '';
-  };
-  services.avahi = {
-    enable = true;
-    openFirewall = true;
-    nssmdns4 = true;
-    publish = {
-      enable = true;
-      addresses = true;
-    };
-  };
-
   systemd.network = {
     links."10-${stationIF}" = {
       matchConfig.PermanentMACAddress = macs.onchip;
