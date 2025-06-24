@@ -18,5 +18,7 @@
 
   services.journald.console = "/dev/tty1";
 
+  boot.loader.timeout = 1;
+
   system.stateVersion = "24.11";
 }
