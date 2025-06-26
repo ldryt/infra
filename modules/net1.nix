@@ -1,6 +1,6 @@
-{ pkgs, ... }:
+{ pkgs-pie, ... }:
 {
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs-pie; [
     gns3-gui
     gns3-server
     inetutils
@@ -17,7 +17,7 @@
   virtualisation.virtualbox.host.enable = true;
 
   security.wrappers.ubridge = {
-    source = "${pkgs.ubridge}/bin/ubridge";
+    source = "${pkgs-pie.ubridge}/bin/ubridge";
     capabilities = "cap_net_admin,cap_net_raw=ep";
     owner = "root";
     group = "root";

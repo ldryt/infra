@@ -2,6 +2,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpie.url = "git+https://gitlab.cri.epita.fr/forge/infra/nixpie.git";
     home-manager-unstable.url = "github:nix-community/home-manager";
     home-manager = {
       url = "github:nix-community/home-manager/release-25.05";
@@ -39,6 +40,7 @@
       nixos-hardware,
       impermanence,
       mailserver,
+      nixpie,
       ...
     }@inputs:
     let
@@ -87,6 +89,9 @@
           nixpkgs.lib.nixosSystem {
             specialArgs = {
               inherit inputs;
+              pkgs-pie = import nixpie.inputs.nixpkgs {
+                inherit system;
+              };
             };
             inherit system;
             modules = [
