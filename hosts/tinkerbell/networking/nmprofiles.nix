@@ -70,20 +70,20 @@
           psk = "$ROSETTA_PWD";
         };
       };
-      IONIS = {
+      eduroam = {
         "802-1x" = {
           eap = "peap;";
-          identity = "$IONIS_ID";
-          password = "$IONIS_PWD";
+          identity = "$eduroam_ID";
+          password = "$eduroam_PWD";
           phase2-auth = "mschapv2";
         };
         connection = {
-          id = "IONIS";
+          id = "eduroam";
           type = "wifi";
         };
         wifi = {
           mode = "infrastructure";
-          ssid = "IONIS";
+          ssid = "eduroam";
         };
         wifi-security = {
           auth-alg = "open";
