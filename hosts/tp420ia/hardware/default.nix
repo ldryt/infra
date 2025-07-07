@@ -47,12 +47,12 @@
     #
     # To register password in TPM:
     # > sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+2+7+12 --wipe-slot=tpm2 /dev/nvme0n1p2
-    loader.systemd-boot.enable = true;
-    #initrd.systemd.enable = true;
-    #lanzaboote = {
-    #  enable = true;
-    #  pkiBundle = "/etc/secureboot";
-    #};
+    loader.systemd-boot.enable = lib.mkForce false;
+    initrd.systemd.enable = true;
+    lanzaboote = {
+      enable = true;
+      pkiBundle = "/var/lib/sbctl";
+    };
   };
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";

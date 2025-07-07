@@ -21,7 +21,7 @@
       "/var/lib/nixos"
       "/var/lib/systemd/coredump"
       "/var/cache/powertop"
-      "/etc/secureboot"
+      "/var/lib/sbctl"
     ];
     files = [
       "/etc/machine-id"

@@ -129,6 +129,7 @@
             disko.nixosModules.disko
             impermanence.nixosModules.impermanence
             home-manager.nixosModules.home-manager
+            lanzaboote.nixosModules.lanzaboote
           ];
         };
         domus =
