@@ -6,6 +6,7 @@
     ./users.nix
 
     ../../modules/nix-settings.nix
+    ../../modules/openssh.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
@@ -22,8 +23,14 @@
       "/var/cache/powertop"
       "/etc/secureboot"
     ];
-    files = [ "/etc/machine-id" ];
+    files = [
+      "/etc/machine-id"
+      "/etc/ssh/ssh_host_ed25519_key"
+      "/etc/ssh/ssh_host_rsa_key"
+    ];
   };
+
+  time.timeZone = "Europe/Paris";
 
   system.stateVersion = "23.05";
 }
