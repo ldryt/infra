@@ -118,6 +118,19 @@
             mailserver.nixosModules.mailserver
           ];
         };
+        tp420ia = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            inherit inputs;
+          };
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/tp420ia
+            sops-nix.nixosModules.sops
+            disko.nixosModules.disko
+            impermanence.nixosModules.impermanence
+            home-manager.nixosModules.home-manager
+          ];
+        };
         domus =
           let
             system = "aarch64-linux";
