@@ -15,9 +15,13 @@
       };
       logLevel = "INFO";
     };
-    firewall.allowedTCPPorts = [
-      # Syncthing LAN
-      22000
-    ];
+    firewall = {
+      allowedTCPPorts = [
+        # Syncthing LAN
+        22000
+      ];
+      # Don't drop wireguard packets
+      checkReversePath = "loose";
+    };
   };
 }

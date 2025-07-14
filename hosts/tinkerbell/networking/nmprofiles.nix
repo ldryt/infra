@@ -4,6 +4,30 @@
   networking.networkmanager.ensureProfiles = {
     environmentFiles = [ config.sops.secrets."system/NetworkManager/profiles/env".path ];
     profiles = {
+      wg_GNB = {
+        connection = {
+          id = "wg_GNB";
+          interface-name = "wg_GNB";
+          type = "wireguard";
+        };
+        ipv4 = {
+          address1 = "192.168.27.65/32";
+          method = "manual";
+        };
+        ipv6 = {
+          method = "disabled";
+        };
+        wireguard = {
+          mtu = "1360";
+          private-key = "$wg_GNB_PRIVATE_KEY";
+        };
+        "wireguard-peer.auwq1FbYBSiMBTktf105iLyIv6CRPIK5KGy9zvdVNhE=" = {
+          allowed-ips = "0.0.0.0/0;192.168.27.64/27;192.168.0.0/24;";
+          endpoint = "$wg_GNB_ENDPOINT";
+          preshared-key = "$wg_GNB_PRESHARED_KEY";
+          preshared-key-flags = "0";
+        };
+      };
       LYS = {
         connection = {
           id = "$LYS_SSID";
