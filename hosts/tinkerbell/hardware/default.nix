@@ -29,13 +29,9 @@
 
   boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
 
-  boot.plymouth = {
-    enable = true;
-  };
-
   services.fwupd.enable = true;
 
-  services.fprintd.enable = true;
+  services.fprintd.enable = false;
 
   services.xserver.xkb = {
     layout = "qwerty-fr,us,fr";
