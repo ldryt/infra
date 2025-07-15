@@ -14,7 +14,6 @@
   ];
 
   virtualisation.docker.enable = true;
-  virtualisation.virtualbox.host.enable = true;
 
   security.wrappers.ubridge = {
     source = "${pkgs-pie.ubridge}/bin/ubridge";
