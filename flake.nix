@@ -68,14 +68,25 @@
         {
           default = pkgs.mkShell {
             buildInputs = with pkgs; [
-              sops
+              inputs.self.packages.${system}.sops-keepass
               terraform
               jq
             ];
             shellHook = ''
-              export SOPS_AGE_KEY_FILE=~/.keyring/sops_age_ldryt.key
-              export TF_VAR_cloudflare_token_file=~/.keyring/cloudflare_token
-              export TF_VAR_hcloud_token_file=~/.keyring/hcloud_token
+              export KEEPASS_DB="$HOME/Sync/Vault/keyring.kdbx"
+
+              echo "Enter password to unlock $KEEPASS_DB":
+              read -rs KEEPASS_PASSWORD
+              echo
+
+              read_secret() {
+                echo "$KEEPASS_PASSWORD" | ${pkgs.keepassxc}/bin/keepassxc-cli show -a notes "$KEEPASS_DB" "$1"
+              }
+
+              export TF_VAR_cloudflare_token="$(read_secret 'cloudflare_token')"
+              export TF_VAR_hcloud_token="$(read_secret 'hcloud_token')"
+
+              unset KEEPASS_PASSWORD
             '';
           };
         }
@@ -167,10 +178,18 @@
           };
       };
 
-      packages = forAllSystems (system: {
-        sdImage-printer = self.nixosConfigurations.printer.config.system.build.sdImage;
-        sdImage-domus = self.nixosConfigurations.domus.config.system.build.sdImage;
-      });
+      packages = forAllSystems (
+        system:
+        let
+          pkgs = import nixpkgs { inherit system; };
+        in
+        {
+          sops-keepass = pkgs.callPackage ./pkgs/sops-keepass.nix { };
+
+          sdImage-printer = self.nixosConfigurations.printer.config.system.build.sdImage;
+          sdImage-domus = self.nixosConfigurations.domus.config.system.build.sdImage;
+        }
+      );
 
       homeConfigurations."lucas.ladreyt" =
         let

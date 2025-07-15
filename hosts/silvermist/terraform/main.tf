@@ -26,23 +26,23 @@ locals {
 }
 
 
-variable "hcloud_token_file" {
-  description = "Hetzner Cloud API Token. Can be loaded using environment variable 'TF_VAR_hcloud_token_file'"
+variable "hcloud_token" {
   type        = string
+  sensitive   = true
 }
 
-variable "cloudflare_token_file" {
-  description = "Cloudflare API Token. Can be loaded using environment variable 'TF_VAR_cloudflare_token_file'"
-  type        = string
+variable "cloudflare_token" {
+  type      = string
+  sensitive = true
 }
 
 
 provider "sops" {}
 
 provider "cloudflare" {
-  api_token = file(var.cloudflare_token_file)
+  api_token = var.cloudflare_token
 }
 
 provider "hcloud" {
-  token = file(var.hcloud_token_file)
+  token = var.hcloud_token
 }

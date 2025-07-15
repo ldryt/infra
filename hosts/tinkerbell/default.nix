@@ -1,4 +1,4 @@
-{ lib, ... }:
+{ ... }:
 {
   imports = [
     ./hardware
@@ -19,11 +19,6 @@
 
   nixpkgs.config.allowUnfree = true;
 
-  virtualisation.virtualbox.host.enable = true;
-  virtualisation.docker.enable = true;
-  # https://discourse.nixos.org/t/disable-a-systemd-service-while-having-it-in-nixoss-conf/12732/4
-  systemd.services.docker.wantedBy = lib.mkForce [ ];
-
   sops.defaultSopsFile = ./secrets.yaml;
   sops.age.keyFile = "/nix/persist/sops_age_tinkerbell.key";
 
@@ -37,13 +32,9 @@
       "/var/lib/systemd/coredump"
       "/var/cache/powertop"
       "/etc/secureboot"
-      "/var/lib/fprint"
       "/var/lib/containers"
       "/var/lib/docker"
       "/var/cache/tuigreet"
-
-      # Quick and dirty fix for large nix builds
-      "/tmp"
     ];
     files = [ "/etc/machine-id" ];
 
@@ -54,15 +45,10 @@
         "Music"
         "Pictures"
         "Videos"
-        "VirtualBox VMs"
-        ".config/VirtualBox"
         "Sync"
         ".local/state/syncthing"
         ".ssh"
-        ".keyring"
         ".local/share/direnv"
-        ".local/share/keyrings"
-        ".config/vesktop"
         ".config/SuperSlicer"
         ".mozilla"
         ".thunderbird"
@@ -70,23 +56,13 @@
         ".config/dconf"
         ".local/share/Steam"
         ".config/JetBrains"
-        ".config/evolution"
-        ".config/goa-1.0"
-        ".cache/tracker3"
         ".config/keepassxc"
         ".cache/keepassxc"
         ".config/obsidian"
-        ".local/share/wluma"
-        "GNS3"
-        ".local/share/GNS3"
         ".parsec"
         ".parsec-persistent"
         ".local/share/TelegramDesktop"
         ".config/Slack"
-      ];
-      files = [
-        ".config/monitors.xml"
-        ".config/mimeapps.list"
       ];
     };
   };
