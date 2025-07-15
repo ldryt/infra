@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  pkgs-unstable,
   ...
 }:
 let
@@ -149,19 +148,6 @@ in
         font pango:monospace 0.001
         titlebar_padding 1
         titlebar_border_thickness 0
-
-        # Background apps
-        for_window [app_id="org.keepassxc.KeePassXC"] move scratchpad
-        bindsym ${mod}+p [app_id="org.keepassxc.KeePassXC"] scratchpad show
-        exec --no-startup-id keepassxc
-
-        for_window [app_id="thunderbird"] move scratchpad
-        bindsym ${mod}+m [app_id="thunderbird"] scratchpad show
-        exec --no-startup-id thunderbird
-
-        for_window [app_id="obsidian"] move scratchpad
-        bindsym ${mod}+n [app_id="obsidian"] scratchpad show
-        exec --no-startup-id obsidian
       '';
       config = {
         bars = [
