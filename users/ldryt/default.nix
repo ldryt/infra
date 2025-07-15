@@ -25,7 +25,7 @@
   };
 
   sops = {
-    age.keyFile = "${config.home.homeDirectory}/.keyring/sops_age_ldryt.key";
+    age.keyFile = "/nix/persist/sops_age_ldryt.key";
     defaultSopsFile = ./secrets.yaml;
     defaultSymlinkPath = "${config.home.homeDirectory}/.sops/secrets";
     defaultSecretsMountPoint = "${config.home.homeDirectory}/.sops/secrets.d";
