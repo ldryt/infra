@@ -22,6 +22,8 @@
     git-crypt
     nix-tree
     restic
+    rclone
+    encfs
 
     bluetuith
   ];
