@@ -10,11 +10,7 @@
     ../../modules/sway.nix
     ../../modules/geoclue.nix
     ../../modules/steam.nix
-    ../../modules/net1.nix
     ../../modules/nix-settings.nix
-
-    ./services/windows-dockur.nix
-    ./services/libvirt-single-gpu-passthrough.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -32,8 +28,6 @@
       "/var/lib/systemd/coredump"
       "/var/cache/powertop"
       "/etc/secureboot"
-      "/var/lib/containers"
-      "/var/lib/docker"
       "/var/cache/tuigreet"
     ];
     files = [ "/etc/machine-id" ];
