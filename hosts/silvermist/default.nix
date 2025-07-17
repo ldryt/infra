@@ -11,7 +11,6 @@
     ./services/tunnel.nix
     ./services/mailserver.nix
     ./services/radicale.nix
-    ./services/monitoring.nix
     ./services/syncthing.nix
 
     ../../modules/nginx.nix
