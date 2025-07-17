@@ -1,5 +1,5 @@
 let
-  dns = builtins.fromJSON (builtins.readFile ../dns.json);
+  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
 
   min-port = 10000;
   max-port = 20000;

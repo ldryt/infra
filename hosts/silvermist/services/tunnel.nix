@@ -1,6 +1,6 @@
 { pkgs, config, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../dns.json);
+  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   wireguardPort = 62879;
   wireguardIF = "tunneltunnel";
   wgIp = "10.22.22";

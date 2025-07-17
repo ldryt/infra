@@ -1,6 +1,6 @@
 { config, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../dns.json);
+  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   oidcClientID = "2NADHAc~yxd~kNvfJg4PwJNXE1ErhAcQ2~9FPZEh2TgxLY_GIJdv1LluQGKv38iSy~JYNxo.";
 in
 {

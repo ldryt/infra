@@ -1,6 +1,6 @@
 { config, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../dns.json);
+  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   internalPort = "5232";
   dataDir = "/var/lib/radicale/collections";
 in

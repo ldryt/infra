@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../dns.json);
+  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   dataDir = "/mnt/nextcloud-data";
   backupsTmpDir = "/tmp/nextcloud_backups";
   oidcClientID = "Yn08v8LYLXu81BOva30ja9WAKg9CFSGJ7tXh~PaxTP_mPF1XtajkG8hEnj13cuFJ4FjII55D";

@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../dns.json);
+  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   subfolder = "link";
   podmanNetwork = "shlink-network";
   internalPort = "44086";

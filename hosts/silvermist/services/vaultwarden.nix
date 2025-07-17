@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../dns.json);
+  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   backupsTmpDir = "/tmp/bitwarden_rs_backup";
   dataDir = "/var/lib/bitwarden_rs";
 in

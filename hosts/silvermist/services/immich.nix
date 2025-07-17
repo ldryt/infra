@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../dns.json);
+  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   dataDir = "/mnt/immich-library";
   podmanNetwork = "immich-network";
   internalPort = "44084";

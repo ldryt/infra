@@ -1,6 +1,6 @@
 { config, pkgs, ... }:
 let
-  silvermistDNS = builtins.fromJSON (builtins.readFile ../../hosts/silvermist/dns.json);
+  silvermistDNS = builtins.fromJSON (builtins.readFile ../../hosts/silvermist/../../dns.json);
   nextcloudInstanceURL = "https://${silvermistDNS.subdomains.nextcloud}.${silvermistDNS.zone}";
   paths = [
     "/Documents"

@@ -1,6 +1,6 @@
 { config, lib, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../dns.json);
+  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
 in
 {
   sops.secrets."services/mailserver/users/ldryt/password" = { };

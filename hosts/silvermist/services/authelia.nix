@@ -1,6 +1,6 @@
 { config, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../dns.json);
+  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   autheliaPublicFQDN = "${dns.subdomains.authelia}.${dns.zone}";
   autheliaInternalAddress = "localhost:44092";
   dataDir = "/var/lib/authelia-${config.services.authelia.instances.main.name}";

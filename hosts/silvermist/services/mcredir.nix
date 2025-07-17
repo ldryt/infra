@@ -1,6 +1,6 @@
 { pkgs, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../dns.json);
+  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   FQDN = dns.subdomains.mcredir + "." + dns.zone;
   FQDNRegex = builtins.replaceStrings [ "." ] [ ''\.'' ] FQDN;
   mcpulsePorts = {

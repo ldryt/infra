@@ -1,6 +1,6 @@
 { config, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../dns.json);
+  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   opendkimSocket = "/run/opendkim/opendkim.sock";
 in
 {

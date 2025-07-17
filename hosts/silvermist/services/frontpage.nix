@@ -1,6 +1,6 @@
 { ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../dns.json);
+  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
 in
 {
   services.nginx.virtualHosts."${dns.zone}" = {

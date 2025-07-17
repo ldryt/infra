@@ -5,7 +5,7 @@
   ...
 }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../dns.json);
+  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   dataDir = "/mnt/ocis-data";
   oidcClientID = "ocis-web";
 in
