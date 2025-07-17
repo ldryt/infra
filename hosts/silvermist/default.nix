@@ -42,7 +42,7 @@
       "/var/lib/fail2ban"
       "/var/lib/containers"
       "/var/lib/systemd/coredump"
-      "/var/cache/fscache"
+      "/var/cache"
     ];
     files = [
       "/etc/machine-id"

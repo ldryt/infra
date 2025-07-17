@@ -15,6 +15,12 @@ in
       group = "opendkim";
       mode = "0750";
     }
+    {
+      directory = "/var/lib/rspamd";
+      user = "rspamd";
+      group = "rspamd";
+      mode = "0700";
+    }
   ];
 
   security.acme.certs."${dns.subdomains.mailserver}.${dns.zone}" = {
