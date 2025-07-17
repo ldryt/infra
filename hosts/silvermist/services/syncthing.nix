@@ -36,6 +36,10 @@ in
             "domus"
             "rosetta"
           ];
+          versioning = {
+            type = "simple";
+            params.keep = "10";
+          };
         };
         "~/ldryt-vault" = {
           id = "ldryt-vault";
@@ -45,6 +49,10 @@ in
             "domus"
             "rosetta"
           ];
+          versioning = {
+            type = "simple";
+            params.keep = "10";
+          };
         };
         "~/ldryt-documents" = {
           id = "ldryt-documents";
@@ -54,6 +62,10 @@ in
             "domus"
             "rosetta"
           ];
+          versioning = {
+            type = "simple";
+            params.keep = "10";
+          };
         };
         "~/ldryt-pictures" = {
           id = "ldryt-pictures";
@@ -61,6 +73,10 @@ in
             "tinkerbell"
             "rosetta"
           ];
+          versioning = {
+            type = "simple";
+            params.keep = "10";
+          };
         };
       };
     };

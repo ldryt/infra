@@ -29,6 +29,10 @@
             "domus"
             "rosetta"
           ];
+          versioning = {
+            type = "simple";
+            params.keep = "10";
+          };
         };
         "~/Sync/Notes" = {
           id = "ldryt-notes";
@@ -37,6 +41,10 @@
             "domus"
             "rosetta"
           ];
+          versioning = {
+            type = "simple";
+            params.keep = "10";
+          };
         };
         "~/Documents" = {
           id = "ldryt-documents";
@@ -45,6 +53,10 @@
             "domus"
             "rosetta"
           ];
+          versioning = {
+            type = "simple";
+            params.keep = "10";
+          };
         };
         "~/Pictures" = {
           id = "ldryt-pictures";
@@ -52,6 +64,10 @@
             "silvermist"
             "rosetta"
           ];
+          versioning = {
+            type = "simple";
+            params.keep = "10";
+          };
         };
       };
     };
