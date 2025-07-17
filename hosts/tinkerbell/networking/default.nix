@@ -10,7 +10,6 @@
     networkmanager = {
       enable = true;
       wifi = {
-        backend = "iwd";
         powersave = true;
         macAddress = "stable-ssid";
       };
