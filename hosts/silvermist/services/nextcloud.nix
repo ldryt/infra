@@ -62,7 +62,6 @@ in
       client_id = oidcClientID;
       client_secret = "$pbkdf2-sha512$310000$vmlFc9aoWutrZykeVwndlg$DrkOquUG9Wqhd7EdGtcuAT0M3nrxPC8SyTyvKJeEt1EqwzQiZbMax38Nl8C1Tsoglq8dyDulByofSR3wlhBwcw";
       public = false;
-      authorization_policy = "one_factor";
       require_pkce = true;
       pkce_challenge_method = "S256";
       redirect_uris = [ "https://${dns.subdomains.nextcloud}.${dns.zone}/apps/user_oidc/code" ];

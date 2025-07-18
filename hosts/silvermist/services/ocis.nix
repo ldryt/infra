@@ -59,7 +59,6 @@ in
         client_name = "ownCloud Web";
         client_id = oidcClientID;
         public = true;
-        authorization_policy = "one_factor";
         scopes = [
           "email"
           "groups"

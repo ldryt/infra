@@ -105,7 +105,6 @@ in
       client_id = oidcClientID;
       client_secret = "$pbkdf2-sha512$310000$Huutr5ZUtLI/eUqou676MA$p2z9qxBbkkjkDoPni55VAfCP4gO4TzE78Vob2FbLfhAn3syHa6/97NjHhyVsz9B7xWB2lkkiYDtCs6jBC1th4w";
       public = false;
-      authorization_policy = "one_factor";
       consent_mode = "implicit";
       redirect_uris = [
         "https://${dns.subdomains.immich}.${dns.zone}/auth/login"

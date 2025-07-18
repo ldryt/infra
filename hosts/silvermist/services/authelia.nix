@@ -54,8 +54,8 @@ in
 
       identity_providers.oidc = {
         lifespans = {
-          access_token = "10d";
-          refresh_token = "10d";
+          access_token = "1h";
+          refresh_token = "3d";
         };
         cors = {
           endpoints = [
@@ -68,11 +68,10 @@ in
         };
       };
 
-      access_control.default_policy = "one_factor";
+      access_control.default_policy = "two_factor";
 
       authentication_backend = {
         file.path = config.sops.secrets."services/authelia/users".path;
-        password_reset.disable = true;
       };
 
       totp.issuer = autheliaPublicFQDN;
