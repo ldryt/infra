@@ -14,9 +14,9 @@ terraform {
       source  = "carlpett/sops"
       version = "~>1.2.0"
     }
-    cloudflare = {
-      version = "~>5.5.0"
-      source  = "cloudflare/cloudflare"
+    desec = {
+      source  = "Valodim/desec"
+      version = "~>0.6.1"
     }
   }
 }
@@ -27,11 +27,11 @@ locals {
 
 
 variable "hcloud_token" {
-  type        = string
-  sensitive   = true
+  type      = string
+  sensitive = true
 }
 
-variable "cloudflare_token" {
+variable "desec_token" {
   type      = string
   sensitive = true
 }
@@ -39,8 +39,8 @@ variable "cloudflare_token" {
 
 provider "sops" {}
 
-provider "cloudflare" {
-  api_token = var.cloudflare_token
+provider "desec" {
+  api_token = var.desec_token
 }
 
 provider "hcloud" {

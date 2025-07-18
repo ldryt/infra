@@ -24,7 +24,7 @@ in
   ];
 
   security.acme.certs."${dns.subdomains.mailserver}.${dns.zone}" = {
-    dnsProvider = "cloudflare";
+    dnsProvider = "desec";
     environmentFile = config.sops.secrets."services/postfix/certs/acme/env".path;
     group = config.services.postfix.group;
   };

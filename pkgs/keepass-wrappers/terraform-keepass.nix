@@ -5,7 +5,7 @@ let
   DB_PATH = "$HOME/Sync/Vault/keyring.kdbx";
 
   TF_VAR_ENTRIES = [
-    "cloudflare_token"
+    "desec_token"
     "hcloud_token"
   ];
   TF_VAR_ATTR = "notes";

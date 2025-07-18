@@ -8,7 +8,7 @@ in
 
   sops.secrets."services/postfix/certs/acme/env" = { };
   security.acme.certs."${dns.subdomains.postfix}.${dns.zone}" = {
-    dnsProvider = "cloudflare";
+    dnsProvider = "desec";
     environmentFile = config.sops.secrets."services/postfix/certs/acme/env".path;
     group = config.services.postfix.group;
   };
