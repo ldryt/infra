@@ -60,34 +60,15 @@
       devShells = forAllSystems (
         system:
         let
-          pkgs = import nixpkgs {
-            config.allowUnfree = true;
-            inherit system;
-          };
+          pkgs = import nixpkgs { inherit system; };
         in
         {
           default = pkgs.mkShell {
             buildInputs = with pkgs; [
               inputs.self.packages.${system}.sops-keepass
-              terraform
+              inputs.self.packages.${system}.terraform-keepass
               jq
             ];
-            shellHook = ''
-              export KEEPASS_DB="$HOME/Sync/Vault/keyring.kdbx"
-
-              echo "Enter password to unlock $KEEPASS_DB":
-              read -rs KEEPASS_PASSWORD
-              echo
-
-              read_secret() {
-                echo "$KEEPASS_PASSWORD" | ${pkgs.keepassxc}/bin/keepassxc-cli show -a notes "$KEEPASS_DB" "$1"
-              }
-
-              export TF_VAR_cloudflare_token="$(read_secret 'cloudflare_token')"
-              export TF_VAR_hcloud_token="$(read_secret 'hcloud_token')"
-
-              unset KEEPASS_PASSWORD
-            '';
           };
         }
       );
@@ -181,10 +162,14 @@
       packages = forAllSystems (
         system:
         let
-          pkgs = import nixpkgs { inherit system; };
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
         in
         {
-          sops-keepass = pkgs.callPackage ./pkgs/sops-keepass.nix { };
+          sops-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/sops-keepass.nix { };
+          terraform-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/terraform-keepass.nix { };
 
           sdImage-printer = self.nixosConfigurations.printer.config.system.build.sdImage;
           sdImage-domus = self.nixosConfigurations.domus.config.system.build.sdImage;
