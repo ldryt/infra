@@ -60,13 +60,18 @@
       devShells = forAllSystems (
         system:
         let
-          pkgs = import nixpkgs { inherit system; };
+          pkgs = import nixpkgs {
+            inherit system;
+            config.allowUnfree = true;
+          };
         in
         {
           default = pkgs.mkShell {
             buildInputs = with pkgs; [
               inputs.self.packages.${system}.sops-keepass
               inputs.self.packages.${system}.terraform-keepass
+              terraform
+              sops
               jq
             ];
           };
