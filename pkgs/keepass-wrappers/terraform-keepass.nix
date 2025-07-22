@@ -1,6 +1,6 @@
 { pkgs }:
 let
-  keepass_cmd = "${pkgs.keepassxc}/bin/keepassxc-cli show -q -a";
+  keepass_cmd = "keepassxc-cli show -q -a";
 
   DB_PATH = "$HOME/Sync/Vault/keyring.kdbx";
 
@@ -17,26 +17,38 @@ let
     entries:
     builtins.concatStringsSep "\n" (
       map (entry: ''
-        export TF_VAR_${entry}="$(
+        TF_VAR_${entry}="$(
           echo "$KEEPASS_PASSWORD" | ${keepass_cmd} "${TF_VAR_ATTR}" "${DB_PATH}" "${entry}"
         )"
+        export TF_VAR_${entry}
       '') entries
     );
 in
-pkgs.writeShellScriptBin "terraform-keepass" ''
-  set -euo pipefail
+pkgs.writeShellApplication {
+  name = "terraform-keepass";
 
-  read -rsp "Enter password to unlock ${DB_PATH}: " KEEPASS_PASSWORD
-  echo
+  runtimeInputs = with pkgs; [
+    terraform
+    keepassxc
+    jq
+  ];
 
-  export SOPS_AGE_KEY_FILE="$(umask 077; mktemp)"
-  trap 'rm -f "$SOPS_AGE_KEY_FILE"' EXIT
+  text = ''
+    set -euo pipefail
 
-  echo "$KEEPASS_PASSWORD" | ${keepass_cmd} "${SOPS_KEY_ATTR}" "${DB_PATH}" "${SOPS_KEY_ENTRY}" > $SOPS_AGE_KEY_FILE
+    read -rsp "Enter password to unlock ${DB_PATH}: " KEEPASS_PASSWORD
+    echo
 
-  ${genTfVarExports TF_VAR_ENTRIES}
+    SOPS_AGE_KEY_FILE="$(umask 077; mktemp)"
+    trap 'rm -f "$SOPS_AGE_KEY_FILE"' EXIT
 
-  unset KEEPASS_PASSWORD
+    echo "$KEEPASS_PASSWORD" | ${keepass_cmd} "${SOPS_KEY_ATTR}" "${DB_PATH}" "${SOPS_KEY_ENTRY}" > "$SOPS_AGE_KEY_FILE"
 
-  "${pkgs.terraform}/bin/terraform" "$@"
-''
+    ${genTfVarExports TF_VAR_ENTRIES}
+
+    unset KEEPASS_PASSWORD
+
+    export SOPS_AGE_KEY_FILE
+    terraform "$@"
+  '';
+}
