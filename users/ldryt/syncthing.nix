@@ -46,7 +46,7 @@
             params.keep = "10";
           };
         };
-        "~/Documents" = {
+        "~/Documents/Sync" = {
           id = "ldryt-documents";
           devices = [
             "silvermist"
