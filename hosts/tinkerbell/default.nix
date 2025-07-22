@@ -43,6 +43,7 @@
         ".local/state/syncthing"
         ".ssh"
         ".local/share/direnv"
+        ".local/share/wluma"
         ".config/SuperSlicer"
         ".mozilla"
         ".thunderbird"

@@ -1,6 +1,7 @@
 {
   lib,
   pkgs,
+  pkgs-unstable,
   ...
 }:
 let
@@ -115,15 +116,16 @@ in
   # Automatically adjust brightness
   services.wluma = {
     enable = true;
+    package = pkgs-unstable.wluma;
     settings = {
       als.iio = {
         path = "/sys/bus/iio/devices";
         thresholds = {
           "0" = "night";
           "20" = "dark";
+          "80" = "dim";
           "250" = "normal";
           "500" = "bright";
-          "80" = "dim";
           "800" = "outdoors";
         };
       };
@@ -132,19 +134,19 @@ in
           {
             name = "BOE 0x0BCA";
             path = "/sys/class/backlight/amdgpu_bl1";
-            capturer = "none";
+            capturer = "wayland";
           }
           {
             name = "G3N0018101Q";
             path = "/sys/class/backlight/ddcci14";
-            capturer = "none";
+            capturer = "wayland";
           }
         ];
       };
       keyboard = [
         {
           name = "framework-keyboard";
-          path = "/sys/class/leds/framework_laptop::kbd_backlight";
+          path = "/sys/class/leds/chromeos::kbd_backlight";
         }
       ];
     };

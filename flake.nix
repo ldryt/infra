@@ -89,6 +89,7 @@
               pkgs-pie = import nixpie.inputs.nixpkgs {
                 inherit system;
               };
+              pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
             };
             inherit system;
             modules = [
