@@ -112,6 +112,44 @@ in
     };
   };
 
+  # Automatically adjust brightness
+  services.wluma = {
+    enable = true;
+    settings = {
+      als.iio = {
+        path = "/sys/bus/iio/devices";
+        thresholds = {
+          "0" = "night";
+          "20" = "dark";
+          "250" = "normal";
+          "500" = "bright";
+          "80" = "dim";
+          "800" = "outdoors";
+        };
+      };
+      output = {
+        backlight = [
+          {
+            name = "BOE 0x0BCA";
+            path = "/sys/class/backlight/amdgpu_bl1";
+            capturer = "none";
+          }
+          {
+            name = "G3N0018101Q";
+            path = "/sys/class/backlight/ddcci14";
+            capturer = "none";
+          }
+        ];
+      };
+      keyboard = [
+        {
+          name = "framework-keyboard";
+          path = "/sys/class/leds/framework_laptop::kbd_backlight";
+        }
+      ];
+    };
+  };
+
   programs.ghostty = {
     enable = true;
     enableBashIntegration = true;
