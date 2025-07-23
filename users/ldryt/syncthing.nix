@@ -15,61 +15,40 @@
       options = {
         urAccepted = -1;
         crashReportingEnabled = false;
+        natEnabled = false;
+        localAnnounceEnabled = false;
       };
-      devices = {
-        "domus".id = "PRSTEYD-BFS3F7N-6AS245G-SFISD7N-CDZPWIK-MN6U7PN-NPW64SW-UTKRWA5";
-        "rosetta".id = "27GKCTR-KWK6GEH-RQSNP6R-MENWWMA-XPKMLIN-HAKD2FC-BC5BBKX-HGVV2QX";
-        "silvermist".id = "DURUBGK-S45UN27-6QQSHDA-7FWX3OS-4VCM4TD-NYMK6TV-JTEF742-VBTF7AZ";
-      };
-      folders = {
-        "~/Sync/Vault" = {
-          id = "ldryt-vault";
-          devices = [
-            "silvermist"
-            "domus"
-            "rosetta"
-          ];
-          versioning = {
-            type = "simple";
-            params.keep = "10";
+      devices = builtins.removeAttrs (builtins.fromJSON (
+        builtins.readFile ../../syncthing-devices.json
+      )) [ "tinkerbell" ];
+      folders =
+        let
+          folderCfg = {
+            devices = [
+              "silvermist"
+              "domus"
+              "rosetta"
+            ];
+            versioning = {
+              type = "simple";
+              params.keep = "10";
+            };
           };
+        in
+        {
+          "~/Sync/Vault" = {
+            id = "ldryt-vault";
+          } // folderCfg;
+          "~/Sync/Notes" = {
+            id = "ldryt-notes";
+          } // folderCfg;
+          "~/Documents/Sync" = {
+            id = "ldryt-documents";
+          } // folderCfg;
+          "~/Pictures" = {
+            id = "ldryt-pictures";
+          } // folderCfg;
         };
-        "~/Sync/Notes" = {
-          id = "ldryt-notes";
-          devices = [
-            "silvermist"
-            "domus"
-            "rosetta"
-          ];
-          versioning = {
-            type = "simple";
-            params.keep = "10";
-          };
-        };
-        "~/Documents/Sync" = {
-          id = "ldryt-documents";
-          devices = [
-            "silvermist"
-            "domus"
-            "rosetta"
-          ];
-          versioning = {
-            type = "simple";
-            params.keep = "10";
-          };
-        };
-        "~/Pictures" = {
-          id = "ldryt-pictures";
-          devices = [
-            "silvermist"
-            "rosetta"
-          ];
-          versioning = {
-            type = "simple";
-            params.keep = "10";
-          };
-        };
-      };
     };
   };
 }

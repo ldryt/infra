@@ -13,39 +13,42 @@
     cert = config.sops.secrets."services/syncthing/cert".path;
     settings = {
       options = {
+        urAccepted = -1;
+        crashReportingEnabled = false;
+        natEnabled = false;
         localAnnounceEnabled = false;
       };
-      devices = {
-        "tinkerbell".id = "BRAQOO2-4MD5S4O-ORGTC3X-DEJDE3Q-YRK7V4E-VXXBR32-77PFW7P-G4Z6PAO";
-        "rosetta".id = "27GKCTR-KWK6GEH-RQSNP6R-MENWWMA-XPKMLIN-HAKD2FC-BC5BBKX-HGVV2QX";
-        "silvermist".id = "DURUBGK-S45UN27-6QQSHDA-7FWX3OS-4VCM4TD-NYMK6TV-JTEF742-VBTF7AZ";
-      };
-      folders = {
-        "~/ldryt-notes" = {
-          id = "ldryt-notes";
-          devices = [
-            "tinkerbell"
-            "silvermist"
-            "rosetta"
+      devices = builtins.removeAttrs (builtins.fromJSON (
+        builtins.readFile ../../../syncthing-devices.json
+      )) [ "domus" ];
+      folders =
+        let
+          folderCfg = {
+            type = "receiveonly";
+            devices = [
+              "tinkerbell"
+              "domus"
+              "rosetta"
+            ];
+            versioning = {
+              type = "simple";
+              params.keep = "10";
+            };
+          };
+          folderIds = [
+            "ldryt-notes"
+            "ldryt-vault"
+            "ldryt-documents"
           ];
-        };
-        "~/ldryt-vault" = {
-          id = "ldryt-vault";
-          devices = [
-            "tinkerbell"
-            "silvermist"
-            "rosetta"
-          ];
-        };
-        "~/ldryt-documents" = {
-          id = "ldryt-documents";
-          devices = [
-            "tinkerbell"
-            "silvermist"
-            "rosetta"
-          ];
-        };
-      };
+        in
+        builtins.listToAttrs (
+          map (id: {
+            name = "~/${id}";
+            value = {
+              inherit id;
+            } // folderCfg;
+          }) folderIds
+        );
     };
   };
   systemd.services.syncthing.environment.STNODEFAULTFOLDER = "true";
