@@ -147,22 +147,6 @@
               nixos-hardware.nixosModules.raspberry-pi-4
             ];
           };
-        printer =
-          let
-            system = "aarch64-linux";
-          in
-          nixpkgs.lib.nixosSystem {
-            specialArgs = {
-              inherit inputs;
-              pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
-            };
-            inherit system;
-            modules = [
-              ./hosts/printer
-              sops-nix.nixosModules.sops
-              home-manager.nixosModules.home-manager
-            ];
-          };
       };
 
       packages = forAllSystems (
@@ -177,7 +161,6 @@
           sops-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/sops-keepass.nix { };
           terraform-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/terraform-keepass.nix { };
 
-          sdImage-printer = self.nixosConfigurations.printer.config.system.build.sdImage;
           sdImage-domus = self.nixosConfigurations.domus.config.system.build.sdImage;
         }
       );
