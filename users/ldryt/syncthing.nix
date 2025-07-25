@@ -45,7 +45,7 @@
           "~/Documents/Sync" = {
             id = "ldryt-documents";
           } // folderCfg;
-          "~/Pictures" = {
+          "~/Pictures/Sync" = {
             id = "ldryt-pictures";
           } // folderCfg;
         };

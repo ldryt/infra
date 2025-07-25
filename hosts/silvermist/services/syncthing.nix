@@ -30,6 +30,7 @@ in
         let
           folderCfg = {
             type = "receiveonly";
+            ignorePerms = true;
             devices = [
               "tinkerbell"
               "domus"
