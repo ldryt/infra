@@ -10,6 +10,7 @@
           stamp = "sdns://AgEAAAAAAAAAAAAOZG5zLm5leHRkbnMuaW8HL2MxZGNhMw";
         };
       };
+      sources = { };
     };
   };
 
