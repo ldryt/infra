@@ -27,7 +27,7 @@ in
   virtualisation.oci-containers.containers = {
     "immich-server" = {
       hostname = "immich-server";
-      image = "ghcr.io/immich-app/immich-server:v1.135.1";
+      image = "ghcr.io/immich-app/immich-server:v1.136.0";
       environment = {
         IMMICH_CONFIG_FILE = immichConfigPath;
         DB_HOSTNAME = "immich-db";
@@ -51,7 +51,7 @@ in
     };
     "immich-machine-learning" = {
       hostname = "immich-machine-learning";
-      image = "ghcr.io/immich-app/immich-machine-learning:v1.135.1";
+      image = "ghcr.io/immich-app/immich-machine-learning:v1.136.0";
       volumes = [ "immich-ml-cache:/cache" ];
       extraOptions = [ "--network=${podmanNetwork}" ];
     };
