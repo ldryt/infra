@@ -114,9 +114,9 @@ in
 
   config = {
     ldryt-infra.backups.hosts = mkIf cfg.enableDefaultHosts {
-      glouton.url = mkDefault "sftp:u391790-sub3@u391790-sub3.your-storagebox.de";
+      glouton.url = mkDefault "u391790-sub3@u391790-sub3.your-storagebox.de";
       tp420ia = {
-        url = mkDefault "sftp:restic-backups@tp420ia.ldryt.dev";
+        url = mkDefault "restic-backups@tp420ia.ldryt.dev";
         port = mkDefault 34971;
       };
     };
@@ -144,7 +144,7 @@ in
                     passwordFile
                     ;
                   initialize = true;
-                  repository = "${hostCfg.url}:restic-repo-${repoName}";
+                  repository = "sftp:${hostCfg.url}:restic-repo-${repoName}";
                   extraOptions = repoCfg.extraOptions ++ [
                     "sftp.command='ssh ${hostCfg.url} -p ${toString hostCfg.port} -i ${hostCfg.sshKey} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -s sftp'"
                   ];
