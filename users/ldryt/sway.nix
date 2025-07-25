@@ -17,7 +17,7 @@ let
     inside-ver-color=000000
     hide-keyboard-layout
   '';
-  lock-cmd = "playerctl pause ; ${pkgs.swaylock}/bin/swaylock --config=${swaylock-cfg}";
+  lock-cmd = "${pkgs.playerctl}/bin/playerctl pause ; ${pkgs.swaylock}/bin/swaylock --config=${swaylock-cfg}";
 in
 {
   imports = [
