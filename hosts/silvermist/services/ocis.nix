@@ -189,7 +189,9 @@ in
     };
   };
 
-  ldryt-infra.backups.ocis = {
+  sops.secrets."backups/restic/repos/ocis/password" = { };
+  ldryt-infra.backups.repos.ocis = {
+    passwordFile = config.sops.secrets."backups/restic/repos/ocis/password".path;
     paths = [ dataDir ];
   };
 }

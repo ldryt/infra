@@ -115,7 +115,9 @@ in
     kTLS = true;
   };
 
-  ldryt-infra.backups.nextcloud = {
+  sops.secrets."backups/restic/repos/nextcloud/password" = { };
+  ldryt-infra.backups.repos.nextcloud = {
+    passwordFile = config.sops.secrets."backups/restic/repos/nextcloud/password".path;
     paths = [
       backupsTmpDir
       dataDir

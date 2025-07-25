@@ -101,7 +101,9 @@ in
     locations."/".proxyPass = "http://${autheliaInternalAddress}";
   };
 
-  ldryt-infra.backups.authelia = {
+  sops.secrets."backups/restic/repos/authelia/password" = { };
+  ldryt-infra.backups.repos.authelia = {
+    passwordFile = config.sops.secrets."backups/restic/repos/authelia/password".path;
     paths = [ config.services.authelia.instances.main.settings.storage.local.path ];
   };
 }

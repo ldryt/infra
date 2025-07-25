@@ -72,7 +72,9 @@ in
   security.acme.acceptTerms = true;
   security.acme.defaults.email = lib.mkForce "security@ldryt.dev";
 
-  ldryt-infra.backups.mailserver = {
+  sops.secrets."backups/restic/repos/mailserver/password" = { };
+  ldryt-infra.backups.repos.mailserver = {
+    passwordFile = config.sops.secrets."backups/restic/repos/mailserver/password".path;
     paths = [
       config.mailserver.mailDirectory
       config.mailserver.dkimKeyDirectory

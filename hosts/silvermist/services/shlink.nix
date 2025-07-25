@@ -64,7 +64,9 @@ in
     locations."/${subfolder}".proxyPass = "http://127.0.0.1:${internalPort}";
   };
 
-  ldryt-infra.backups.shlink = {
+  sops.secrets."backups/restic/repos/shlink/password" = { };
+  ldryt-infra.backups.repos.shlink = {
+    passwordFile = config.sops.secrets."backups/restic/repos/shlink/password".path;
     paths = [ backupsTmpDir ];
     backupPrepareCommand = ''
       ${pkgs.bash}/bin/bash -c '

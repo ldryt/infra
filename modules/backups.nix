@@ -8,68 +8,151 @@ with lib;
 
 let
   cfg = config.ldryt-infra.backups;
-  inherit (utils.systemdUtils.unitOptions) unitOption;
-
-  storageBox = "u391790-sub3@u391790-sub3.your-storagebox.de";
 in
 {
-  options.ldryt-infra.backups = mkOption {
-    type = types.attrsOf (
-      types.submodule (
-        { ... }:
-        {
+  options.ldryt-infra.backups = {
+    enableDefaultHosts = mkOption {
+      type = types.bool;
+      default = true;
+    };
+
+    hosts = mkOption {
+      type = types.attrsOf (
+        types.submodule {
           options = {
-            paths = mkOption {
-              type = types.nullOr (types.listOf types.str);
-              default = [ ];
+            enable = mkOption {
+              type = types.bool;
+              default = true;
             };
-            backupPrepareCommand = mkOption {
-              type = types.nullOr types.str;
-              default = null;
+
+            url = mkOption {
+              type = types.str;
             };
-            backupCleanupCommand = mkOption {
-              type = types.nullOr types.str;
-              default = null;
+
+            sshKey = mkOption {
+              type = types.str;
             };
-            timerConfig = mkOption {
-              type = types.nullOr (types.attrsOf unitOption);
-              default = {
-                OnCalendar = "daily";
-                RandomizedDelaySec = "2h";
-                Persistent = true;
-              };
+
+            port = mkOption {
+              type = types.port;
+              default = 23;
             };
           };
         }
-      )
-    );
+      );
+      default = { };
+    };
+
+    repos = mkOption {
+      type = types.attrsOf (
+        types.submodule (
+          { name, ... }:
+          {
+            options = {
+              hosts = mkOption {
+                type = types.listOf (types.enum (attrNames cfg.hosts));
+                default = [
+                  "glouton"
+                  "tp420ia"
+                ];
+              };
+
+              passwordFile = mkOption {
+                type = types.str;
+              };
+
+              user = mkOption {
+                type = types.str;
+                default = "root";
+              };
+
+              paths = mkOption {
+                type = types.listOf types.str;
+                default = [ ];
+              };
+
+              backupPrepareCommand = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+              };
+
+              backupCleanupCommand = mkOption {
+                type = types.nullOr types.str;
+                default = null;
+              };
+
+              timerConfig = mkOption {
+                type = types.nullOr (types.attrsOf (utils.systemdUtils.unitOptions.unitOption));
+                default = {
+                  OnCalendar = "daily";
+                  RandomizedDelaySec = "2h";
+                  Persistent = true;
+                };
+              };
+
+              pruneOpts = mkOption {
+                type = types.listOf types.str;
+                default = [
+                  "--keep-daily 7"
+                  "--keep-weekly 8"
+                  "--keep-monthly 12"
+                  "--keep-yearly 100"
+                ];
+              };
+
+              extraOptions = mkOption {
+                type = types.listOf types.str;
+                default = [ ];
+              };
+            };
+          }
+        )
+      );
+      default = { };
+    };
   };
+
   config = {
-    sops.secrets."backups/restic/repositoryPass".owner = "root";
-    sops.secrets."backups/restic/sshKey".owner = "root";
-    services.restic.backups = mapAttrs' (
-      name: conf:
-      nameValuePair name {
-        user = "root";
-        backupPrepareCommand = conf.backupPrepareCommand;
-        backupCleanupCommand = conf.backupCleanupCommand;
-        paths = conf.paths;
-        initialize = true;
-        repository = "sftp:${storageBox}:restic-repo-${name}";
-        extraOptions = [
-          "sftp.command='ssh ${storageBox} -p 23 -i ${
-            config.sops.secrets."backups/restic/sshKey".path
-          } -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -s sftp'"
-        ];
-        passwordFile = config.sops.secrets."backups/restic/repositoryPass".path;
-        pruneOpts = [
-          "--keep-daily 7"
-          "--keep-weekly 8"
-          "--keep-monthly 12"
-          "--keep-yearly 100"
-        ];
-        timerConfig = conf.timerConfig;
-      }
-    ) cfg;
+    ldryt-infra.backups.hosts = mkIf cfg.enableDefaultHosts {
+      glouton.url = mkDefault "sftp:u391790-sub3@u391790-sub3.your-storagebox.de";
+      tp420ia = {
+        url = mkDefault "sftp:restic-backups@tp420ia.ldryt.dev";
+        port = mkDefault 34971;
+      };
+    };
+
+    services.restic.backups =
+      let
+        enabledHosts = filterAttrs (hostName: hostCfg: hostCfg.enable) cfg.hosts;
+        all = concatLists (
+          mapAttrsToList (
+            repoName: repoCfg:
+            map (hostName: {
+              name = "${repoName}@${hostName}";
+              value =
+                let
+                  hostCfg = enabledHosts.${hostName};
+                in
+                {
+                  inherit (repoCfg)
+                    user
+                    paths
+                    backupPrepareCommand
+                    backupCleanupCommand
+                    timerConfig
+                    pruneOpts
+                    passwordFile
+                    ;
+                  initialize = true;
+                  repository = "${hostCfg.url}:restic-repo-${repoName}";
+                  extraOptions = repoCfg.extraOptions ++ [
+                    "sftp.command='ssh ${hostCfg.url} -p ${toString hostCfg.port} -i ${hostCfg.sshKey} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -s sftp'"
+                  ];
+                };
+            }) (filter (host: hasAttr host enabledHosts) repoCfg.hosts)
+          ) cfg.repos
+        );
+      in
+      listToAttrs all;
   };
 }

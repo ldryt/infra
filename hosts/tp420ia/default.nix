@@ -5,6 +5,8 @@
     ./networking
     ./users.nix
 
+    ./services/sftp-backups.nix
+
     ../../modules/nix-settings.nix
     ../../modules/openssh.nix
   ];

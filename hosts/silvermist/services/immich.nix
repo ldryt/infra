@@ -124,7 +124,9 @@ in
     }
   ];
 
-  ldryt-infra.backups.immich = {
+  sops.secrets."backups/restic/repos/immich/password" = { };
+  ldryt-infra.backups.repos.immich = {
+    passwordFile = config.sops.secrets."backups/restic/repos/immich/password".path;
     paths = [
       backupsTmpDir
       dataDir

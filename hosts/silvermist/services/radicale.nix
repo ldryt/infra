@@ -6,7 +6,12 @@ let
 in
 {
   environment.persistence.silvermist.directories = [ dataDir ];
-  ldryt-infra.backups.radicale.paths = [ dataDir ];
+
+  sops.secrets."backups/restic/repos/radicale/password" = { };
+  ldryt-infra.backups.repos.radicale = {
+    passwordFile = config.sops.secrets."backups/restic/repos/radicale/password".path;
+    paths = [ dataDir ];
+  };
 
   sops.secrets."services/radicale/htpasswd".owner = config.users.users.radicale.name;
   services.radicale = {

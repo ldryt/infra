@@ -27,7 +27,9 @@ in
     };
   };
 
-  ldryt-infra.backups.vaultwarden = {
+  sops.secrets."backups/restic/repos/vaultwarden/password" = { };
+  ldryt-infra.backups.repos.vaultwarden = {
+    passwordFile = config.sops.secrets."backups/restic/repos/vaultwarden/password".path;
     paths = [ backupsTmpDir ];
     # https://github.com/NixOS/nixpkgs/blob/592047fc9e4f7b74a4dc85d1b9f5243dfe4899e3/nixos/modules/services/security/vaultwarden/backup.sh
     backupPrepareCommand = ''

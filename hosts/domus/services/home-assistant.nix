@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 let
   backupsDir = "/mnt/home-assistant";
 in
@@ -21,7 +21,9 @@ in
   };
   systemd.services."podman-home-assistant".serviceConfig.RestartSec = "15s";
 
-  ldryt-infra.backups.home-assistant = {
+  sops.secrets."backups/restic/repos/home-assistant/password" = { };
+  ldryt-infra.backups.repos.home-assistant = {
+    passwordFile = config.sops.secrets."backups/restic/repos/home-assistant/password".path;
     paths = [ backupsDir ];
   };
 }
