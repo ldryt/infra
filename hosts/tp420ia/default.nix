@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 {
   imports = [
     ./hardware
@@ -10,10 +10,26 @@
     ../../modules/nix-settings.nix
     ../../modules/openssh.nix
     ../../modules/fail2ban.nix
+    ../../modules/backups.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
   sops.age.keyFile = "/nix/persist/sops_age_tp420ia.key";
+
+  sops.secrets."backups/restic/hosts/glouton/sshKey" = { };
+  sops.secrets."backups/restic/repos/tp420ia/password" = { };
+  ldryt-infra.backups = {
+    hosts = {
+      glouton.sshKey = config.sops.secrets."backups/restic/hosts/glouton/sshKey".path;
+      tp420ia.enable = false;
+    };
+    repos = {
+      tp420ia = {
+        passwordFile = config.sops.secrets."backups/restic/repos/tp420ia/password".path;
+        paths = [ "/nix/persist" ];
+      };
+    };
+  };
 
   environment.persistence.tp420ia = {
     persistentStoragePath = "/nix/persist";

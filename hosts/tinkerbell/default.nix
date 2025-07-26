@@ -62,5 +62,10 @@
     };
   };
 
+  environment.persistence."/nix/tmp".directories = [
+    "/tmp"
+    "/var/tmp"
+  ];
+
   system.stateVersion = "23.05";
 }
