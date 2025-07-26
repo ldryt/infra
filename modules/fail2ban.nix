@@ -14,16 +14,24 @@
     extraPackages = [ pkgs.ipset ];
     banaction = "iptables-ipset-proto6-allports";
     maxretry = 1;
-    bantime = "24h";
+    bantime = "8h";
     bantime-increment = {
       enable = true;
       formula = "ban.Time * math.exp(float(ban.Count+1)*banFactor)/math.exp(1*banFactor)";
       overalljails = true;
-      rndtime = "4m";
+      rndtime = "16h";
     };
     jails = {
       "portscan".settings = {
         filter = "portscan";
+        backend = "systemd";
+      };
+      "sshd".settings = {
+        mode = "aggressive";
+        backend = "systemd";
+      };
+      "postfix".settings = {
+        mode = "aggressive";
         backend = "systemd";
       };
     };
