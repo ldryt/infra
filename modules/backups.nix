@@ -84,7 +84,8 @@ in
               timerConfig = mkOption {
                 type = types.nullOr (types.attrsOf (utils.systemdUtils.unitOptions.unitOption));
                 default = {
-                  OnCalendar = "daily";
+                  # everyday between 2AM and 4AM UTC
+                  OnCalendar = "*-*-* 02:00:00 UTC";
                   RandomizedDelaySec = "2h";
                   Persistent = true;
                 };
