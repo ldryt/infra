@@ -9,6 +9,7 @@
 
     ../../modules/nix-settings.nix
     ../../modules/openssh.nix
+    ../../modules/fail2ban.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
