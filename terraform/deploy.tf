@@ -1,17 +1,22 @@
-module "silvermist-deploy" {
-  source                 = "github.com/nix-community/nixos-anywhere//terraform/all-in-one"
-  nixos_system_attr      = ".#nixosConfigurations.${hcloud_server.silvermist_server.name}.config.system.build.toplevel"
-  nixos_partitioner_attr = ".#nixosConfigurations.${hcloud_server.silvermist_server.name}.config.system.build.diskoScript"
+module "deploy" {
+  for_each = local.servers
 
-  instance_id        = hcloud_server.silvermist_server.id
-  target_host        = hcloud_primary_ip.silvermist_ipv4.ip_address
+  source = "github.com/nix-community/nixos-anywhere//terraform/all-in-one"
+
+  nixos_system_attr      = ".#nixosConfigurations.${each.key}.config.system.build.toplevel"
+  nixos_partitioner_attr = ".#nixosConfigurations.${each.key}.config.system.build.diskoScript"
+
+  instance_id = each.value.id
+  target_host = each.value.ip
+
   target_user        = "colon"
-  install_user       = "root"
-  install_ssh_key    = nonsensitive(data.sops_file.silvermist_secrets.data["users.colon.sshKey"])
-  deployment_ssh_key = nonsensitive(data.sops_file.silvermist_secrets.data["users.colon.sshKey"])
+  deployment_ssh_key = nonsensitive(data.sops_file.secrets[each.key].data["nixos-anywhere.deploy.colon.sshKey"])
+
+  install_user    = "root"
+  install_ssh_key = nonsensitive(data.sops_file.secrets[each.key].data["nixos-anywhere.install.sshKey"])
 
   extra_files_script = "${path.module}/deploy-sops-key.sh"
   extra_environment = {
-    "SERVER_NAME" = hcloud_server.silvermist_server.name
+    "SERVER_NAME" = each.key
   }
 }

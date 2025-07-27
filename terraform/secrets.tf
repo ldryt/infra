@@ -1,3 +1,5 @@
-data "sops_file" "silvermist_secrets" {
-  source_file = "${path.module}/../hosts/silvermist/secrets.yaml"
+data "sops_file" "secrets" {
+  for_each = local.servers
+
+  source_file = each.value.sops_file
 }

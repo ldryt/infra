@@ -17,7 +17,8 @@
       extraGroups = [ "wheel" ];
       hashedPasswordFile = config.sops.secrets."users/colon/hashedPassword".path;
       openssh.authorizedKeys.keys = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILhRiEHBueW2yW+bb+6QoQhNOEFA1tF0F4sTFtEDuPir"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILhRiEHBueW2yW+bb+6QoQhNOEFA1tF0F4sTFtEDuPir ldryt@tinkerbell"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHWVErnA1i/HuHVfQs+0Vc6+7xfz3vLL5zIOamlZzXcH terraform@infra"
       ];
     };
   };

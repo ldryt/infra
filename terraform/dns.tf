@@ -6,13 +6,24 @@ resource "desec_rrset" "root_A_record" {
   ttl     = 86400
 }
 
+resource "desec_rrset" "servers_subdomains" {
+  for_each = local.servers
+
+  domain  = local.dns.zone
+  subname = each.key
+  type    = "A"
+  records = [each.value.ip]
+  ttl     = 86400
+}
+
 resource "desec_rrset" "silvermist_subdomains" {
   for_each = local.dns.subdomains
-  domain   = local.dns.zone
-  subname  = each.value
-  type     = "A"
-  records  = [hcloud_primary_ip.silvermist_ipv4.ip_address]
-  ttl      = 86400
+
+  domain  = local.dns.zone
+  subname = each.value
+  type    = "A"
+  records = [hcloud_primary_ip.silvermist_ipv4.ip_address]
+  ttl     = 86400
 }
 
 # https://desec.readthedocs.io/en/latest/dns/rrsets.html#caveats

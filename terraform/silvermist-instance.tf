@@ -14,7 +14,7 @@ resource "hcloud_ssh_key" "silvermist_ssh_key" {
     "silvermist" : true
   }
   name       = "silvermist_ssh_key"
-  public_key = data.sops_file.silvermist_secrets.data["users.colon.sshPubKey"]
+  public_key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKpnQLHFPVhJB4jhCjWF1TNaogH/MnpU1JBwzU9JWjRl nixos-anywhere-install@hcloud-silvermist"
 }
 
 resource "hcloud_server" "silvermist_server" {
