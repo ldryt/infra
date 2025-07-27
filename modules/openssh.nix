@@ -16,4 +16,7 @@
       AuthenticationMethods publickey
     '';
   };
+
+  # https://ghostty.org/docs/help/terminfo
+  environment.enableAllTerminfo = true;
 }
