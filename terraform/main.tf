@@ -22,7 +22,7 @@ terraform {
 }
 
 locals {
-  dns = jsondecode(file("${path.module}/../../../dns.json"))
+  dns = jsondecode(file("${path.module}/../dns.json"))
 }
 
 
