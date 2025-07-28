@@ -11,6 +11,13 @@ in
 
   environment.persistence.silvermist.directories = [ configDir ];
 
+  sops.secrets."backups/restic/repos/syncthing-silvermist/password".owner = "syncthing";
+  ldryt-infra.backups.repos.syncthing-silvermist = {
+    user = "syncthing";
+    passwordFile = config.sops.secrets."backups/restic/repos/syncthing-silvermist/password".path;
+    paths = [ dataDir ];
+  };
+
   services.syncthing = {
     enable = true;
     openDefaultPorts = true;
@@ -53,7 +60,8 @@ in
             name = "~/${id}";
             value = {
               inherit id;
-            } // folderCfg;
+            }
+            // folderCfg;
           }) folderIds
         );
     };
