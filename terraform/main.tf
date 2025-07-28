@@ -28,11 +28,13 @@ locals {
     "silvermist" = {
       id        = hcloud_server.silvermist_server.id
       ip        = hcloud_primary_ip.silvermist_ipv4.ip_address
+      ssh_port  = 22
       sops_file = "${path.module}/../hosts/silvermist/secrets.yaml"
     },
     "tp420ia" = {
       id        = "tp420ia-id-2025-07-12"
       ip        = "82.65.203.15"
+      ssh_port  = 34971
       sops_file = "${path.module}/../hosts/tp420ia/secrets.yaml"
     }
   }

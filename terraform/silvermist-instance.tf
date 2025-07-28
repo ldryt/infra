@@ -31,6 +31,11 @@ resource "hcloud_server" "silvermist_server" {
     ipv4         = hcloud_primary_ip.silvermist_ipv4.id
     ipv6_enabled = false
   }
+
+  lifecycle {
+    # only used by nixos-anywhere on first install
+    ignore_changes = [ssh_keys]
+  }
 }
 
 resource "hcloud_rdns" "silvermist_rdns" {

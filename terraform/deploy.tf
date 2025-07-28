@@ -6,8 +6,10 @@ module "deploy" {
   nixos_system_attr      = ".#nixosConfigurations.${each.key}.config.system.build.toplevel"
   nixos_partitioner_attr = ".#nixosConfigurations.${each.key}.config.system.build.diskoScript"
 
-  instance_id = each.value.id
-  target_host = each.value.ip
+  instance_id     = each.value.id
+  target_host     = each.value.ip
+  target_port     = each.value.ssh_port
+  build_on_remote = false
 
   target_user        = "colon"
   deployment_ssh_key = nonsensitive(data.sops_file.secrets[each.key].data["nixos-anywhere.deploy.colon.sshKey"])
@@ -19,4 +21,6 @@ module "deploy" {
   extra_environment = {
     "SERVER_NAME" = each.key
   }
+
+  debug_logging = true
 }
