@@ -1,9 +1,26 @@
+variable "state_passphrase" {
+  sensitive = true
+}
+
 terraform {
-  cloud {
-    organization = "ldryt-infra"
-    workspaces {
-      name = "silvermist"
-    }
+   encryption {
+     key_provider "pbkdf2" "state_encryption_passphrase" {
+       passphrase = var.state_passphrase
+     }
+     method "aes_gcm" "state_encryption_method" {
+       keys = key_provider.pbkdf2.state_encryption_passphrase
+     }
+     state {
+       method = method.aes_gcm.state_encryption_method
+       enforced = true
+     }
+     plan {
+       method = method.aes_gcm.state_encryption_method
+       enforced = true
+     }
+   }
+  backend "local" {
+    path = "tfstate.json.enc"
   }
   required_providers {
     hcloud = {
@@ -15,7 +32,7 @@ terraform {
       version = "~>1.2.0"
     }
     desec = {
-      source  = "Valodim/desec"
+      source  = "valodim/desec"
       version = "~>0.6.1"
     }
   }

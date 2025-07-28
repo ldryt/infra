@@ -5,6 +5,7 @@ let
   DB_PATH = "$HOME/Sync/Vault/keyring.kdbx";
 
   TF_VAR_ENTRIES = [
+    "state_passphrase"
     "desec_token"
     "hcloud_token"
   ];
@@ -25,10 +26,10 @@ let
     );
 in
 pkgs.writeShellApplication {
-  name = "terraform-keepass";
+  name = "tofu-keepass";
 
   runtimeInputs = with pkgs; [
-    terraform
+    opentofu
     keepassxc
     jq
   ];
@@ -49,6 +50,6 @@ pkgs.writeShellApplication {
     unset KEEPASS_PASSWORD
 
     export SOPS_AGE_KEY_FILE
-    terraform "$@"
+    tofu "$@"
   '';
 }

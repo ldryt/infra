@@ -69,8 +69,8 @@
           default = pkgs.mkShell {
             buildInputs = with pkgs; [
               inputs.self.packages.${system}.sops-keepass
-              inputs.self.packages.${system}.terraform-keepass
-              terraform
+              inputs.self.packages.${system}.tofu-keepass
+              opentofu
               sops
               jq
             ];
@@ -159,7 +159,7 @@
         in
         {
           sops-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/sops-keepass.nix { };
-          terraform-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/terraform-keepass.nix { };
+          tofu-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/tofu-keepass.nix { };
 
           sdImage-domus = self.nixosConfigurations.domus.config.system.build.sdImage;
         }
