@@ -11,9 +11,8 @@ in
 
   environment.persistence.silvermist.directories = [ configDir ];
 
-  sops.secrets."backups/restic/repos/syncthing-silvermist/password".owner = "syncthing";
+  sops.secrets."backups/restic/repos/syncthing-silvermist/password" = { };
   ldryt-infra.backups.repos.syncthing-silvermist = {
-    user = "syncthing";
     passwordFile = config.sops.secrets."backups/restic/repos/syncthing-silvermist/password".path;
     paths = [ dataDir ];
   };
