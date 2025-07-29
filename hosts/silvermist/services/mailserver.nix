@@ -72,6 +72,13 @@ in
   security.acme.acceptTerms = true;
   security.acme.defaults.email = lib.mkForce "security@ldryt.dev";
 
+  # tells rspamd to use kresd
+  services.rspamd.locals."options.inc".text = ''
+    dns {
+      nameserver = "127.0.0.1";
+    }
+  '';
+
   sops.secrets."backups/restic/repos/mailserver/password" = { };
   ldryt-infra.backups.repos.mailserver = {
     passwordFile = config.sops.secrets."backups/restic/repos/mailserver/password".path;
