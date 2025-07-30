@@ -14,7 +14,10 @@ in
   sops.secrets."backups/restic/repos/syncthing-silvermist/password" = { };
   ldryt-infra.backups.repos.syncthing-silvermist = {
     passwordFile = config.sops.secrets."backups/restic/repos/syncthing-silvermist/password".path;
-    paths = [ dataDir ];
+    paths = [
+      dataDir
+      configDir
+    ];
   };
 
   services.syncthing = {
