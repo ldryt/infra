@@ -2,10 +2,11 @@
 {
   imports = [
     ./hardware
-    ./networking
+    ./networking.nix
     ./users.nix
 
     ./services/sftp-backups.nix
+    ./services/ap.nix
 
     ../../modules/nix-settings.nix
     ../../modules/openssh.nix
