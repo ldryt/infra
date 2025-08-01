@@ -41,20 +41,21 @@ in
     radios = {
       "${intf}" = {
         countryCode = "FR";
-        band = "2g";
-        channel = 1;
+        band = "5g";
+        channel = 36;
         wifi4 = {
           enable = true;
           capabilities = [
-            "LDPC"
             "HT40+"
             "HT40-"
-            "SHORT-GI-20"
-            "SHORT-GI-40"
           ];
         };
+        wifi5 = {
+          enable = true;
+          operatingChannelWidth = "160";
+        };
+        wifi6.enable = true;
         networks."${intf}" = {
-          logLevel = 1;
           inherit ssid;
           authentication = {
             mode = "wpa3-sae-transition";
