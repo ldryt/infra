@@ -1,6 +1,5 @@
 { config, ... }:
 let
-  ssid = "tp420ia";
   mac = "58:cd:c9:3a:78:1b"; # mt7922
   intf = "ap0";
   ip = "192.168.144.1";
@@ -52,11 +51,11 @@ in
         };
         wifi5 = {
           enable = true;
-          operatingChannelWidth = "160";
+          operatingChannelWidth = "40";
         };
         wifi6.enable = true;
         networks."${intf}" = {
-          inherit ssid;
+          ssid = "freebox_PSTPVI";
           authentication = {
             mode = "wpa3-sae-transition";
             saePasswordsFile = config.sops.secrets."services/hostapd/password".path;
