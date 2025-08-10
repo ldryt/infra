@@ -49,10 +49,7 @@ in
             "HT40-"
           ];
         };
-        wifi5 = {
-          enable = true;
-          operatingChannelWidth = "40";
-        };
+        wifi5.enable = true;
         wifi6.enable = true;
         networks."${intf}" = {
           ssid = "freebox_PSTPVI";
