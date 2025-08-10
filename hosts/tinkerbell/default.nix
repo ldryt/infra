@@ -11,6 +11,7 @@
     ../../modules/geoclue.nix
     ../../modules/steam.nix
     ../../modules/nix-settings.nix
+    ../../modules/docker.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
