@@ -1,6 +1,4 @@
 let
-  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
-
   min-port = 10000;
   max-port = 20000;
   listening-port = 3478;
@@ -26,7 +24,7 @@ in
 
   services.coturn = {
     enable = true;
-    realm = "${dns.subdomains.turn}.${dns.zone}";
+    realm = "${config.ldryt-infra.dns.records.turn}";
     inherit min-port;
     inherit max-port;
     inherit listening-port;

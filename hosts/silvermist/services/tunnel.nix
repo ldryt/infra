@@ -1,6 +1,5 @@
-{ pkgs, config, ... }:
+{ config, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   wireguardPort = 62879;
   wireguardIF = "tunneltunnel";
   wgIp = "10.22.22";
@@ -39,7 +38,7 @@ in
     };
   };
 
-  services.nginx.virtualHosts."${dns.subdomains.domus}.${dns.zone}" = {
+  services.nginx.virtualHosts."${config.ldryt-infra.dns.records.domus}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;

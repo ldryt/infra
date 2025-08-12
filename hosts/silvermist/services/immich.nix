@@ -1,6 +1,5 @@
 { config, pkgs, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   dataDir = "/mnt/immich-library";
   podmanNetwork = "immich-network";
   internalPort = "44084";
@@ -86,7 +85,7 @@ in
     ];
   };
 
-  services.nginx.virtualHosts."${dns.subdomains.immich}.${dns.zone}" = {
+  services.nginx.virtualHosts."${config.ldryt-infra.dns.records.immich}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;
@@ -107,8 +106,8 @@ in
       public = false;
       consent_mode = "implicit";
       redirect_uris = [
-        "https://${dns.subdomains.immich}.${dns.zone}/auth/login"
-        "https://${dns.subdomains.immich}.${dns.zone}/user-settings"
+        "https://${config.ldryt-infra.dns.records.immich}/auth/login"
+        "https://${config.ldryt-infra.dns.records.immich}/user-settings"
         "app.immich:///oauth-callback"
       ];
       scopes = [
@@ -162,7 +161,7 @@ in
           tonemap: reinhard
         oauth:
           enabled: true
-          issuerUrl: https://${dns.subdomains.authelia}.${dns.zone}/.well-known/openid-configuration
+          issuerUrl: https://${config.ldryt-infra.dns.records.authelia}/.well-known/openid-configuration
           clientId: ${oidcClientID}
           clientSecret: ${oauthClientSecretPlaceholder}
           signingAlgorithm: ${oidcSigningAlg}
@@ -170,7 +169,7 @@ in
           scope: openid email profile
           storageLabelClaim: preferred_username
           storageQuotaClaim: immich_quota
-          buttonText: Login with ${dns.subdomains.authelia}.${dns.zone}
+          buttonText: Login with ${config.ldryt-infra.dns.records.authelia}
           defaultStorageQuota: 0
           autoRegister: true
         machineLearning:
@@ -188,7 +187,7 @@ in
           preview:
             quality: 85
         server:
-          externalDomain: https://${dns.subdomains.immich}.${dns.zone}
+          externalDomain: https://${config.ldryt-infra.dns.records.immich}
         notifications:
           smtp:
             enabled: true

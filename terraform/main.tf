@@ -41,6 +41,24 @@ terraform {
 
 locals {
   dns = jsondecode(file("${path.module}/../dns.json"))
+  dns_list = flatten([
+    for zone, servers in local.dns : [
+      for name, services in servers : [
+        for service, subname in services : {
+          fqdn    = "${subname}.${zone}"
+          zone    = zone
+          service = service
+          subname = subname
+          ip      = local.servers[name].ip
+        }
+      ]
+    ]
+  ])
+  dns_records = { for r in local.dns_list : r.fqdn => r }
+  mailserver_record = one([
+    for r in local.dns_list : r
+    if r.service == "mailserver"
+  ])
   servers = {
     "silvermist" = {
       id        = hcloud_server.silvermist_server.id

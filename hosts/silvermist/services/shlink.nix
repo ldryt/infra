@@ -1,6 +1,5 @@
 { config, pkgs, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   subfolder = "link";
   podmanNetwork = "shlink-network";
   internalPort = "44086";
@@ -28,7 +27,7 @@ in
       hostname = "shlink-server";
       image = "ghcr.io/shlinkio/shlink:4.4.6";
       environment = {
-        DEFAULT_DOMAIN = dns.zone;
+        DEFAULT_DOMAIN = config.ldryt-infra.dns.zone;
         IS_HTTPS_ENABLED = "true";
         BASE_PATH = "/${subfolder}";
         DB_DRIVER = "postgres";
@@ -57,7 +56,7 @@ in
     };
   };
 
-  services.nginx.virtualHosts."${dns.zone}" = {
+  services.nginx.virtualHosts."${config.ldryt-infra.dns.zone}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;

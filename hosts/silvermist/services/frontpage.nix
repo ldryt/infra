@@ -1,9 +1,6 @@
-{ ... }:
-let
-  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
-in
+{ config, ... }:
 {
-  services.nginx.virtualHosts."${dns.zone}" = {
+  services.nginx.virtualHosts."${config.ldryt-infra.dns.zone}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;

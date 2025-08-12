@@ -1,7 +1,4 @@
 { config, lib, ... }:
-let
-  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
-in
 {
   sops.secrets."services/mailserver/users/ldryt/password" = { };
   sops.secrets."services/postfix/certs/acme/env" = { };
@@ -23,7 +20,7 @@ in
     }
   ];
 
-  security.acme.certs."${dns.subdomains.mailserver}.${dns.zone}" = {
+  security.acme.certs."${config.ldryt-infra.dns.records.mailserver}" = {
     dnsProvider = "desec";
     environmentFile = config.sops.secrets."services/postfix/certs/acme/env".path;
     group = config.services.postfix.group;
@@ -31,7 +28,7 @@ in
 
   mailserver = {
     enable = true;
-    fqdn = "${dns.subdomains.mailserver}.${dns.zone}";
+    fqdn = "${config.ldryt-infra.dns.records.mailserver}";
     domains = [
       "ldryt.dev"
       "lucasladreyt.eu"

@@ -1,6 +1,5 @@
 { config, pkgs, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   dataDir = "/mnt/nextcloud-data";
   backupsTmpDir = "/tmp/nextcloud_backups";
   oidcClientID = "Yn08v8LYLXu81BOva30ja9WAKg9CFSGJ7tXh~PaxTP_mPF1XtajkG8hEnj13cuFJ4FjII55D";
@@ -13,7 +12,7 @@ in
     enable = true;
     package = pkgs.nextcloud29;
 
-    hostName = "${dns.subdomains.nextcloud}.${dns.zone}";
+    hostName = "${config.ldryt-infra.dns.records.nextcloud}";
     home = dataDir;
     https = true;
     maxUploadSize = "10G";
@@ -48,7 +47,7 @@ in
       ${config.services.nextcloud.occ}/bin/nextcloud-occ user_oidc:provider authelia-main \
         --clientid="${oidcClientID}" \
         --clientsecret="$(cat ${config.sops.secrets."services/nextcloud/oidcSecret".path})" \
-        --discoveryuri="https://${dns.subdomains.authelia}.${dns.zone}/.well-known/openid-configuration"
+        --discoveryuri="https://${config.ldryt-infra.dns.records.authelia}/.well-known/openid-configuration"
 
       ${config.services.nextcloud.occ}/bin/nextcloud-occ config:app:set --value=0 user_oidc allow_multiple_user_backends
     '';
@@ -64,7 +63,7 @@ in
       public = false;
       require_pkce = true;
       pkce_challenge_method = "S256";
-      redirect_uris = [ "https://${dns.subdomains.nextcloud}.${dns.zone}/apps/user_oidc/code" ];
+      redirect_uris = [ "https://${config.ldryt-infra.dns.records.nextcloud}/apps/user_oidc/code" ];
       scopes = [
         "openid"
         "profile"

@@ -1,6 +1,5 @@
 { config, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   internalPort = "5232";
   dataDir = "/var/lib/radicale/collections";
 in
@@ -27,7 +26,7 @@ in
     };
   };
 
-  services.nginx.virtualHosts."${dns.subdomains.radicale}.${dns.zone}" = {
+  services.nginx.virtualHosts."${config.ldryt-infra.dns.records.radicale}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;

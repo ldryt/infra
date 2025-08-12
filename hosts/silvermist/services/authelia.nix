@@ -1,7 +1,5 @@
 { config, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
-  autheliaPublicFQDN = "${dns.subdomains.authelia}.${dns.zone}";
   autheliaInternalAddress = "localhost:44092";
   dataDir = "/var/lib/authelia-${config.services.authelia.instances.main.name}";
 in
@@ -47,8 +45,8 @@ in
 
       session.cookies = [
         {
-          domain = dns.zone;
-          authelia_url = "https://${autheliaPublicFQDN}";
+          domain = config.ldryt-infra.dns.zone;
+          authelia_url = "https://${config.ldryt-infra.dns.records.authelia}";
         }
       ];
 
@@ -74,11 +72,11 @@ in
         file.path = config.sops.secrets."services/authelia/users".path;
       };
 
-      totp.issuer = autheliaPublicFQDN;
+      totp.issuer = config.ldryt-infra.dns.records.authelia;
 
       notifier.smtp = {
-        address = "submissions://${dns.subdomains.mailserver}.${dns.zone}:465";
-        identifier = "${dns.subdomains.mailserver}.${dns.zone}";
+        address = "submissions://${config.ldryt-infra.dns.records.mailserver}:465";
+        identifier = "${config.ldryt-infra.dns.records.mailserver}";
         sender = "Authelia <auth@ldryt.dev>";
         username = "auth@ldryt.dev";
       };
@@ -94,7 +92,7 @@ in
     sendOnly = true;
   };
 
-  services.nginx.virtualHosts."${dns.subdomains.authelia}.${dns.zone}" = {
+  services.nginx.virtualHosts."${config.ldryt-infra.dns.records.authelia}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;

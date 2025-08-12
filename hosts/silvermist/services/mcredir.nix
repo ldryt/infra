@@ -1,8 +1,6 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
-  FQDN = dns.subdomains.mcredir + "." + dns.zone;
-  FQDNRegex = builtins.replaceStrings [ "." ] [ ''\.'' ] FQDN;
+  FQDNRegex = builtins.replaceStrings [ "." ] [ ''\.'' ] config.ldryt-infra.dns.records.mcredir;
   mcpulsePorts = {
     slp = 25565;
     pulser = 9065;

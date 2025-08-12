@@ -1,13 +1,12 @@
 { config, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   opendkimSocket = "/run/opendkim/opendkim.sock";
 in
 {
   environment.persistence.silvermist.directories = [ "/var/lib/postfix" ];
 
   sops.secrets."services/postfix/certs/acme/env" = { };
-  security.acme.certs."${dns.subdomains.postfix}.${dns.zone}" = {
+  security.acme.certs."${config.ldryt-infra.dns.records.postfix}" = {
     dnsProvider = "desec";
     environmentFile = config.sops.secrets."services/postfix/certs/acme/env".path;
     group = config.services.postfix.group;
@@ -15,13 +14,13 @@ in
 
   services.postfix = {
     enable = true;
-    hostname = "${dns.subdomains.postfix}.${dns.zone}";
+    hostname = "${config.ldryt-infra.dns.records.postfix}";
     domain = dns.zone;
     config = {
       inet_interfaces = "loopback-only";
 
-      smtpd_tls_cert_file = "/var/lib/acme/${dns.subdomains.postfix}.${dns.zone}/cert.pem";
-      smtpd_tls_key_file = "/var/lib/acme/${dns.subdomains.postfix}.${dns.zone}/key.pem";
+      smtpd_tls_cert_file = "/var/lib/acme/${config.ldryt-infra.dns.records.postfix}/cert.pem";
+      smtpd_tls_key_file = "/var/lib/acme/${config.ldryt-infra.dns.records.postfix}/key.pem";
       smtpd_tls_security_level = "may";
 
       milter_protocol = "6";

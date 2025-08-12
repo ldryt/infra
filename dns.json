@@ -1,16 +1,20 @@
 {
-  "zone": "ldryt.dev",
-  "subdomains": {
-    "immich": "pics",
-    "authelia": "auth",
-    "vaultwarden": "pass",
-    "mailserver": "mx",
-    "ocis": "files",
-    "domus": "domus",
-    "printer": "printer",
-    "radicale": "cal",
-    "grafana": "graph",
-    "stun": "stun",
-    "turn": "turn"
+  "ldryt.dev": {
+    "tp420ia": {
+      "immich2": "pics.tp420ia"
+    },
+    "silvermist": {
+      "immich": "pics",
+      "authelia": "auth",
+      "vaultwarden": "pass",
+      "mailserver": "mx",
+      "ocis": "files",
+      "domus": "domus",
+      "printer": "printer",
+      "radicale": "cal",
+      "grafana": "graph",
+      "stun": "stun",
+      "turn": "turn"
+    }
   }
 }

@@ -1,6 +1,5 @@
 { config, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   oidcClientID = "2NADHAc~yxd~kNvfJg4PwJNXE1ErhAcQ2~9FPZEh2TgxLY_GIJdv1LluQGKv38iSy~JYNxo.";
 in
 {
@@ -110,7 +109,7 @@ in
       server = {
         http_addr = "127.0.0.1";
         http_port = 44144;
-        domain = "${dns.subdomains.grafana}.${dns.zone}";
+        domain = "${config.ldryt-infra.dns.records.grafana}";
         root_url = "https://${config.services.grafana.settings.server.domain}/";
       };
       analytics.feedback_links_enabled = false;
@@ -119,9 +118,9 @@ in
         enabled = true;
         client_id = oidcClientID;
         client_secret = "$__file{${config.sops.secrets."services/grafana/oidc/clientSecret".path}}";
-        auth_url = "https://${dns.subdomains.authelia}.${dns.zone}/api/oidc/authorization";
-        token_url = "https://${dns.subdomains.authelia}.${dns.zone}/api/oidc/token";
-        api_url = "https://${dns.subdomains.authelia}.${dns.zone}/api/oidc/userinfo";
+        auth_url = "https://${config.ldryt-infra.dns.records.authelia}/api/oidc/authorization";
+        token_url = "https://${config.ldryt-infra.dns.records.authelia}/api/oidc/token";
+        api_url = "https://${config.ldryt-infra.dns.records.authelia}/api/oidc/userinfo";
         scopes = "openid profile email groups";
         empty_scopes = false;
         login_attribute_path = "preferred_username";
@@ -133,7 +132,7 @@ in
       };
       smtp = {
         enabled = true;
-        host = "${dns.subdomains.mailserver}.${dns.zone}:465";
+        host = "${config.ldryt-infra.dns.records.mailserver}:465";
         user = "graph@ldryt.dev";
         password = "$__file{${config.sops.secrets."services/grafana/mail/clearPassword".path}}";
         from_address = "graph@ldryt.dev";

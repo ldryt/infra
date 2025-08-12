@@ -5,7 +5,6 @@
   ...
 }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   dataDir = "/mnt/ocis-data";
   oidcClientID = "ocis-web";
 in
@@ -29,11 +28,11 @@ in
 
     stateDir = dataDir;
 
-    url = "https://${dns.subdomains.ocis}.${dns.zone}";
+    url = "https://${config.ldryt-infra.dns.records.ocis}";
     environment = {
       PROXY_TLS = "false";
 
-      OCIS_OIDC_ISSUER = "https://${dns.subdomains.authelia}.${dns.zone}";
+      OCIS_OIDC_ISSUER = "https://${config.ldryt-infra.dns.records.authelia}";
       WEB_OIDC_CLIENT_ID = oidcClientID;
 
       PROXY_AUTOPROVISION_ACCOUNTS = "true";
@@ -66,9 +65,9 @@ in
           "profile"
         ];
         redirect_uris = [
-          "https://${dns.subdomains.ocis}.${dns.zone}/"
-          "https://${dns.subdomains.ocis}.${dns.zone}/oidc-callback.html"
-          "https://${dns.subdomains.ocis}.${dns.zone}/oidc-silent-redirect.html"
+          "https://${config.ldryt-infra.dns.records.ocis}/"
+          "https://${config.ldryt-infra.dns.records.ocis}/oidc-callback.html"
+          "https://${config.ldryt-infra.dns.records.ocis}/oidc-silent-redirect.html"
         ];
       }
       {
@@ -177,7 +176,7 @@ in
     ];
   };
 
-  services.nginx.virtualHosts."${dns.subdomains.ocis}.${dns.zone}" = {
+  services.nginx.virtualHosts."${config.ldryt-infra.dns.records.ocis}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;

@@ -6,7 +6,6 @@
     ./users.nix
 
     ./services/immich.nix
-    ./services/frontpage.nix
     ./services/authelia.nix
     ./services/tunnel.nix
     ./services/mailserver.nix
@@ -19,6 +18,7 @@
     ../../modules/podman.nix
     ../../modules/nix-settings.nix
     ../../modules/backups.nix
+    ../../modules/dns.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;

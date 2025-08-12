@@ -1,6 +1,5 @@
 { config, pkgs, ... }:
 let
-  dns = builtins.fromJSON (builtins.readFile ../../../dns.json);
   backupsTmpDir = "/tmp/bitwarden_rs_backup";
   dataDir = "/var/lib/bitwarden_rs";
 in
@@ -9,7 +8,7 @@ in
   services.vaultwarden = {
     enable = true;
     config = {
-      DOMAIN = "https://${dns.subdomains.vaultwarden}.${dns.zone}";
+      DOMAIN = "https://${config.ldryt-infra.dns.records.vaultwarden}";
       SIGNUPS_ALLOWED = "true";
       ROCKET_ADDRESS = "127.0.0.1";
       ROCKET_PORT = 44083;
@@ -17,7 +16,7 @@ in
     };
   };
 
-  services.nginx.virtualHosts."${dns.subdomains.vaultwarden}.${dns.zone}" = {
+  services.nginx.virtualHosts."${config.ldryt-infra.dns.records.vaultwarden}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;
