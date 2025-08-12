@@ -34,6 +34,8 @@ in
 
   networking.firewall.interfaces."${intf}".allowedUDPPorts = [ 67 ];
 
+  boot.kernel.sysctl."net.ipv4.conf.all.forwarding" = 1;
+
   sops.secrets."services/hostapd/password" = { };
   services.hostapd = {
     enable = true;
