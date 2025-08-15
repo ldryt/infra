@@ -6,9 +6,9 @@
     ./users.nix
 
     ./services/immich.nix
-    ./services/authelia.nix
+    ./services/authelia
     ./services/tunnel.nix
-    ./services/mailserver.nix
+    ./services/mailserver
     ./services/radicale.nix
     ./services/syncthing.nix
 

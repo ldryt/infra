@@ -4,6 +4,10 @@ let
   dataDir = "/var/lib/authelia-${config.services.authelia.instances.main.name}";
 in
 {
+  imports = [
+    ./immich.nix
+  ];
+
   environment.persistence.silvermist.directories = [ dataDir ];
 
   sops.secrets."services/authelia/users".owner = config.services.authelia.instances.main.user;

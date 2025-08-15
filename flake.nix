@@ -116,9 +116,10 @@
             mailserver.nixosModules.mailserver
           ];
         };
-        tp420ia = nixpkgs.lib.nixosSystem {
+        tp420ia = nixpkgs.lib.nixosSystem rec {
           specialArgs = {
             inherit inputs;
+            pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
           };
           system = "x86_64-linux";
           modules = [

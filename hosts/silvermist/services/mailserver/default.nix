@@ -1,5 +1,9 @@
 { config, lib, ... }:
 {
+  imports = [
+    ./immich.nix
+  ];
+
   sops.secrets."services/mailserver/users/ldryt/password" = { };
   sops.secrets."services/postfix/certs/acme/env" = { };
 

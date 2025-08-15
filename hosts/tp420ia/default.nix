@@ -7,11 +7,15 @@
 
     ./services/sftp-backups.nix
     ./services/ap.nix
+    ./services/immich.nix
 
     ../../modules/nix-settings.nix
     ../../modules/openssh.nix
     ../../modules/fail2ban.nix
     ../../modules/backups.nix
+    ../../modules/podman.nix
+    ../../modules/dns.nix
+    ../../modules/nginx.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
@@ -51,6 +55,8 @@
   };
 
   time.timeZone = "Europe/Paris";
+
+  services.openssh.ports = [ 34971 ];
 
   system.stateVersion = "23.05";
 }
