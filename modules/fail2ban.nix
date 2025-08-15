@@ -10,6 +10,8 @@
       "192.168.0.0/16"
       "FE80::/10"
       "::1/128"
+      "82.65.203.15"
+      "49.12.97.63"
     ];
     extraPackages = [ pkgs.ipset ];
     banaction = "iptables-ipset-proto6-allports";
@@ -40,9 +42,10 @@
   environment.etc = {
     "fail2ban/filter.d/portscan.conf".text = ''
       [Definition]
-      failregex = ^.*refused connection.* IN=.* SRC=<HOST>.*$
+      failregex = ^.*refused connection.* IN=.* SRC=<HOST>.* DPT=(?!80|443|22000)\d+.*$
       journalmatch = _TRANSPORT=kernel
       ignoreregex =
     '';
   };
+
 }
