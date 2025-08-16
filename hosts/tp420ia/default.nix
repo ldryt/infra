@@ -54,6 +54,15 @@
     ];
   };
 
+  sops.secrets."system/2a37-key" = { };
+  environment.etc.crypttab = {
+    mode = "0600";
+    text = ''
+      # <volume-name> <encrypted-device> [key-file] [options]
+      2a37-data UUID=2a37da19-450e-4119-adfa-7cb42edb76ba ${config.sops.secrets."system/2a37-key".path}
+    '';
+  };
+
   time.timeZone = "Europe/Paris";
 
   services.openssh.ports = [ 34971 ];

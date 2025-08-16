@@ -5,7 +5,7 @@
   ...
 }:
 let
-  immichMediaDir = "/mnt/immich-media";
+  immichMediaDir = "/mnt/immich";
   oidcSigningAlg = "RS256";
   oidcClientID = "YL~WkjeeJXxVWOs01mdJjXJarT6yssLlf4yZdAowKL61OWpP3G2WbR1D9y2RBAjh_xHSXRGo";
   smtpSender = "pics@ldryt.dev";
@@ -13,9 +13,19 @@ let
 in
 {
   environment.persistence.tp420ia.directories = [
-    immichMediaDir
+    config.services.postgresql.dataDir
     config.services.immich.machine-learning.environment.MACHINE_LEARNING_CACHE_FOLDER
   ];
+
+  fileSystems."${immichMediaDir}" = {
+    device = "/dev/mapper/2a37-data";
+    fsType = "btrfs";
+    options = [
+      "defaults"
+      "nofail"
+      "subvol=immich"
+    ];
+  };
 
   sops.secrets."backups/restic/repos/immich/password" = { };
   ldryt-infra.backups.repos.immich = {
@@ -34,6 +44,12 @@ in
         client_max_body_size 0;
       '';
     };
+  };
+
+  # https://github.com/NixOS/nixpkgs/issues/418799
+  users.users.immich = {
+    home = config.services.immich.machine-learning.environment.MACHINE_LEARNING_CACHE_FOLDER;
+    createHome = true;
   };
 
   services.immich = {
@@ -59,6 +75,11 @@ in
     let
       settings = {
         server.externalDomain = "https://${config.ldryt-infra.dns.records.immich2}";
+        backup.database = {
+          enabled = true;
+          cronExpression = "0 */6 * * *";
+          keepLastAmount = 60;
+        };
         ffmpeg = {
           accel = "vaapi";
           accelDecode = true;

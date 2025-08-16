@@ -5,7 +5,7 @@ let
 in
 {
   fileSystems."${bckpDir}" = {
-    device = "/dev/disk/by-label/ldryt.dev\\x20-\\x20backups";
+    device = "/dev/disk/by-uuid/9b37793d-5610-4f94-a421-cbe6898df45f";
     fsType = "btrfs";
     options = [
       "defaults"
