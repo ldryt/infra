@@ -97,8 +97,9 @@ in
           maxBitrate = "0";
           preset = "veryslow";
           threads = 1;
-          tonemap = "mobius";
           twoPass = false;
+          # mobius would mess with ffmpeg options and VAAPI
+          tonemap = "hable";
         };
         image = {
           fullsize = {
