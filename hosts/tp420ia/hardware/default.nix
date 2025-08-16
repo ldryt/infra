@@ -18,6 +18,11 @@
   hardware.enableRedistributableFirmware = true;
   hardware.cpu.amd.updateMicrocode = config.hardware.enableRedistributableFirmware;
 
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
+  };
+
   boot = {
     initrd.availableKernelModules = [
       "nvme"

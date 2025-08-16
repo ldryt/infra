@@ -50,6 +50,9 @@ in
   users.users.immich = {
     home = config.services.immich.machine-learning.environment.MACHINE_LEARNING_CACHE_FOLDER;
     createHome = true;
+
+    # Allow access to /dev/dri/renderD128
+    extraGroups = [ "render" ];
   };
 
   services.immich = {
@@ -90,7 +93,7 @@ in
           targetAudioCodec = "aac";
           targetResolution = "1080";
           targetVideoCodec = "hevc";
-          crf = 28;
+          crf = 32;
           maxBitrate = "0";
           preset = "veryslow";
           threads = 1;
