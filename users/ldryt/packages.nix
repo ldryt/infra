@@ -16,5 +16,6 @@
     parsec-bin
     libreoffice
     slack
+    digikam
   ];
 }
