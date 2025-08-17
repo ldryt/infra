@@ -101,6 +101,11 @@ in
           # mobius would mess with ffmpeg options and VAAPI
           tonemap = "hable";
         };
+        storageTemplate = {
+          enabled = true;
+          hashVerificationEnabled = true;
+          template = "{{#if album}}{{album}}{{else}}{{y}}/{{WW}}{{/if}}/{{HH}}/{{filetype}}_{{y}}{{MM}}{{dd}}-{{HH}}{{mm}}{{ss}}{{SSS}}_{{assetId}}";
+        };
         image = {
           fullsize = {
             enabled = true;
