@@ -54,6 +54,11 @@
     ];
   };
 
+  environment.persistence."/nix/tmp".directories = [
+    "/tmp"
+    "/var/tmp"
+  ];
+
   sops.secrets."system/2a37-key" = { };
   environment.etc.crypttab = {
     mode = "0600";
