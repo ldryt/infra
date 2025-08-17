@@ -2,6 +2,7 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
+    nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nixpie.url = "git+https://gitlab.cri.epita.fr/forge/infra/nixpie.git";
     home-manager-unstable.url = "github:nix-community/home-manager";
     home-manager = {
@@ -33,6 +34,7 @@
       self,
       nixpkgs,
       nixpkgs-unstable,
+      nixpkgs-master,
       home-manager,
       sops-nix,
       disko,
@@ -120,6 +122,7 @@
           specialArgs = {
             inherit inputs;
             pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
+            pkgs-master = nixpkgs-master.legacyPackages.${system};
           };
           system = "x86_64-linux";
           modules = [

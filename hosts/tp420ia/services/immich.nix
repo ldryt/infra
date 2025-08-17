@@ -1,7 +1,7 @@
 {
   config,
   lib,
-  pkgs-unstable,
+  pkgs-master,
   ...
 }:
 let
@@ -57,7 +57,7 @@ in
 
   services.immich = {
     enable = true;
-    package = pkgs-unstable.immich;
+    package = pkgs-master.immich;
     mediaLocation = immichMediaDir;
     database.enable = true;
     redis.enable = true;
