@@ -46,6 +46,7 @@
       "/var/lib/systemd/coredump"
       "/var/cache/powertop"
       "/var/lib/sbctl"
+      "/var/lib/acme"
     ];
     files = [
       "/etc/machine-id"
