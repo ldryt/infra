@@ -59,6 +59,8 @@
         ".parsec-persistent"
         ".local/share/TelegramDesktop"
         ".config/Slack"
+      ];
+      files = [
         ".config/digikamrc"
         ".config/digikam_systemrc"
       ];
