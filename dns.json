@@ -1,10 +1,9 @@
 {
   "ldryt.dev": {
     "tp420ia": {
-      "immich2": "pics.tp420ia"
+      "immich": "pics"
     },
     "silvermist": {
-      "immich": "pics",
       "authelia": "auth",
       "vaultwarden": "pass",
       "mailserver": "mx",

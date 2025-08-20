@@ -5,7 +5,6 @@
     ./networking.nix
     ./users.nix
 
-    ./services/immich.nix
     ./services/authelia
     ./services/tunnel.nix
     ./services/mailserver

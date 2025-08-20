@@ -33,7 +33,7 @@ in
     paths = [ immichMediaDir ];
   };
 
-  services.nginx.virtualHosts."${config.ldryt-infra.dns.records.immich2}" = {
+  services.nginx.virtualHosts."${config.ldryt-infra.dns.records.immich}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;
@@ -77,7 +77,7 @@ in
   sops.templates."immich.json" =
     let
       settings = {
-        server.externalDomain = "https://${config.ldryt-infra.dns.records.immich2}";
+        server.externalDomain = "https://${config.ldryt-infra.dns.records.immich}";
         backup.database = {
           enabled = true;
           cronExpression = "0 */6 * * *";

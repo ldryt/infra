@@ -27,15 +27,15 @@ in
       ];
       clients = [
         {
-          client_name = "immich2";
+          client_name = "Immich on ${config.ldryt-infra.dns.records.immich}";
           client_id = oidcClientID;
           client_secret = "$pbkdf2-sha512$310000$BnofSrb/7axDYm4xu.8Oiw$KdpSMxSSOf0JolMmcGJX.wyRFulmjz115rDTWefXkH4wNrnwezFJVx3tHzjr3.eVo7ywnmcrydLbZTMTSK/RLQ";
           public = false;
           consent_mode = "pre-configured";
-          pre_configured_consent_duration = "1 month";
+          pre_configured_consent_duration = "14 days";
           redirect_uris = [
-            "https://${config.ldryt-infra.dns.records.immich2}/auth/login"
-            "https://${config.ldryt-infra.dns.records.immich2}/user-settings"
+            "https://${config.ldryt-infra.dns.records.immich}/auth/login"
+            "https://${config.ldryt-infra.dns.records.immich}/user-settings"
             "app.immich:///oauth-callback"
           ];
           scopes = [
