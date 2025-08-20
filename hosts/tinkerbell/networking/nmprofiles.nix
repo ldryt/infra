@@ -94,6 +94,20 @@
           psk = "$ROSETTA_PWD";
         };
       };
+      tp420ia = {
+        connection = {
+          id = "tp420ia";
+          type = "wifi";
+        };
+        wifi = {
+          mode = "infrastructure";
+          ssid = "tp420ia";
+        };
+        wifi-security = {
+          key-mgmt = "wpa-psk";
+          psk = "$TP420IA_PWD";
+        };
+      };
       eduroam = {
         "802-1x" = {
           eap = "peap;";

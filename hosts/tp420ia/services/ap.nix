@@ -54,7 +54,7 @@ in
         wifi5.enable = true;
         wifi6.enable = true;
         networks."${intf}" = {
-          ssid = "freebox_PSTPVI";
+          ssid = "tp420ia";
           authentication = {
             mode = "wpa3-sae-transition";
             saePasswordsFile = config.sops.secrets."services/hostapd/password".path;
