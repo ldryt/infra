@@ -2,6 +2,7 @@
 {
   imports = [
     ./immich.nix
+    ./paperless.nix
   ];
 
   sops.secrets."services/mailserver/users/ldryt/password" = { };

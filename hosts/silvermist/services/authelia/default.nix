@@ -6,6 +6,7 @@ in
 {
   imports = [
     ./immich.nix
+    ./paperless.nix
   ];
 
   environment.persistence.silvermist.directories = [ dataDir ];

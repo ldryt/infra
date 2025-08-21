@@ -1,7 +1,8 @@
 {
   "ldryt.dev": {
     "tp420ia": {
-      "immich": "pics"
+      "immich": "pics",
+      "paperless": "docs"
     },
     "silvermist": {
       "authelia": "auth",
