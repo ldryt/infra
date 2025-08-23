@@ -2,10 +2,12 @@
   config,
   lib,
   pkgs-master,
+  pkgs,
   ...
 }:
 let
-  immichMediaDir = "/mnt/immich";
+  dataDir = "/mnt/immich";
+  extLibraryDir = "/mnt/smb-immich-ext1";
   oidcSigningAlg = "RS256";
   oidcClientID = "YL~WkjeeJXxVWOs01mdJjXJarT6yssLlf4yZdAowKL61OWpP3G2WbR1D9y2RBAjh_xHSXRGo";
   smtpSender = "pics@ldryt.dev";
@@ -17,7 +19,7 @@ in
     config.services.immich.machine-learning.environment.MACHINE_LEARNING_CACHE_FOLDER
   ];
 
-  fileSystems."${immichMediaDir}" = {
+  fileSystems."${dataDir}" = {
     device = "/dev/mapper/2a37-data";
     fsType = "btrfs";
     options = [
@@ -30,7 +32,7 @@ in
   sops.secrets."backups/restic/repos/immich/password" = { };
   ldryt-infra.backups.repos.immich = {
     passwordFile = config.sops.secrets."backups/restic/repos/immich/password".path;
-    paths = [ immichMediaDir ];
+    paths = [ dataDir ];
   };
 
   services.nginx.virtualHosts."${config.ldryt-infra.dns.records.immich}" = {
@@ -58,7 +60,7 @@ in
   services.immich = {
     enable = true;
     package = pkgs-master.immich;
-    mediaLocation = immichMediaDir;
+    mediaLocation = dataDir;
     database.enable = true;
     redis.enable = true;
     machine-learning = {
@@ -180,4 +182,32 @@ in
       ];
       content = lib.strings.toJSON settings;
     };
+
+  environment.systemPackages = [ pkgs.cifs-utils ];
+  fileSystems."${extLibraryDir}" = {
+    device = "//192.168.0.1/WD1042/NATH PERSO LU CHLO/PHOTOS 2004-2017";
+    fsType = "cifs";
+    options = [
+      "uid=${toString config.services.immich.user}"
+      "forceuid"
+      "gid=${toString config.services.immich.group}"
+      "forcegid"
+      "file_mode=0770"
+      "dir_mode=0770"
+
+      "vers=3.1.1"
+      "guest"
+
+      "async"
+      "noatime"
+      "rsize=4194304"
+      "wsize=4194304"
+      "fsc"
+
+      "noauto"
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=60"
+      "x-systemd.mount-timeout=15s"
+    ];
+  };
 }

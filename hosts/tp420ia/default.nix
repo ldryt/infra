@@ -48,6 +48,7 @@
       "/var/cache/powertop"
       "/var/lib/sbctl"
       "/var/lib/acme"
+      config.services.cachefilesd.cacheDir
     ];
     files = [
       "/etc/machine-id"
@@ -67,6 +68,15 @@
     text = ''
       # <volume-name> <encrypted-device> [key-file] [options]
       2a37-data UUID=2a37da19-450e-4119-adfa-7cb42edb76ba ${config.sops.secrets."system/2a37-key".path}
+    '';
+  };
+
+  services.cachefilesd = {
+    enable = true;
+    extraConfig = ''
+      brun 40%
+      bcull 35%
+      bstop 30%
     '';
   };
 
