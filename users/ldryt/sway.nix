@@ -28,6 +28,7 @@ in
     # Screenshots
     slurp
     grim
+    wf-recorder
     # Wallpaper
     swaybg
     # Clipboard
@@ -178,7 +179,10 @@ in
             "XF86AudioRaiseVolume" = "exec wpctl set-volume @DEFAULT_SINK@ 5%+ ${wpctlToWob}";
             "XF86MonBrightnessDown" = "exec brightnessctl set 5%- ${brightnessctlToWob}";
             "XF86MonBrightnessUp" = "exec brightnessctl set 5%+ ${brightnessctlToWob}";
-            "Print" = "exec grim -g \"$(slurp)\" - | wl-copy";
+            "Print" =
+              "exec grim -g \"$(slurp)\" - | tee ~/Pictures/Screenshots/screenshot_\"$(date +'%Y-%m-%d_%H:%M:%S')_$(hostname)\".jpg | wl-copy";
+            "Ctrl+Print" =
+              "exec sh -c 'kill -2 $(pidof wf-recorder) || { test ! $? -eq 0 && wf-recorder -g \"$(slurp)\" --audio=\"$(pactl info | grep \"Default Sink\" | cut -d \" \" -f3)\".monitor -f ~/Pictures/Screenshots/recording_\"$(date +'%Y-%m-%d_%H:%M:%S')_$(hostname)\".mp4; }'";
           };
         startup = [
           { command = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"; }
