@@ -84,28 +84,28 @@
 
   networking.firewall.interfaces."printertunnel".allowedTCPPorts = [
     80
-    # 9999
+    9999
   ];
   services.mainsail.enable = true;
 
-  # services.ustreamer = {
-  #   enable = true;
-  #   listenAddress = "0.0.0.0:9999";
-  #   extraArgs = [
-  #     "--resolution=1024x768"
-  #     "--quality=50"
-  #     "--drop-same-frames=20"
-  #     "--format=uyvy"
-  #     # "--encoder=m2m-image"
-  #     "--persistent"
-  #     "--buffers=3"
-  #     "--device-timeout=5"
+  services.ustreamer = {
+    enable = true;
+    listenAddress = "0.0.0.0:9999";
+    extraArgs = [
+      "--resolution=1024x768"
+      "--quality=50"
+      "--drop-same-frames=20"
+      "--format=uyvy"
+      # "--encoder=m2m-image"
+      "--persistent"
+      "--buffers=3"
+      "--device-timeout=5"
 
-  #     "--image-default"
-  #     "--sharpness=80"
-  #     "--brightness=55"
-  #     "--contrast=5"
-  #     "--saturation=5"
-  #   ];
-  # };
+      "--image-default"
+      "--sharpness=80"
+      "--brightness=55"
+      "--contrast=5"
+      "--saturation=5"
+    ];
+  };
 }

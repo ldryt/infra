@@ -1,13 +1,19 @@
-{ lib, ... }:
+{ pkgs, lib, ... }:
 {
-  imports = [
-    ./uart.nix
-  ];
-
   # Remove zfs:
   boot.supportedFilesystems.zfs = lib.mkForce false;
 
-  boot.kernelParams = lib.mkForce [ ];
+  boot.kernelParams = [
+    "console=ttyS0,115200n8"
+    "console=tty0"
+  ];
+
+  boot.loader = {
+    grub.enable = false;
+    generic-extlinux-compatible.enable = true;
+  };
+
+  boot.kernelPackages = pkgs.linuxKernel.packages.linux_rpi3;
 
   # Some modules are included by default, but our rpi kernel doesn't
   # include all.
@@ -19,15 +25,8 @@
     })
   ];
 
-  # Note: hardware options imported from https://github.com/NixOS/nixos-hardware/blob/e81fd167b33121269149c57806599045fd33eeed/flake.nix#L323
-  # A lot of device tree quirks applied from there.
-  hardware.raspberry-pi."4" = {
-    # Fixes https://github.com/NixOS/nixpkgs/issues/125354
-    apply-overlays-dtmerge.enable = true;
-  };
-
-  hardware.deviceTree = {
-    enable = true;
-    filter = "bcm2711-rpi-4*.dtb";
+  hardware = {
+    enableRedistributableFirmware = lib.mkForce false;
+    firmware = [ pkgs.raspberrypiWirelessFirmware ];
   };
 }

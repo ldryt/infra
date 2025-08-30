@@ -27,7 +27,7 @@
             type = "receiveonly";
             devices = [
               "tinkerbell"
-              "domus"
+              "silvermist"
               "rosetta"
             ];
             versioning = {
@@ -46,7 +46,8 @@
             name = "~/${id}";
             value = {
               inherit id;
-            } // folderCfg;
+            }
+            // folderCfg;
           }) folderIds
         );
     };

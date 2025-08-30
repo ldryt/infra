@@ -1,8 +1,4 @@
 { config, ... }:
-let
-  macs = builtins.fromJSON (builtins.readFile ./macs.json);
-  stationIF = "st0";
-in
 {
   networking = {
     hostName = "domus";
@@ -15,15 +11,8 @@ in
   };
 
   systemd.network = {
-    links."10-${stationIF}" = {
-      matchConfig.PermanentMACAddress = macs.onchip;
-      linkConfig = {
-        Name = stationIF;
-        MACAddress = "5a:f6:d6:96:07:35";
-      };
-    };
-    networks."10-${stationIF}" = {
-      matchConfig.Name = stationIF;
+    networks."10-wlan0" = {
+      matchConfig.Name = "wlan0";
       DHCP = "ipv4";
       dhcpV4Config = {
         UseDNS = false;
@@ -35,7 +24,7 @@ in
   sops.secrets."system/networking/wpa_supplicant/secrets.conf" = { };
   networking.wireless = {
     enable = true;
-    interfaces = [ stationIF ];
+    interfaces = [ "wlan0" ];
     userControlled.enable = true;
     allowAuxiliaryImperativeNetworks = true;
     secretsFile = config.sops.secrets."system/networking/wpa_supplicant/secrets.conf".path;

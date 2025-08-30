@@ -8,6 +8,7 @@
     ./users.nix
 
     ./services/printer
+    ./services/syncthing.nix
 
     ../../modules/openssh.nix
     ../../modules/nix-settings.nix
