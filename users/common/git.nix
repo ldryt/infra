@@ -32,6 +32,10 @@
         contents.user.email = "lucas.ladreyt@epita.fr";
         condition = "hasconfig:remote.*.url:*@*.epita.fr:**/**";
       }
+      {
+        contents.user.email = "lucas.ladreyt@obspm.fr";
+        condition = "hasconfig:remote.*.url:*@*.obspm.fr:**/**";
+      }
     ];
   };
 }
