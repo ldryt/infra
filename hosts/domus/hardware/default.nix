@@ -13,8 +13,6 @@
     generic-extlinux-compatible.enable = true;
   };
 
-  boot.kernelPackages = pkgs.linuxKernel.packages.linux_rpi3;
-
   # Some modules are included by default, but our rpi kernel doesn't
   # include all.
   # This overlay ignores missing modules errors
@@ -24,9 +22,4 @@
       makeModulesClosure = x: super.makeModulesClosure (x // { allowMissing = true; });
     })
   ];
-
-  hardware = {
-    enableRedistributableFirmware = lib.mkForce false;
-    firmware = [ pkgs.raspberrypiWirelessFirmware ];
-  };
 }
