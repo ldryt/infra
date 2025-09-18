@@ -8,14 +8,12 @@
   home.packages = with pkgs; [
     nix-tree
     wl-clipboard
-    vesktop
     super-slicer-beta
     evolution
     obsidian
     telegram-desktop
     parsec-bin
     libreoffice
-    slack
     digikam
   ];
 }
