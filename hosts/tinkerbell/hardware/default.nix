@@ -24,6 +24,7 @@
   };
 
   fileSystems."/swap".neededForBoot = true;
+  boot.kernel.sysctl."vm.swappiness" = 15;
 
   fileSystems."/nix".neededForBoot = true;
 
