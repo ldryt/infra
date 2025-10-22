@@ -10,6 +10,7 @@
     ./services/mailserver
     ./services/radicale.nix
     ./services/syncthing.nix
+    ./services/immich.nix
 
     ../../modules/nginx.nix
     ../../modules/fail2ban.nix

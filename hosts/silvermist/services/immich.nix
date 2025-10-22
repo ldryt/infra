@@ -1,88 +1,27 @@
-{ config, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs-master,
+  pkgs,
+  ...
+}:
 let
-  dataDir = "/mnt/immich-library";
-  podmanNetwork = "immich-network";
-  internalPort = "44084";
-  backupsTmpDir = "/tmp/immich_backups";
+  dataDir = "/mnt/immich";
   oidcSigningAlg = "RS256";
-  oidcClientID = "lDGd-h~eVFyILWKT0uvDA1WGMZXboNdLJC8XL.eqW1UbEIjP~6yyCR5Pv1La5zix73LAf38e";
-  immichConfigPath = "/etc/immich.conf";
+  oidcClientID = "YL~WkjeeJXxVWOs01mdJjXJarT6yssLlf4yZdAowKL61OWpP3G2WbR1D9y2RBAjh_xHSXRGo";
+  smtpSender = "pics@ldryt.dev";
+  mlClipModel = "ViT-B-16-SigLIP__webli";
 in
 {
-  systemd.services.init-immich-network = {
-    description = "Create the network named ${podmanNetwork}.";
-    after = [ "network.target" ];
-    wantedBy = [ "multi-user.target" ];
-    serviceConfig.Type = "oneshot";
-    script = ''
-      check=$(${pkgs.podman}/bin/podman network ls | grep "${podmanNetwork}" || true)
-      if [ -z "$check" ];
-        then ${pkgs.podman}/bin/podman network create ${podmanNetwork}
-        else echo "${podmanNetwork} already exists in podman"
-      fi
-    '';
-  };
+  environment.persistence.silvermist.directories = [
+    config.services.postgresql.dataDir
+    config.services.immich.machine-learning.environment.MACHINE_LEARNING_CACHE_FOLDER
+  ];
 
-  virtualisation.oci-containers.containers = {
-    "immich-server" = {
-      hostname = "immich-server";
-      image = "ghcr.io/immich-app/immich-server:v1.137.1";
-      environment = {
-        IMMICH_CONFIG_FILE = immichConfigPath;
-        DB_HOSTNAME = "immich-db";
-        DB_USERNAME = config.virtualisation.oci-containers.containers.immich-db.environment.POSTGRES_USER;
-        DB_DATABASE_NAME =
-          config.virtualisation.oci-containers.containers.immich-db.environment.POSTGRES_DB;
-        DB_PASSWORD =
-          config.virtualisation.oci-containers.containers.immich-db.environment.POSTGRES_PASSWORD;
-        REDIS_HOSTNAME = "immich-redis";
-      };
-      volumes = [
-        "${immichConfigPath}:${immichConfigPath}:ro"
-        "${dataDir}:/usr/src/app/upload"
-      ];
-      ports = [ "127.0.0.1:${internalPort}:2283" ];
-      dependsOn = [
-        "immich-redis"
-        "immich-db"
-      ];
-      extraOptions = [ "--network=${podmanNetwork}" ];
-    };
-    "immich-machine-learning" = {
-      hostname = "immich-machine-learning";
-      image = "ghcr.io/immich-app/immich-machine-learning:v1.137.1";
-      volumes = [ "immich-ml-cache:/cache" ];
-      extraOptions = [ "--network=${podmanNetwork}" ];
-    };
-    "immich-db" = {
-      hostname = "immich-db";
-      image = "ghcr.io/immich-app/postgres:14-vectorchord0.3.0-pgvectors0.2.0";
-      environment = {
-        POSTGRES_PASSWORD = "postgres";
-        POSTGRES_USER = "postgres";
-        POSTGRES_DB = "immich";
-        POSTGRES_INITDB_ARGS = "--data-checksums";
-      };
-      volumes = [ "immich-db-data:/var/lib/postgresql/data" ];
-      extraOptions = [ "--network=${podmanNetwork}" ];
-    };
-    "immich-redis" = {
-      hostname = "immich-redis";
-      image = "docker.io/valkey/valkey:8-bookworm@sha256:42cba146593a5ea9a622002c1b7cba5da7be248650cbb64ecb9c6c33d29794b1";
-      extraOptions = [ "--network=${podmanNetwork}" ];
-    };
-  };
-
-  sops.secrets."system/smb/glouton/immich-library/credentials" = { };
-  environment.systemPackages = [ pkgs.cifs-utils ];
-  fileSystems."${dataDir}" = {
-    device = "//u391790-sub1.your-storagebox.de/u391790-sub1";
-    fsType = "cifs";
-    options = [
-      "async,rw,auto,nofail,credentials=${
-        config.sops.secrets."system/smb/glouton/immich-library/credentials".path
-      },uid=${toString config.users.users.colon.uid},fsc,noauto,x-systemd.automount,x-systemd.idle-timeout=60,x-systemd.mount-timeout=5s"
-    ];
+  sops.secrets."backups/restic/repos/immich/password" = { };
+  ldryt-infra.backups.repos.immich = {
+    passwordFile = config.sops.secrets."backups/restic/repos/immich/password".path;
+    paths = [ dataDir ];
   };
 
   services.nginx.virtualHosts."${config.ldryt-infra.dns.records.immich}" = {
@@ -91,118 +30,173 @@ in
     kTLS = true;
     locations."/" = {
       proxyWebsockets = true;
-      proxyPass = "http://127.0.0.1:${internalPort}";
+      proxyPass = "http://${config.services.immich.host}:${toString config.services.immich.port}";
       extraConfig = ''
         client_max_body_size 0;
       '';
     };
   };
 
-  services.authelia.instances.main.settings.identity_providers.oidc.clients = [
-    {
-      client_name = "immich";
-      client_id = oidcClientID;
-      client_secret = "$pbkdf2-sha512$310000$Huutr5ZUtLI/eUqou676MA$p2z9qxBbkkjkDoPni55VAfCP4gO4TzE78Vob2FbLfhAn3syHa6/97NjHhyVsz9B7xWB2lkkiYDtCs6jBC1th4w";
-      public = false;
-      consent_mode = "implicit";
-      redirect_uris = [
-        "https://${config.ldryt-infra.dns.records.immich}/auth/login"
-        "https://${config.ldryt-infra.dns.records.immich}/user-settings"
-        "app.immich:///oauth-callback"
-      ];
-      scopes = [
-        "openid"
-        "profile"
-        "email"
-      ];
-      userinfo_signed_response_alg = oidcSigningAlg;
-      id_token_signed_response_alg = oidcSigningAlg;
-
-      # https://github.com/immich-app/immich/releases/tag/v1.132.3
-      token_endpoint_auth_method = "client_secret_post";
-    }
-  ];
-
-  sops.secrets."backups/restic/repos/immich/password" = { };
-  ldryt-infra.backups.repos.immich = {
-    passwordFile = config.sops.secrets."backups/restic/repos/immich/password".path;
-    paths = [
-      backupsTmpDir
-      dataDir
-    ];
-    backupPrepareCommand = ''
-      ${pkgs.bash}/bin/bash -c '
-        if ! mkdir -p "${backupsTmpDir}"; then
-          echo "Could not create backup folder '${backupsTmpDir}'" >&2
-          exit 1
-        fi
-
-        ${pkgs.podman}/bin/podman exec -t immich-db pg_dumpall -c -U postgres | ${pkgs.gzip}/bin/gzip > "${backupsTmpDir}/immich-db-dump.sql.gz"
-      '
-    '';
-    backupCleanupCommand = ''
-      ${pkgs.bash}/bin/bash -c 'rm -rf "${backupsTmpDir}"'
-    '';
+  # https://github.com/NixOS/nixpkgs/issues/418799
+  users.users.immich = {
+    home = config.services.immich.machine-learning.environment.MACHINE_LEARNING_CACHE_FOLDER;
+    createHome = true;
   };
 
-  sops.secrets."services/immich/oidc/clientSecret".owner = config.users.users.colon.name;
-  systemd.services."${config.virtualisation.oci-containers.backend}-immich-server".serviceConfig.ExecStartPre =
+  services.immich = {
+    enable = true;
+    package = pkgs-master.immich;
+    mediaLocation = dataDir;
+    database = {
+      enable = true;
+      enableVectorChord = true;
+      enableVectors = false;
+    };
+    redis.enable = true;
+    machine-learning = {
+      enable = true;
+      environment = {
+        MACHINE_LEARNING_PRELOAD__CLIP__TEXTUAL = mlClipModel;
+      };
+    };
+    environment.IMMICH_CONFIG_FILE = config.sops.templates."immich.json".path;
+  };
+
+  # https://github.com/NixOS/nixpkgs/issues/369379#issuecomment-3082247079
+  sops.secrets."services/immich/oidc/clientSecret".owner = config.services.immich.user;
+  sops.secrets."services/immich/mail/clearPassword".owner = config.services.immich.user;
+  sops.templates."immich.json" =
     let
-      oauthClientSecretPlaceholder = "SUPPOSED_TO_BE_REPLACED_AUTOMATICALLY";
-      immichConfig = pkgs.writeText "immich-config.json" ''
-        ffmpeg:
-          transcode: all
-          crf: 30
-          preset: medium
-          targetVideoCodec: vp9
-          targetAudioCodec: libopus
-          targetResolution: '720'
-          twoPass: true
-          tonemap: reinhard
-        oauth:
-          enabled: true
-          issuerUrl: https://${config.ldryt-infra.dns.records.authelia}/.well-known/openid-configuration
-          clientId: ${oidcClientID}
-          clientSecret: ${oauthClientSecretPlaceholder}
-          signingAlgorithm: ${oidcSigningAlg}
-          profileSigningAlgorithm: ${oidcSigningAlg}
-          scope: openid email profile
-          storageLabelClaim: preferred_username
-          storageQuotaClaim: immich_quota
-          buttonText: Login with ${config.ldryt-infra.dns.records.authelia}
-          defaultStorageQuota: 0
-          autoRegister: true
-        machineLearning:
-          clip:
-            modelName: ViT-B-16-SigLIP-384__webli
-        passwordLogin:
-          enabled: false
-        storageTemplate:
-          enabled: true
-          hashVerificationEnabled: true
-          template: '{{y}}/{{MMMM}}/{{y}}{{MM}}{{dd}}-{{HH}}{{mm}}{{ss}}'
-        image:
-          thumbnail:
-            quality: 85
-          preview:
-            quality: 85
-        server:
-          externalDomain: https://${config.ldryt-infra.dns.records.immich}
-        notifications:
-          smtp:
-            enabled: true
-            from: pics@ldryt.dev
-            replyTo: noreply@ldryt.dev
-            transport:
-              host: localhost
-              port: 25
-      '';
+      settings = {
+        server.externalDomain = "https://${config.ldryt-infra.dns.records.immich}";
+        backup.database = {
+          enabled = true;
+          cronExpression = "0 */6 * * *";
+          keepLastAmount = 60;
+        };
+        ffmpeg = {
+          transcode = "all";
+          acceptedAudioCodecs = [ "aac" ];
+          acceptedContainers = [ ];
+          acceptedVideoCodecs = [ "hevc" ];
+          targetAudioCodec = "aac";
+          targetResolution = "1080";
+          targetVideoCodec = "hevc";
+          crf = 30;
+          maxBitrate = "0";
+          preset = "medium";
+          threads = 1;
+          twoPass = false;
+        };
+        storageTemplate = {
+          enabled = true;
+          hashVerificationEnabled = true;
+          template = "{{#if album}}{{album}}{{else}}{{y}}/{{WW}}{{/if}}/{{HH}}/{{filetype}}_{{y}}{{MM}}{{dd}}-{{HH}}{{mm}}{{ss}}{{SSS}}_{{assetId}}";
+        };
+        image = {
+          fullsize = {
+            enabled = true;
+            format = "webp";
+            quality = 85;
+          };
+          preview = {
+            format = "webp";
+            quality = 80;
+            size = 1440;
+          };
+          thumbnail = {
+            format = "webp";
+            quality = 80;
+            size = 250;
+          };
+        };
+        job = {
+          thumbnailGeneration = {
+            concurrency = 4;
+          };
+          videoConversion = {
+            concurrency = 4;
+          };
+          smartSearch = {
+            concurrency = 1;
+          };
+          faceDetection = {
+            concurrency = 1;
+          };
+        };
+        logging = {
+          enabled = true;
+          level = "debug";
+        };
+        machineLearning.clip.modelName = mlClipModel;
+        newVersionCheck.enabled = false;
+        oauth = {
+          enabled = true;
+          autoRegister = true;
+          autoLaunch = true;
+          buttonText = "Login with ${config.ldryt-infra.dns.records.authelia}";
+          defaultStorageQuota = 5;
+          clientId = oidcClientID;
+          clientSecret = config.sops.placeholder."services/immich/oidc/clientSecret";
+          issuerUrl = "https://${config.ldryt-infra.dns.records.authelia}/.well-known/openid-configuration";
+          signingAlgorithm = oidcSigningAlg;
+          profileSigningAlgorithm = oidcSigningAlg;
+          scope = "openid email profile immich_scope";
+          storageLabelClaim = "preferred_username";
+          storageQuotaClaim = "immich_quota";
+          roleClaim = "immich_role";
+        };
+        passwordLogin.enabled = false;
+        notifications.smtp = {
+          enabled = true;
+          from = smtpSender;
+          transport = {
+            host = "${config.ldryt-infra.dns.records.mailserver}";
+            port = 465;
+            username = smtpSender;
+            password = config.sops.placeholder."services/immich/mail/clearPassword";
+          };
+        };
+      };
     in
-    [
-      (pkgs.writeShellScript "immich-config-inject-secrets.sh" ''
-        oauth_client_secret=$(cat ${config.sops.secrets."services/immich/oidc/clientSecret".path})
-        install -D -o ${config.users.users.colon.name} -m 0400 "${immichConfig}" "${immichConfigPath}"
-        ${pkgs.busybox}/bin/sed -i 's/${oauthClientSecretPlaceholder}/'"$oauth_client_secret"'/g' "${immichConfigPath}"
-      '')
+    {
+      owner = config.services.immich.user;
+      restartUnits = [
+        "immich-server.service"
+        "immich-machine-learning.service"
+      ];
+      content = lib.strings.toJSON settings;
+    };
+
+  sops.secrets."system/smb/glouton/immich-library/credentials" = { };
+  environment.systemPackages = [ pkgs.cifs-utils ];
+  fileSystems."${dataDir}" = {
+    device = "//u391790-sub1.your-storagebox.de/u391790-sub1";
+    fsType = "cifs";
+    options = [
+      "credentials=${config.sops.secrets."system/smb/glouton/immich-library/credentials".path}"
+
+      "uid=${toString config.services.immich.user}"
+      "forceuid"
+      "gid=${toString config.services.immich.group}"
+      "forcegid"
+      "file_mode=0770"
+      "dir_mode=0770"
+
+      "vers=3.1.1"
+      "sec=ntlmsspi"
+      "seal"
+
+      "async"
+      "noatime"
+      "rsize=4194304"
+      "wsize=4194304"
+      "fsc"
+
+      "noauto"
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=600s"
+      "x-systemd.mount-timeout=15s"
     ];
+  };
 }

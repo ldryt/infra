@@ -104,9 +104,10 @@
               home-manager.nixosModules.home-manager
             ];
           };
-        silvermist = nixpkgs.lib.nixosSystem {
+        silvermist = nixpkgs.lib.nixosSystem rec {
           specialArgs = {
             inherit inputs;
+            pkgs-master = nixpkgs-master.legacyPackages.${system};
           };
           system = "x86_64-linux";
           modules = [

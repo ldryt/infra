@@ -1,13 +1,13 @@
 {
   "ldryt.dev": {
     "tp420ia": {
-      "immich": "pics",
       "paperless": "docs"
     },
     "silvermist": {
       "authelia": "auth",
       "vaultwarden": "pass",
       "mailserver": "mx",
+      "immich": "pics",
       "ocis": "files",
       "domus": "domus",
       "printer": "printer",
