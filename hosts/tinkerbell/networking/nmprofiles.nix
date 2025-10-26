@@ -3,7 +3,7 @@
   sops.secrets."system/NetworkManager/profiles/env" = { };
   networking.networkmanager.ensureProfiles = {
     environmentFiles = [ config.sops.secrets."system/NetworkManager/profiles/env".path ];
-    profiles = {
+    profiles = rec {
       wg_GNB = {
         connection = {
           id = "wg_GNB";
@@ -106,6 +106,46 @@
         wifi-security = {
           key-mgmt = "wpa-psk";
           psk = "$TP420IA_PWD";
+        };
+      };
+      Eduroam = {
+        "802-1x" = {
+          eap = "peap;";
+          identity = "$eduroam_ID";
+          password = "$eduroam_PWD";
+          phase2-auth = "mschapv2";
+        };
+        connection = {
+          id = "Eduroam";
+          type = "wifi";
+        };
+        wifi = {
+          mode = "infrastructure";
+          ssid = "Eduroam";
+        };
+        wifi-security = {
+          auth-alg = "open";
+          key-mgmt = "wpa-eap";
+        };
+      };
+      IONIS = {
+        "802-1x" = {
+          eap = "peap;";
+          identity = "$eduroam_ID";
+          password = "$eduroam_PWD";
+          phase2-auth = "mschapv2";
+        };
+        connection = {
+          id = "IONIS";
+          type = "wifi";
+        };
+        wifi = {
+          mode = "infrastructure";
+          ssid = "IONIS";
+        };
+        wifi-security = {
+          auth-alg = "open";
+          key-mgmt = "wpa-eap";
         };
       };
       eduroam = {
