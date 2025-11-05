@@ -6,8 +6,6 @@
     ./users.nix
 
     ./services/sftp-backups.nix
-    ./services/ap.nix
-    ./services/immich.nix
     ./services/paperless.nix
 
     ../../modules/nix-settings.nix
