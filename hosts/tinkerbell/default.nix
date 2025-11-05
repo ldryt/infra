@@ -6,12 +6,14 @@
     ./users.nix
     ./locales.nix
 
+    ./services/virtualbox.nix
+    ./services/docker.nix
+
     ../../modules/greetd.nix
     ../../modules/sway.nix
     ../../modules/geoclue.nix
     ../../modules/steam.nix
     ../../modules/nix-settings.nix
-    ../../modules/docker.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
