@@ -45,6 +45,13 @@
 
         # Misc
         vscode-langservers-extracted
+        dockerfile-language-server-nodejs
+        fortls
+        taplo
+        yaml-language-server
+        bash-language-server
+        neocmakelsp
+        mesonlsp
       ];
     languages = {
       language-server = {
