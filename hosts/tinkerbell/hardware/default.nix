@@ -28,7 +28,10 @@
 
   fileSystems."/nix".neededForBoot = true;
 
-  boot.binfmt.emulatedSystems = [ "aarch64-linux" ];
+  boot.binfmt = {
+    emulatedSystems = [ "aarch64-linux" ];
+    preferStaticEmulators = true;
+  };
 
   services.fwupd.enable = true;
 
