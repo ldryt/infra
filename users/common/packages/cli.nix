@@ -21,6 +21,8 @@
     usbutils
     pciutils
 
+    uv
+
     which
     tree
     ripgrep
