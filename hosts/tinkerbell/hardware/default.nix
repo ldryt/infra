@@ -73,6 +73,10 @@
     kernelModules = [
       "kvm-amd"
     ];
+    kernelParams = [
+      "clocksource=tsc"
+      "tsc=reliable"
+    ];
 
     loader.efi.canTouchEfiVariables = true;
 
