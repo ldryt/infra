@@ -14,7 +14,8 @@
       "radicale": "cal",
       "grafana": "graph",
       "stun": "stun",
-      "turn": "turn"
+      "turn": "turn",
+      "firefox-syncserver": "firesync"
     }
   }
 }
