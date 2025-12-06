@@ -114,6 +114,17 @@ in
     };
   };
 
+  xdg.mimeApps = {
+    enable = true;
+    defaultApplications = {
+      "text/html" = "firefox.desktop";
+      "x-scheme-handler/http" = "firefox.desktop";
+      "x-scheme-handler/https" = "firefox.desktop";
+      "x-scheme-handler/about" = "firefox.desktop";
+      "x-scheme-handler/unknown" = "firefox.desktop";
+    };
+  };
+
   programs.ghostty = {
     enable = true;
     enableBashIntegration = true;
@@ -185,6 +196,10 @@ in
               "exec sh -c 'kill -2 $(pidof wf-recorder) || { test ! $? -eq 0 && wf-recorder -g \"$(slurp)\" --audio=\"$(pactl info | grep \"Default Sink\" | cut -d \" \" -f3)\".monitor -f ~/Pictures/Screenshots/recording_\"$(date +'%Y-%m-%d_%H:%M:%S')_$(hostname)\".mp4; }'";
           };
         startup = [
+          {
+            # https://archive.is/CDQxh
+            command = "systemctl --user import-environment PATH && systemctl --user restart xdg-desktop-portal.service";
+          }
           { command = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"; }
         ];
         input = {
