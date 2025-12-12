@@ -1,12 +1,12 @@
-{ config, ... }:
+{ ... }:
 {
   services.power-profiles-daemon.enable = true;
   powerManagement.powertop.enable = true;
 
-  services.logind = {
+  services.logind.settings.Login = {
     powerKey = "suspend-then-hibernate";
     powerKeyLongPress = "poweroff";
-    lidSwitch = config.services.logind.powerKey;
+    lidSwitch = "suspend-then-hibernate";
     lidSwitchDocked = "ignore";
   };
 

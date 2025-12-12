@@ -2,7 +2,11 @@
 {
   programs.git = {
     enable = true;
-    extraConfig = {
+    settings = {
+      user = {
+        name = "Lucas Ladreyt";
+        email = "ldryt@posteo.com";
+      };
       push = {
         default = "simple";
         autoSetupRemote = true;
@@ -25,8 +29,6 @@
       alias."pretty-log" =
         "log --graph --abbrev-commit --decorate --format=format:'%C(bold blue)%h%C(reset) - %C(bold green)(%ar)%C(reset) %C(white)%s%C(reset) %C(dim white)- %an%C(reset)%C(auto)%d%C(reset)' --all";
     };
-    userName = "Lucas Ladreyt";
-    userEmail = "ldryt@posteo.com";
     includes = [
       {
         contents.user.email = "lucas.ladreyt@epita.fr";

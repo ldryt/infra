@@ -45,7 +45,7 @@
 
         # Misc
         vscode-langservers-extracted
-        dockerfile-language-server-nodejs
+        dockerfile-language-server
         fortls
         taplo
         yaml-language-server

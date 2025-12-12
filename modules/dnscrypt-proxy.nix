@@ -1,6 +1,6 @@
 { ... }:
 {
-  services.dnscrypt-proxy2 = {
+  services.dnscrypt-proxy = {
     enable = true;
     settings = {
       http3 = true;

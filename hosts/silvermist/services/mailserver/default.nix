@@ -33,6 +33,7 @@
 
   mailserver = {
     enable = true;
+    stateVersion = 3;
     fqdn = "${config.ldryt-infra.dns.records.mailserver}";
     domains = [
       "ldryt.dev"

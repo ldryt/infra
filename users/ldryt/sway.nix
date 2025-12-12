@@ -129,7 +129,7 @@ in
     enable = true;
     enableBashIntegration = true;
     settings = {
-      theme = "dark:GitLab-Dark,light:GitLab-Light";
+      theme = "dark:GitLab Dark,light:GitLab Light";
       confirm-close-surface = false;
       resize-overlay = "never";
       app-notifications = false;

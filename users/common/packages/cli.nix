@@ -6,7 +6,7 @@
     iotop
     iftop
     nvtopPackages.amd
-    linuxPackages_latest.perf
+    perf
     wavemon
 
     screen

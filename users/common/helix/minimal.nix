@@ -24,7 +24,7 @@
       yaml-language-server
 
       # TOML
-      taplo-lsp
+      taplo
     ];
     languages.language = [
       {
