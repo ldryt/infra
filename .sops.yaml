@@ -5,6 +5,7 @@ keys:
   - &domus age1xvfsgq2yk82pakqkw7nyx6phq7z6qhpjj8umrlsc8zckwplsspaqsymdc6
   - &printer age148eenczc4deuzlp0nkmglv44qcjqwclkk0dx47rfknjk8jw3vpyq8jq6kv
   - &tp420ia age1claperypgl6azqx64k83vslrcuch9d2cs6xs8aak3y6qt9fq2aeslf2j9r
+  - &luke age17w5m4sen9zl9qf7enj2g8974uyfa6jnsuukut9v6tjawmrxh5vaqye03sc
   - &ldryt age1d7d0ed4268h2gdew58c62gcpac2y9tn9ke03kdkr5c93alvzm5rqn2zg2j
 creation_rules:
   - path_regex: hosts/silvermist/secrets.yaml$
@@ -36,6 +37,11 @@ creation_rules:
     key_groups:
       - age:
         - *tp420ia
+        - *ldryt
+  - path_regex: hosts/luke/secrets.yaml$
+    key_groups:
+      - age:
+        - *luke
         - *ldryt
   - path_regex: users/ldryt/secrets.yaml$
     key_groups:

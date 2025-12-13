@@ -3,6 +3,9 @@
     "tp420ia": {
       "paperless": "docs"
     },
+    "luke": {
+      "dummy": "dummy"
+    },
     "silvermist": {
       "authelia": "auth",
       "vaultwarden": "pass",

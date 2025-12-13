@@ -135,6 +135,21 @@
             lanzaboote.nixosModules.lanzaboote
           ];
         };
+        luke = nixpkgs.lib.nixosSystem rec {
+          specialArgs = {
+            inherit inputs;
+            pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
+            pkgs-master = nixpkgs-master.legacyPackages.${system};
+          };
+          system = "aarch64-linux";
+          modules = [
+            ./hosts/luke
+            sops-nix.nixosModules.sops
+            disko.nixosModules.disko
+            impermanence.nixosModules.impermanence
+            home-manager.nixosModules.home-manager
+          ];
+        };
         domus =
           let
             system = "aarch64-linux";

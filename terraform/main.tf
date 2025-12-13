@@ -71,6 +71,12 @@ locals {
       ip        = "82.65.203.15"
       ssh_port  = 34971
       sops_file = "${path.module}/../hosts/tp420ia/secrets.yaml"
+    },
+    "luke" = {
+      id        = "luke-id-2025-12-12"
+      ip        = "129.151.231.71"
+      ssh_port  = 22
+      sops_file = "${path.module}/../hosts/luke/secrets.yaml"
     }
   }
 }
