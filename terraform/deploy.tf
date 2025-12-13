@@ -19,7 +19,8 @@ module "deploy" {
 
   extra_files_script = "${path.module}/deploy-sops-key.sh"
   extra_environment = {
-    "SERVER_NAME" = each.key
+    "SERVER_NAME"     = each.key
+    "SERVER_SOPS_KEY" = nonsensitive(data.sops_file.secrets[each.key].data["nixos-anywhere.install.self-sops-key"])
   }
 
   debug_logging = true

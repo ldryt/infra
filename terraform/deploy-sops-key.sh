@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-
 set -xeu
 
-mkdir -p ./nix
+mkdir -p ./nix/persist
 
-keepassxc-cli show -a notes "$KEEPASS_DB" "$SERVER_NAME - sops" > "./nix/sops_age_$SERVER_NAME.key"
+umask 077
+echo "$SERVER_SOPS_KEY" > "./nix/persist/sops_age_$SERVER_NAME.key"
