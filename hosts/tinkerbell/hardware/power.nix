@@ -4,10 +4,10 @@
   powerManagement.powertop.enable = true;
 
   services.logind.settings.Login = {
-    powerKey = "suspend-then-hibernate";
-    powerKeyLongPress = "poweroff";
-    lidSwitch = "suspend-then-hibernate";
-    lidSwitchDocked = "ignore";
+    HandlePowerKey = "suspend-then-hibernate";
+    HandlePowerKeyLongPress = "poweroff";
+    HandleLidSwitch = "suspend-then-hibernate";
+    HandleLidSwitchDocked = "ignore";
   };
 
   systemd.sleep.extraConfig = ''
