@@ -1,14 +1,18 @@
 { config, ... }:
+let
+  devices = builtins.fromJSON (builtins.readFile ../../../syncthing-devices.json);
+in
 {
   sops.secrets."services/syncthing/key".owner = config.services.syncthing.user;
   sops.secrets."services/syncthing/cert".owner = config.services.syncthing.user;
-  sops.secrets."services/syncthing/devices/luke/encryptionPassword".owner =
-    config.services.syncthing.user;
+
+  environment.persistence.luke.directories = [
+    config.services.syncthing.dataDir
+    config.services.syncthing.configDir
+  ];
 
   services.syncthing = {
     enable = true;
-    dataDir = "/var/lib/syncthing/data";
-    configDir = "/var/lib/syncthing/config";
     openDefaultPorts = true;
     key = config.sops.secrets."services/syncthing/key".path;
     cert = config.sops.secrets."services/syncthing/cert".path;
@@ -19,22 +23,17 @@
         natEnabled = false;
         localAnnounceEnabled = false;
       };
-      devices = builtins.removeAttrs (builtins.fromJSON (
-        builtins.readFile ../../../syncthing-devices.json
-      )) [ "domus" ];
+      devices = builtins.removeAttrs devices [ "luke" ];
       folders =
         let
           folderCfg = {
-            type = "receiveonly";
+            type = "receiveencrypted";
+            ignorePerms = true;
             devices = [
               "tinkerbell"
-              "silvermist"
+              "domus"
               "rosetta"
-              {
-                name = "luke";
-                encryptionPasswordFile =
-                  config.sops.secrets."services/syncthing/devices/luke/encryptionPassword".path;
-              }
+              "silvermist"
             ];
             versioning = {
               type = "simple";
@@ -45,6 +44,7 @@
             "ldryt-notes"
             "ldryt-vault"
             "ldryt-documents"
+            "ldryt-pictures"
           ];
         in
         builtins.listToAttrs (

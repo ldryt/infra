@@ -1,8 +1,8 @@
 { config, ... }:
 {
-  # BRAQOO2-4MD5S4O-ORGTC3X-DEJDE3Q-YRK7V4E-VXXBR32-77PFW7P-G4Z6PAO
   sops.secrets."services/syncthing/key" = { };
   sops.secrets."services/syncthing/cert" = { };
+  sops.secrets."services/syncthing/devices/luke/encryptionPassword" = { };
 
   # workaround to avoid syncthing-init.service dependency failure on boot
   systemd.user.services."syncthing".Unit.After = [ "sops-nix.service" ];
@@ -28,6 +28,11 @@
               "silvermist"
               "domus"
               "rosetta"
+              {
+                name = "luke";
+                encryptionPasswordFile =
+                  config.sops.secrets."services/syncthing/devices/luke/encryptionPassword".path;
+              }
             ];
             versioning = {
               type = "simple";
@@ -38,16 +43,20 @@
         {
           "~/Sync/Vault" = {
             id = "ldryt-vault";
-          } // folderCfg;
+          }
+          // folderCfg;
           "~/Sync/Notes" = {
             id = "ldryt-notes";
-          } // folderCfg;
+          }
+          // folderCfg;
           "~/Documents/Sync" = {
             id = "ldryt-documents";
-          } // folderCfg;
+          }
+          // folderCfg;
           "~/Pictures/Sync" = {
             id = "ldryt-pictures";
-          } // folderCfg;
+          }
+          // folderCfg;
         };
     };
   };

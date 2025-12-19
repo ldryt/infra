@@ -5,9 +5,10 @@ let
   devices = builtins.fromJSON (builtins.readFile ../../../syncthing-devices.json);
 in
 {
-  # DURUBGK-S45UN27-6QQSHDA-7FWX3OS-4VCM4TD-NYMK6TV-JTEF742-VBTF7AZ
   sops.secrets."services/syncthing/key".owner = config.services.syncthing.user;
   sops.secrets."services/syncthing/cert".owner = config.services.syncthing.user;
+  sops.secrets."services/syncthing/devices/luke/encryptionPassword".owner =
+    config.services.syncthing.user;
 
   environment.persistence.silvermist.directories = [ configDir ];
 
@@ -44,6 +45,11 @@ in
               "tinkerbell"
               "domus"
               "rosetta"
+              {
+                name = "luke";
+                encryptionPasswordFile =
+                  config.sops.secrets."services/syncthing/devices/luke/encryptionPassword".path;
+              }
             ];
             versioning = {
               type = "simple";

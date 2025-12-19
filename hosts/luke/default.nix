@@ -5,6 +5,8 @@
     ./networking.nix
     ./users.nix
 
+    ./services/syncthing.nix
+
     ../../modules/nix-settings.nix
     ../../modules/openssh.nix
     ../../modules/fail2ban.nix
