@@ -1,5 +1,5 @@
 {
-  config,
+  inputs,
   pkgs,
   lib,
   modulesPath,
@@ -61,7 +61,20 @@
     pkgs.framework-tool
   ];
 
+  nixpkgs.overlays = [ inputs.mac-style-plymouth.overlays.default ];
   boot = {
+    plymouth = {
+      enable = true;
+      theme = "mac-style";
+      themePackages = [
+        (pkgs.mac-style-plymouth.overrideAttrs (oldAttrs: {
+          installPhase = oldAttrs.installPhase + ''
+            rm "$out/share/plymouth/themes/mac-style/images/header-image.png"
+          '';
+        }))
+      ];
+    };
+
     initrd.availableKernelModules = [
       "nvme"
       "xhci_pci"

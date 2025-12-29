@@ -25,6 +25,10 @@
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    mac-style-plymouth = {
+      url = "github:SergioRibera/s4rchiso-plymouth-theme";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     impermanence.url = "github:nix-community/impermanence";
     mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-25.11";
@@ -81,29 +85,25 @@
       );
 
       nixosConfigurations = {
-        tinkerbell =
-          let
-            system = "x86_64-linux";
-          in
-          nixpkgs.lib.nixosSystem {
-            specialArgs = {
-              inherit inputs;
-              pkgs-pie = import nixpie.inputs.nixpkgs {
-                inherit system;
-              };
-              pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
+        tinkerbell = nixpkgs.lib.nixosSystem rec {
+          specialArgs = {
+            inherit inputs;
+            pkgs-pie = import nixpie.inputs.nixpkgs {
+              inherit system;
             };
-            inherit system;
-            modules = [
-              ./hosts/tinkerbell
-              nixos-hardware.nixosModules.framework-13-7040-amd
-              sops-nix.nixosModules.sops
-              lanzaboote.nixosModules.lanzaboote
-              disko.nixosModules.disko
-              impermanence.nixosModules.impermanence
-              home-manager.nixosModules.home-manager
-            ];
+            pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
           };
+          system = "x86_64-linux";
+          modules = [
+            ./hosts/tinkerbell
+            nixos-hardware.nixosModules.framework-13-7040-amd
+            sops-nix.nixosModules.sops
+            lanzaboote.nixosModules.lanzaboote
+            disko.nixosModules.disko
+            impermanence.nixosModules.impermanence
+            home-manager.nixosModules.home-manager
+          ];
+        };
         silvermist = nixpkgs.lib.nixosSystem rec {
           specialArgs = {
             inherit inputs;
