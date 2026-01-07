@@ -11,6 +11,7 @@
     ./services/radicale.nix
     ./services/syncthing.nix
     ./services/immich.nix
+    ./services/frontpage.nix
 
     ../../modules/nginx.nix
     ../../modules/fail2ban.nix

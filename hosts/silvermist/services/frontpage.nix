@@ -1,9 +1,30 @@
-{ config, ... }:
+{ config, pkgs, ... }:
 {
+  services.nginx.virtualHosts."${config.ldryt-infra.dns.records.eu-web}" = {
+    enableACME = true;
+    forceSSL = true;
+    kTLS = true;
+    root = "${(pkgs.callPackage ../../../pkgs/www.lucasladreyt.eu { })}/public";
+  };
+
+  services.nginx.virtualHosts."${config.ldryt-infra.dns.records.ldryt-web}" = {
+    enableACME = true;
+    forceSSL = true;
+    kTLS = true;
+    globalRedirect = config.ldryt-infra.dns.records.eu-web;
+  };
+
   services.nginx.virtualHosts."${config.ldryt-infra.dns.zone}" = {
     enableACME = true;
     forceSSL = true;
     kTLS = true;
-    locations."/".return = "302 https://github.com/ldryt";
+    globalRedirect = config.ldryt-infra.dns.records.eu-web;
+  };
+
+  services.nginx.virtualHosts."lucasladreyt.eu" = {
+    enableACME = true;
+    forceSSL = true;
+    kTLS = true;
+    globalRedirect = config.ldryt-infra.dns.records.eu-web;
   };
 }

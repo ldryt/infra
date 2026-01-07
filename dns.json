@@ -2,6 +2,7 @@
   "ldryt.dev": {
     "luke": {},
     "silvermist": {
+      "ldryt-web": "www",
       "authelia": "auth",
       "vaultwarden": "pass",
       "mailserver": "mx",
@@ -13,6 +14,11 @@
       "stun": "stun",
       "turn": "turn",
       "firefox-syncserver": "firesync"
+    }
+  },
+  "lucasladreyt.eu": {
+    "silvermist": {
+      "eu-web": "www"
     }
   }
 }

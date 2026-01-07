@@ -1,0 +1,42 @@
+baseURL: https://www.lucasladreyt.eu/
+languageCode: en-US
+title: Lucas Ladreyt
+theme: PaperMod
+params:
+  description: Lucas Ladreyt.
+  keywords:
+    - Lucas Ladreyt
+    - Lucas Ladrey
+    - Luca Ladreyt
+    - Luca Ladrey
+    - Lucas Ladre
+    - ldryt
+    - Lucas Ladreyt Paris
+    - Lucas Ladreyt Lyon
+    - Lucas Ladreyt LinkedIn
+    - Lucas Ladreyt picture
+    - Lucas Ladreyt Github
+  author: Lucas Ladreyt
+  images:
+    - /images/me.jpg
+  profileMode:
+    enabled: true
+    title: Lucas Ladreyt
+    subtitle: Computer Science student at EPITA
+    imageUrl: /images/me.jpg
+    imageTitle: Lucas Ladreyt's picture
+    buttons:
+      - name: Website
+        url: https://ldryt.dev
+      - name: GitHub
+        url: https://github.com/ldryt
+      - name: LinkedIn
+        url: https://www.linkedin.com/in/lucas-ladreyt
+  socialIcons:
+    - name: github
+      url: https://github.com/ldryt
+    - name: linkedin
+      url: https://www.linkedin.com/in/lucas-ladreyt
+    - name: email
+      url: mailto:ldryt@posteo.com
+

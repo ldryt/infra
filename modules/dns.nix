@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ lib, ... }:
 with lib;
 {
   options = {
@@ -13,13 +13,17 @@ with lib;
   };
   config =
     let
-      cfg = config.ldryt-infra.dns;
       dns = builtins.fromJSON (builtins.readFile ../dns.json);
-      flatten = mapAttrs (
-        zone: hosts: foldl' (acc: hostRecords: acc // hostRecords) { } (attrValues hosts)
+
+      getServices = hosts: foldl' (acc: hostRecords: acc // hostRecords) { } (attrValues hosts);
+
+      recordsByZone = mapAttrs (
+        zoneName: hosts: mapAttrs (_: subdomain: "${subdomain}.${zoneName}") (getServices hosts)
       ) dns;
+
+      allRecords = foldl' (acc: zoneRecords: acc // zoneRecords) { } (attrValues recordsByZone);
     in
     {
-      ldryt-infra.dns.records = mapAttrs (_: subdomain: "${subdomain}.${cfg.zone}") flatten."${cfg.zone}";
+      ldryt-infra.dns.records = allRecords;
     };
 }
