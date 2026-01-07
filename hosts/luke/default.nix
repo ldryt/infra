@@ -19,12 +19,12 @@
   sops.age.keyFile = "/nix/persist/sops_age_luke.key";
 
   sops.secrets."backups/restic/hosts/glouton/sshKey" = { };
-  sops.secrets."backups/restic/hosts/tp420ia/sshKey" = { };
+  sops.secrets."backups/restic/hosts/domus/sshKey" = { };
   sops.secrets."backups/restic/repos/luke/password" = { };
   ldryt-infra.backups = {
     hosts = {
       glouton.sshKey = config.sops.secrets."backups/restic/hosts/glouton/sshKey".path;
-      tp420ia.sshKey = config.sops.secrets."backups/restic/hosts/tp420ia/sshKey".path;
+      domus.sshKey = config.sops.secrets."backups/restic/hosts/domus/sshKey".path;
     };
     repos = {
       luke = {

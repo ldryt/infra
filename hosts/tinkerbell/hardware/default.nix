@@ -11,9 +11,10 @@
     ./disko.nix
 
     (modulesPath + "/installer/scan/not-detected.nix")
+
+    inputs.nixos-hardware.nixosModules.framework-13-7040-amd
   ];
 
-  # Note: module "framework-13-7040-amd" from https://github.com/NixOS/nixos-hardware is imported in flake
   hardware.framework = {
     enableKmod = true;
     laptop13.audioEnhancement = {

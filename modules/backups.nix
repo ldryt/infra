@@ -53,7 +53,7 @@ in
                 type = types.listOf (types.enum (attrNames cfg.hosts));
                 default = [
                   "glouton"
-                  "tp420ia"
+                  # "domus"
                 ];
               };
 
@@ -116,9 +116,9 @@ in
   config = {
     ldryt-infra.backups.hosts = mkIf cfg.enableDefaultHosts {
       glouton.url = mkDefault "u391790-sub3@u391790-sub3.your-storagebox.de";
-      tp420ia = {
-        url = mkDefault "restic-backups@tp420ia.ldryt.dev";
-        port = mkDefault 34971;
+      domus = {
+        url = mkDefault "restic-backups@domus.ldryt.dev";
+        port = mkDefault 22;
       };
     };
 

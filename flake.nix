@@ -1,4 +1,14 @@
 {
+  nixConfig = {
+    extra-substituters = [
+      "https://nix-community.cachix.org"
+      "https://nixos-raspberrypi.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI="
+    ];
+  };
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -29,6 +39,7 @@
       url = "github:SergioRibera/s4rchiso-plymouth-theme";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     impermanence.url = "github:nix-community/impermanence";
     mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-25.11";
@@ -44,6 +55,7 @@
       disko,
       lanzaboote,
       nixos-hardware,
+      nixos-raspberrypi,
       impermanence,
       mailserver,
       nixpie,
@@ -96,7 +108,6 @@
           system = "x86_64-linux";
           modules = [
             ./hosts/tinkerbell
-            nixos-hardware.nixosModules.framework-13-7040-amd
             sops-nix.nixosModules.sops
             lanzaboote.nixosModules.lanzaboote
             disko.nixosModules.disko
@@ -119,22 +130,6 @@
             mailserver.nixosModules.mailserver
           ];
         };
-        tp420ia = nixpkgs.lib.nixosSystem rec {
-          specialArgs = {
-            inherit inputs;
-            pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
-            pkgs-master = nixpkgs-master.legacyPackages.${system};
-          };
-          system = "x86_64-linux";
-          modules = [
-            ./hosts/tp420ia
-            sops-nix.nixosModules.sops
-            disko.nixosModules.disko
-            impermanence.nixosModules.impermanence
-            home-manager.nixosModules.home-manager
-            lanzaboote.nixosModules.lanzaboote
-          ];
-        };
         luke = nixpkgs.lib.nixosSystem rec {
           specialArgs = {
             inherit inputs;
@@ -150,22 +145,21 @@
             home-manager.nixosModules.home-manager
           ];
         };
-        domus =
-          let
-            system = "aarch64-linux";
-          in
-          nixpkgs.lib.nixosSystem {
-            specialArgs = {
-              inherit inputs;
-              pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
-            };
-            inherit system;
-            modules = [
-              ./hosts/domus
-              sops-nix.nixosModules.sops
-              home-manager.nixosModules.home-manager
-            ];
+        domus = nixos-raspberrypi.lib.nixosSystemFull rec {
+          specialArgs = {
+            inherit inputs;
+            inherit nixos-raspberrypi;
+            pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
           };
+          system = "aarch64-linux";
+          modules = [
+            ./hosts/domus
+            sops-nix.nixosModules.sops
+            disko.nixosModules.disko
+            impermanence.nixosModules.impermanence
+            home-manager.nixosModules.home-manager
+          ];
+        };
       };
 
       packages = forAllSystems (
@@ -179,8 +173,6 @@
         {
           sops-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/sops-keepass.nix { };
           tofu-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/tofu-keepass.nix { };
-
-          sdImage-domus = self.nixosConfigurations.domus.config.system.build.sdImage;
         }
       );
 

@@ -66,12 +66,12 @@ locals {
       ssh_port  = 22
       sops_file = "${path.module}/../hosts/silvermist/secrets.yaml"
     },
-    "tp420ia" = {
-      id        = "tp420ia-id-2025-07-12"
-      ip        = "82.65.203.15"
-      ssh_port  = 34971
-      sops_file = "${path.module}/../hosts/tp420ia/secrets.yaml"
-    },
+    # "domus" = {
+    #   id        = "domus-id-2025-12-27"
+    #   ip        = "82.65.203.15"
+    #   ssh_port  = 22
+    #   sops_file = "${path.module}/../hosts/domus/secrets.yaml"
+    # },
     "luke" = {
       id        = "luke-id-2025-12-12"
       ip        = "129.151.231.71"

@@ -1,10 +1,12 @@
-{ config, ... }:
+{ config, pkgs-unstable, ... }:
 {
   home-manager = {
-    useGlobalPkgs = true;
     useUserPackages = true;
     users = {
-      colon = import ../../users/colon;
+      colon = {
+        imports = [ ../../users/colon ];
+        nixpkgs = pkgs-unstable;
+      };
     };
   };
 
@@ -17,7 +19,8 @@
         extraGroups = [ "wheel" ];
         hashedPasswordFile = config.sops.secrets."users/colon/hashedPassword".path;
         openssh.authorizedKeys.keys = [
-          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHlbB0gz194Jq9LSwI2OvsLcA+LgIQMWS2dNNhapaA8K"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICg6pfvS/wc+6M2JgGuH5TdYE71S7aOsUn2IjyrR5RbH terraform@infra"
+          "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHlbB0gz194Jq9LSwI2OvsLcA+LgIQMWS2dNNhapaA8K ldryt@tinkerbell"
         ];
       };
     };

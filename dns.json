@@ -1,18 +1,12 @@
 {
   "ldryt.dev": {
-    "tp420ia": {
-      "paperless": "docs"
-    },
-    "luke": {
-      "dummy": "dummy"
-    },
+    "luke": {},
     "silvermist": {
       "authelia": "auth",
       "vaultwarden": "pass",
       "mailserver": "mx",
       "immich": "pics",
       "ocis": "files",
-      "domus": "domus",
       "printer": "printer",
       "radicale": "cal",
       "grafana": "graph",

@@ -43,6 +43,7 @@
           };
           folderIds = [
             "ldryt-notes"
+            "ldryt-pictures"
             "ldryt-vault"
             "ldryt-documents"
           ];

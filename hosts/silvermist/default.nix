@@ -6,7 +6,7 @@
     ./users.nix
 
     ./services/authelia
-    ./services/tunnel.nix
+    # ./services/tunnel.nix
     ./services/mailserver
     ./services/radicale.nix
     ./services/syncthing.nix
@@ -24,18 +24,18 @@
   sops.defaultSopsFile = ./secrets.yaml;
   sops.age.keyFile = "/nix/sops_age_silvermist.key";
 
-  sops.secrets."backups/restic/hosts/tp420ia/sshKey" = { };
+  sops.secrets."backups/restic/hosts/domus/sshKey" = { };
   sops.secrets."backups/restic/hosts/glouton/sshKey" = { };
   sops.secrets."backups/restic/repos/silvermist/password" = { };
   ldryt-infra.backups = {
     hosts = {
       glouton.sshKey = config.sops.secrets."backups/restic/hosts/glouton/sshKey".path;
-      tp420ia.sshKey = config.sops.secrets."backups/restic/hosts/tp420ia/sshKey".path;
+      domus.sshKey = config.sops.secrets."backups/restic/hosts/domus/sshKey".path;
     };
     repos = {
       silvermist = {
         passwordFile = config.sops.secrets."backups/restic/repos/silvermist/password".path;
-        paths = [ "/nix/persist" ];
+        paths = [ config.environment.persistence.silvermist.persistentStoragePath ];
       };
     };
   };
