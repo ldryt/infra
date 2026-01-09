@@ -13,7 +13,8 @@
       "grafana": "graph",
       "stun": "stun",
       "turn": "turn",
-      "firefox-syncserver": "firesync"
+      "firefox-syncserver": "firesync",
+      "umami": "sweet"
     }
   },
   "lucasladreyt.eu": {

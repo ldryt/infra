@@ -12,6 +12,7 @@
     ./services/syncthing.nix
     ./services/immich.nix
     ./services/frontpage.nix
+    ./services/umami.nix
 
     ../../modules/nginx.nix
     ../../modules/fail2ban.nix

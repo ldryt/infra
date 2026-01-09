@@ -1,0 +1,27 @@
+<script defer src="https://sweet.ldryt.dev/sweet.js" data-domains="www.lucasladreyt.eu"
+  data-website-id="46887e9a-2b0e-4f0b-87cd-d1e1cc3a8811">
+  </script>
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const track = (eventName) => {
+      if (window.umami) {
+        umami.track(eventName);
+      }
+    };
+    const trackedEvents = ['click', 'auxclick', 'contextmenu'];
+    const attachTrackers = (elements, category) => {
+      elements.forEach(el => {
+        trackedEvents.forEach(event => {
+          el.addEventListener(event, () => {
+            const title = el.getAttribute('title');
+            track(`${title} (${category}/${event})`);
+          });
+        });
+      });
+    };
+    const socialLinks = document.querySelectorAll('.social-icons a');
+    const buttonLinks = document.querySelectorAll('.buttons .button');
+    attachTrackers(socialLinks, 'Social');
+    attachTrackers(buttonLinks, 'Link');
+  });
+</script>

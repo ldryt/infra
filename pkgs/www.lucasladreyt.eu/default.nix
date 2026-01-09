@@ -12,8 +12,7 @@ pkgs.stdenv.mkDerivation {
   buildPhase = ''
     mkdir -p themes/PaperMod
     cp -r $theme/* themes/PaperMod
-    hugo --minify --destination public
-    find
+    hugo build --minify --destination public --panicOnWarning
   '';
   installPhase = ''
     mkdir -p $out

@@ -14,14 +14,32 @@ let
 in
 {
   environment.persistence.silvermist.directories = [
-    config.services.postgresql.dataDir
-    config.services.immich.machine-learning.environment.MACHINE_LEARNING_CACHE_FOLDER
+    {
+      directory = config.services.postgresqlBackup.location;
+      user = "postgres";
+    }
+    {
+      directory = config.services.postgresql.dataDir;
+      user = "postgres";
+    }
+    {
+      directory = config.services.immich.machine-learning.environment.MACHINE_LEARNING_CACHE_FOLDER;
+      user = "postgres";
+    }
   ];
 
   sops.secrets."backups/restic/repos/immich/password" = { };
   ldryt-infra.backups.repos.immich = {
     passwordFile = config.sops.secrets."backups/restic/repos/immich/password".path;
-    paths = [ dataDir ];
+    paths = [
+      dataDir
+      config.services.postgresqlBackup.location
+    ];
+  };
+
+  services.postgresqlBackup = {
+    enable = true;
+    databases = [ "immich" ];
   };
 
   services.nginx.virtualHosts."${config.ldryt-infra.dns.records.immich}" = {
