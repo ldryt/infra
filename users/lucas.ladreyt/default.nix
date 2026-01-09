@@ -19,4 +19,11 @@
     homeDirectory = "/home/${config.home.username}";
     stateVersion = "23.05";
   };
+
+  sops = {
+    age.keyFile = "~/sops_age_sm-epita.key";
+    defaultSopsFile = ./secrets.yaml;
+    defaultSymlinkPath = "${config.home.homeDirectory}/.sops/secrets";
+    defaultSecretsMountPoint = "${config.home.homeDirectory}/.sops/secrets.d";
+  };
 }

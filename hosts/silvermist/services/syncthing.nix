@@ -50,6 +50,7 @@ in
                 encryptionPasswordFile =
                   config.sops.secrets."services/syncthing/devices/luke/encryptionPassword".path;
               }
+              "sm-epita"
             ];
             versioning = {
               type = "simple";

@@ -20,11 +20,12 @@
       };
       devices = builtins.removeAttrs (builtins.fromJSON (
         builtins.readFile ../../syncthing-devices.json
-      )) [ "tinkerbell" ];
+      )) [ "sm-epita" ];
       folders =
         let
           folderCfg = {
             devices = [
+              "tinkerbell"
               "silvermist"
               "domus"
               "rosetta"
@@ -33,7 +34,6 @@
                 encryptionPasswordFile =
                   config.sops.secrets."services/syncthing/devices/luke/encryptionPassword".path;
               }
-              "sm-epita"
             ];
             versioning = {
               type = "simple";

@@ -186,7 +186,10 @@
         in
         home-manager.lib.homeManagerConfiguration {
           inherit pkgs;
-          modules = [ ./users/lucas.ladreyt ];
+          modules = [
+            ./users/lucas.ladreyt
+            sops-nix.homeManagerModules.sops
+          ];
         };
     };
 }

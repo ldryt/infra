@@ -34,6 +34,7 @@ in
               "domus"
               "rosetta"
               "silvermist"
+              "sm-epita"
             ];
             versioning = {
               type = "simple";
