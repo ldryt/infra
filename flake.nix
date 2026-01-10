@@ -1,12 +1,16 @@
 {
   nixConfig = {
     extra-substituters = [
+      "https://nix-cache.ldryt.dev"
       "https://nix-community.cachix.org"
       "https://nixos-raspberrypi.cachix.org"
+      "https://s3.cri.epita.fr/cri-nix-cache.s3.cri.epita.fr"
     ];
     extra-trusted-public-keys = [
+      "nix-cache.ldryt.dev:LcILZm4hXqCkD31rz94/W+hhvap6ZZJZn9nt3gqvlDg="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI="
+      "cache.nix.cri.epita.fr:qDIfJpZWGBWaGXKO3wZL1zmC+DikhMwFRO4RVE6VVeo="
     ];
   };
   inputs = {

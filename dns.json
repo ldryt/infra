@@ -1,6 +1,8 @@
 {
   "ldryt.dev": {
-    "luke": {},
+    "luke": {
+      "nix-cache": "nix-cache"
+    },
     "silvermist": {
       "ldryt-web": "www",
       "authelia": "auth",

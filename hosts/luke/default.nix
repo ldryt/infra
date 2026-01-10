@@ -6,6 +6,7 @@
     ./users.nix
 
     ./services/syncthing.nix
+    ./services/nix-cache.nix
 
     ../../modules/nix-settings.nix
     ../../modules/openssh.nix
@@ -13,6 +14,7 @@
     ../../modules/backups.nix
     ../../modules/podman.nix
     ../../modules/dns.nix
+    ../../modules/nginx.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
