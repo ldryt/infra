@@ -10,6 +10,8 @@
     ../common/clang-format.nix
     ../common/packages/cli.nix
     ../common/vscode.nix
+
+    ./syncthing.nix
   ];
 
   programs.home-manager.enable = true;
@@ -21,7 +23,7 @@
   };
 
   sops = {
-    age.keyFile = "~/sops_age_sm-epita.key";
+    age.keyFile = "${config.home.homeDirectory}/afs/sops_age_sm-epita.key";
     defaultSopsFile = ./secrets.yaml;
     defaultSymlinkPath = "${config.home.homeDirectory}/.sops/secrets";
     defaultSecretsMountPoint = "${config.home.homeDirectory}/.sops/secrets.d";
