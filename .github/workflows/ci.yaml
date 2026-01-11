@@ -60,5 +60,5 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ vars.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
           eval $(ssh-agent -s)
-          ssh-add <(echo "${{ secrets.NIX_CACHE_SSH_PRIVKEY }}")
+          echo "${{ secrets.NIX_CACHE_SSH_PRIVKEY }}" | ssh-add -
           nix copy --to "ssh://nix-cache@nix-cache.ldryt.dev" ./result
