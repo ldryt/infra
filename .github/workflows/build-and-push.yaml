@@ -1,6 +1,7 @@
 name: "Build & Cache"
 
 on:
+  pull_request:
   push:
   workflow_dispatch:
 
@@ -16,7 +17,7 @@ jobs:
       matrix: ${{ steps.discover-matrix.outputs.matrix }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: DeterminateSystems/nix-installer-action@v21
       - id: discover-matrix
         run: |
@@ -39,7 +40,7 @@ jobs:
       }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Free disk space
         uses: jlumbroso/free-disk-space@v1.3.1
