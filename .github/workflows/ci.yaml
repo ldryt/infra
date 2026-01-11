@@ -39,7 +39,7 @@ jobs:
       - name: Push ${{ matrix.host }} to nix-cache.ldryt.dev
         run: |
           mkdir -p ~/.ssh
-          ssh-keyscan nix-cache.ldryt.dev >> ~/.ssh/known_hosts
+          echo "${{ env.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
           eval $(ssh-agent -s)
           ssh-add <(echo "${{ secrets.NIX_CACHE_SSH_PRIVKEY }}")
           nix copy --to "ssh://nix-cache@nix-cache.ldryt.dev" ./result
