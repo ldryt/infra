@@ -1,11 +1,11 @@
-{ config, pkgs-unstable, ... }:
+{ config, ... }:
 {
   home-manager = {
     useUserPackages = true;
+    useGlobalPkgs = true;
     users = {
       colon = {
         imports = [ ../../users/colon ];
-        nixpkgs = pkgs-unstable;
       };
     };
   };
