@@ -1,9 +1,9 @@
 {
   nixConfig = {
     extra-substituters = [
-      "https://nix-cache.ldryt.dev"
-      "https://nix-community.cachix.org"
-      "https://s3.cri.epita.fr/cri-nix-cache.s3.cri.epita.fr"
+      "https://nix-cache.ldryt.dev?priority=50"
+      "https://nix-community.cachix.org?priority=41"
+      "https://s3.cri.epita.fr/cri-nix-cache.s3.cri.epita.fr?priority=90"
     ];
     extra-trusted-public-keys = [
       "nix-cache.ldryt.dev:LcILZm4hXqCkD31rz94/W+hhvap6ZZJZn9nt3gqvlDg="
