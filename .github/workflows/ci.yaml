@@ -30,14 +30,23 @@ jobs:
       matrix:
         include: ${{ fromJson(needs.discover-matrix.outputs.matrix) }}
 
-    runs-on: ${{ matrix.gha-runner }}
+    runs-on: >-
+      ${{ 
+        matrix.platform == 'aarch64-linux' && 'ubuntu-24.04-arm' || 
+        matrix.platform == 'aarch64-darwin' && 'macos-15' || 
+        matrix.platform == 'x86_64-darwin' && 'macos-15-intel' || 
+        'ubuntu-24.04' 
+      }}
 
     steps:
       - uses: actions/checkout@v4
 
-      - uses: jlumbroso/free-disk-space@v1.3.1
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@v1.3.1
+        if: matrix.platform == 'aarch64-linux' || matrix.platform == 'x86_64-linux'
 
-      - uses: DeterminateSystems/nix-installer-action@v21
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v21
         with:
           extra-conf: |
             accept-flake-config = true

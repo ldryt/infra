@@ -67,7 +67,6 @@
       systems = [
         "x86_64-linux"
         "aarch64-linux"
-        "i686-linux"
         "x86_64-darwin"
         "aarch64-darwin"
       ];
@@ -209,28 +208,23 @@
       };
 
       ghaMatrix =
-        let
-          mkNode = name: platform: target: {
-            inherit name target;
-            gha-runner = if platform == "aarch64-linux" then "ubuntu-24.04-arm" else "ubuntu-24.04";
-          };
-        in
-        (builtins.map (
-          name:
-          mkNode name self.nixosConfigurations.${name}.config.nixpkgs.system
-            ".#nixosConfigurations.${name}.config.system.build.toplevel"
-        ) (builtins.attrNames self.nixosConfigurations))
-        ++ (builtins.map (
-          name:
-          mkNode name self.homeConfigurations.${name}.pkgs.stdenv.hostPlatform.system
-            ".#homeConfigurations.${name}.activationPackage"
-        ) (builtins.attrNames self.homeConfigurations))
+        (builtins.map (name: {
+          inherit name;
+          platform = self.nixosConfigurations.${name}.config.nixpkgs.system;
+          target = ".#nixosConfigurations.${name}.config.system.build.toplevel";
+        }) (builtins.attrNames self.nixosConfigurations))
+        ++ (builtins.map (name: {
+          inherit name;
+          platform = self.homeConfigurations.${name}.pkgs.stdenv.hostPlatform.system;
+          target = ".#homeConfigurations.\\\"${name}\\\".activationPackage";
+        }) (builtins.attrNames self.homeConfigurations))
         ++ (builtins.concatLists (
           builtins.map (
             platform:
-            builtins.map (name: mkNode name platform ".#packages.${platform}.${name}") (
-              builtins.attrNames self.packages.${platform}
-            )
+            builtins.map (name: {
+              inherit name platform;
+              target = ".#packages.${platform}.${name}";
+            }) (builtins.attrNames self.packages.${platform})
           ) (builtins.attrNames self.packages)
         ));
     };
