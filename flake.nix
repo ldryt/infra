@@ -222,10 +222,13 @@
         ++ (builtins.concatLists (
           builtins.map (
             platform:
+            let
+              isCompatible = name: (self.packages.${platform}.${name}.system) == platform;
+            in
             builtins.map (name: {
               inherit name platform;
               target = ".#packages.${platform}.${name}";
-            }) (builtins.attrNames self.packages.${platform})
+            }) (builtins.filter isCompatible (builtins.attrNames self.packages.${platform}))
           ) (builtins.attrNames self.packages)
         ));
     };
