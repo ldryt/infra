@@ -1,16 +1,16 @@
-name: "Build NixOS configurations and cache into nix-cache.ldryt.dev"
+name: "Build & Cache"
 on:
   push:
   workflow_dispatch:
 jobs:
-  find-hosts:
+  discover-hosts:
     runs-on: ubuntu-24.04
     outputs:
-      hosts: ${{ steps.find-hosts.outputs.hosts }}
+      hosts: ${{ steps.discover-hosts.outputs.hosts }}
     steps:
       - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@v9
-      - id: find-hosts
+      - uses: DeterminateSystems/nix-installer-action@main
+      - id: discover-hosts
         run: |
           echo "hosts=$(nix eval --json .#nixosConfigurations --apply '
             ncs:
@@ -20,14 +20,15 @@ jobs:
             }) (builtins.attrNames ncs)
           ')" >> "$GITHUB_OUTPUT"
   build-and-push:
-    needs: find-hosts
+    needs: discover-hosts
     strategy:
       fail-fast: false
       matrix:
-        host: ${{ fromJson(needs.find-hosts.outputs.hosts) }}
+        host: ${{ fromJson(needs.discover-hosts.outputs.hosts) }}
     runs-on: ${{ matrix.host.system == 'aarch64-linux' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
     steps:
       - uses: actions/checkout@v4
+      - uses: jlumbroso/free-disk-space@main
       - uses: DeterminateSystems/nix-installer-action@main
         with:
           extra-conf: |
