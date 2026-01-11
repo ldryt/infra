@@ -1,4 +1,9 @@
-{ pkgs, config, ... }:
+{
+  lib,
+  pkgs,
+  config,
+  ...
+}:
 let
   cacheUser = "nix-cache";
 in
@@ -35,4 +40,5 @@ in
     Match User ${cacheUser}
       ForceCommand ${config.nix.package}/bin/nix-store --serve --write
   '';
+  nix.gc.automatic = lib.mkForce false;
 }
