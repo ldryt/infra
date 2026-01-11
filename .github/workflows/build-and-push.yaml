@@ -58,6 +58,7 @@ jobs:
 
       - name: Push ${{ matrix.target }}
         run: |
+          curl ipv4.myip.wtf || true
           mkdir -p ~/.ssh
           echo "${{ vars.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
           eval $(ssh-agent -s)
