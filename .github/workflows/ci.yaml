@@ -42,11 +42,11 @@ jobs:
           extra-conf: |
             accept-flake-config = true
 
-      - name: Build ${{ matrix.name }}
+      - name: Build ${{ matrix.target }}
         run: |
-          nix build .#${{ matrix.target }}
+          nix build ${{ matrix.target }}
 
-      - name: Push ${{ matrix.name }}
+      - name: Push ${{ matrix.target }}
         run: |
           mkdir -p ~/.ssh
           echo "${{ vars.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts
