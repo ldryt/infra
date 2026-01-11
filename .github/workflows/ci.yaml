@@ -1,0 +1,45 @@
+name: "Build NixOS configurations and cache into nix-cache.ldryt.dev"
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  find-hosts:
+    runs-on: ubuntu-24.04
+    outputs:
+      hosts: ${{ steps.find-hosts.outputs.hosts }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@v9
+      - id: find-hosts
+        run: |
+          echo "hosts=$(nix eval --json .#nixosConfigurations --apply '
+            ncs:
+            builtins.map (name: {
+              name = name;
+              system = ncs.${name}.config.nixpkgs.system;
+            }) (builtins.attrNames ncs)
+          ')" >> "$GITHUB_OUTPUT"
+  build-and-push:
+    needs: find-hosts
+    strategy:
+      fail-fast: false
+      matrix:
+        host: ${{ fromJson(needs.find-hosts.outputs.hosts) }}
+    runs-on: ${{ matrix.host.system == 'aarch64-linux' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DeterminateSystems/nix-installer-action@main
+        with:
+          extra-conf: |
+            accept-flake-config = true
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: Build ${{ matrix.host }}
+        run: |
+          nix build .#nixosConfigurations.${{ matrix.host.name }}.config.system.build.toplevel
+      - name: Push ${{ matrix.host }} to nix-cache.ldryt.dev
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan nix-cache.ldryt.dev >> ~/.ssh/known_hosts
+          eval $(ssh-agent -s)
+          ssh-add <(echo "${{ secrets.NIX_CACHE_SSH_PRIVKEY }}")
+          nix copy --to "ssh://nix-cache@nix-cache.ldryt.dev" ./result
