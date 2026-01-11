@@ -1,42 +1,52 @@
 name: "Build & Cache"
+
 on:
   push:
   workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  discover-hosts:
+  discover-matrix:
     runs-on: ubuntu-24.04
+
     outputs:
-      hosts: ${{ steps.discover-hosts.outputs.hosts }}
+      matrix: ${{ steps.discover-matrix.outputs.matrix }}
+
     steps:
       - uses: actions/checkout@v4
-      - uses: DeterminateSystems/nix-installer-action@main
-      - id: discover-hosts
+      - uses: DeterminateSystems/nix-installer-action@v21
+      - id: discover-matrix
         run: |
-          echo "hosts=$(nix eval --json .#nixosConfigurations --apply '
-            ncs:
-            builtins.map (name: {
-              name = name;
-              system = ncs.${name}.config.nixpkgs.system;
-            }) (builtins.attrNames ncs)
-          ')" >> "$GITHUB_OUTPUT"
+          echo "matrix=$(nix eval --json .#ghaMatrix)" >> "$GITHUB_OUTPUT"
+
   build-and-push:
-    needs: discover-hosts
+    needs: discover-matrix
+
     strategy:
       fail-fast: false
       matrix:
-        host: ${{ fromJson(needs.discover-hosts.outputs.hosts) }}
-    runs-on: ${{ matrix.host.system == 'aarch64-linux' && 'ubuntu-24.04-arm' || 'ubuntu-24.04' }}
+        include: ${{ fromJson(needs.discover-matrix.outputs.matrix) }}
+
+    runs-on: ${{ matrix.gha-runner }}
+
     steps:
       - uses: actions/checkout@v4
-      - uses: jlumbroso/free-disk-space@main
-      - uses: DeterminateSystems/nix-installer-action@main
+
+      - uses: jlumbroso/free-disk-space@v1.3.1
+
+      - uses: DeterminateSystems/nix-installer-action@v21
         with:
           extra-conf: |
             accept-flake-config = true
-      - name: Build ${{ matrix.host }}
+
+      - name: Build ${{ matrix.name }}
         run: |
-          nix build .#nixosConfigurations.${{ matrix.host.name }}.config.system.build.toplevel
-      - name: Push ${{ matrix.host }} to nix-cache.ldryt.dev
+          nix build .#${{ matrix.target }}
+
+      - name: Push ${{ matrix.name }}
         run: |
           mkdir -p ~/.ssh
           echo "${{ vars.SSH_KNOWN_HOSTS }}" >> ~/.ssh/known_hosts

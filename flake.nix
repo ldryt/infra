@@ -177,19 +177,61 @@
         }
       );
 
-      homeConfigurations."lucas.ladreyt" =
+      homeConfigurations = {
+        "lucas.ladreyt" =
+          let
+            pkgs = import nixpkgs {
+              system = "x86_64-linux";
+              config.allowUnfree = true;
+            };
+          in
+          home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+            modules = [
+              ./users/lucas.ladreyt
+              sops-nix.homeManagerModules.sops
+            ];
+          };
+        "ldryt" =
+          let
+            pkgs = import nixpkgs {
+              system = "x86_64-linux";
+              config.allowUnfree = true;
+            };
+          in
+          home-manager.lib.homeManagerConfiguration {
+            inherit pkgs;
+            modules = [
+              ./users/lucas.ladreyt
+              sops-nix.homeManagerModules.sops
+            ];
+          };
+      };
+
+      ghaMatrix =
         let
-          pkgs = import nixpkgs {
-            system = "x86_64-linux";
-            config.allowUnfree = true;
+          mkNode = name: platform: target: {
+            inherit name target;
+            gha-runner = if platform == "aarch64-linux" then "ubuntu-24.04-arm" else "ubuntu-24.04";
           };
         in
-        home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          modules = [
-            ./users/lucas.ladreyt
-            sops-nix.homeManagerModules.sops
-          ];
-        };
+        (builtins.map (
+          name:
+          mkNode name self.nixosConfigurations.${name}.config.nixpkgs.system
+            ".#nixosConfigurations.${name}.config.system.build.toplevel"
+        ) (builtins.attrNames self.nixosConfigurations))
+        ++ (builtins.map (
+          name:
+          mkNode name self.homeConfigurations.${name}.pkgs.stdenv.hostPlatform.system
+            ".#homeConfigurations.${name}.activationPackage"
+        ) (builtins.attrNames self.homeConfigurations))
+        ++ (builtins.concatLists (
+          builtins.map (
+            platform:
+            builtins.map (name: mkNode name platform ".#packages.${platform}.${name}") (
+              builtins.attrNames self.packages.${platform}
+            )
+          ) (builtins.attrNames self.packages)
+        ));
     };
 }
