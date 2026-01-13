@@ -21,6 +21,7 @@
     ../../modules/nix-settings.nix
     ../../modules/backups.nix
     ../../modules/dns.nix
+    ../../modules/syncthing-relay.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;

@@ -15,6 +15,7 @@
     ../../modules/podman.nix
     ../../modules/dns.nix
     ../../modules/nginx.nix
+    ../../modules/syncthing-relay.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
