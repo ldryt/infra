@@ -11,6 +11,7 @@
   sdImage = {
     compressImage = true;
     rootVolumeLabel = "NIXOS_PERSIST";
+    nixPathRegistrationFile = "/persist/nix-path-registration";
   };
 
   fileSystems = {
@@ -65,7 +66,7 @@
       '';
       nixPathRegistrationFile = config.sdImage.nixPathRegistrationFile;
     in
-    ''
+    lib.mkForce ''
       # On the first boot do some maintenance tasks
       if [ -f ${nixPathRegistrationFile} ]; then
         set -euo pipefail
@@ -76,12 +77,12 @@
         # Register the contents of the initial Nix store
         ${config.nix.package.out}/bin/nix-store --load-db < ${nixPathRegistrationFile}
 
-        # nixos-rebuild also requires a "system" profile and an /etc/NIXOS tag.
-        touch /etc/NIXOS
-        ${config.nix.package.out}/bin/nix-env -p /nix/var/nix/profiles/system --set /run/current-system
-
         # Prevents this from running on later boots.
         rm -f ${nixPathRegistrationFile}
       fi
+
+      # nixos-rebuild also requires a "system" profile and an /etc/NIXOS tag.
+      touch /etc/NIXOS
+      ${config.nix.package.out}/bin/nix-env -p /nix/var/nix/profiles/system --set /run/current-system
     '';
 }
