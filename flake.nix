@@ -159,6 +159,19 @@
             home-manager.nixosModules.home-manager
           ];
         };
+        printer = nixpkgs.lib.nixosSystem rec {
+          specialArgs = {
+            inherit inputs;
+            pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
+          };
+          system = "aarch64-linux";
+          modules = [
+            ./hosts/printer
+            sops-nix.nixosModules.sops
+            impermanence.nixosModules.impermanence
+            home-manager.nixosModules.home-manager
+          ];
+        };
       };
 
       packages = forAllSystems (
@@ -174,6 +187,7 @@
           tofu-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/tofu-keepass.nix { };
           www-lucasladreyt-eu = pkgs.callPackage ./pkgs/www.lucasladreyt.eu { };
           sdImage-domus = self.nixosConfigurations.domus.config.system.build.sdImage;
+          sdImage-printer = self.nixosConfigurations.printer.config.system.build.sdImage;
         }
       );
 
