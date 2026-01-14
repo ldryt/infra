@@ -27,6 +27,9 @@
     configFile = ./VORON0.2_SKR_PICO_V1.0.cfg;
     logFile = config.services.moonraker.stateDir + "/logs/klippy.log";
   };
+  systemd.tmpfiles.rules = [
+    "f ${config.services.klipper.logFile} 0600 ${config.services.klipper.user} ${config.services.klipper.group}"
+  ];
 
   services.mainsail.enable = true;
 
