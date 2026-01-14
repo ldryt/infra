@@ -3,22 +3,22 @@ variable "state_passphrase" {
 }
 
 terraform {
-   encryption {
-     key_provider "pbkdf2" "state_encryption_passphrase" {
-       passphrase = var.state_passphrase
-     }
-     method "aes_gcm" "state_encryption_method" {
-       keys = key_provider.pbkdf2.state_encryption_passphrase
-     }
-     state {
-       method = method.aes_gcm.state_encryption_method
-       enforced = true
-     }
-     plan {
-       method = method.aes_gcm.state_encryption_method
-       enforced = true
-     }
-   }
+  encryption {
+    key_provider "pbkdf2" "state_encryption_passphrase" {
+      passphrase = var.state_passphrase
+    }
+    method "aes_gcm" "state_encryption_method" {
+      keys = key_provider.pbkdf2.state_encryption_passphrase
+    }
+    state {
+      method   = method.aes_gcm.state_encryption_method
+      enforced = true
+    }
+    plan {
+      method   = method.aes_gcm.state_encryption_method
+      enforced = true
+    }
+  }
   backend "local" {
     path = "tfstate.json.enc"
   }
@@ -71,7 +71,15 @@ locals {
     #   ip        = "82.65.203.15"
     #   ssh_port  = 22
     #   sops_file = "${path.module}/../hosts/domus/secrets.yaml"
+    #   no_install = true
     # },
+    "printer" = {
+      id         = "printer-id-2026-01-14"
+      ip         = "printer.local"
+      ssh_port   = 22
+      sops_file  = "${path.module}/../hosts/printer/secrets.yaml"
+      no_install = true
+    }
     "luke" = {
       id        = "luke-id-2025-12-12"
       ip        = "129.151.231.71"
