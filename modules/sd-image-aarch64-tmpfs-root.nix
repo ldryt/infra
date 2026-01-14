@@ -12,6 +12,8 @@
     compressImage = true;
     rootVolumeLabel = "NIXOS_PERSIST";
     nixPathRegistrationFile = "/persist/nix-path-registration";
+    firmwareSize = 64;
+    expandOnBoot = true;
   };
 
   fileSystems = {
@@ -67,11 +69,11 @@
       nixPathRegistrationFile = config.sdImage.nixPathRegistrationFile;
     in
     lib.mkForce ''
+      set -euo pipefail
+      set -x
+
       # On the first boot do some maintenance tasks
       if [ -f ${nixPathRegistrationFile} ]; then
-        set -euo pipefail
-        set -x
-
         ${expandOnBoot}
 
         # Register the contents of the initial Nix store
