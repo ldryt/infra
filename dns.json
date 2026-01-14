@@ -10,7 +10,6 @@
       "mailserver": "mx",
       "immich": "pics",
       "ocis": "files",
-      "printer": "printer",
       "radicale": "cal",
       "grafana": "graph",
       "stun": "stun",

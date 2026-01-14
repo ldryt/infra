@@ -12,12 +12,15 @@ resource "desec_rrset" "root_web_aliases" {
 }
 
 resource "desec_rrset" "servers_subdomains" {
-  for_each = local.servers
+  for_each = {
+    for k, v in local.servers : k => v.ip
+    if !can(regex("[a-zA-Z]", v.ip))
+  }
 
   domain  = "ldryt.dev"
   subname = each.key
   type    = "A"
-  records = [each.value.ip]
+  records = [each.value]
   ttl     = 86400
 }
 
