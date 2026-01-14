@@ -28,7 +28,7 @@
     logFile = config.services.moonraker.stateDir + "/logs/klippy.log";
   };
   systemd.tmpfiles.rules = [
-    "f ${config.services.klipper.logFile} 0600 ${config.services.klipper.user} ${config.services.klipper.group}"
+    "d ${builtins.dirOf config.services.klipper.logFile} 0755 ${config.services.klipper.user} ${config.services.klipper.group}"
   ];
 
   services.mainsail.enable = true;
