@@ -2,6 +2,7 @@
   config,
   lib,
   utils,
+  pkgs,
   ...
 }:
 with lib;
@@ -25,12 +26,33 @@ in
               default = true;
             };
 
+            type = mkOption {
+              type = types.enum [
+                "sftp"
+                "rclone"
+              ];
+              default = "sftp";
+            };
+
             url = mkOption {
               type = types.str;
+              description = "SFTP Only";
+              default = "";
+            };
+
+            rcloneRemote = mkOption {
+              type = types.str;
+              default = "";
+            };
+
+            rcloneConfigFile = mkOption {
+              type = types.nullOr types.path;
+              default = null;
             };
 
             sshKey = mkOption {
               type = types.str;
+              default = "";
             };
 
             port = mkOption {
@@ -54,6 +76,7 @@ in
                 default = [
                   "glouton"
                   # "domus"
+                  "gdrive"
                 ];
               };
 
@@ -114,11 +137,19 @@ in
   };
 
   config = {
+    environment.systemPackages = mkIf (any (h: h.type == "rclone") (attrValues cfg.hosts)) [
+      pkgs.rclone
+    ];
+
     ldryt-infra.backups.hosts = mkIf cfg.enableDefaultHosts {
       glouton.url = mkDefault "u391790-sub3@u391790-sub3.your-storagebox.de";
       domus = {
         url = mkDefault "restic-backups@domus.ldryt.dev";
         port = mkDefault 22;
+      };
+      gdrive = {
+        type = mkDefault "rclone";
+        rcloneRemote = mkDefault "gdrive";
       };
     };
 
@@ -133,6 +164,7 @@ in
               value =
                 let
                   hostCfg = enabledHosts.${hostName};
+                  isRclone = hostCfg.type == "rclone";
                 in
                 {
                   inherit (repoCfg)
@@ -144,11 +176,22 @@ in
                     pruneOpts
                     passwordFile
                     ;
+                  inherit (hostCfg)
+                    rcloneConfigFile
+                    ;
                   initialize = true;
-                  repository = "sftp:${hostCfg.url}:restic-repo-${repoName}";
-                  extraOptions = repoCfg.extraOptions ++ [
-                    "sftp.command='ssh ${hostCfg.url} -p ${toString hostCfg.port} -i ${hostCfg.sshKey} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -s sftp'"
-                  ];
+
+                  repository =
+                    if isRclone then
+                      "rclone:${hostCfg.rcloneRemote}:restic-repo-${repoName}"
+                    else
+                      "sftp:${hostCfg.url}:restic-repo-${repoName}";
+
+                  extraOptions =
+                    repoCfg.extraOptions
+                    ++ (optionals (!isRclone) [
+                      "sftp.command='ssh ${hostCfg.url} -p ${toString hostCfg.port} -i ${hostCfg.sshKey} -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -s sftp'"
+                    ]);
                 };
             }) (filter (host: hasAttr host enabledHosts) repoCfg.hosts)
           ) cfg.repos
