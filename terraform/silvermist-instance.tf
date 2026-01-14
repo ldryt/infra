@@ -3,7 +3,7 @@ resource "hcloud_primary_ip" "silvermist_ipv4" {
     "silvermist" : true
   }
   name          = "silvermist_ipv4"
-  datacenter    = "fsn1-dc14"
+  location      = "fsn1"
   type          = "ipv4"
   assignee_type = "server"
   auto_delete   = true
@@ -23,8 +23,8 @@ resource "hcloud_server" "silvermist_server" {
   }
   name        = "silvermist"
   image       = "debian-12"
-  server_type = "cx22"
-  datacenter  = "fsn1-dc14"
+  server_type = "cx23"
+  location    = "fsn1"
   ssh_keys    = [hcloud_ssh_key.silvermist_ssh_key.id]
   public_net {
     ipv4_enabled = true
