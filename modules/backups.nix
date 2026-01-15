@@ -107,9 +107,9 @@ in
               timerConfig = mkOption {
                 type = types.nullOr (types.attrsOf (utils.systemdUtils.unitOptions.unitOption));
                 default = {
-                  # everyday between 4AM and 6AM (system time)
+                  # everyday between 4AM and 8AM (system time)
                   OnCalendar = "*-*-* 04:00:00";
-                  RandomizedDelaySec = "2h";
+                  RandomizedDelaySec = "4h";
                   Persistent = true;
                 };
               };
@@ -121,6 +121,7 @@ in
                   "--keep-weekly 8"
                   "--keep-monthly 12"
                   "--keep-yearly 100"
+                  "--group-by host"
                 ];
               };
 

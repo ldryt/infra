@@ -13,12 +13,9 @@ in
   environment.persistence.silvermist.directories = [ configDir ];
 
   sops.secrets."backups/restic/repos/syncthing-silvermist/password" = { };
-  ldryt-infra.backups.repos.syncthing-silvermist = {
+  ldryt-infra.backups.repos.syncthing = {
     passwordFile = config.sops.secrets."backups/restic/repos/syncthing-silvermist/password".path;
-    paths = [
-      dataDir
-      configDir
-    ];
+    paths = [ dataDir ];
   };
 
   services.syncthing = {

@@ -31,12 +31,12 @@
       domus.sshKey = config.sops.secrets."backups/restic/hosts/domus/sshKey".path;
       gdrive.rcloneConfigFile = config.sops.secrets."backups/restic/hosts/gdrive/rclone.conf".path;
     };
-    repos = {
-      luke = {
-        passwordFile = config.sops.secrets."backups/restic/repos/luke/password".path;
-        paths = [ "/nix/persist" ];
-      };
-    };
+    # repos = {
+    #   luke = {
+    #     passwordFile = config.sops.secrets."backups/restic/repos/luke/password".path;
+    #     paths = [ "/nix/persist" ];
+    #   };
+    # };
   };
 
   environment.persistence.luke = {

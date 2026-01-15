@@ -11,6 +11,12 @@ in
     config.services.syncthing.configDir
   ];
 
+  sops.secrets."backups/restic/repos/syncthing-luke/password" = { };
+  ldryt-infra.backups.repos.syncthing = {
+    passwordFile = config.sops.secrets."backups/restic/repos/syncthing-luke/password".path;
+    paths = [ config.services.syncthing.dataDir ];
+  };
+
   services.syncthing = {
     enable = true;
     openDefaultPorts = true;

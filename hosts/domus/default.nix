@@ -28,12 +28,12 @@
       domus.enable = false;
       gdrive.rcloneConfigFile = config.sops.secrets."backups/restic/hosts/gdrive/rclone.conf".path;
     };
-    repos = {
-      domus = {
-        passwordFile = config.sops.secrets."backups/restic/repos/domus/password".path;
-        paths = [ config.environment.persistence.domus.persistentStoragePath ];
-      };
-    };
+    # repos = {
+    #   domus = {
+    #     passwordFile = config.sops.secrets."backups/restic/repos/domus/password".path;
+    #     paths = [ config.environment.persistence.domus.persistentStoragePath ];
+    #   };
+    # };
   };
 
   environment.persistence.domus = {

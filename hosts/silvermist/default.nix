@@ -37,12 +37,12 @@
       domus.sshKey = config.sops.secrets."backups/restic/hosts/domus/sshKey".path;
       gdrive.rcloneConfigFile = config.sops.secrets."backups/restic/hosts/gdrive/rclone.conf".path;
     };
-    repos = {
-      silvermist = {
-        passwordFile = config.sops.secrets."backups/restic/repos/silvermist/password".path;
-        paths = [ config.environment.persistence.silvermist.persistentStoragePath ];
-      };
-    };
+    # repos = {
+    #   silvermist = {
+    #     passwordFile = config.sops.secrets."backups/restic/repos/silvermist/password".path;
+    #     paths = [ config.environment.persistence.silvermist.persistentStoragePath ];
+    #   };
+    # };
   };
 
   services.cachefilesd = {

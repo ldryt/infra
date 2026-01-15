@@ -29,10 +29,10 @@
       gdrive.rcloneConfigFile = config.sops.secrets."backups/restic/hosts/gdrive/rclone.conf".path;
     };
     repos = {
-      printer = {
-        passwordFile = config.sops.secrets."backups/restic/repos/printer/password".path;
-        paths = [ config.environment.persistence.printer.persistentStoragePath ];
-      };
+      #   printer = {
+      #     passwordFile = config.sops.secrets."backups/restic/repos/printer/password".path;
+      #     paths = [ config.environment.persistence.printer.persistentStoragePath ];
+      #   };
     };
   };
 
