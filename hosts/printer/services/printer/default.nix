@@ -31,7 +31,10 @@
     "d ${builtins.dirOf config.services.klipper.logFile} 0755 ${config.services.klipper.user} ${config.services.klipper.group}"
   ];
 
-  services.mainsail.enable = true;
+  services.mainsail = {
+    enable = true;
+    nginx.locations."/webcam".proxyPass = config.services.ustreamer.listenAddress;
+  };
 
   sops.secrets."services/moonraker/secrets" = {
     owner = config.services.moonraker.user;
