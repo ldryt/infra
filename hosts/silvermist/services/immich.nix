@@ -11,6 +11,7 @@ let
   oidcClientID = "YL~WkjeeJXxVWOs01mdJjXJarT6yssLlf4yZdAowKL61OWpP3G2WbR1D9y2RBAjh_xHSXRGo";
   smtpSender = "pics@ldryt.dev";
   mlClipModel = "ViT-B-16-SigLIP__webli";
+  gdriveArchiveMount = "/mnt/gdrive-photos-2004-2017";
 in
 {
   environment.persistence.silvermist.directories = [
@@ -186,8 +187,12 @@ in
       content = lib.strings.toJSON settings;
     };
 
+  environment.systemPackages = [
+    pkgs.cifs-utils
+    pkgs.rclone
+  ];
+
   sops.secrets."system/smb/glouton/immich-library/credentials" = { };
-  environment.systemPackages = [ pkgs.cifs-utils ];
   fileSystems."${dataDir}" = {
     device = "//u391790-sub1.your-storagebox.de/u391790-sub1";
     fsType = "cifs";
@@ -215,6 +220,32 @@ in
       "x-systemd.automount"
       "x-systemd.idle-timeout=600s"
       "x-systemd.mount-timeout=15s"
+    ];
+  };
+
+  sops.secrets."system/rclone/gdrive-photos-2004-2017-crypted/rclone.conf" = { };
+  fileSystems."${gdriveArchiveMount}" = {
+    device = "gdrive-photos-2004-2017-crypted:/";
+    fsType = "rclone";
+    options = [
+      "nodev"
+      "nofail"
+
+      "allow_other"
+      "default_permissions"
+      "uid=${toString config.services.immich.user}"
+      "gid=${toString config.services.immich.group}"
+      "umask=007"
+
+      "cache-dir=/var/cache/rclone-vfs-1"
+      "vfs-cache-mode=full"
+      "vfs-cache-min-free-space=5G"
+      "vfs-cache-max-age=6w"
+
+      "log-level=DEBUG"
+
+      "args2env"
+      "config=${config.sops.secrets."system/rclone/gdrive-photos-2004-2017-crypted/rclone.conf".path}"
     ];
   };
 }
