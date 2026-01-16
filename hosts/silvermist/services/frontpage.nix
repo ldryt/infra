@@ -5,6 +5,9 @@
     forceSSL = true;
     kTLS = true;
     root = "${(pkgs.callPackage ../../../pkgs/www.lucasladreyt.eu { })}/public";
+    extraConfig = ''
+      more_clear_headers "X-Robots-Tag";
+    '';
   };
 
   services.nginx.virtualHosts."${config.ldryt-infra.dns.records.ldryt-web}" = {
