@@ -35,10 +35,8 @@
     owner = config.services.moonraker.user;
     path = config.services.moonraker.stateDir + "/moonraker.secrets";
   };
-  security.polkit.enable = true;
   services.moonraker = {
     enable = true;
-    allowSystemControl = true;
     settings = {
       authorization = {
         trusted_clients = [
