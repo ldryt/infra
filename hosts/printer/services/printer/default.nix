@@ -28,7 +28,9 @@
 
   services.mainsail = {
     enable = true;
-    nginx.locations."/webcam".proxyPass = config.services.ustreamer.listenAddress;
+    nginx.locations."/webcam/" = {
+      proxyPass = "http://${config.services.ustreamer.listenAddress}/";
+    };
   };
 
   sops.secrets."services/moonraker/secrets" = {
