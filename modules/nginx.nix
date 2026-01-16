@@ -12,7 +12,11 @@
 
   services.nginx = {
     enable = true;
-    package = pkgs.nginxMainline;
+    package = (
+      pkgs.nginxMainline.override {
+        modules = [ pkgs.nginxModules.moreheaders ];
+      }
+    );
 
     recommendedOptimisation = true;
     recommendedProxySettings = true;
@@ -28,18 +32,18 @@
       map $scheme $hsts_header {
           https   "max-age=31536000; includeSubdomains; preload";
       }
-      add_header Strict-Transport-Security $hsts_header;
+      more_set_headers "Strict-Transport-Security: $hsts_header";
 
       # Minimize information leaked to other domains
-      add_header 'Referrer-Policy' 'origin-when-cross-origin';
+      more_set_headers "Referrer-Policy: origin-when-cross-origin";
 
       # Disable embedding as a frame
-      add_header X-Frame-Options SAMEORIGIN;
+      more_set_headers "X-Frame-Options: SAMEORIGIN";
 
       # Prevent injection of code in other mime types (XSS Attacks)
-      add_header X-Content-Type-Options nosniff;
+      more_set_headers "X-Content-Type-Options: nosniff";
 
-      add_header X-Robots-Tag "noindex, nofollow, nosnippet, noarchive";
+      more_set_headers "X-Robots-Tag: noindex, nofollow, nosnippet, noarchive";
     '';
   };
 }
