@@ -13,6 +13,7 @@
     ../../modules/nix-settings.nix
     ../../modules/backups.nix
     ../../modules/fail2ban.nix
+    ../../modules/nginx.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;

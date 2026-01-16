@@ -14,11 +14,6 @@
     }
   ];
 
-  networking.firewall.allowedTCPPorts = [
-    80
-    9999
-  ];
-
   services.klipper = {
     enable = true;
     user = config.services.moonraker.user;
@@ -71,7 +66,7 @@
 
   services.ustreamer = {
     enable = true;
-    listenAddress = "0.0.0.0:9999";
+    listenAddress = "127.0.0.1:9999";
     extraArgs = [
       "--resolution=1024x768"
       "--quality=50"
