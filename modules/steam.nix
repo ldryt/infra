@@ -1,6 +1,12 @@
 { lib, pkgs, ... }:
 {
-  programs.steam.enable = true;
+  programs.steam = {
+    enable = true;
+    protontricks.enable = true;
+    extraCompatPackages = [
+      pkgs.proton-ge-bin
+    ];
+  };
   nixpkgs.config.allowUnfreePredicate =
     pkg:
     builtins.elem (lib.getName pkg) [
