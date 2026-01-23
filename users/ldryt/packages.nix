@@ -15,5 +15,6 @@
     parsec-bin
     libreoffice
     digikam
+    prismlauncher
   ];
 }

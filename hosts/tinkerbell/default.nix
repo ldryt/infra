@@ -60,6 +60,7 @@
         ".parsec"
         ".parsec-persistent"
         ".local/share/TelegramDesktop"
+        ".local/share/PrismLauncher"
         ".config/Slack"
       ];
       files = [
