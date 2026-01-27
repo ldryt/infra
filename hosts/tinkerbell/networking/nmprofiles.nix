@@ -52,6 +52,20 @@
           psk = "$LYS_PWD";
         };
       };
+      ANR = {
+        connection = {
+          id = "$ANR_SSID";
+          type = "wifi";
+        };
+        wifi = {
+          mode = "infrastructure";
+          ssid = "$ANR_SSID";
+        };
+        wifi-security = {
+          key-mgmt = "wpa-psk";
+          psk = "$ANR_PWD";
+        };
+      };
       VNO = {
         connection = {
           id = "$VNO_SSID";
