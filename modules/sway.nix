@@ -45,4 +45,14 @@
     alsa.support32Bit = true;
     pulse.enable = true;
   };
+
+  environment.systemPackages = with pkgs; [
+    gnupg
+    pinentry-curses
+  ];
+  services.dbus.packages = with pkgs; [ gcr ];
+  programs.gnupg.agent = {
+    enable = true;
+    enableSSHSupport = true;
+  };
 }

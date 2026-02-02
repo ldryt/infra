@@ -62,6 +62,7 @@
         ".local/share/TelegramDesktop"
         ".local/share/PrismLauncher"
         ".config/Slack"
+        ".gnupg"
       ];
       files = [
         ".config/digikamrc"
