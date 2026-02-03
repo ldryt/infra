@@ -104,7 +104,6 @@ in
           crf = 30;
           maxBitrate = "0";
           preset = "medium";
-          threads = 1;
           twoPass = false;
         };
         storageTemplate = {
@@ -131,10 +130,10 @@ in
         };
         job = {
           thumbnailGeneration = {
-            concurrency = 4;
+            concurrency = 2;
           };
           videoConversion = {
-            concurrency = 4;
+            concurrency = 1;
           };
           smartSearch = {
             concurrency = 1;
