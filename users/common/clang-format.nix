@@ -18,7 +18,6 @@
     AlwaysBreakTemplateDeclarations: Yes
     BinPackArguments: true
     BinPackParameters: true
-    BreakBeforeBraces: Custom
     BraceWrapping:
         AfterEnum: true
         AfterClass: true
@@ -35,6 +34,7 @@
         SplitEmptyRecord: false
         SplitEmptyNamespace: false
     BreakBeforeBinaryOperators: NonAssignment
+    BreakBeforeBraces: Custom
     BreakBeforeTernaryOperators: true
     BreakConstructorInitializers: BeforeComma
     BreakInheritanceList: BeforeComma
@@ -60,7 +60,8 @@
     KeepEmptyLinesAtTheStartOfBlocks: false
     Language: Cpp
     NamespaceIndentation: All
-    PointerAlignment: Right
+    PointerAlignment: Left
+    ReferenceAlignment: Left
     ReflowComments: true
     SortIncludes: true
     SortUsingDeclarations: false
