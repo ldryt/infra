@@ -115,16 +115,17 @@ in
           fullsize = {
             enabled = true;
             format = "webp";
-            quality = 85;
+            quality = 90;
           };
           preview = {
-            format = "webp";
+            format = "jpeg";
+            progressive = true;
             quality = 80;
-            size = 1440;
+            size = 1080;
           };
           thumbnail = {
             format = "webp";
-            quality = 80;
+            quality = 70;
             size = 250;
           };
         };
