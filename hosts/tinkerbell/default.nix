@@ -14,6 +14,7 @@
     ../../modules/geoclue.nix
     ../../modules/steam.nix
     ../../modules/nix-settings.nix
+    ../../modules/systemPackages.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -75,8 +76,6 @@
     "/tmp"
     "/var/tmp"
   ];
-
-  programs.nix-ld.enable = true;
 
   system.stateVersion = "23.05";
 }
