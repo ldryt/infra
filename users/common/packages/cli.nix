@@ -8,20 +8,19 @@
     nvtopPackages.amd
     perf
     wavemon
+    usbutils
+    pciutils
 
     screen
     nmap
     tcpdump
     iperf3
     iw
-    unzip
     wget
-    inotify-tools
-
-    usbutils
-    pciutils
 
     uv
+    opentofu
+    sops
 
     which
     tree
@@ -32,6 +31,14 @@
     restic
     rclone
     encfs
+    ltrace
+    file
+    unzip
+    inotify-tools
+
+    qemu
+    e2fsprogs
+    cdrkit
 
     bluetuith
   ];

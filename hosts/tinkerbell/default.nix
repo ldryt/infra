@@ -5,6 +5,7 @@
     ./networking
     ./users.nix
     ./locales.nix
+    ./programs.nix
 
     ./services/virtualbox.nix
     ./services/docker.nix
