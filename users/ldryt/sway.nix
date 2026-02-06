@@ -137,6 +137,7 @@ in
   };
 
   gtk.enable = true;
+  qt.enable = true;
   wayland.windowManager.sway =
     let
       mod = "Mod4";
@@ -146,8 +147,9 @@ in
       checkConfig = false;
       wrapperFeatures.gtk = true;
       extraSessionCommands = ''
-        export SDL_VIDEODRIVER=wayland
-        export QT_QPA_PLATFORM=wayland
+        export SDL_VIDEODRIVER="wayland,x11,windows"
+        export QT_QPA_PLATFORM="wayland;xcb"
+        export GDK_BACKEND="wayland,x11,*"
         export QT_WAYLAND_DISABLE_WINDOWDECORATION="1"
         # Fix for some Java AWT applications
         export _JAVA_AWT_WM_NONREPARENTING=1

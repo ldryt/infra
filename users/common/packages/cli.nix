@@ -18,9 +18,9 @@
     iw
     wget
 
-    uv
     opentofu
     sops
+    vault
 
     which
     tree
@@ -35,10 +35,48 @@
     file
     unzip
     inotify-tools
+    picocom
+    minicom
+    screen
+
+    heptagon
+    uv
+
+    saleae-logic-2
+    arduino-ide
+    quartus-prime-lite
+    surfer
+    kicad
+    jetbrains.idea
+    alire
+    opam
+    stm32cubemx
+    bc
+    bison
+    coccinelle
+    dtc
+    dfu-util
+    efitools
+    flex
+    gptfdisk
+    graphviz
+    imagemagick
+    gnutls
+    libguestfs
+    ncurses
+    subunit
+    swig
+    util-linux
+    virtualenv
+    gtkwave
+    ghdl-llvm
 
     qemu
     e2fsprogs
     cdrkit
+    rpi-imager
+
+    typst
 
     bluetuith
   ];

@@ -45,6 +45,7 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     impermanence.url = "github:nix-community/impermanence";
     mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-25.11";
+    stm32cubeide.url = "github:ldryt/stm32cubeide-nix";
   };
   outputs =
     {
@@ -61,6 +62,7 @@
       impermanence,
       mailserver,
       nixpie,
+      stm32cubeide,
       ...
     }@inputs:
     let
@@ -114,6 +116,7 @@
             disko.nixosModules.disko
             impermanence.nixosModules.impermanence
             home-manager.nixosModules.home-manager
+            stm32cubeide.nixosModules.default
           ];
         };
         silvermist = nixpkgs.lib.nixosSystem rec {
