@@ -24,6 +24,7 @@
     tree
     ripgrep
     sd
+    jq
     git-crypt
     nix-tree
     restic
