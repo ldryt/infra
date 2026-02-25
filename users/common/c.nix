@@ -17,6 +17,11 @@
     ninja
   ];
 
+  xdg.configFile."clangd/config.yaml".text = ''
+    CompileFlags:
+      Add: [-std=c++20]
+  '';
+
   home.sessionVariables = {
     ACLOCAL_PATH = "${pkgs.autoconf-archive}/share/aclocal:${pkgs.autoconf}/share/aclocal:${pkgs.automake}/share/aclocal";
   };
