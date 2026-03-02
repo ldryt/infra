@@ -114,15 +114,28 @@ in
     };
   };
 
-  xdg.mimeApps = {
-    enable = true;
-    defaultApplications = {
-      "text/html" = "firefox.desktop";
-      "x-scheme-handler/http" = "firefox.desktop";
-      "x-scheme-handler/https" = "firefox.desktop";
-      "x-scheme-handler/about" = "firefox.desktop";
-      "x-scheme-handler/unknown" = "firefox.desktop";
+  xdg = {
+    mimeApps = {
+      enable = true;
+      defaultApplications = {
+        "text/html" = "firefox.desktop";
+        "x-scheme-handler/http" = "firefox.desktop";
+        "x-scheme-handler/https" = "firefox.desktop";
+        "x-scheme-handler/about" = "firefox.desktop";
+        "x-scheme-handler/unknown" = "firefox.desktop";
+        "application/pdf" = "firefox.desktop";
+        "video/mp4" = "haruna.desktop";
+        "video/quicktime" = "haruna.desktop";
+        "video/x-matroska" = "haruna.desktop";
+        "image/jpeg" = "org.kde.gwenview.desktop";
+        "image/png" = "org.kde.gwenview.desktop";
+        "inode/directory" = "org.kde.dolphin.desktop";
+      };
     };
+    # Fix Dolphin file associations on non-Plasma desktop environments
+    # https://github.com/NixOS/nixpkgs/issues/409986
+    configFile."menus/applications.menu".source =
+      "${pkgs.kdePackages.plasma-workspace}/etc/xdg/menus/plasma-applications.menu";
   };
 
   programs.ghostty = {
