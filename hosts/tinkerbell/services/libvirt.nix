@@ -24,7 +24,7 @@ in
     enable = true;
     qemu = {
       runAsRoot = false;
-      ovmf.enable = true;
+      # ovmf.enable = true;
     };
     onBoot = "ignore";
     onShutdown = "shutdown";
