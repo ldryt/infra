@@ -905,11 +905,11 @@
         "nixpkgs": "nixpkgs_8"
       },
       "locked": {
-        "lastModified": 1770385842,
-        "narHash": "sha256-NgzYqvkeiOTC8a4DJyI00eIkGzRx/OxmjZUWvEYHCxc=",
+        "lastModified": 1772551616,
+        "narHash": "sha256-t8KjRSLOKgnYLYQ6A6pMA080duuTe5C2oi4ZrOjV7vY=",
         "owner": "ldryt",
         "repo": "stm32cubeide-nix",
-        "rev": "aaa53d097051f416aa929308cb0845b807ca6f53",
+        "rev": "430eb24999fa42bbf55178e942e1b96a84da229f",
         "type": "github"
       },
       "original": {
