@@ -16,5 +16,16 @@
     libreoffice
     digikam
     prismlauncher
+
+    kdePackages.dolphin
+    kdePackages.ffmpegthumbs
+    icoutils
+    kdePackages.kdegraphics-thumbnailers
+    kdePackages.qtsvg
+    kdePackages.kio
+    kdePackages.kio-fuse
+    kdePackages.kio-extras
+    kdePackages.gwenview
+    haruna
   ];
 }

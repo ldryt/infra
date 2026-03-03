@@ -1,5 +1,6 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
+  home.sessionVariables.EDITOR = lib.mkForce "hx";
   programs.helix = {
     enable = true;
     settings = {
