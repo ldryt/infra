@@ -9,6 +9,7 @@
 
     ./services/virtualbox.nix
     ./services/docker.nix
+    ./services/libvirt.nix
 
     ../../modules/greetd.nix
     ../../modules/sway.nix
