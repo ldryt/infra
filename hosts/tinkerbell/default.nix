@@ -16,6 +16,7 @@
     ../../modules/geoclue.nix
     ../../modules/steam.nix
     ../../modules/nix-settings.nix
+    ../../modules/elasticsearch.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
