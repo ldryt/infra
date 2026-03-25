@@ -28,6 +28,12 @@ in
           keepalive 128;
         '';
       };
+      prependConfig = ''
+        worker_processes auto;
+      '';
+      eventsConfig = ''
+        multi_accept on;
+      '';
       appendHttpConfig = ''
         proxy_cache_path /var/cache/nginx/nix_cache levels=1:2 keys_zone=nix_cache:512m max_size=5g inactive=60m use_temp_path=off;
       '';
