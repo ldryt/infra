@@ -1,9 +1,11 @@
-{ lib, ... }:
+{ pkgs, lib, ... }:
 {
   services.journald.console = "/dev/tty1";
 
   # Remove zfs:
   boot.supportedFilesystems.zfs = lib.mkForce false;
+
+  boot.kernelPackages = pkgs.linuxPackages_rpi3;
 
   boot.kernelParams = [
     "console=ttyS0,115200n8"
