@@ -66,6 +66,11 @@
         ".local/share/PrismLauncher"
         ".config/Slack"
         ".gnupg"
+        "STM32Cube"
+        "STM32CubeIDE"
+        ".stm32cubemx"
+        ".stmcube"
+        ".stmcufinder"
       ];
       files = [
         ".config/digikamrc"
