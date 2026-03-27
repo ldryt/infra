@@ -1,7 +1,7 @@
 {
   nixConfig = {
     extra-substituters = [
-      "https://nix-cache.ldryt.dev?priority=10"
+      "https://nix-cache.ldryt.dev?priority=100"
       "https://nix-community.cachix.org?priority=50"
       "https://s3.cri.epita.fr/cri-nix-cache.s3.cri.epita.fr?priority=90"
     ];
