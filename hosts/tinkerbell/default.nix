@@ -71,6 +71,7 @@
         ".stm32cubemx"
         ".stmcube"
         ".stmcufinder"
+        ".vagrant.d"
       ];
       files = [
         ".config/digikamrc"
