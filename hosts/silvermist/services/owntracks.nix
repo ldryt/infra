@@ -39,6 +39,7 @@ in
     '';
     "mosquitto-acls/mobile.acl".text = ''
       pattern readwrite owntracks/%u/#
+      pattern read owntracks/#
     '';
     "mosquitto-conf.d/10-owntracks-listeners.conf".text = ''
       listener ${toString mqttInternalPort} 127.0.0.1
