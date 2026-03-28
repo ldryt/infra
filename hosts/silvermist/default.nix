@@ -13,6 +13,7 @@
     ./services/immich.nix
     ./services/frontpage.nix
     ./services/umami.nix
+    ./services/owntracks.nix
 
     ../../modules/nginx.nix
     ../../modules/fail2ban.nix
