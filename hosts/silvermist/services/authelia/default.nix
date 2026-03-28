@@ -2,6 +2,7 @@
 let
   autheliaInternalAddress = "localhost:44092";
   dataDir = "/var/lib/authelia-${config.services.authelia.instances.main.name}";
+  redisPort = 62379;
 in
 {
   imports = [
@@ -9,7 +10,10 @@ in
     # ./paperless.nix
   ];
 
-  environment.persistence.silvermist.directories = [ dataDir ];
+  environment.persistence.silvermist.directories = [
+    dataDir
+    config.services.redis.servers."authelia-${config.services.authelia.instances.main.name}".settings.dir
+  ];
 
   sops.secrets."services/authelia/users".owner = config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/jwtSecret".owner = config.services.authelia.instances.main.user;
@@ -48,12 +52,18 @@ in
 
       storage.local.path = "${dataDir}/db.sqlite3";
 
-      session.cookies = [
-        {
-          domain = config.ldryt-infra.dns.zone;
-          authelia_url = "https://${config.ldryt-infra.dns.records.authelia}";
-        }
-      ];
+      session = {
+        cookies = [
+          {
+            domain = config.ldryt-infra.dns.zone;
+            authelia_url = "https://${config.ldryt-infra.dns.records.authelia}";
+          }
+        ];
+        redis = {
+          host = "127.0.0.1";
+          port = redisPort;
+        };
+      };
 
       identity_providers.oidc = {
         lifespans = {
@@ -108,5 +118,10 @@ in
   ldryt-infra.backups.repos.authelia = {
     passwordFile = config.sops.secrets."backups/restic/repos/authelia/password".path;
     paths = [ config.services.authelia.instances.main.settings.storage.local.path ];
+  };
+
+  services.redis.servers."authelia-${config.services.authelia.instances.main.name}" = {
+    enable = true;
+    port = redisPort;
   };
 }
