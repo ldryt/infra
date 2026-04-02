@@ -1,4 +1,4 @@
-{ config, ... }:
+{ config, lib, ... }:
 {
   imports = [
     ../../modules/sd-image-aarch64-tmpfs-root.nix
@@ -55,6 +55,9 @@
     "/tmp"
     "/var/tmp"
   ];
+
+  nix.gc.automatic = lib.mkForce false;
+  nix.optimise.automatic = lib.mkForce false;
 
   system.stateVersion = "25.11";
 }
