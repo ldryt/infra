@@ -51,6 +51,7 @@ jobs:
         with:
           extra-conf: |
             accept-flake-config = true
+            fallback = true
 
       - name: Build ${{ matrix.target }}
         run: |

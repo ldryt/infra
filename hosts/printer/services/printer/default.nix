@@ -1,7 +1,8 @@
 { config, ... }:
 {
   imports = [
-    # ./tunnel.nix
+    ./tunnel.nix
+    ./camera-streamer.nix
     ../../../../modules/mdns-publish.nix
   ];
 
@@ -28,9 +29,6 @@
 
   services.mainsail = {
     enable = true;
-    nginx.locations."/webcam/" = {
-      proxyPass = "http://${config.services.ustreamer.listenAddress}/";
-    };
   };
 
   sops.secrets."services/moonraker/secrets" = {
@@ -46,43 +44,10 @@
         ];
         cors_domains = [
           "http://printer.local"
-          #   "https://printer.ldryt.dev"
+          "https://printer.ldryt.dev"
         ];
       };
-      # "power Power_Supply" = {
-      #   type = "homeassistant";
-      #   protocol = "https";
-      #   address = "domus.ldryt.dev";
-      #   port = "443";
-      #   device = "switch.printer";
-      #   token = "{secrets.home_assistant.token}";
-      #   off_when_shutdown = true;
-      #   locked_while_printing = true;
-      #   restart_klipper_when_powered = true;
-      #   restart_delay = 3;
-      # };
     };
-  };
-
-  services.ustreamer = {
-    enable = true;
-    listenAddress = "127.0.0.1:9999";
-    extraArgs = [
-      "--resolution=1024x768"
-      "--quality=50"
-      "--drop-same-frames=20"
-      "--format=uyvy"
-      # "--encoder=m2m-image"
-      "--persistent"
-      "--buffers=3"
-      "--device-timeout=5"
-
-      "--image-default"
-      "--sharpness=80"
-      "--brightness=55"
-      "--contrast=5"
-      "--saturation=5"
-    ];
   };
 
   # Add packages 'klipper-firmware-*' to system packages
