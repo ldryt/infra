@@ -1,11 +1,10 @@
 { config, ... }:
 let
   wireguardPort = 62879;
-  wireguardIF = "tunneltunnel";
+  wireguardIF = "printertunnel";
   wgIp = "10.22.22";
-  domusIp = "${wgIp}.22";
-  domusPublicKey = "domucc9r8SkBuN3voZDs4KDj3TUQJiH08zQ2djO68g8=";
-  haPort = 8123;
+  printerIp = "${wgIp}.22";
+  printerPublicKey = "domucc9r8SkBuN3voZDs4KDj3TUQJiH08zQ2djO68g8=";
   printerPort = 80;
   printerWebcamPort = 9999;
 in
@@ -24,9 +23,9 @@ in
       };
       wireguardPeers = [
         {
-          # domus
-          PublicKey = domusPublicKey;
-          AllowedIPs = [ domusIp ];
+          # printer
+          PublicKey = printerPublicKey;
+          AllowedIPs = [ printerIp ];
         }
       ];
     };
@@ -37,16 +36,6 @@ in
         IPMasquerade = "ipv4";
         IPv4Forwarding = true;
       };
-    };
-  };
-
-  services.nginx.virtualHosts."${config.ldryt-infra.dns.records.domus}" = {
-    enableACME = true;
-    forceSSL = true;
-    kTLS = true;
-    locations."/" = {
-      proxyPass = "http://${domusIp}:${toString haPort}";
-      proxyWebsockets = true;
     };
   };
 
@@ -62,7 +51,7 @@ in
       extraConfig = "include ${autheliaLocation};";
       locations = {
         "/" = {
-          proxyPass = "http://${domusIp}:${toString printerPort}";
+          proxyPass = "http://${printerIp}:${toString printerPort}";
           proxyWebsockets = true;
           extraConfig = ''
             include ${autheliaRequest};
@@ -71,10 +60,10 @@ in
           '';
         };
         "/webcam" = {
-          proxyPass = "http://${domusIp}:${toString printerWebcamPort}";
+          proxyPass = "http://${printerIp}:${toString printerWebcamPort}/";
+          proxyWebsockets = true;
           extraConfig = ''
             include ${autheliaRequest};
-            rewrite ^/webcam(/.*)?$ $1 break;
             postpone_output 0;
             proxy_buffering off;
             proxy_ignore_headers X-Accel-Buffering;

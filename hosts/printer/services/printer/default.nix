@@ -1,7 +1,7 @@
 { config, ... }:
 {
   imports = [
-    # ./tunnel.nix
+    ./tunnel.nix
     ./camera-streamer.nix
     ../../../../modules/mdns-publish.nix
   ];
@@ -44,7 +44,7 @@
         ];
         cors_domains = [
           "http://printer.local"
-          #   "https://printer.ldryt.dev"
+          "https://printer.ldryt.dev"
         ];
       };
     };

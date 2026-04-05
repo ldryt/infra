@@ -6,7 +6,8 @@
     ./users.nix
 
     ./services/authelia
-    # ./services/tunnel.nix
+    ./services/tunnel.nix
+    ./services/coturn.nix
     ./services/mailserver
     ./services/radicale.nix
     ./services/syncthing.nix

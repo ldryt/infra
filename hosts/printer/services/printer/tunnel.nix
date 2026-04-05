@@ -8,7 +8,7 @@ let
   silvermistPublicKey = "silv6SFoJoB7njsaIRTi55CaTb1RkRcM6pVx/WE5m38=";
 in
 {
-  sops.secrets."system/networking/wireguard/privateKey".owner = "systemd-network";
+  sops.secrets."services/printertunnel/wireguard/key".owner = "systemd-network";
   systemd.network = {
     netdevs."10-${wireguardIF}" = {
       netdevConfig = {
@@ -16,7 +16,7 @@ in
         Name = "${wireguardIF}";
       };
       wireguardConfig = {
-        PrivateKeyFile = config.sops.secrets."system/networking/wireguard/privateKey".path;
+        PrivateKeyFile = config.sops.secrets."services/printertunnel/wireguard/key".path;
         ListenPort = 61495;
       };
       wireguardPeers = [
@@ -34,5 +34,4 @@ in
       address = [ "${selfWgIp}/24" ];
     };
   };
-
 }

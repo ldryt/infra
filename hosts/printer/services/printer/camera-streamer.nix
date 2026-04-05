@@ -48,6 +48,8 @@ let
 in
 {
   services.mainsail.nginx.locations."/webcam/".proxyPass = "http://127.0.0.1:9999/";
+  networking.firewall.interfaces."printertunnel".allowedTCPPorts = [ 9999 ];
+  networking.firewall.interfaces."printertunnel".allowedUDPPorts = [ 9999 ];
 
   services.udev.extraRules = ''
     SUBSYSTEM=="dma_heap", GROUP="video", MODE="0660"
