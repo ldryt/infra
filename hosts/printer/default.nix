@@ -3,7 +3,7 @@
   imports = [
     ../../modules/sd-image-aarch64-tmpfs-root.nix
 
-    ./hardware.nix
+    ./hardware
     ./networking.nix
     ./users.nix
 
