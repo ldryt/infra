@@ -72,7 +72,7 @@ in
         "char-dma_heap rw"
         "char-drm rw"
       ];
-      ExecStart = "${camera-streamer}/bin/camera-streamer --camera-type=libcamera --camera-width=1024 --camera-height=768 --http-listen=0.0.0.0 --http-port=9999";
+      ExecStart = "${camera-streamer}/bin/camera-streamer --camera-type=libcamera --camera-width=1024 --camera-height=768 --camera-hflip=1 --http-listen=0.0.0.0 --http-port=9999";
       Restart = "always";
       RestartSec = 10;
     };
