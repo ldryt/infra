@@ -27,6 +27,8 @@
         gotools
 
         # Typescript
+        vscode-langservers-extracted
+        prettier
         typescript
         typescript-language-server
 
@@ -44,7 +46,6 @@
         terraform-ls
 
         # Misc
-        vscode-langservers-extracted
         dockerfile-language-server
         fortls
         taplo
@@ -106,12 +107,34 @@
           indent.tab-width = 4;
           indent.unit = " ";
           auto-format = true;
+          language-servers = [
+            "typescript-language-server"
+            "vscode-eslint-language-server"
+          ];
+          formatter = {
+            command = "prettier";
+            args = [
+              "--parser"
+              "typescript"
+            ];
+          };
         }
         {
           name = "javascript";
           indent.tab-width = 4;
           indent.unit = " ";
           auto-format = true;
+          language-servers = [
+            "typescript-language-server"
+            "vscode-eslint-language-server"
+          ];
+          formatter = {
+            command = "prettier";
+            args = [
+              "--parser"
+              "typescript"
+            ];
+          };
         }
         {
           name = "python";
