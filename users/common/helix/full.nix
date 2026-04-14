@@ -56,6 +56,33 @@
       ];
     languages = {
       language-server = {
+        typescript-language-server = {
+          command = "typescript-language-server";
+          args = [ "--stdio" ];
+          config.tsserver.path = "${pkgs.nodePackages.typescript}/bin/tsserver";
+        };
+        eslint = {
+          command = "vscode-eslint-language-server";
+          args = [ "--stdio" ];
+          config = {
+            format = false;
+            packageManages = "npm";
+            nodePath = "";
+            workingDirectory.mode = "auto";
+            onIgnoredFiles = "off";
+            run = "onType";
+            validate = "on";
+            useESLintClass = false;
+            experimental = { };
+            codeAction = {
+              disableRuleComment = {
+                enable = true;
+                location = "separateLine";
+              };
+              showDocumentation.enable = true;
+            };
+          };
+        };
         texlab.config.texlab = {
           build = {
             onSave = true;
@@ -103,31 +130,18 @@
           auto-format = true;
         }
         {
-          name = "typescript";
-          indent.tab-width = 4;
-          indent.unit = " ";
-          auto-format = true;
-          language-servers = [
-            "typescript-language-server"
-            "vscode-eslint-language-server"
-          ];
-          formatter = {
-            command = "prettier";
-            args = [
-              "--parser"
-              "typescript"
-            ];
-          };
-        }
-        {
           name = "javascript";
-          indent.tab-width = 4;
-          indent.unit = " ";
-          auto-format = true;
           language-servers = [
-            "typescript-language-server"
-            "vscode-eslint-language-server"
+            {
+              name = "typescript-language-server";
+              except-features = [ "format" ];
+            }
+            {
+              name = "eslint";
+              except-features = [ "format" ];
+            }
           ];
+          auto-format = true;
           formatter = {
             command = "prettier";
             args = [
