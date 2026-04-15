@@ -8,7 +8,13 @@
 
   environment.persistence.printer.directories = [
     {
-      directory = config.services.moonraker.stateDir;
+      directory = config.services.moonraker.stateDir + "/gcodes";
+      user = config.services.moonraker.user;
+      group = config.services.moonraker.group;
+      mode = "0700";
+    }
+    {
+      directory = config.services.moonraker.stateDir + "/database";
       user = config.services.moonraker.user;
       group = config.services.moonraker.group;
       mode = "0700";
