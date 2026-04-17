@@ -66,6 +66,20 @@
           psk = "$ANR_PWD";
         };
       };
+      MAKER = {
+        connection = {
+          id = "$MAKER_SSID";
+          type = "wifi";
+        };
+        wifi = {
+          mode = "infrastructure";
+          ssid = "$MAKER_SSID";
+        };
+        wifi-security = {
+          key-mgmt = "wpa-psk";
+          psk = "$MAKER_PWD";
+        };
+      };
       VNO = {
         connection = {
           id = "$VNO_SSID";
