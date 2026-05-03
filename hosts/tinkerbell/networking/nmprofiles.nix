@@ -1,4 +1,40 @@
 { config, ... }:
+let
+  mkWifi = ssid: psk: {
+    connection = {
+      id = ssid;
+      type = "wifi";
+    };
+    wifi = {
+      mode = "infrastructure";
+      inherit ssid;
+    };
+    wifi-security = {
+      key-mgmt = "wpa-psk";
+      inherit psk;
+    };
+  };
+  mkEapWifi = ssid: id: pass: {
+    "802-1x" = {
+      eap = "peap;";
+      identity = id;
+      password = pass;
+      phase2-auth = "mschapv2";
+    };
+    connection = {
+      id = ssid;
+      type = "wifi";
+    };
+    wifi = {
+      mode = "infrastructure";
+      inherit ssid;
+    };
+    wifi-security = {
+      auth-alg = "open";
+      key-mgmt = "wpa-eap";
+    };
+  };
+in
 {
   sops.secrets."system/NetworkManager/profiles/env" = { };
   networking.networkmanager.ensureProfiles = {
@@ -29,11 +65,7 @@
           preshared-key-flags = "0";
         };
       };
-      LYS = {
-        connection = {
-          id = "$LYS_SSID";
-          type = "wifi";
-        };
+      LYS = mkWifi "$LYS_SSID" "$LYS_PWD" // {
         ipv4 = {
           method = "auto";
           dhcp-send-hostname = false;
@@ -44,159 +76,16 @@
           dhcp-duid = "stable-uuid";
           dhcp-send-hostname = false;
         };
-        wifi = {
-          mode = "infrastructure";
-          ssid = "$LYS_SSID";
-        };
-        wifi-security = {
-          key-mgmt = "wpa-psk";
-          psk = "$LYS_PWD";
-        };
       };
-      ANR = {
-        connection = {
-          id = "$ANR_SSID";
-          type = "wifi";
-        };
-        wifi = {
-          mode = "infrastructure";
-          ssid = "$ANR_SSID";
-        };
-        wifi-security = {
-          key-mgmt = "wpa-psk";
-          psk = "$ANR_PWD";
-        };
-      };
-      MAKER = {
-        connection = {
-          id = "$MAKER_SSID";
-          type = "wifi";
-        };
-        wifi = {
-          mode = "infrastructure";
-          ssid = "$MAKER_SSID";
-        };
-        wifi-security = {
-          key-mgmt = "wpa-psk";
-          psk = "$MAKER_PWD";
-        };
-      };
-      VNO = {
-        connection = {
-          id = "$VNO_SSID";
-          type = "wifi";
-        };
-        wifi = {
-          mode = "infrastructure";
-          ssid = "$VNO_SSID";
-        };
-        wifi-security = {
-          key-mgmt = "wpa-psk";
-          psk = "$VNO_PWD";
-        };
-      };
-      GNB = {
-        connection = {
-          id = "$GNB_SSID";
-          type = "wifi";
-        };
-        wifi = {
-          mode = "infrastructure";
-          ssid = "$GNB_SSID";
-        };
-        wifi-security = {
-          key-mgmt = "wpa-psk";
-          psk = "$GNB_PWD";
-        };
-      };
-      rosetta = {
-        connection = {
-          id = "rosetta";
-          type = "wifi";
-        };
-        wifi = {
-          mode = "infrastructure";
-          ssid = "rosetta";
-        };
-        wifi-security = {
-          key-mgmt = "wpa-psk";
-          psk = "$ROSETTA_PWD";
-        };
-      };
-      tp420ia = {
-        connection = {
-          id = "tp420ia";
-          type = "wifi";
-        };
-        wifi = {
-          mode = "infrastructure";
-          ssid = "tp420ia";
-        };
-        wifi-security = {
-          key-mgmt = "wpa-psk";
-          psk = "$TP420IA_PWD";
-        };
-      };
-      Eduroam = {
-        "802-1x" = {
-          eap = "peap;";
-          identity = "$eduroam_ID";
-          password = "$eduroam_PWD";
-          phase2-auth = "mschapv2";
-        };
-        connection = {
-          id = "Eduroam";
-          type = "wifi";
-        };
-        wifi = {
-          mode = "infrastructure";
-          ssid = "Eduroam";
-        };
-        wifi-security = {
-          auth-alg = "open";
-          key-mgmt = "wpa-eap";
-        };
-      };
-      IONIS = {
-        "802-1x" = {
-          eap = "peap;";
-          identity = "$eduroam_ID";
-          password = "$eduroam_PWD";
-          phase2-auth = "mschapv2";
-        };
-        connection = {
-          id = "IONIS";
-          type = "wifi";
-        };
-        wifi = {
-          mode = "infrastructure";
-          ssid = "IONIS";
-        };
-        wifi-security = {
-          auth-alg = "open";
-          key-mgmt = "wpa-eap";
-        };
-      };
-      eduroam = {
-        "802-1x" = {
-          eap = "peap;";
-          identity = "$eduroam_ID";
-          password = "$eduroam_PWD";
-          phase2-auth = "mschapv2";
-        };
-        connection = {
-          id = "eduroam";
-          type = "wifi";
-        };
-        wifi = {
-          mode = "infrastructure";
-          ssid = "eduroam";
-        };
-        wifi-security = {
-          auth-alg = "open";
-          key-mgmt = "wpa-eap";
-        };
-      };
+      ANR = mkWifi "$ANR_SSID" "$ANR_PWD";
+      MAKER = mkWifi "$MAKER_SSID" "$MAKER_PWD";
+      VNO = mkWifi "$VNO_SSID" "$VNO_PWD";
+      GNB = mkWifi "$GNB_SSID" "$GNB_PWD";
+      rosetta = mkWifi "rosetta" "$ROSETTA_PWD";
+      tp420ia = mkWifi "tp420ia" "$TP420IA_PWD";
+      IONIS = mkEapWifi "IONIS" "$eduroam_ID" "$eduroam_PWD";
+      Eduroam = mkEapWifi "Eduroam" "$eduroam_ID" "$eduroam_PWD";
+      eduroam = mkEapWifi "eduroam" "$eduroam_ID" "$eduroam_PWD";
     };
   };
 }
