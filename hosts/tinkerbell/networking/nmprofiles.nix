@@ -3,12 +3,13 @@
   sops.secrets."system/NetworkManager/profiles/env" = { };
   networking.networkmanager.ensureProfiles = {
     environmentFiles = [ config.sops.secrets."system/NetworkManager/profiles/env".path ];
-    profiles = rec {
+    profiles = {
       wg_GNB = {
         connection = {
           id = "wg_GNB";
           interface-name = "wg_GNB";
           type = "wireguard";
+          autoconnect = false;
         };
         ipv4 = {
           address1 = "192.168.27.65/32";
