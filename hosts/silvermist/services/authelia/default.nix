@@ -1,4 +1,4 @@
-{ config, ... }:
+{ lib, config, ... }:
 let
   autheliaInternalAddress = "localhost:44092";
   dataDir = "/var/lib/authelia-${config.services.authelia.instances.main.name}";
@@ -81,7 +81,16 @@ in
         };
       };
 
-      access_control.default_policy = "two_factor";
+      access_control = {
+        default_policy = "deny";
+        rules = lib.mkBefore [
+          {
+            subject = [ "group:admin" ];
+            domain_regex = "^.*$";
+            policy = "two_factor";
+          }
+        ];
+      };
 
       authentication_backend = {
         file.path = config.sops.secrets."services/authelia/users".path;

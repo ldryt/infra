@@ -17,6 +17,18 @@ in
       };
     };
     identity_providers.oidc = {
+      authorization_policies."immich_authz" = {
+        default_policy = "deny";
+        rules = [
+          {
+            subject = [
+              "group:admin"
+              "group:immich"
+            ];
+            policy = "two_factor";
+          }
+        ];
+      };
       claims_policies.immich_policy.custom_claims = {
         "immich_quota".attribute = "immich_quota";
         "immich_role".attribute = "immich_role";
@@ -49,6 +61,7 @@ in
           id_token_signed_response_alg = oidcSigningAlg;
           token_endpoint_auth_method = "client_secret_post";
           require_pkce = false;
+          authorization_policy = "immich_authz";
         }
       ];
     };

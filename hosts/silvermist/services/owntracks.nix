@@ -178,4 +178,12 @@ in
         };
       };
     };
+
+  services.authelia.instances.main.settings.access_control.rules = [
+    {
+      subject = [ "group:owntracks" ];
+      domain = [ config.ldryt-infra.dns.records.owntracks ];
+      policy = "two_factor";
+    }
+  ];
 }
