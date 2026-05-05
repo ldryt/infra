@@ -1,34 +1,12 @@
 {
   config,
   lib,
-  pkgs-master,
   pkgs,
+  pkgs-master,
   ...
 }:
 let
-  dataDir = "/mnt/immich";
-  oidcSigningAlg = "RS256";
-  oidcClientID = "YL~WkjeeJXxVWOs01mdJjXJarT6yssLlf4yZdAowKL61OWpP3G2WbR1D9y2RBAjh_xHSXRGo";
-  smtpSender = "pics@ldryt.dev";
-  mlClipModel = "ViT-B-16-SigLIP__webli";
-  gdriveArchiveMount = "/mnt/gdrive-photos-2004-2017";
-  patchedOCRImmich = pkgs-master.immich.override {
-    immich-machine-learning = pkgs-master.immich-machine-learning.override {
-      python3 = pkgs-master.python3.override {
-        packageOverrides = final: prev: {
-          rapidocr = prev.rapidocr.overridePythonAttrs (old: rec {
-            version = "3.7.0";
-            src = pkgs.fetchFromGitHub {
-              owner = "RapidAI";
-              repo = "RapidOCR";
-              tag = "v${version}";
-              hash = "sha256-wFAW0KRNC31cqJ8f1/dBZDLSkOBdB5AFpPzO85g3rHA=";
-            };
-          });
-        };
-      };
-    };
-  };
+  common = import ../../common/immich { inherit pkgs-master; };
 in
 {
   environment.persistence.silvermist.directories = [
@@ -40,17 +18,13 @@ in
       directory = config.services.postgresql.dataDir;
       user = "postgres";
     }
-    {
-      directory = config.services.immich.machine-learning.environment.MACHINE_LEARNING_CACHE_FOLDER;
-      user = "postgres";
-    }
   ];
 
   sops.secrets."backups/restic/repos/immich/password" = { };
   ldryt-infra.backups.repos.immich = {
     passwordFile = config.sops.secrets."backups/restic/repos/immich/password".path;
     paths = [
-      dataDir
+      common.dataDir
       config.services.postgresqlBackup.location
     ];
   };
@@ -73,29 +47,37 @@ in
     };
   };
 
-  # https://github.com/NixOS/nixpkgs/issues/418799
-  users.users.immich = {
-    home = config.services.immich.machine-learning.environment.MACHINE_LEARNING_CACHE_FOLDER;
-    createHome = true;
+  networking.firewall.allowedUDPPorts = [ common.wg.port ];
+  sops.secrets."services/immich/wg/privateKey" = { };
+  networking.wireguard.interfaces."${common.wg.int}" = {
+    ips = [ "${common.wg.silvermist.ip}${common.wg.subnet}" ];
+    listenPort = common.wg.port;
+    privateKeyFile = config.sops.secrets."services/immich/wg/privateKey".path;
+    peers = [
+      {
+        publicKey = common.wg.luke.pubKey;
+        allowedIPs = [ "${common.wg.luke.ip}/32" ];
+        endpoint = "luke.${config.ldryt-infra.dns.zone}:${toString common.wg.port}";
+        persistentKeepalive = 25;
+      }
+    ];
   };
 
   services.immich = {
     enable = true;
-    package = patchedOCRImmich;
-    mediaLocation = dataDir;
+    package = common.immichPkg;
+    mediaLocation = common.dataDir;
     database = {
       enable = true;
       enableVectorChord = true;
       enableVectors = false;
     };
     redis.enable = true;
-    machine-learning = {
-      enable = true;
-      environment = {
-        MACHINE_LEARNING_PRELOAD__CLIP__TEXTUAL = mlClipModel;
-      };
+    machine-learning.enable = false;
+    environment = {
+      IMMICH_CONFIG_FILE = config.sops.templates."immich.json".path;
+      IMMICH_MACHINE_LEARNING_URL = lib.mkForce "http://${common.wg.luke.ip}:${toString common.ml.port}";
     };
-    environment.IMMICH_CONFIG_FILE = config.sops.templates."immich.json".path;
   };
 
   # https://github.com/NixOS/nixpkgs/issues/369379#issuecomment-3082247079
@@ -164,7 +146,7 @@ in
           enabled = true;
           level = "debug";
         };
-        machineLearning.clip.modelName = mlClipModel;
+        machineLearning.clip.modelName = common.ml.model;
         newVersionCheck.enabled = false;
         oauth = {
           enabled = true;
@@ -172,11 +154,11 @@ in
           autoLaunch = true;
           buttonText = "Login with ${config.ldryt-infra.dns.records.authelia}";
           defaultStorageQuota = 5;
-          clientId = oidcClientID;
+          clientId = common.oidc.clientID;
           clientSecret = config.sops.placeholder."services/immich/oidc/clientSecret";
           issuerUrl = "https://${config.ldryt-infra.dns.records.authelia}/.well-known/openid-configuration";
-          signingAlgorithm = oidcSigningAlg;
-          profileSigningAlgorithm = oidcSigningAlg;
+          signingAlgorithm = common.oidc.signingAlg;
+          profileSigningAlgorithm = common.oidc.signingAlg;
           scope = "openid email profile immich_scope";
           storageLabelClaim = "preferred_username";
           storageQuotaClaim = "immich_quota";
@@ -185,11 +167,11 @@ in
         passwordLogin.enabled = false;
         notifications.smtp = {
           enabled = true;
-          from = smtpSender;
+          from = common.smtpSender;
           transport = {
             host = "${config.ldryt-infra.dns.records.mailserver}";
             port = 465;
-            username = smtpSender;
+            username = common.smtpSender;
             password = config.sops.placeholder."services/immich/mail/clearPassword";
           };
         };
@@ -210,7 +192,7 @@ in
   ];
 
   sops.secrets."system/smb/glouton/immich-library/credentials" = { };
-  fileSystems."${dataDir}" = {
+  fileSystems."${common.dataDir}" = {
     device = "//u391790-sub1.your-storagebox.de/u391790-sub1";
     fsType = "cifs";
     options = [
@@ -241,7 +223,7 @@ in
   };
 
   sops.secrets."system/rclone/gdrive-photos-2004-2017-crypted/rclone.conf" = { };
-  fileSystems."${gdriveArchiveMount}" = {
+  fileSystems."${common.gdriveArchiveMount}" = {
     device = "gdrive-photos-2004-2017-crypted:/";
     fsType = "rclone";
     options = [

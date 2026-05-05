@@ -7,6 +7,7 @@
 
     ./services/syncthing.nix
     ./services/nix-cache.nix
+    ./services/immich-machine-learning.nix
 
     ../../modules/nix-settings.nix
     ../../modules/openssh.nix
