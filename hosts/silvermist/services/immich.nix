@@ -12,6 +12,23 @@ let
   smtpSender = "pics@ldryt.dev";
   mlClipModel = "ViT-B-16-SigLIP__webli";
   gdriveArchiveMount = "/mnt/gdrive-photos-2004-2017";
+  patchedOCRImmich = pkgs-master.immich.override {
+    immich-machine-learning = pkgs-master.immich-machine-learning.override {
+      python3 = pkgs-master.python3.override {
+        packageOverrides = final: prev: {
+          rapidocr = prev.rapidocr.overridePythonAttrs (old: rec {
+            version = "3.7.0";
+            src = pkgs.fetchFromGitHub {
+              owner = "RapidAI";
+              repo = "RapidOCR";
+              tag = "v${version}";
+              hash = "sha256-wFAW0KRNC31cqJ8f1/dBZDLSkOBdB5AFpPzO85g3rHA=";
+            };
+          });
+        };
+      };
+    };
+  };
 in
 {
   environment.persistence.silvermist.directories = [
@@ -64,7 +81,7 @@ in
 
   services.immich = {
     enable = true;
-    package = pkgs-master.immich;
+    package = patchedOCRImmich;
     mediaLocation = dataDir;
     database = {
       enable = true;
