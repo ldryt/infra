@@ -15,6 +15,7 @@
     ./services/frontpage.nix
     ./services/umami.nix
     ./services/owntracks.nix
+    ./services/calibre-web.nix
 
     ../../modules/nginx.nix
     ../../modules/fail2ban.nix
