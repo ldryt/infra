@@ -129,24 +129,25 @@ in
           };
         };
         job = {
-          thumbnailGeneration = {
-            concurrency = 2;
-          };
-          videoConversion = {
-            concurrency = 1;
-          };
-          smartSearch = {
-            concurrency = 1;
-          };
-          faceDetection = {
-            concurrency = 1;
-          };
+          thumbnailGeneration.concurrency = 4;
+          videoConversion.concurrency = 2;
+          smartSearch.concurrency = 2;
+          faceDetection.concurrency = 2;
+          ocr.concurrency = 2;
         };
         logging = {
           enabled = true;
           level = "debug";
         };
-        machineLearning.clip.modelName = common.ml.model;
+        machineLearning = {
+          clip.modelName = common.ml.clipModel;
+          ocr = {
+            modelName = common.ml.ocrModel;
+            maxResolution = 1280;
+          };
+          facialRecognition.modelName = common.ml.facialModel;
+          availabilityChecks.timeout = 5000;
+        };
         newVersionCheck.enabled = false;
         oauth = {
           enabled = true;

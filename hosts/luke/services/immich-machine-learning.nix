@@ -48,7 +48,13 @@ in
       enable = true;
       environment = {
         IMMICH_HOST = lib.mkForce common.wg.luke.ip;
-        MACHINE_LEARNING_PRELOAD__CLIP__TEXTUAL = common.ml.model;
+        MACHINE_LEARNING_PRELOAD__CLIP__TEXTUAL = common.ml.clipModel;
+        MACHINE_LEARNING_PRELOAD__CLIP__VISUAL = common.ml.clipModel;
+        MACHINE_LEARNING_PRELOAD__FACIAL_RECOGNITION__DETECTION = common.ml.facialModel;
+        MACHINE_LEARNING_PRELOAD__FACIAL_RECOGNITION__RECOGNITION = common.ml.facialModel;
+        MACHINE_LEARNING_PRELOAD__OCR__DETECTION = common.ml.ocrModel;
+        MACHINE_LEARNING_PRELOAD__OCR__RECOGNITION = common.ml.ocrModel;
+        MACHINE_LEARNING_MODEL_TTL = "-1";
       };
     };
   };

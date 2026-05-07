@@ -9,8 +9,10 @@
   smtpSender = "pics@ldryt.dev";
   redis.port = 46379;
   ml = {
-    port = 3003; # hardcoded :( https://github.com/immich-app/immich/blob/7acda0572dc3349977d1aa66e90a3ef1474583fa/machine-learning/immich_ml/config.py#L96
-    model = "ViT-B-16-SigLIP__webli";
+    port = 3003; # https://github.com/immich-app/immich/blob/7acda0572dc3349977d1aa66e90a3ef1474583fa/machine-learning/immich_ml/config.py#L96
+    clipModel = "ViT-SO400M-16-SigLIP2-384__webli"; # https://docs.immich.app/features/searching/#clip-models
+    ocrModel = "PP-OCRv5_server"; # https://huggingface.co/collections/PaddlePaddle/pp-ocrv5;
+    facialModel = "buffalo_l";
   };
   wg = {
     int = "wg-immich";
