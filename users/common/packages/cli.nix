@@ -5,6 +5,7 @@
     btop
     iotop
     iftop
+    nethogs
     nvtopPackages.amd
     perf
     wavemon
