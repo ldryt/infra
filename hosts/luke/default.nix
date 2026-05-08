@@ -17,6 +17,7 @@
     ../../modules/dns.nix
     ../../modules/nginx.nix
     ../../modules/syncthing-relay.nix
+    ../../modules/monitoring/client.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
@@ -38,6 +39,12 @@
     #     paths = [ "/nix/persist" ];
     #   };
     # };
+  };
+
+  sops.secrets."services/monitoring/wg/privateKey" = { };
+  ldryt-infra.monitoring.client = {
+    enable = true;
+    wg.privateKeyFile = config.sops.secrets."services/monitoring/wg/privateKey".path;
   };
 
   environment.persistence.luke = {

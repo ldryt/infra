@@ -14,6 +14,8 @@
     ../../modules/nix-settings.nix
     ../../modules/backups.nix
     ../../modules/fail2ban.nix
+    ../../modules/dns.nix
+    ../../modules/monitoring/client.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
@@ -34,6 +36,12 @@
     #     paths = [ config.environment.persistence.domus.persistentStoragePath ];
     #   };
     # };
+  };
+
+  sops.secrets."services/monitoring/wg/privateKey" = { };
+  ldryt-infra.monitoring.client = {
+    enable = true;
+    wg.privateKeyFile = config.sops.secrets."services/monitoring/wg/privateKey".path;
   };
 
   environment.persistence.domus = {
