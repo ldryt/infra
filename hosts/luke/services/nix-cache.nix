@@ -80,6 +80,8 @@ in
   nix.settings.trusted-users = [ cacheUser ];
   services.openssh.extraConfig = ''
     Match User ${cacheUser}
+      ClientAliveInterval 60
+      ClientAliveCountMax 30
       ForceCommand ${config.nix.package}/bin/nix-store --serve --write
   '';
 }
