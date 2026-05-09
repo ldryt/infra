@@ -218,6 +218,8 @@ in
       }) cfg.blackbox.targets);
     };
 
+    users.groups.alertmanager_sops = { };
+    systemd.services.alertmanager.serviceConfig.SupplementaryGroups = [ "alertmanager_sops" ];
     services.prometheus.alertmanager = {
       enable = true;
       port = common.ports.alertmanager;
@@ -247,8 +249,10 @@ in
             name = "email";
             email_configs = [
               {
+                send_resolved = true;
                 to = cfg.alertmanager.mail.recipient;
                 smarthost = "${config.ldryt-infra.dns.records.mailserver}:465";
+                require_tls = false;
                 from = "graph@ldryt.dev";
                 auth_username = "graph@ldryt.dev";
                 auth_password_file = cfg.alertmanager.mail.passwordFile;
@@ -330,7 +334,8 @@ in
           login_attribute_path = "preferred_username";
           groups_attribute_path = "groups";
           name_attribute_path = "name";
-          role_attribute_path = "contains(groups[*], 'admin') && 'GrafanaAdmin' || 'Viewer'";
+          role_attribute_path = "contains(groups, 'admin') && 'GrafanaAdmin' || 'Viewer'";
+          role_attribute_strict = true;
           allow_assign_grafana_admin = true;
           use_pkce = true;
           auto_login = false;

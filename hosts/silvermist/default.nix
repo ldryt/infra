@@ -52,8 +52,15 @@
   sops.secrets."services/monitoring/wg/privateKey" = { };
   sops.secrets."services/grafana/adminPassword".owner = "grafana";
   sops.secrets."services/grafana/oidc/clientSecret".owner = "grafana";
-  sops.secrets."services/grafana/mail/clearPassword".owner = "grafana";
-  sops.secrets."services/monitoring/alertmanager/botToken" = { };
+  sops.secrets."services/grafana/mail/clearPassword" = {
+    owner = "grafana";
+    group = "alertmanager_sops";
+    mode = "0440";
+  };
+  sops.secrets."services/monitoring/alertmanager/botToken" = {
+    group = "alertmanager_sops";
+    mode = "0440";
+  };
   ldryt-infra.monitoring.server = {
     enable = true;
     wg.privateKeyFile = config.sops.secrets."services/monitoring/wg/privateKey".path;
@@ -89,7 +96,6 @@
       ];
       tcp_connect = [
         "${config.ldryt-infra.dns.records.mailserver}:465"
-        "${config.ldryt-infra.dns.records.mailserver}:587"
         "${config.ldryt-infra.dns.records.mailserver}:993"
         "luke.${config.ldryt-infra.dns.zone}:22067"
         "silvermist.${config.ldryt-infra.dns.zone}:22067"
