@@ -11,7 +11,7 @@
       "immich": "pics",
       "ocis": "files",
       "radicale": "cal",
-      "grafana": "graph",
+      "grafana": "monitor",
       "stun": "stun",
       "turn": "turn",
       "firefox-syncserver": "firesync",
