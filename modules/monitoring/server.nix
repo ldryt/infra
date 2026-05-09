@@ -126,6 +126,14 @@ in
                   annotations:
                     summary: "Critical disk on {{ $labels.instance }}{{ $labels.mountpoint }}: {{ $value | humanize }}% free"
 
+                - alert: SystemdServiceFailed
+                  expr: node_systemd_unit_state{state="failed"} == 1
+                  for: 2m
+                  labels:
+                    severity: warning
+                  annotations:
+                    summary: "Service {{ $labels.name }} failed on {{ $labels.instance }}"
+
             - name: blackbox
               rules:
                 - alert: ServiceDown
@@ -135,6 +143,14 @@ in
                     severity: critical
                   annotations:
                     summary: "{{ $labels.instance }} probe failed ({{ $labels.job }})"
+
+                - alert: SSLCertExpiringSoon
+                  expr: probe_ssl_earliest_cert_expiry{job=~"blackbox_.*"} - time() < 86400 * 7
+                  for: 4h
+                  labels:
+                    severity: critical
+                  annotations:
+                    summary: "SSL Certificate for {{ $labels.instance }} expires in less than 1 week"
         ''
       ];
       alertmanagers = [
