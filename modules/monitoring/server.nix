@@ -330,6 +330,8 @@ in
           login_attribute_path = "preferred_username";
           groups_attribute_path = "groups";
           name_attribute_path = "name";
+          role_attribute_path = "contains(groups[*], 'admin') && 'GrafanaAdmin' || 'Viewer'";
+          allow_assign_grafana_admin = true;
           use_pkce = true;
           auto_login = false;
           allow_sign_up = true;
