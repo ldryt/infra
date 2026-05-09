@@ -223,41 +223,40 @@ in
       port = common.ports.alertmanager;
       listenAddress = "127.0.0.1";
       configuration = {
-        global = {
-          resolve_timeout = "5m";
-          smtp_smarthost = "${config.ldryt-infra.dns.records.mailserver}:587";
-          smtp_from = "alerts@ldryt.dev";
-          smtp_auth_username = "graph@ldryt.dev";
-          smtp_auth_password_file = cfg.alertmanager.mail.passwordFile;
-          smtp_require_tls = true;
-        };
         route = {
-          receiver = "default";
+          receiver = "email";
           group_by = [
             "alertname"
             "instance"
           ];
-          group_wait = "30s";
-          group_interval = "5m";
-          repeat_interval = "4h";
           routes = [
             {
-              match.severity = "critical";
-              receiver = "default";
+              matchers = [ "severity=\"critical\"" ];
+              receiver = "telegram";
               group_wait = "10s";
-              repeat_interval = "1h";
+            }
+            {
+              matchers = [ "severity=\"warning\"" ];
+              receiver = "email";
+              repeat_interval = "24h";
             }
           ];
         };
         receivers = [
           {
-            name = "default";
+            name = "email";
             email_configs = [
               {
                 to = cfg.alertmanager.mail.recipient;
-                send_resolved = true;
+                smarthost = "${config.ldryt-infra.dns.records.mailserver}:465";
+                from = "graph@ldryt.dev";
+                auth_username = "graph@ldryt.dev";
+                auth_password_file = cfg.alertmanager.mail.passwordFile;
               }
             ];
+          }
+          {
+            name = "telegram";
             telegram_configs = [
               {
                 bot_token_file = cfg.alertmanager.telegram.botTokenFile;
@@ -265,7 +264,7 @@ in
                 send_resolved = true;
                 message = ''
                   {{ if eq .Status "firing" }}FIRING{{ else }}RESOLVED{{ end }}
-                  *{{ .GroupLabels.alertname }}* — {{ .GroupLabels.instance }}
+                  *{{ .GroupLabels.alertname }}* | {{ .GroupLabels.instance }}
                   {{ .CommonAnnotations.summary }}
                 '';
               }
@@ -358,6 +357,12 @@ in
             type = "loki";
             access = "proxy";
             url = "http://127.0.0.1:${toString common.ports.loki}";
+          }
+          {
+            name = "Alertmanager";
+            type = "alertmanager";
+            access = "proxy";
+            url = "http://127.0.0.1:${toString common.ports.alertmanager}";
           }
         ];
         dashboards.settings.providers = [
