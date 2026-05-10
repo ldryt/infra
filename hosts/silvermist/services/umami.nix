@@ -38,7 +38,6 @@
   services.nginx.virtualHosts."${config.ldryt-infra.dns.records.umami}" = {
     enableACME = true;
     forceSSL = true;
-    kTLS = true;
     locations."/" = {
       proxyWebsockets = true;
       proxyPass = "http://${config.services.umami.settings.HOSTNAME}:${toString config.services.umami.settings.PORT}";

@@ -37,7 +37,6 @@ in
   services.nginx.virtualHosts."${config.ldryt-infra.dns.records.immich}" = {
     enableACME = true;
     forceSSL = true;
-    kTLS = true;
     locations."/" = {
       proxyWebsockets = true;
       proxyPass = "http://${config.services.immich.host}:${toString config.services.immich.port}";

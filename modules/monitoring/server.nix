@@ -387,7 +387,6 @@ in
     services.nginx.virtualHosts."${config.services.grafana.settings.server.domain}" = {
       enableACME = true;
       forceSSL = true;
-      kTLS = true;
       locations."/" = {
         proxyPass = "http://127.0.0.1:${toString common.ports.grafana}";
         proxyWebsockets = true;

@@ -19,7 +19,6 @@ in
   services.nginx.virtualHosts."${config.ldryt-infra.dns.records.vaultwarden}" = {
     enableACME = true;
     forceSSL = true;
-    kTLS = true;
     locations."/" = {
       proxyWebsockets = true;
       proxyPass = "http://${config.services.vaultwarden.config.ROCKET_ADDRESS}:${toString config.services.vaultwarden.config.ROCKET_PORT}";

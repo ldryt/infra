@@ -40,7 +40,6 @@ in
       virtualHosts."${config.ldryt-infra.dns.records.nix-cache}" = {
         forceSSL = true;
         enableACME = true;
-        kTLS = true;
         extraConfig = ''
           client_max_body_size 0;
           proxy_read_timeout 30m;

@@ -179,7 +179,6 @@ in
   services.nginx.virtualHosts."${config.ldryt-infra.dns.records.ocis}" = {
     enableACME = true;
     forceSSL = true;
-    kTLS = true;
     locations."/" = {
       proxyPass = "http://${config.services.ocis.address}:${toString config.services.ocis.port}";
       extraConfig = ''

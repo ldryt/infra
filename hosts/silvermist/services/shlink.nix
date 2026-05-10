@@ -59,7 +59,6 @@ in
   services.nginx.virtualHosts."${config.ldryt-infra.dns.zone}" = {
     enableACME = true;
     forceSSL = true;
-    kTLS = true;
     locations."/${subfolder}".proxyPass = "http://127.0.0.1:${internalPort}";
   };
 

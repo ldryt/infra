@@ -111,7 +111,6 @@ in
   services.nginx.virtualHosts.${config.services.nextcloud.hostName} = {
     enableACME = true;
     forceSSL = true;
-    kTLS = true;
   };
 
   sops.secrets."backups/restic/repos/nextcloud/password" = { };

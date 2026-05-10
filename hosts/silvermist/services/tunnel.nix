@@ -47,7 +47,6 @@ in
     {
       enableACME = true;
       forceSSL = true;
-      kTLS = true;
       extraConfig = "include ${autheliaLocation};";
       locations = {
         "/" = {

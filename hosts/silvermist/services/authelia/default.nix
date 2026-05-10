@@ -120,7 +120,6 @@ in
   services.nginx.virtualHosts."${config.ldryt-infra.dns.records.authelia}" = {
     enableACME = true;
     forceSSL = true;
-    kTLS = true;
     locations."/".proxyPass = "http://${autheliaInternalAddress}";
   };
 
