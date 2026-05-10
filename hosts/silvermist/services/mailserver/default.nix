@@ -1,4 +1,9 @@
-{ config, lib, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 {
   imports = [
     ./immich.nix
@@ -90,5 +95,39 @@
       config.mailserver.mailDirectory
       config.mailserver.dkimKeyDirectory
     ];
+  };
+
+  # https://autoconfig.ldryt.dev/mail/config-v1.1.xml
+  services.nginx.virtualHosts."${config.ldryt-infra.dns.records.mailserver-autoconfig}" = {
+    enableACME = true;
+    forceSSL = true;
+    locations."= /mail/config-v1.1.xml".alias = pkgs.writeText "autoconfig.xml" ''
+      <?xml version="1.0" encoding="UTF-8"?>
+      <clientConfig version="1.1">
+        <emailProvider id="ldryt.dev">
+          <domain>ldryt.dev</domain>
+          <domain>lucasladreyt.eu</domain>
+          <displayName>ldryt.dev Mail</displayName>
+          <displayNameShort>ldryt.dev</displayNameShort>
+          <incomingServer type="imap">
+            <hostname>mx.ldryt.dev</hostname>
+            <port>993</port>
+            <socketType>SSL</socketType>
+            <username>%EMAILADDRESS%</username>
+            <authentication>password-cleartext</authentication>
+          </incomingServer>
+          <outgoingServer type="smtp">
+            <hostname>mx.ldryt.dev</hostname>
+            <port>465</port>
+            <socketType>SSL</socketType>
+            <username>%EMAILADDRESS%</username>
+            <authentication>password-cleartext</authentication>
+          </outgoingServer>
+          <documentation url="https://ldryt.dev">
+            <descr lang="en">ldryt.dev mail configuration</descr>
+          </documentation>
+        </emailProvider>
+      </clientConfig>
+    '';
   };
 }

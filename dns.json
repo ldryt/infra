@@ -8,6 +8,7 @@
       "authelia": "auth",
       "vaultwarden": "pass",
       "mailserver": "mx",
+      "mailserver-autoconfig": "autoconfig",
       "immich": "pics",
       "ocis": "files",
       "radicale": "cal",
