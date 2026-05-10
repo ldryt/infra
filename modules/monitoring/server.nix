@@ -324,22 +324,21 @@ in
         security.admin_password = "$__file{${cfg.grafana.adminPasswordFile}}";
         "auth.generic_oauth" = {
           enabled = true;
+          name = "${config.ldryt-infra.dns.records.authelia}";
           client_id = cfg.grafana.oidcClientId;
           client_secret = "$__file{${cfg.grafana.oidcClientSecretFile}}";
           auth_url = "https://${config.ldryt-infra.dns.records.authelia}/api/oidc/authorization";
           token_url = "https://${config.ldryt-infra.dns.records.authelia}/api/oidc/token";
           api_url = "https://${config.ldryt-infra.dns.records.authelia}/api/oidc/userinfo";
           scopes = "openid profile email groups";
-          empty_scopes = false;
-          login_attribute_path = "preferred_username";
-          groups_attribute_path = "groups";
-          name_attribute_path = "name";
-          role_attribute_path = "contains(groups, 'admin') && 'GrafanaAdmin' || 'Viewer'";
-          role_attribute_strict = true;
-          allow_assign_grafana_admin = true;
           use_pkce = true;
-          auto_login = false;
+          auto_login = true;
           allow_sign_up = true;
+
+          # Grafana evaluates twice (Authelia ID Token and Userinfo API)
+          # Falls back to an empty string so Grafana ignores the ID Token pass
+          role_attribute_path = "contains(groups || `[]`, 'admin') && 'GrafanaAdmin' || contains(groups || `[]`, 'grafana') && 'Admin' || ''";
+          allow_assign_grafana_admin = true;
         };
         smtp = {
           enabled = true;
@@ -377,7 +376,7 @@ in
             name = "default";
             type = "file";
             disableDeletion = true;
-            updateIntervalSeconds = 0;
+            updateIntervalSeconds = 3600;
             options.path = ./dashboards;
           }
         ];
