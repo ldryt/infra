@@ -2,6 +2,7 @@ baseURL: https://www.lucasladreyt.eu/
 languageCode: en-US
 title: Lucas Ladreyt
 theme: PaperMod
+enableRobotsTXT: true
 params:
   description: Lucas Ladreyt.
   keywords:

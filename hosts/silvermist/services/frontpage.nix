@@ -15,6 +15,9 @@
     forceSSL = true;
     kTLS = true;
     globalRedirect = config.ldryt-infra.dns.records.eu-web;
+    extraConfig = ''
+      more_clear_headers "X-Robots-Tag";
+    '';
   };
 
   services.nginx.virtualHosts."${config.ldryt-infra.dns.zone}" = {
@@ -22,6 +25,9 @@
     forceSSL = true;
     kTLS = true;
     globalRedirect = config.ldryt-infra.dns.records.eu-web;
+    extraConfig = ''
+      more_clear_headers "X-Robots-Tag";
+    '';
   };
 
   services.nginx.virtualHosts."lucasladreyt.eu" = {
@@ -29,5 +35,8 @@
     forceSSL = true;
     kTLS = true;
     globalRedirect = config.ldryt-infra.dns.records.eu-web;
+    extraConfig = ''
+      more_clear_headers "X-Robots-Tag";
+    '';
   };
 }
