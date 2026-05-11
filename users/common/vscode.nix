@@ -94,6 +94,7 @@
         "editor.codeActionsOnSave" = {
           "source.fixAll.eslint" = "explicit";
         };
+        "chat.disableAIFeatures" = true;
       };
     };
   };
