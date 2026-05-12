@@ -36,8 +36,6 @@ in
         recipient = lib.mkOption { type = lib.types.str; };
       };
     };
-
-    blackbox.targets = lib.mkOption { type = lib.types.attrsOf (lib.types.listOf lib.types.str); };
   };
 
   config = lib.mkIf cfg.enable (
@@ -50,12 +48,16 @@ in
       permanentWgPeers = builtins.filter (p: !(p.isEphemeral or false)) allWgPeers;
 
       monitoredHostnames = [ common.wg.server.hostname ] ++ builtins.attrNames common.wg.clients;
+      monitoredConfigs = builtins.attrValues (
+        lib.filterAttrs (name: _: builtins.elem name monitoredHostnames) nixosConfigurations
+      );
+
       allMounts = lib.unique (
-        lib.flatten (
-          lib.mapAttrsToList (_: c: builtins.attrNames c.config.fileSystems) (
-            lib.filterAttrs (name: _: builtins.elem name monitoredHostnames) nixosConfigurations
-          )
-        )
+        lib.flatten (lib.mapAttrsToList (_: c: builtins.attrNames c.config.fileSystems) monitoredConfigs)
+      );
+
+      allBlackboxTargets = lib.foldAttrs lib.concat [ ] (
+        map (c: c.config.ldryt-infra.monitoring.blackbox.targets) monitoredConfigs
       );
 
       allMountsRegex = toRegex allMounts;
@@ -210,6 +212,14 @@ in
                     annotations:
                       summary: "{{ $labels.instance }} probe failed ({{ $labels.job }})"
 
+                  - alert: PortExposed
+                    expr: probe_success{job="blackbox_tcp_fail"} == 1
+                    for: 2m
+                    labels:
+                      severity: critical
+                    annotations:
+                      summary: "Port is exposed on {{ $labels.instance }}"
+
                   - alert: SSLCertExpiringSoon
                     expr: probe_ssl_earliest_cert_expiry - time() < 86400 * 7
                     for: 4h
@@ -230,13 +240,13 @@ in
             port = common.ports.blackbox;
             configFile = pkgs.writeText "blackbox.yml" ''
               modules:
-                http_2xx:
+                http_ok:
                   prober: http
                   timeout: 5s
                   http:
                     valid_http_versions: ["HTTP/1.1", "HTTP/2.0"]
                     follow_redirects: true
-                http_401:
+                http_protected:
                   prober: http
                   timeout: 5s
                   http:
@@ -244,8 +254,8 @@ in
                 tcp_connect:
                   prober: tcp
                   timeout: 5s
-                icmp:
-                  prober: icmp
+                tcp_fail:
+                  prober: tcp
                   timeout: 5s
             '';
           };
@@ -266,7 +276,7 @@ in
           metrics_path = "/probe";
           params.module = [ module ];
           static_configs = [ { inherit targets; } ];
-          # https://ping --> http://127.0.0.1:44190/probe?target=https://ping&module=http_2xx
+          # https://ping --> http://127.0.0.1:44190/probe?target=https://ping&module=http_ok
           relabel_configs = [
             {
               source_labels = [ "__address__" ];
@@ -281,7 +291,7 @@ in
               replacement = "127.0.0.1:${toString common.ports.blackbox}";
             }
           ];
-        }) cfg.blackbox.targets);
+        }) allBlackboxTargets);
       };
 
       users.groups.alertmanager_sops = { };

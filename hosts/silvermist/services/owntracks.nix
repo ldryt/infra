@@ -12,6 +12,10 @@ in
     paths = [ recorderStateDir ];
   };
 
+  ldryt-infra.monitoring.blackbox.targets.http_ok = [
+    "https://${config.ldryt-infra.dns.records.owntracks}/"
+  ];
+
   environment.persistence.silvermist.directories = [
     {
       directory = "/var/lib/${config.systemd.services.owntracks-recorder.serviceConfig.StateDirectory}";

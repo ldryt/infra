@@ -1,5 +1,15 @@
 { config, ... }:
 {
+  ldryt-infra.monitoring.blackbox.targets = {
+    http_ok = [
+      "http://luke.${config.ldryt-infra.dns.zone}:22070/status"
+      "http://silvermist.${config.ldryt-infra.dns.zone}:22070/status"
+    ];
+    tcp_connect = [
+      "luke.${config.ldryt-infra.dns.zone}:22067"
+      "silvermist.${config.ldryt-infra.dns.zone}:22067"
+    ];
+  };
   services.syncthing.relay = {
     enable = true;
     listenAddress = "0.0.0.0";

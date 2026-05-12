@@ -13,7 +13,15 @@ in
     };
   };
 
+  options.ldryt-infra.monitoring.blackbox.targets = lib.mkOption {
+    type = lib.types.attrsOf (lib.types.listOf lib.types.str);
+  };
+
   config = lib.mkIf cfg.enable {
+    services.fail2ban.ignoreIP = map (p: p.ip) (
+      [ common.wg.server ] ++ builtins.attrValues common.wg.clients
+    );
+
     services.prometheus.exporters.node = {
       enable = true;
       port = common.ports.nodeExporter;

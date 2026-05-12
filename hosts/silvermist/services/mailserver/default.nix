@@ -11,6 +11,24 @@
     ./grafana.nix
   ];
 
+  ldryt-infra.monitoring.blackbox.targets = {
+    http_ok = [
+      "https://${config.ldryt-infra.dns.records.mailserver-autoconfig}/mail/config-v1.1.xml"
+    ];
+    tcp_connect = [
+      "${config.ldryt-infra.dns.records.mailserver}:993"
+      "${config.ldryt-infra.dns.records.mailserver}:465"
+    ];
+    tcp_fail = [
+      "${config.ldryt-infra.dns.records.mailserver}:587"
+      "${config.ldryt-infra.dns.records.mailserver}:4190"
+      "${config.ldryt-infra.dns.records.mailserver}:11334"
+      "${config.ldryt-infra.dns.records.mailserver}:25"
+      "${config.ldryt-infra.dns.records.mailserver}:143"
+      "${config.ldryt-infra.dns.records.mailserver}:110"
+    ];
+  };
+
   sops.secrets."services/mailserver/users/ldryt/password" = { };
   sops.secrets."services/postfix/certs/acme/env" = { };
 

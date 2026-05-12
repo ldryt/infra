@@ -80,28 +80,6 @@
         recipient = "postmaster+alerts@ldryt.dev";
       };
     };
-    blackbox.targets = {
-      http_2xx = [
-        "https://${config.ldryt-infra.dns.records.grafana}/login"
-        "https://${config.ldryt-infra.dns.records.authelia}/api/health"
-        "https://${config.ldryt-infra.dns.records.immich}/api/server/ping"
-        "https://${config.ldryt-infra.dns.records.owntracks}/"
-        "http://luke.${config.ldryt-infra.dns.zone}:22070/status"
-        "http://silvermist.${config.ldryt-infra.dns.zone}:22070/status"
-        "http://10.114.44.2:3003"
-      ];
-      http_401 = [
-        "https://${config.ldryt-infra.dns.records.immich}/api/auth/status"
-        "https://${config.ldryt-infra.dns.records.owntracks}/"
-      ];
-      tcp_connect = [
-        "${config.ldryt-infra.dns.records.mailserver}:465"
-        "${config.ldryt-infra.dns.records.mailserver}:993"
-        "luke.${config.ldryt-infra.dns.zone}:22067"
-        "silvermist.${config.ldryt-infra.dns.zone}:22067"
-        "10.44.128.1:44191"
-      ];
-    };
   };
 
   services.cachefilesd = {

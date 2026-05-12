@@ -29,6 +29,16 @@ in
     ];
   };
 
+  ldryt-infra.monitoring.blackbox.targets = {
+    http_ok = [
+      "https://${config.ldryt-infra.dns.records.immich}/api/server/ping"
+      config.services.immich.environment.IMMICH_MACHINE_LEARNING_URL
+    ];
+    http_protected = [
+      "https://${config.ldryt-infra.dns.records.immich}/api/auth/status"
+    ];
+  };
+
   services.postgresqlBackup = {
     enable = true;
     databases = [ "immich" ];

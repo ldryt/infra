@@ -16,6 +16,15 @@ in
     config.services.redis.servers."authelia-${config.services.authelia.instances.main.name}".settings.dir
   ];
 
+  ldryt-infra.monitoring.blackbox.targets = {
+    http_ok = [
+      "https://${config.ldryt-infra.dns.records.authelia}/api/health"
+    ];
+    http_protected = [
+      "https://${config.ldryt-infra.dns.records.authelia}/api/oidc/userinfo"
+    ];
+  };
+
   sops.secrets."services/authelia/users".owner = config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/jwtSecret".owner = config.services.authelia.instances.main.user;
   sops.secrets."services/authelia/storageEncryptionKey".owner =
