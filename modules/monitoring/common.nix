@@ -18,10 +18,7 @@ rec {
       luke = {
         ip = "10.44.128.3";
         pubKey = "mpUwzziqZqgtgdrWxlkqISi+LLssmmnP+gHoBRVRhm0=";
-      };
-      tinkerbell = {
-        ip = "10.44.128.4";
-        pubKey = "3V9lmv3UM+u9YNUJ+SU/yEycyzgj5xiGGoQfLiqsvCM=";
+        isEphemeral = false;
       };
       printer = {
         ip = "10.44.128.5";

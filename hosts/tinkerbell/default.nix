@@ -1,4 +1,4 @@
-{ config, ... }:
+{ ... }:
 {
   imports = [
     ./hardware
@@ -18,19 +18,12 @@
     ../../modules/nix-settings.nix
     ../../modules/elasticsearch.nix
     ../../modules/dns.nix
-    ../../modules/monitoring/client.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
 
   sops.defaultSopsFile = ./secrets.yaml;
   sops.age.keyFile = "/nix/persist/sops_age_tinkerbell.key";
-
-  sops.secrets."services/monitoring/wg/privateKey" = { };
-  ldryt-infra.monitoring.client = {
-    enable = true;
-    wg.privateKeyFile = config.sops.secrets."services/monitoring/wg/privateKey".path;
-  };
 
   environment.persistence.tinkerbell = {
     persistentStoragePath = "/nix/persist";
