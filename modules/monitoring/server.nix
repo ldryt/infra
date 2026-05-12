@@ -48,16 +48,16 @@ in
       permanentWgPeers = builtins.filter (p: !(p.isEphemeral or false)) allWgPeers;
 
       monitoredHostnames = [ common.wg.server.hostname ] ++ builtins.attrNames common.wg.clients;
-      monitoredConfigs = builtins.attrValues (
-        lib.filterAttrs (name: _: builtins.elem name monitoredHostnames) nixosConfigurations
-      );
+      monitoredConfigs = lib.filterAttrs (
+        name: _: builtins.elem name monitoredHostnames
+      ) nixosConfigurations;
 
       allMounts = lib.unique (
         lib.flatten (lib.mapAttrsToList (_: c: builtins.attrNames c.config.fileSystems) monitoredConfigs)
       );
 
       allBlackboxTargets = lib.foldAttrs lib.concat [ ] (
-        map (c: c.config.ldryt-infra.monitoring.blackbox.targets) monitoredConfigs
+        map (c: c.config.ldryt-infra.monitoring.blackbox.targets) (builtins.attrValues monitoredConfigs)
       );
 
       allMountsRegex = toRegex allMounts;
