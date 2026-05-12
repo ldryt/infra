@@ -15,6 +15,7 @@ in
 
   options.ldryt-infra.monitoring.blackbox.targets = lib.mkOption {
     type = lib.types.attrsOf (lib.types.listOf lib.types.str);
+    default = { };
   };
 
   config = lib.mkIf cfg.enable {
