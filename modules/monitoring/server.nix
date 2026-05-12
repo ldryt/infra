@@ -41,7 +41,7 @@ in
   config = lib.mkIf cfg.enable (
     let
       toRegex = builtins.concatStringsSep "|";
-      escapePubKey = lib.replaceStrings [ "+" ] [ "\\+" ];
+      escapePubKey = lib.replaceStrings [ "+" ] [ "[+]" ];
 
       allWgPeers = [ common.wg.server ] ++ builtins.attrValues common.wg.clients;
       ephemeralWgPeers = builtins.filter (p: p.isEphemeral or false) allWgPeers;
@@ -192,7 +192,7 @@ in
                     labels:
                       severity: warning
                     annotations:
-                      summary: "Peer ${wgPeerNameTemplate} has lost connection to {{ $labels.instance }}"
+                      summary: 'Peer ${wgPeerNameTemplate} has lost connection to {{ $labels.instance }}'
 
                   - alert: HostReboot
                     expr: time() - node_boot_time_seconds < 60 * 5
