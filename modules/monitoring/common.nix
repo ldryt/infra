@@ -14,6 +14,7 @@ rec {
       domus = {
         ip = "10.44.128.2";
         pubKey = "nuR6GcYBc1yejUQg0rVJXbsKl2+Y4GwjIwnMRzyavVs=";
+        isEphemeral = true;
       };
       luke = {
         ip = "10.44.128.3";
@@ -23,6 +24,7 @@ rec {
       printer = {
         ip = "10.44.128.5";
         pubKey = "oIj9Q5nKQ0BSCVzlbu6lAx97l9Kzu7Vltlp7jqVSGjc=";
+        isEphemeral = true;
       };
     };
   };

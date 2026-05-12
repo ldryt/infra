@@ -122,6 +122,7 @@
         silvermist = nixpkgs.lib.nixosSystem rec {
           specialArgs = {
             inherit inputs;
+            nixosConfigurations = self.nixosConfigurations;
             pkgs-master = nixpkgs-master.legacyPackages.${system};
           };
           system = "x86_64-linux";
