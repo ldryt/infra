@@ -205,8 +205,8 @@ in
               - name: blackbox
                 rules:
                   - alert: ServiceDown
-                    expr: probe_success == 0
-                    for: 3m
+                    expr: probe_success{job!="blackbox_tcp_fail"} == 0
+                    for: 2m
                     labels:
                       severity: critical
                     annotations:
@@ -218,7 +218,7 @@ in
                     labels:
                       severity: critical
                     annotations:
-                      summary: "Port is exposed on {{ $labels.instance }}"
+                      summary: "Port {{ $labels.instance }} is exposed"
 
                   - alert: SSLCertExpiringSoon
                     expr: probe_ssl_earliest_cert_expiry - time() < 86400 * 7
