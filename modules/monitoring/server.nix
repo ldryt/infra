@@ -128,31 +128,31 @@ in
                     labels:
                       severity: critical
                     annotations:
-                      summary: "Host {{ $labels.instance }} is unreachable"
+                      summary: "Host {{ $labels.instance }} is down"
 
                   - alert: HighCPUPressure
-                    expr: rate(node_pressure_cpu_waiting_seconds_total[3m]) * 100 > 65
-                    for: 3m
+                    expr: rate(node_pressure_cpu_waiting_seconds_total[5m]) * 100 > 80
+                    for: 5m
                     labels:
                       severity: critical
                     annotations:
-                      summary: "High CPU Pressure on {{ $labels.instance }}: {{ $value }}% stall time"
+                      summary: "High CPU Pressure on {{ $labels.instance }}: {{ $value | printf \"%.1f\" }}% stall time"
 
                   - alert: HighIOPressure
-                    expr: rate(node_pressure_io_waiting_seconds_total[3m]) * 100 > 65
-                    for: 3m
+                    expr: rate(node_pressure_io_waiting_seconds_total[5m]) * 100 > 65
+                    for: 5m
                     labels:
                       severity: critical
                     annotations:
-                      summary: "High I/O wait times on {{ $labels.instance }}: {{ $value }}% stall time"
+                      summary: "High I/O wait times on {{ $labels.instance }}: {{ $value | printf \"%.1f\" }}% stall time"
 
                   - alert: HighMemoryPressure
-                    expr: rate(node_pressure_memory_waiting_seconds_total[3m]) * 100 > 65
-                    for: 3m
+                    expr: rate(node_pressure_memory_waiting_seconds_total[5m]) * 100 > 65
+                    for: 5m
                     labels:
                       severity: critical
                     annotations:
-                      summary: "High Memory Pressure on {{ $labels.instance }}: {{ $value }}% stall time"
+                      summary: "High Memory Pressure on {{ $labels.instance }}: {{ $value | printf \"%.1f\" }}% stall time"
 
                   - alert: LowDisk
                     expr: (node_filesystem_avail_bytes{mountpoint=~"${allMountsRegex}"} / node_filesystem_size_bytes{mountpoint=~"${allMountsRegex}"}) * 100 < 15
@@ -160,7 +160,7 @@ in
                     labels:
                       severity: warning
                     annotations:
-                      summary: "Low disk on {{ $labels.instance }}{{ $labels.mountpoint }}: {{ $value | humanize }}% free"
+                      summary: "Low disk on {{ $labels.instance }}{{ $labels.mountpoint }}: {{ $value | printf \"%.1f\" }}% free"
 
                   - alert: CriticalDisk
                     expr: (node_filesystem_avail_bytes{mountpoint=~"${allMountsRegex}"} / node_filesystem_size_bytes{mountpoint=~"${allMountsRegex}"}) * 100 < 5
@@ -168,29 +168,29 @@ in
                     labels:
                       severity: critical
                     annotations:
-                      summary: "Critical disk on {{ $labels.instance }}{{ $labels.mountpoint }}: {{ $value | humanize }}% free"
+                      summary: "Critical disk on {{ $labels.instance }}{{ $labels.mountpoint }}: {{ $value | printf \"%.1f\" }}% free"
 
-                  - alert: SystemdServiceFailed
+                  - alert: SystemdUnitFailed
                     expr: node_systemd_unit_state{state="failed"} == 1
                     for: 2m
                     labels:
-                      severity: warning
+                      severity: critical
                     annotations:
-                      summary: "Service {{ $labels.name }} failed on {{ $labels.instance }}"
+                      summary: "Systemd unit {{ $labels.name }} failed on {{ $labels.instance }}"
 
-                  - alert: OOMKillsDetected
+                  - alert: OOMKillTriggered
                     expr: increase(node_vmstat_oom_kill[5m]) > 0
                     for: 1m
                     labels:
                       severity: critical
                     annotations:
-                      summary: "OOM Kill detected on {{ $labels.instance }}."
+                      summary: "OOM Kill was triggered on {{ $labels.instance }}."
 
                   - alert: WireguardPeerOffline
                     expr: (time() - wireguard_latest_handshake_seconds{public_key!~"${ephemeralWgPubKeysRegex}"}) > 300
                     for: 2m
                     labels:
-                      severity: warning
+                      severity: critical
                     annotations:
                       summary: 'Peer ${wgPeerNameTemplate} has lost connection to {{ $labels.instance }}'
 
@@ -204,7 +204,7 @@ in
 
               - name: blackbox
                 rules:
-                  - alert: ServiceDown
+                  - alert: ProbeUnreachable
                     expr: probe_success{job!="blackbox_tcp_fail"} == 0
                     for: 2m
                     labels:
@@ -220,13 +220,13 @@ in
                     annotations:
                       summary: "Port {{ $labels.instance }} is exposed"
 
-                  - alert: SSLCertExpiringSoon
-                    expr: probe_ssl_earliest_cert_expiry - time() < 86400 * 7
+                  - alert: SSLCertExpiring
+                    expr: probe_ssl_earliest_cert_expiry - time() < 86400 * 20
                     for: 4h
                     labels:
                       severity: critical
                     annotations:
-                      summary: "SSL Certificate for {{ $labels.instance }} expires in less than 1 week"
+                      summary: "SSL Certificate for {{ $labels.instance }} expires in less than 20 days"
           ''
         ];
         alertmanagers = [
@@ -311,12 +311,11 @@ in
               {
                 matchers = [ "severity=\"critical\"" ];
                 receiver = "telegram";
-                group_wait = "10s";
+                repeat_interval = "2h";
               }
               {
                 matchers = [ "severity=\"warning\"" ];
                 receiver = "email";
-                repeat_interval = "24h";
               }
             ];
           };
@@ -355,6 +354,7 @@ in
           server = {
             http_listen_port = common.ports.loki;
             grpc_listen_port = common.ports.lokiGrpc;
+            log_level = "warn";
           };
           auth_enabled = false;
           common = {
