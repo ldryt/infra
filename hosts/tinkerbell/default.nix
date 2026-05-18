@@ -36,6 +36,7 @@
       "/var/cache/powertop"
       "/etc/secureboot"
       "/var/cache/tuigreet"
+      "/var/lib/fprint"
     ];
     files = [ "/etc/machine-id" ];
 

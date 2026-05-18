@@ -36,7 +36,7 @@
 
   services.fwupd.enable = true;
 
-  services.fprintd.enable = false;
+  services.fprintd.enable = true;
 
   services.xserver.xkb = {
     layout = "qwerty-fr,us,fr";
