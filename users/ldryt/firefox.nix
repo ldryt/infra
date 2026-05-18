@@ -11,6 +11,12 @@
         default = "ddg";
         force = true;
         engines = {
+          "Kagi" = {
+            urls = [ { template = "https://kagi.com/search?q={searchTerms}"; } ];
+            icon = "https://kagi.com/favicon-32x32.png";
+            updateInterval = 7 * 24 * 60 * 60 * 1000;
+            definedAliases = [ "k" ];
+          };
           "GitHub" = {
             urls = [ { template = "https://github.com/search?q={searchTerms}"; } ];
             icon = "https://github.com/fluidicon.png";
@@ -28,18 +34,6 @@
             icon = "https://mynixos.com/favicon-dark.svg";
             updateInterval = 7 * 24 * 60 * 60 * 1000;
             definedAliases = [ "nx" ];
-          };
-          "Perplexity" = {
-            urls = [ { template = "https://www.perplexity.ai/?q={searchTerms}"; } ];
-            icon = "https://www.perplexity.ai/favicon.ico";
-            updateInterval = 7 * 24 * 60 * 60 * 1000;
-            definedAliases = [ "p" ];
-          };
-          "Phind" = {
-            urls = [ { template = "https://www.phind.com/search?q={searchTerms}&ignoreSearchResults=false"; } ];
-            icon = "https://www.phind.com/images/favicon.png";
-            updateInterval = 7 * 24 * 60 * 60 * 1000;
-            definedAliases = [ "ph" ];
           };
         };
       };
