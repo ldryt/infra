@@ -6,7 +6,7 @@
     ./users.nix
 
     ./services/authelia
-    ./services/farmlab-tunnel.nix
+    # ./services/farmlab-tunnel.nix
     # ./services/coturn.nix
     ./services/mailserver
     ./services/radicale.nix
