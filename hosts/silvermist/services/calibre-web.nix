@@ -54,22 +54,5 @@ in
       dataDir
       libraryDir
     ];
-
-    backupPrepareCommand = ''
-      ${pkgs.bash}/bin/bash -c '
-        if [[ -f "${dataDir}/app.db" ]]; then
-          ${pkgs.sqlite}/bin/sqlite3 "${dataDir}/app.db" ".backup '${dataDir}/app.db.bak'"
-        fi
-        if [[ -f "${libraryDir}/metadata.db" ]]; then
-          ${pkgs.sqlite}/bin/sqlite3 "${libraryDir}/metadata.db" ".backup '${libraryDir}/metadata.db.bak'"
-        fi
-      '
-    '';
-    backupCleanupCommand = ''
-      ${pkgs.bash}/bin/bash -c '
-        rm -f "${dataDir}/app.db.bak"
-        rm -f "${libraryDir}/metadata.db.bak"
-      '
-    '';
   };
 }
