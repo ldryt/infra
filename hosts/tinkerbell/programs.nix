@@ -1,5 +1,9 @@
 { pkgs, ... }:
 {
+  services.tailscale = {
+    enable = true;
+    extraUpFlags = [ "--accept-dns=false" ];
+  };
   programs.nix-ld.enable = true;
   programs.bcc.enable = true;
   hardware.saleae-logic.enable = true;

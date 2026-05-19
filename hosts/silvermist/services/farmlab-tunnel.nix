@@ -12,11 +12,16 @@ let
 in
 {
   ldryt-infra.monitoring.blackbox.targets = {
+    http_ok = [
+      "http://${config.services.oauth2-proxy.httpAddress}/ping"
+      "http://${wg.farmlab.ip}:80"
+    ];
     http_protected = [
-      "https://${config.ldryt-infra.dns.records.farmlab}/"
+      "https://${config.ldryt-infra.dns.records.farmlab}/oauth2/signin"
     ];
   };
 
+  networking.firewall.checkReversePath = "loose";
   sops.secrets."services/farmlab-tunnel/privateKey".owner = "systemd-network";
   networking.firewall.allowedUDPPorts = [ wg.port ];
   systemd.network = {
@@ -45,14 +50,15 @@ in
 
   sops.secrets."services/farmlab-tunnel/oidc/clientSecret" = { };
   sops.secrets."services/farmlab-tunnel/oidc/cookieSecret" = { };
+  sops.templates."oauth2-proxy.env".content = ''
+    OAUTH2_PROXY_CLIENT_SECRET=${config.sops.placeholder."services/farmlab-tunnel/oidc/clientSecret"}
+    OAUTH2_PROXY_COOKIE_SECRET=${config.sops.placeholder."services/farmlab-tunnel/oidc/cookieSecret"}
+  '';
   services.oauth2-proxy = {
     enable = true;
     provider = "google";
     clientID = "757008932440-qvfa00r0cgtjvddnvrfe8raie9kap0fp.apps.googleusercontent.com";
-
-    keyFile = config.sops.secrets."services/farmlab-tunnel/oidc/clientSecret".path;
-    cookie.secret = config.sops.secrets."services/farmlab-tunnel/oidc/cookieSecret".path;
-
+    keyFile = config.sops.templates."oauth2-proxy.env".path;
     email.domains = [
       "atelier-maker.fr"
     ];
