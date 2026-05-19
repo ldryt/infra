@@ -41,6 +41,12 @@ in
     };
   };
 
+  ldryt-infra.monitoring.blackbox.targets = {
+    http_ok = [
+      "http://${config.ldryt-infra.dns.records.calibre-web}/"
+    ];
+  };
+
   sops.secrets."backups/restic/repos/calibre-web/password" = { };
   ldryt-infra.backups.repos.calibre-web = {
     passwordFile = config.sops.secrets."backups/restic/repos/calibre-web/password".path;
