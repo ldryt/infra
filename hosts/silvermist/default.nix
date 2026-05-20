@@ -16,6 +16,7 @@
     ./services/umami.nix
     ./services/owntracks.nix
     ./services/calibre-web.nix
+    ./services/wallabag.nix
 
     ../../modules/nginx.nix
     ../../modules/fail2ban.nix
