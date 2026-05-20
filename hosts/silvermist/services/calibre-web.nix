@@ -41,6 +41,40 @@ in
     };
   };
 
+  systemd.services.calibre-web.serviceConfig = {
+    ProtectSystem = "strict";
+    ProtectHome = true;
+    PrivateTmp = true;
+    PrivateDevices = true;
+    ReadWritePaths = [
+      dataDir
+      libraryDir
+    ];
+    CapabilityBoundingSet = "";
+    NoNewPrivileges = true;
+    ProtectKernelTunables = true;
+    ProtectKernelModules = true;
+    ProtectControlGroups = true;
+    RestrictSUIDSGID = true;
+    SystemCallArchitectures = "native";
+    SystemCallFilter = [
+      "@system-service"
+      "~@privileged"
+      "~@resources"
+    ];
+    IPAddressDeny = [
+      "10.0.0.0/8"
+      "172.16.0.0/12"
+      "192.168.0.0/16"
+    ];
+    IPAddressAllow = [
+      "localhost"
+    ];
+    RestrictAddressFamilies = [
+      "AF_INET"
+    ];
+  };
+
   ldryt-infra.monitoring.blackbox.targets = {
     http_ok = [
       "http://${config.ldryt-infra.dns.records.calibre-web}/"
