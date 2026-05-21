@@ -49,4 +49,7 @@
     rpi-imager
     typst
   ];
+
+  environment.etc."jtagd/pgm_parts.txt".source =
+    "${pkgs.quartus-prime-lite}/quartus/linux64/pgm_parts.txt";
 }
