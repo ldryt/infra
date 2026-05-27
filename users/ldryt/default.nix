@@ -8,6 +8,7 @@
     ../common/c.nix
     ../common/git.nix
     ../common/vscode.nix
+    ../common/zen-browser.nix
 
     ./sway.nix
     ./packages.nix

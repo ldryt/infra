@@ -118,12 +118,12 @@ in
     mimeApps = {
       enable = true;
       defaultApplications = {
-        "text/html" = "firefox.desktop";
-        "x-scheme-handler/http" = "firefox.desktop";
-        "x-scheme-handler/https" = "firefox.desktop";
-        "x-scheme-handler/about" = "firefox.desktop";
-        "x-scheme-handler/unknown" = "firefox.desktop";
-        "application/pdf" = "firefox.desktop";
+        "text/html" = "zen-beta.desktop";
+        "x-scheme-handler/http" = "zen-beta.desktop";
+        "x-scheme-handler/https" = "zen-beta.desktop";
+        "x-scheme-handler/about" = "zen-beta.desktop";
+        "x-scheme-handler/unknown" = "zen-beta.desktop";
+        "application/pdf" = "zen-beta.desktop";
         "video/mp4" = "haruna.desktop";
         "video/quicktime" = "haruna.desktop";
         "video/x-matroska" = "haruna.desktop";
@@ -195,6 +195,7 @@ in
           in
           lib.mkOptionDefault {
             "${mod}+d" = "exec ${pkgs.dmenu-wayland}/bin/dmenu-wl_run";
+            "${mod}+b" = "exec zen-beta";
             "${mod}+f" = "fullscreen";
             "${mod}+l" = "exec \"${lock-cmd}\"";
             "XF86AudioPlay" = "exec playerctl play-pause";

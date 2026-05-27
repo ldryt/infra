@@ -74,6 +74,7 @@
         ".stmcube"
         ".stmcufinder"
         ".vagrant.d"
+        ".config/zen"
       ];
       files = [
         ".config/digikamrc"
