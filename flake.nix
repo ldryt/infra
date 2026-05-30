@@ -111,6 +111,7 @@
               inherit system;
             };
             pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
+            pkgs-master = nixpkgs-master.legacyPackages.${system};
           };
           system = "x86_64-linux";
           modules = [
@@ -158,6 +159,7 @@
           specialArgs = {
             inherit inputs;
             pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
+            pkgs-master = nixpkgs-master.legacyPackages.${system};
           };
           system = "aarch64-linux";
           modules = [
@@ -171,6 +173,7 @@
           specialArgs = {
             inherit inputs;
             pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
+            pkgs-master = nixpkgs-master.legacyPackages.${system};
           };
           system = "aarch64-linux";
           modules = [

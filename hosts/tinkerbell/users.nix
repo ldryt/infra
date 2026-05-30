@@ -2,6 +2,7 @@
   inputs,
   config,
   pkgs-unstable,
+  pkgs-master,
   ...
 }:
 {
@@ -16,6 +17,7 @@
     extraSpecialArgs = {
       inherit inputs;
       inherit pkgs-unstable;
+      inherit pkgs-master;
       firefox-addons = inputs.firefox-addons;
     };
   };

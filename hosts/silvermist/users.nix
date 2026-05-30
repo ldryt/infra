@@ -1,10 +1,13 @@
-{ config, ... }:
+{ pkgs-master, config, ... }:
 {
   home-manager = {
     useGlobalPkgs = true;
     useUserPackages = true;
     users = {
       colon = import ../../users/colon;
+    };
+    extraSpecialArgs = {
+      inherit pkgs-master;
     };
   };
 

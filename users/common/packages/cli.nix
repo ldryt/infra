@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-master, ... }:
 {
   home.packages = with pkgs; [
     atop
@@ -46,5 +46,7 @@
     cdrkit
 
     bluetuith
+
+    pkgs-master.headlamp
   ];
 }

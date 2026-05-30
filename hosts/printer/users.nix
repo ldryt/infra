@@ -1,4 +1,4 @@
-{ config, ... }:
+{ pkgs-master, config, ... }:
 {
   home-manager = {
     useUserPackages = true;
@@ -7,6 +7,9 @@
       colon = {
         imports = [ ../../users/colon ];
       };
+    };
+    extraSpecialArgs = {
+      inherit pkgs-master;
     };
   };
 
