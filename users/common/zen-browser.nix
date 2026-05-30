@@ -43,6 +43,8 @@
         "browser.aboutwelcome.enabled" = false;
         "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
         "svg.context-properties.content.enabled" = true;
+
+        "zen.window-sync.enabled" = false;
       };
 
       search = {
@@ -53,7 +55,7 @@
             urls = [ { template = "https://kagi.com/search?q={searchTerms}"; } ];
             definedAliases = [ "k" ];
           };
-          "Google" = {
+          "google" = {
             urls = [ { template = "https://www.google.com/search?q={searchTerms}"; } ];
             definedAliases = [ "g" ];
           };
