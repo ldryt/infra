@@ -202,36 +202,39 @@
         }
       );
 
-      homeConfigurations = {
-        "lucas.ladreyt" =
-          let
-            pkgs = import nixpkgs {
-              system = "x86_64-linux";
-              config.allowUnfree = true;
-            };
-          in
-          home-manager.lib.homeManagerConfiguration {
+      homeConfigurations =
+        let
+          pkgs = import nixpkgs {
+            system = "x86_64-linux";
+            config.allowUnfree = true;
+          };
+          pkgs-master = import nixpkgs-master {
+            system = "x86_64-linux";
+            config.allowUnfree = true;
+          };
+        in
+        {
+          "lucas.ladreyt" = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
+            extraSpecialArgs = {
+              inherit pkgs-master;
+            };
             modules = [
               ./users/lucas.ladreyt
               sops-nix.homeManagerModules.sops
             ];
           };
-        "ldryt" =
-          let
-            pkgs = import nixpkgs {
-              system = "x86_64-linux";
-              config.allowUnfree = true;
-            };
-          in
-          home-manager.lib.homeManagerConfiguration {
+          "ldryt" = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
+            extraSpecialArgs = {
+              inherit pkgs-master;
+            };
             modules = [
               ./users/lucas.ladreyt
               sops-nix.homeManagerModules.sops
             ];
           };
-      };
+        };
 
       ghaMatrix =
         (builtins.map (name: {

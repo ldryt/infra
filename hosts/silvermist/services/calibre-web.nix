@@ -72,6 +72,7 @@ in
     ];
     RestrictAddressFamilies = [
       "AF_INET"
+      "AF_UNIX"
     ];
   };
 
