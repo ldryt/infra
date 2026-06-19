@@ -1,7 +1,6 @@
 { pkgs, config, ... }:
 {
   services.power-profiles-daemon.enable = true;
-  powerManagement.powertop.enable = true;
 
   services.logind.settings.Login = {
     HandlePowerKey = "suspend-then-hibernate";
