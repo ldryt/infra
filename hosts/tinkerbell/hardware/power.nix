@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 {
   services.power-profiles-daemon.enable = true;
   powerManagement.powertop.enable = true;
@@ -14,23 +14,9 @@
     HibernateDelaySec=30m
   '';
 
-  systemd.services.low-battery-hibernate = {
-    description = "Hibernate on low battery";
-    serviceConfig = {
-      Type = "oneshot";
-      ExecStart = pkgs.writeShellScript "low-battery-check" ''
-        capacity=$(cat /sys/class/power_supply/BAT1/capacity)
-        status=$(cat /sys/class/power_supply/BAT1/status)
-        if [ "$status" = "Discharging" ] && [ "$capacity" -le 5 ]; then
-          systemctl hibernate
-        fi
-      '';
-    };
-  };
-
-  systemd.timers.low-battery-hibernate = {
-    description = "Check battery level every minute";
-    wantedBy = [ "timers.target" ];
-    timerConfig.OnActiveSec = "1min";
-  };
+  services.udev.extraRules = ''
+    SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", ATTR{capacity}=="[0-5]", RUN+="${config.systemd.package}/bin/systemctl hibernate"
+    SUBSYSTEM=="power_supply", ATTR{status}=="Discharging", RUN+="${pkgs.power-profiles-daemon}/bin/powerprofilesctl set power-saver"
+    SUBSYSTEM=="power_supply", ATTR{status}=="Charging", RUN+="${pkgs.power-profiles-daemon}/bin/powerprofilesctl set performance"
+  '';
 }
