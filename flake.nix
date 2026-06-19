@@ -15,7 +15,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
-    nixpie.url = "git+https://gitlab.cri.epita.fr/forge/infra/nixpie.git";
+    nixpkgs-pie.url = "git+https://gitlab.cri.epita.fr/forge/infra/nixpie.git";
     home-manager-unstable.url = "github:nix-community/home-manager";
     home-manager = {
       url = "github:nix-community/home-manager/release-25.11";
@@ -57,6 +57,7 @@
       nixpkgs,
       nixpkgs-unstable,
       nixpkgs-master,
+      nixpkgs-pie,
       home-manager,
       sops-nix,
       disko,
@@ -65,125 +66,47 @@
       nixos-raspberrypi,
       impermanence,
       mailserver,
-      nixpie,
       stm32cubeide,
       ...
     }@inputs:
     let
+      lib = nixpkgs.lib;
       systems = [
         "x86_64-linux"
         "aarch64-linux"
         "x86_64-darwin"
         "aarch64-darwin"
       ];
-
-      forAllSystems = nixpkgs.lib.genAttrs systems;
+      forAllSystems = lib.genAttrs systems;
     in
     {
       formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
 
-      devShells = forAllSystems (
-        system:
+      nixosConfigurations = lib.genAttrs (builtins.attrNames (builtins.readDir ./hosts)) (
+        name:
         let
-          pkgs = import nixpkgs {
-            inherit system;
-            config.allowUnfree = true;
-          };
+          meta = import (./hosts/${name}/meta.nix) { inherit inputs; };
+          inherit (meta) system;
         in
-        {
-          default = pkgs.mkShell {
-            buildInputs = with pkgs; [
-              inputs.self.packages.${system}.sops-keepass
-              inputs.self.packages.${system}.tofu-keepass
-              opentofu
-              sops
-              jq
-            ];
-          };
+        lib.nixosSystem {
+          inherit system;
+          specialArgs = {
+            inherit inputs self system;
+            inherit (self) nixosConfigurations;
+            pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
+            pkgs-master = inputs.nixpkgs-master.legacyPackages.${system};
+          }
+          // (meta.specialArgs or { });
+          modules = [
+            ./hosts/${name}
+            inputs.sops-nix.nixosModules.sops
+            inputs.impermanence.nixosModules.impermanence
+            inputs.home-manager.nixosModules.home-manager
+            { networking.hostName = name; }
+          ]
+          ++ (meta.modules or [ ]);
         }
       );
-
-      nixosConfigurations = {
-        tinkerbell = nixpkgs.lib.nixosSystem rec {
-          specialArgs = {
-            inherit inputs;
-            pkgs-pie = import nixpie.inputs.nixpkgs {
-              inherit system;
-            };
-            pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
-            pkgs-master = nixpkgs-master.legacyPackages.${system};
-          };
-          system = "x86_64-linux";
-          modules = [
-            ./hosts/tinkerbell
-            sops-nix.nixosModules.sops
-            lanzaboote.nixosModules.lanzaboote
-            disko.nixosModules.disko
-            impermanence.nixosModules.impermanence
-            home-manager.nixosModules.home-manager
-            stm32cubeide.nixosModules.default
-          ];
-        };
-        silvermist = nixpkgs.lib.nixosSystem rec {
-          specialArgs = {
-            inherit inputs;
-            nixosConfigurations = self.nixosConfigurations;
-            pkgs-master = nixpkgs-master.legacyPackages.${system};
-          };
-          system = "x86_64-linux";
-          modules = [
-            ./hosts/silvermist
-            sops-nix.nixosModules.sops
-            disko.nixosModules.disko
-            impermanence.nixosModules.impermanence
-            home-manager.nixosModules.home-manager
-            mailserver.nixosModules.mailserver
-          ];
-        };
-        luke = nixpkgs.lib.nixosSystem rec {
-          specialArgs = {
-            inherit inputs;
-            pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
-            pkgs-master = nixpkgs-master.legacyPackages.${system};
-          };
-          system = "aarch64-linux";
-          modules = [
-            ./hosts/luke
-            sops-nix.nixosModules.sops
-            disko.nixosModules.disko
-            impermanence.nixosModules.impermanence
-            home-manager.nixosModules.home-manager
-          ];
-        };
-        domus = nixpkgs.lib.nixosSystem rec {
-          specialArgs = {
-            inherit inputs;
-            pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
-            pkgs-master = nixpkgs-master.legacyPackages.${system};
-          };
-          system = "aarch64-linux";
-          modules = [
-            ./hosts/domus
-            sops-nix.nixosModules.sops
-            impermanence.nixosModules.impermanence
-            home-manager.nixosModules.home-manager
-          ];
-        };
-        printer = nixpkgs.lib.nixosSystem rec {
-          specialArgs = {
-            inherit inputs;
-            pkgs-unstable = nixpkgs-unstable.legacyPackages.${system};
-            pkgs-master = nixpkgs-master.legacyPackages.${system};
-          };
-          system = "aarch64-linux";
-          modules = [
-            ./hosts/printer
-            sops-nix.nixosModules.sops
-            impermanence.nixosModules.impermanence
-            home-manager.nixosModules.home-manager
-          ];
-        };
-      };
 
       packages = forAllSystems (
         system:
