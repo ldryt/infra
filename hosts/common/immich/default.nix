@@ -27,21 +27,5 @@
       pubKey = "+OpKi943ZB5i18dFxBmjV4Eu5t9fv6AcMJyYKq272kA=";
     };
   };
-  immichPkg = pkgs-master.immich.override {
-    immich-machine-learning = pkgs-master.immich-machine-learning.override {
-      python3 = pkgs-master.python3.override {
-        packageOverrides = final: prev: {
-          rapidocr = prev.rapidocr.overridePythonAttrs (old: rec {
-            version = "3.7.0";
-            src = pkgs-master.fetchFromGitHub {
-              owner = "RapidAI";
-              repo = "RapidOCR";
-              tag = "v${version}";
-              hash = "sha256-wFAW0KRNC31cqJ8f1/dBZDLSkOBdB5AFpPzO85g3rHA=";
-            };
-          });
-        };
-      };
-    };
-  };
+  immichPkg = pkgs-master.immich;
 }
