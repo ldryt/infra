@@ -31,6 +31,6 @@
   systemd.timers.low-battery-hibernate = {
     description = "Check battery level every minute";
     wantedBy = [ "timers.target" ];
-    timerConfig.OnUnitActiveSec = "1min";
+    timerConfig.OnActiveSec = "1min";
   };
 }
