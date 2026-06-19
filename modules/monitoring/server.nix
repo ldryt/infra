@@ -81,7 +81,7 @@ in
         listenAddress = common.wg.server.ip;
       };
 
-      environment.persistence."${config.networking.hostName}".directories = [
+      ldryt-infra.persist.directories = [
         {
           directory = config.services.loki.dataDir;
           user = config.services.loki.user;

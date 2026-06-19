@@ -16,7 +16,7 @@ in
     "https://${config.ldryt-infra.dns.records.owntracks}/"
   ];
 
-  environment.persistence.silvermist.directories = [
+  ldryt-infra.persist.directories = [
     {
       directory = "/var/lib/${config.systemd.services.owntracks-recorder.serviceConfig.StateDirectory}";
       user = "owntracks";

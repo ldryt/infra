@@ -17,16 +17,19 @@
     ./services/owntracks.nix
     ./services/calibre-web.nix
     ./services/wallabag.nix
+    ./services/cachefilesd.nix
 
     ../../modules/nginx.nix
     ../../modules/fail2ban.nix
     ../../modules/openssh.nix
     ../../modules/podman.nix
     ../../modules/nix-settings.nix
+    ../../modules/syncthing-relay.nix
+
     ../../modules/backups.nix
     ../../modules/dns.nix
-    ../../modules/syncthing-relay.nix
     ../../modules/monitoring/server.nix
+    ../../modules/impermanence.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
@@ -42,12 +45,6 @@
       domus.sshKey = config.sops.secrets."backups/restic/hosts/domus/sshKey".path;
       gdrive.rcloneConfigFile = config.sops.secrets."backups/restic/hosts/gdrive/rclone.conf".path;
     };
-    # repos = {
-    #   silvermist = {
-    #     passwordFile = config.sops.secrets."backups/restic/repos/silvermist/password".path;
-    #     paths = [ config.environment.persistence.silvermist.persistentStoragePath ];
-    #   };
-    # };
   };
 
   sops.secrets."services/monitoring/wg/privateKey" = { };
@@ -82,38 +79,6 @@
       };
     };
   };
-
-  services.cachefilesd = {
-    enable = true;
-    extraConfig = ''
-      brun  20%
-      bcull 15%
-      bstop 10%
-    '';
-  };
-
-  environment.persistence.silvermist = {
-    persistentStoragePath = "/nix/persist";
-    directories = [
-      "/var/log"
-      "/var/lib/acme"
-      "/var/lib/nixos"
-      "/var/lib/fail2ban"
-      "/var/lib/containers"
-      "/var/lib/systemd/coredump"
-      "/var/cache"
-    ];
-    files = [
-      "/etc/machine-id"
-      "/etc/ssh/ssh_host_ed25519_key"
-      "/etc/ssh/ssh_host_rsa_key"
-    ];
-  };
-
-  environment.persistence."/nix/tmp".directories = [
-    "/tmp"
-    "/var/tmp"
-  ];
 
   time.timeZone = "Europe/Paris";
 

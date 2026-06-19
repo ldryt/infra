@@ -6,7 +6,7 @@ in
   sops.secrets."services/syncthing/key".owner = config.services.syncthing.user;
   sops.secrets."services/syncthing/cert".owner = config.services.syncthing.user;
 
-  environment.persistence.luke.directories = [
+  ldryt-infra.persist.directories = [
     config.services.syncthing.dataDir
     config.services.syncthing.configDir
   ];

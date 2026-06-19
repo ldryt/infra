@@ -1,5 +1,8 @@
 { pkgs, ... }:
 {
+  ldryt-infra.persist.directories = [
+    "/var/lib/fail2ban"
+  ];
   services.fail2ban = {
     enable = true;
     ignoreIP = [

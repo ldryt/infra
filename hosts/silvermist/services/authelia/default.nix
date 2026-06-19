@@ -11,7 +11,7 @@ in
     ./grafana.nix
   ];
 
-  environment.persistence.silvermist.directories = [
+  ldryt-infra.persist.directories = [
     dataDir
     config.services.redis.servers."authelia-${config.services.authelia.instances.main.name}".settings.dir
   ];

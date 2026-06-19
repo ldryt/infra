@@ -6,7 +6,7 @@
     ../../../../modules/mdns-publish.nix
   ];
 
-  environment.persistence.printer.directories = [
+  ldryt-infra.persist.directories = [
     {
       directory = config.services.moonraker.stateDir + "/gcodes";
       user = config.services.moonraker.user;

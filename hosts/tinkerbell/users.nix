@@ -40,4 +40,45 @@
   };
   nix.settings.trusted-users = [ config.users.users.ldryt.name ];
 
+  ldryt-infra.persist.users.ldryt = {
+    directories = [
+      "Documents"
+      "Downloads"
+      "Music"
+      "Pictures"
+      "Videos"
+      "Sync"
+      ".local/state/syncthing"
+      ".ssh"
+      ".local/share/direnv"
+      ".local/share/wluma"
+      ".config/SuperSlicer"
+      ".mozilla"
+      ".thunderbird"
+      ".terraform.d"
+      ".config/dconf"
+      ".local/share/Steam"
+      ".config/JetBrains"
+      ".config/keepassxc"
+      ".cache/keepassxc"
+      ".config/obsidian"
+      ".parsec"
+      ".parsec-persistent"
+      ".local/share/TelegramDesktop"
+      ".local/share/PrismLauncher"
+      ".config/Slack"
+      ".gnupg"
+      "STM32Cube"
+      "STM32CubeIDE"
+      ".stm32cubemx"
+      ".stmcube"
+      ".stmcufinder"
+      ".vagrant.d"
+      ".config/zen"
+    ];
+    files = [
+      ".config/digikamrc"
+      ".config/digikam_systemrc"
+    ];
+  };
 }

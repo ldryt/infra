@@ -7,7 +7,7 @@ let
   mappedNobodyUid = toString (baseUid + nobodyUid);
 in
 {
-  environment.persistence.silvermist.directories = [
+  ldryt-infra.persist.directories = [
     {
       directory = dataDir;
       mode = "0755";

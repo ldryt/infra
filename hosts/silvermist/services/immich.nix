@@ -9,7 +9,7 @@ let
   common = import ../../common/immich { inherit pkgs-master; };
 in
 {
-  environment.persistence.silvermist.directories = [
+  ldryt-infra.persist.directories = [
     {
       directory = config.services.postgresqlBackup.location;
       user = "postgres";

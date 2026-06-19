@@ -1,6 +1,6 @@
 { lib, config, ... }:
 {
-  environment.persistence.silvermist.directories = (
+  ldryt-infra.persist.directories = (
     # TODO: uniquefy final list
     lib.optionals (!config.services.immich.enable) [
       {

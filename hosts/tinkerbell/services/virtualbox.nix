@@ -4,7 +4,7 @@
     enableExtensionPack = true;
   };
 
-  environment.persistence.tinkerbell.users.ldryt.directories = [
+  ldryt-infra.persist.users.ldryt.directories = [
     "VirtualBox VMs"
     ".config/VirtualBox"
   ];

@@ -18,7 +18,7 @@
   networking.firewall.allowedTCPPorts = [ config.services.firefox-syncserver.settings.port ];
 
   systemd.services.firefox-syncserver.serviceConfig.StateDirectory = "firefox-syncserver";
-  environment.persistence.silvermist.directories = [
+  ldryt-infra.persist.directories = [
     "/var/lib/private/firefox-syncserver"
   ];
 }

@@ -1,11 +1,11 @@
-{ config, pkgs, ... }:
+{ config, ... }:
 let
   port = 8083;
   dataDir = "/var/lib/calibre-web";
   libraryDir = "/var/lib/calibre-library";
 in
 {
-  environment.persistence.silvermist.directories = [
+  ldryt-infra.persist.directories = [
     {
       directory = dataDir;
       user = config.services.calibre-web.user;

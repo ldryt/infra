@@ -32,7 +32,7 @@
   sops.secrets."services/mailserver/users/ldryt/password" = { };
   sops.secrets."services/postfix/certs/acme/env" = { };
 
-  environment.persistence.silvermist.directories = [
+  ldryt-infra.persist.directories = [
     config.mailserver.mailDirectory
     config.mailserver.indexDir
     {

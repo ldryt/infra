@@ -10,7 +10,7 @@ in
   sops.secrets."services/syncthing/devices/luke/encryptionPassword".owner =
     config.services.syncthing.user;
 
-  environment.persistence.silvermist.directories = [ configDir ];
+  ldryt-infra.persist.directories = [ configDir ];
 
   sops.secrets."backups/restic/repos/syncthing-silvermist/password" = { };
   ldryt-infra.backups.repos.syncthing = {

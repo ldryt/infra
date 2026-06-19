@@ -1,5 +1,8 @@
 { pkgs, ... }:
 {
+  ldryt-infra.persist.directories = [
+    "/var/cache/tuigreet"
+  ];
   services.greetd = {
     enable = true;
     settings = {

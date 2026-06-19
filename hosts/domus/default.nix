@@ -12,8 +12,10 @@
 
     ../../modules/openssh.nix
     ../../modules/nix-settings.nix
-    ../../modules/backups.nix
     ../../modules/fail2ban.nix
+
+    ../../modules/impermanence.nix
+    ../../modules/backups.nix
     ../../modules/dns.nix
     ../../modules/monitoring/client.nix
   ];
@@ -30,12 +32,6 @@
       domus.enable = false;
       gdrive.rcloneConfigFile = config.sops.secrets."backups/restic/hosts/gdrive/rclone.conf".path;
     };
-    # repos = {
-    #   domus = {
-    #     passwordFile = config.sops.secrets."backups/restic/repos/domus/password".path;
-    #     paths = [ config.environment.persistence.domus.persistentStoragePath ];
-    #   };
-    # };
   };
 
   sops.secrets."services/monitoring/wg/privateKey" = { };
@@ -43,26 +39,6 @@
     enable = true;
     wg.privateKeyFile = config.sops.secrets."services/monitoring/wg/privateKey".path;
   };
-
-  environment.persistence.domus = {
-    persistentStoragePath = "/nix/persist";
-    directories = [
-      "/var/log"
-      "/var/lib/bluetooth"
-      "/var/lib/nixos"
-      "/var/lib/systemd/coredump"
-      "/var/lib/acme"
-    ];
-    files = [
-      "/etc/machine-id"
-      "/etc/ssh/ssh_host_ed25519_key"
-      "/etc/ssh/ssh_host_rsa_key"
-    ];
-  };
-  environment.persistence."/nix/tmp".directories = [
-    "/tmp"
-    "/var/tmp"
-  ];
 
   sops.secrets."system/2a37-key" = { };
   environment.etc.crypttab = {

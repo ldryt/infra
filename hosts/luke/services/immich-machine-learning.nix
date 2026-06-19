@@ -8,7 +8,7 @@ let
   common = import ../../common/immich { inherit pkgs-master; };
 in
 {
-  environment.persistence.luke.directories = [
+  ldryt-infra.persist.directories = [
     {
       directory = config.services.immich.machine-learning.environment.MACHINE_LEARNING_CACHE_FOLDER;
       user = "immich";

@@ -8,16 +8,19 @@
     ./services/syncthing.nix
     ./services/nix-cache.nix
     ./services/immich-machine-learning.nix
+    ./services/cachefilesd.nix
 
     ../../modules/nix-settings.nix
     ../../modules/openssh.nix
     ../../modules/fail2ban.nix
-    ../../modules/backups.nix
     ../../modules/podman.nix
-    ../../modules/dns.nix
     ../../modules/nginx.nix
     ../../modules/syncthing-relay.nix
+
+    ../../modules/backups.nix
+    ../../modules/dns.nix
     ../../modules/monitoring/client.nix
+    ../../modules/impermanence.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
@@ -33,51 +36,12 @@
       domus.sshKey = config.sops.secrets."backups/restic/hosts/domus/sshKey".path;
       gdrive.rcloneConfigFile = config.sops.secrets."backups/restic/hosts/gdrive/rclone.conf".path;
     };
-    # repos = {
-    #   luke = {
-    #     passwordFile = config.sops.secrets."backups/restic/repos/luke/password".path;
-    #     paths = [ "/nix/persist" ];
-    #   };
-    # };
   };
 
   sops.secrets."services/monitoring/wg/privateKey" = { };
   ldryt-infra.monitoring.client = {
     enable = true;
     wg.privateKeyFile = config.sops.secrets."services/monitoring/wg/privateKey".path;
-  };
-
-  environment.persistence.luke = {
-    persistentStoragePath = "/nix/persist";
-    hideMounts = true;
-    directories = [
-      "/var/log"
-      "/var/lib/bluetooth"
-      "/var/lib/nixos"
-      "/var/lib/systemd/coredump"
-      "/var/lib/sbctl"
-      "/var/lib/acme"
-      config.services.cachefilesd.cacheDir
-    ];
-    files = [
-      "/etc/machine-id"
-      "/etc/ssh/ssh_host_ed25519_key"
-      "/etc/ssh/ssh_host_rsa_key"
-    ];
-  };
-
-  environment.persistence."/nix/tmp".directories = [
-    "/tmp"
-    "/var/tmp"
-  ];
-
-  services.cachefilesd = {
-    enable = true;
-    extraConfig = ''
-      brun 40%
-      bcull 35%
-      bstop 30%
-    '';
   };
 
   time.timeZone = "Europe/Paris";

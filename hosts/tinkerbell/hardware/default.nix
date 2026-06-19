@@ -117,5 +117,11 @@
     };
   };
 
+  ldryt-infra.persist.directories = [
+    "/var/lib/fprint"
+    "/var/lib/bluetooth"
+    "/etc/secureboot"
+  ];
+
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }

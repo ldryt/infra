@@ -1,6 +1,6 @@
 { lib, ... }:
 {
-  environment.persistence.tinkerbell.directories = [
+  ldryt-infra.persist.directories = [
     "/var/lib/docker"
   ];
 

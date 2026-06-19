@@ -3,7 +3,7 @@ let
   opendkimSocket = "/run/opendkim/opendkim.sock";
 in
 {
-  environment.persistence.silvermist.directories = [ "/var/lib/postfix" ];
+  ldryt-infra.persist.directories = [ "/var/lib/postfix" ];
 
   sops.secrets."services/postfix/certs/acme/env" = { };
   security.acme.certs."${config.ldryt-infra.dns.records.postfix}" = {

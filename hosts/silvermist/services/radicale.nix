@@ -4,7 +4,7 @@ let
   dataDir = "/var/lib/radicale/collections";
 in
 {
-  environment.persistence.silvermist.directories = [ dataDir ];
+  ldryt-infra.persist.directories = [ dataDir ];
 
   sops.secrets."backups/restic/repos/radicale/password" = { };
   ldryt-infra.backups.repos.radicale = {

@@ -114,5 +114,5 @@ in
     "f /dev/shm/looking-glass 0660 ${user} qemu-libvirtd -"
   ];
 
-  environment.persistence.tinkerbell.directories = [ "/var/lib/libvirt" ];
+  ldryt-infra.persist.directories = [ "/var/lib/libvirt" ];
 }

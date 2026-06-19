@@ -4,7 +4,7 @@ let
   dataDir = "/var/lib/bitwarden_rs";
 in
 {
-  environment.persistence.silvermist.directories = [ dataDir ];
+  ldryt-infra.persist.directories = [ dataDir ];
   services.vaultwarden = {
     enable = true;
     config = {
