@@ -1,6 +1,11 @@
 { config, lib, ... }:
 let
   cfg = config.ldryt-infra.persist;
+  cmp =
+    name: a: b:
+    (if builtins.isString a then a else a."${name}") < (if builtins.isString b then b else b."${name}");
+  cmpDir = a: b: cmp "directory" a b;
+  cmpFile = a: b: cmp "file" a b;
 in
 {
   options.ldryt-infra.persist = {
@@ -58,9 +63,12 @@ in
     environment.persistence = {
       ${cfg.path} = {
         hideMounts = true;
-        directories = lib.unique cfg.directories;
-        files = lib.unique cfg.files;
-        inherit (cfg) users;
+        directories = lib.unique (lib.sort cmpDir cfg.directories);
+        files = lib.unique (lib.sort cmpFile cfg.files);
+        users = lib.mapAttrs (_: u: {
+          directories = lib.unique (lib.sort cmpDir u.directories);
+          files = lib.unique (lib.sort cmpFile u.files);
+        }) cfg.users;
       };
       "/nix/tmp".directories = [
         "/tmp"
