@@ -75,6 +75,8 @@
       ".stmcufinder"
       ".vagrant.d"
       ".config/zen"
+      ".cache/uv"
+      ".cache/huggingface"
     ];
     files = [
       ".config/digikamrc"
