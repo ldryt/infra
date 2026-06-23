@@ -1,10 +1,9 @@
-{ config, ... }:
+{ lib, config, ... }:
 let
   min-port = 10000;
   max-port = 20000;
-  listening-port = 3478;
   tls-listening-port = 5349;
-  realm = config.ldryt-infra.dns.records.turn;
+  realm = config.ldryt-infra.dns.records.coturn;
 in
 {
   networking.firewall = {
@@ -15,11 +14,9 @@ in
       }
     ];
     allowedUDPPorts = [
-      listening-port
       tls-listening-port
     ];
     allowedTCPPorts = [
-      listening-port
       tls-listening-port
     ];
   };
@@ -37,7 +34,6 @@ in
       realm
       min-port
       max-port
-      listening-port
       tls-listening-port
       ;
 
@@ -48,9 +44,12 @@ in
 
     extraConfig = ''
       fingerprint
-      user=test:test12308
       syslog
       verbose
     '';
   };
+  sops.secrets."services/coturn/users".owner = "turnserver";
+  systemd.services.coturn.preStart = lib.mkAfter ''
+    { echo ""; cat ${config.sops.secrets."services/coturn/users".path}; } >> /run/coturn/turnserver.cfg
+  '';
 }

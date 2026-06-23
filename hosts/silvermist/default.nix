@@ -7,7 +7,7 @@
 
     ./services/authelia
     # ./services/farmlab-tunnel.nix
-    # ./services/coturn.nix
+    ./services/coturn.nix
     ./services/mailserver
     ./services/radicale.nix
     ./services/syncthing.nix
