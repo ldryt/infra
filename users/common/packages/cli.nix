@@ -33,11 +33,13 @@
     encfs
     ltrace
     file
+    zip
     unzip
     inotify-tools
     picocom
     minicom
     screen
+    ncdu
 
     uv
 

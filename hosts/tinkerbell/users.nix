@@ -76,6 +76,11 @@
       ".vagrant.d"
       ".config/zen"
       ".cache/uv"
+      ".local/share/uv"
+      ".cache/torch"
+      ".cache/zen"
+      ".cache/Cypress"
+      ".cache/mozilla"
       ".cache/huggingface"
     ];
     files = [
