@@ -153,7 +153,7 @@
               inherit pkgs-master;
             };
             modules = [
-              ./users/lucas.ladreyt
+              ./users/ldryt
               sops-nix.homeManagerModules.sops
             ];
           };
