@@ -14,6 +14,7 @@
     ../../modules/nix-settings.nix
     ../../modules/fail2ban.nix
 
+    ../../modules/colon-user.nix
     ../../modules/impermanence.nix
     ../../modules/backups.nix
     ../../modules/dns.nix

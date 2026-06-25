@@ -18,6 +18,7 @@
     ../../modules/dns.nix
     ../../modules/monitoring/client.nix
     ../../modules/impermanence.nix
+    ../../modules/colon-user.nix
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
