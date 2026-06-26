@@ -81,6 +81,7 @@ in
       MAKER = mkWifi "$MAKER_SSID" "$MAKER_PWD";
       VNO = mkWifi "$VNO_SSID" "$VNO_PWD";
       GNB = mkWifi "$GNB_SSID" "$GNB_PWD";
+      ORY = mkWifi "$ORY_SSID" "$ORY_PWD";
       rosetta = mkWifi "rosetta" "$ROSETTA_PWD";
       tp420ia = mkWifi "tp420ia" "$TP420IA_PWD";
       IONIS = mkEapWifi "IONIS" "$eduroam_ID" "$eduroam_PWD";
