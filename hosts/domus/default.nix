@@ -1,8 +1,6 @@
 { config, ... }:
 {
   imports = [
-    ../../modules/sd-image-aarch64-tmpfs-root.nix
-
     ./hardware
     ./networking.nix
     ./users.nix

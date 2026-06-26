@@ -66,13 +66,12 @@ locals {
       ssh_port  = 22
       sops_file = "${path.module}/../hosts/silvermist/secrets.yaml"
     },
-    # "domus" = {
-    #   id        = "domus-id-2025-12-27"
-    #   ip        = "82.65.203.15"
-    #   ssh_port  = 22
-    #   sops_file = "${path.module}/../hosts/domus/secrets.yaml"
-    #   no_install = true
-    # },
+    "domus" = {
+      id        = "domus-2026-06-25"
+      ip        = "82.65.203.15"
+      ssh_port  = 22
+      sops_file = "${path.module}/../hosts/domus/secrets.yaml"
+    },
     "printer" = {
       id         = "printer-id-2026-01-14"
       ip         = "printer.local"
