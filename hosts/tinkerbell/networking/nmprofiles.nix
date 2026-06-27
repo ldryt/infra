@@ -34,36 +34,75 @@ let
       key-mgmt = "wpa-eap";
     };
   };
+  mkWireguard =
+    {
+      name,
+      address,
+      privateKey,
+      peerPubKey,
+      endpoint,
+      allowedIPs ? "0.0.0.0/0;",
+      presharedKey ? null,
+      mtu ? "1420",
+      autoconnect ? false,
+    }:
+    {
+      connection = {
+        id = name;
+        interface-name = name;
+        type = "wireguard";
+        inherit autoconnect;
+      };
+      ipv4 = {
+        address1 = address;
+        method = "manual";
+      };
+      ipv6 = {
+        method = "disabled";
+      };
+      wireguard = {
+        inherit mtu;
+        private-key = privateKey;
+      };
+      "wireguard-peer.${peerPubKey}" = {
+        allowed-ips = allowedIPs;
+        inherit endpoint;
+      }
+      // (
+        if presharedKey != null then
+          {
+            preshared-key = presharedKey;
+            preshared-key-flags = "0";
+          }
+        else
+          { }
+      );
+    };
 in
 {
   sops.secrets."system/NetworkManager/profiles/env" = { };
   networking.networkmanager.ensureProfiles = {
     environmentFiles = [ config.sops.secrets."system/NetworkManager/profiles/env".path ];
     profiles = {
-      wg_GNB = {
-        connection = {
-          id = "wg_GNB";
-          interface-name = "wg_GNB";
-          type = "wireguard";
-          autoconnect = false;
-        };
-        ipv4 = {
-          address1 = "192.168.27.65/32";
-          method = "manual";
-        };
-        ipv6 = {
-          method = "disabled";
-        };
-        wireguard = {
-          mtu = "1360";
-          private-key = "$wg_GNB_PRIVATE_KEY";
-        };
-        "wireguard-peer.auwq1FbYBSiMBTktf105iLyIv6CRPIK5KGy9zvdVNhE=" = {
-          allowed-ips = "0.0.0.0/0;192.168.27.64/27;192.168.0.0/24;";
-          endpoint = "$wg_GNB_ENDPOINT";
-          preshared-key = "$wg_GNB_PRESHARED_KEY";
-          preshared-key-flags = "0";
-        };
+      wg_GNB = mkWireguard {
+        name = "wg_GNB";
+        address = "192.168.27.65/32";
+        privateKey = "$wg_GNB_PRIVATE_KEY";
+        peerPubKey = "auwq1FbYBSiMBTktf105iLyIv6CRPIK5KGy9zvdVNhE=";
+        endpoint = "$wg_GNB_ENDPOINT";
+        allowedIPs = "0.0.0.0/0;192.168.27.64/27;192.168.0.0/24;";
+        presharedKey = "$wg_GNB_PRESHARED_KEY";
+        mtu = "1360";
+      };
+      wg_ORY = mkWireguard {
+        name = "wg_ORY";
+        address = "192.168.27.65/32";
+        privateKey = "$wg_ORY_PRIVATE_KEY";
+        peerPubKey = "J+mdhyF9Qk4I7R7NbF++bGW6rNI7qQVx/DnrX5cihno=";
+        endpoint = "$wg_ORY_ENDPOINT";
+        allowedIPs = "0.0.0.0/0;192.168.27.64/27;192.168.1.0/24;";
+        presharedKey = "$wg_ORY_PRESHARED_KEY";
+        mtu = "1360";
       };
       LYS = mkWifi "$LYS_SSID" "$LYS_PWD" // {
         ipv4 = {
