@@ -34,6 +34,9 @@
     ltrace
     file
     zip
+    zlib
+    nix-diff
+    ncdu
     unzip
     inotify-tools
     picocom
