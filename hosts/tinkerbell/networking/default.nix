@@ -10,7 +10,7 @@
     networkmanager = {
       enable = true;
       wifi = {
-        powersave = true;
+        powersave = false;
         macAddress = "stable-ssid";
       };
       logLevel = "INFO";
@@ -24,4 +24,5 @@
       checkReversePath = "loose";
     };
   };
+  hardware.wirelessRegulatoryDatabase = true;
 }
