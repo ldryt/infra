@@ -120,7 +120,6 @@
           sops-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/sops-keepass.nix { };
           tofu-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/tofu-keepass.nix { };
           www-lucasladreyt-eu = pkgs.callPackage ./pkgs/www.lucasladreyt.eu { };
-          sdImage-domus = self.nixosConfigurations.domus.config.system.build.sdImage;
           sdImage-printer = self.nixosConfigurations.printer.config.system.build.sdImage;
         }
       );
