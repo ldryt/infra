@@ -12,7 +12,7 @@
     wireless = {
       enable = true;
       networks = {
-        rosetta.pskRaw = "ext:secrets_psk_rosetta";
+        Bobble.pskRaw = "ext:secrets_psk_Bobble";
       };
       secretsFile = config.sops.secrets."system/networking/wpa_supplicant/secrets.conf".path;
     };
