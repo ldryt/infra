@@ -1,8 +1,16 @@
 { config, ... }:
 let
+  nameToUuid =
+    with builtins;
+    name:
+    let
+      h = hashString "md5" name;
+    in
+    "${substring 0 8 h}-${substring 8 4 h}-${substring 12 4 h}-${substring 16 4 h}-${substring 20 12 h}";
   mkWifi = ssid: psk: {
     connection = {
       id = ssid;
+      uuid = nameToUuid ssid;
       type = "wifi";
     };
     wifi = {
@@ -17,6 +25,7 @@ let
   mkSaeWifi = ssid: psk: {
     connection = {
       id = ssid;
+      uuid = nameToUuid ssid;
       type = "wifi";
     };
     wifi = {
@@ -37,6 +46,7 @@ let
     };
     connection = {
       id = ssid;
+      uuid = nameToUuid ssid;
       type = "wifi";
     };
     wifi = {
