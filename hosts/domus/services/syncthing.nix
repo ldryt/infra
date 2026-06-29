@@ -5,6 +5,16 @@
   sops.secrets."services/syncthing/devices/luke/encryptionPassword".owner =
     config.services.syncthing.user;
 
+  fileSystems."/var/lib/syncthing" = {
+    device = "/dev/mapper/2a37-data";
+    fsType = "btrfs";
+    options = [
+      "defaults"
+      "nofail"
+      "subvol=domus-syncthing"
+    ];
+  };
+
   services.syncthing = {
     enable = true;
     dataDir = "/var/lib/syncthing/data";
