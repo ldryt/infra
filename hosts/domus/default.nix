@@ -57,5 +57,10 @@
     ];
   };
 
+  services.openssh.ports = [
+    22
+    34971
+  ];
+
   system.stateVersion = "25.11";
 }

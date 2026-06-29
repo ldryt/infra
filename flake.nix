@@ -146,16 +146,6 @@
               sops-nix.homeManagerModules.sops
             ];
           };
-          "ldryt" = home-manager.lib.homeManagerConfiguration {
-            inherit pkgs;
-            extraSpecialArgs = {
-              inherit pkgs-master;
-            };
-            modules = [
-              ./users/ldryt
-              sops-nix.homeManagerModules.sops
-            ];
-          };
         };
 
       ghaMatrix =

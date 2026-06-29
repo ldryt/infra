@@ -68,9 +68,10 @@ locals {
     },
     "domus" = {
       id        = "domus-2026-06-25"
-      ip        = "82.65.203.15"
-      ssh_port  = 22
+      ip        = "82.67.219.252"
+      ssh_port  = 34971
       sops_file = "${path.module}/../hosts/domus/secrets.yaml"
+      luks = true
     },
     "printer" = {
       id         = "printer-id-2026-01-14"
