@@ -85,7 +85,7 @@
 
     x509.useACMEHost = "${config.ldryt-infra.dns.records.mailserver}";
 
-    dkimKeyBits = 4096;
+    dkim.defaults.keyLength = 4096;
 
     fullTextSearch = {
       enable = true;
