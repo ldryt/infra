@@ -24,6 +24,7 @@ in
       oidcClientSecretFile = lib.mkOption { type = lib.types.path; };
       mailPasswordFile = lib.mkOption { type = lib.types.path; };
       oidcClientId = lib.mkOption { type = lib.types.str; };
+      secretKeyFile = lib.mkOption { type = lib.types.path; };
     };
 
     alertmanager = {
@@ -392,7 +393,10 @@ in
             root_url = "https://${config.services.grafana.settings.server.domain}/";
           };
           analytics.feedback_links_enabled = false;
-          security.admin_password = "$__file{${cfg.grafana.adminPasswordFile}}";
+          security = {
+            admin_password = "$__file{${cfg.grafana.adminPasswordFile}}";
+            secret_key = "$__file{${cfg.grafana.secretKeyFile}}";
+          };
           "auth.generic_oauth" = {
             enabled = true;
             name = "${config.ldryt-infra.dns.records.authelia}";
