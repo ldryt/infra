@@ -173,11 +173,7 @@ in
           enable = true;
           package = cfg.package;
           mediaLocation = cfg.mediaLocation;
-          database = {
-            enable = true;
-            enableVectorChord = true;
-            enableVectors = false;
-          };
+          database.enable = true;
           redis.enable = true;
           machine-learning.enable = false;
           environment = {
