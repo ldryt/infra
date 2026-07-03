@@ -121,7 +121,7 @@ in
     config.services.authelia.instances.main.user;
 
   sops.secrets."services/authelia/mail/hashedPassword" = { };
-  mailserver.loginAccounts."auth@ldryt.dev" = {
+  mailserver.accounts."auth@ldryt.dev" = {
     hashedPasswordFile = config.sops.secrets."services/authelia/mail/hashedPassword".path;
     sendOnly = true;
   };

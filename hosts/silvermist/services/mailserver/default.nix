@@ -64,7 +64,7 @@
       "lucasladreyt.eu"
     ];
 
-    loginAccounts = {
+    accounts = {
       "ldryt@ldryt.dev" = {
         hashedPasswordFile = config.sops.secrets."services/mailserver/users/ldryt/password".path;
         aliases = [
