@@ -44,16 +44,10 @@ in
   services.swayidle = {
     enable = true;
     extraArgs = [ "-d" ];
-    events = [
-      {
-        event = "before-sleep";
-        command = lock-cmd;
-      }
-      {
-        event = "lock";
-        command = lock-cmd;
-      }
-    ];
+    events = {
+      "before-sleep".command = lock-cmd;
+      "lock".command = lock-cmd;
+    };
     timeouts = [
       {
         timeout = 15 * 60;
