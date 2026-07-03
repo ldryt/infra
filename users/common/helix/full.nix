@@ -8,7 +8,6 @@
   programs.helix = {
     extraPackages =
       with pkgs;
-      with nodePackages;
       with python311Packages;
       [
         # TeX
@@ -59,7 +58,7 @@
         typescript-language-server = {
           command = "typescript-language-server";
           args = [ "--stdio" ];
-          config.tsserver.path = "${pkgs.nodePackages.typescript}/bin/tsserver";
+          config.tsserver.path = "${pkgs.typescript}/bin/tsserver";
         };
         eslint = {
           command = "vscode-eslint-language-server";
