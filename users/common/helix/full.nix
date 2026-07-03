@@ -6,53 +6,50 @@
   ];
 
   programs.helix = {
-    extraPackages =
-      with pkgs;
-      with python311Packages;
-      [
-        # TeX
-        texlab
-        ltex-ls
-        evince
+    extraPackages = with pkgs; [
+      # TeX
+      texlab
+      ltex-ls
+      evince
 
-        # Rust
-        rust-analyzer
-        rustfmt
-        clang-tools
-        lldb
+      # Rust
+      rust-analyzer
+      rustfmt
+      clang-tools
+      lldb
 
-        # GO
-        gopls
-        gotools
+      # GO
+      gopls
+      gotools
 
-        # Typescript
-        vscode-langservers-extracted
-        prettier
-        typescript
-        typescript-language-server
+      # Typescript
+      vscode-langservers-extracted
+      prettier
+      typescript
+      typescript-language-server
 
-        # Bash
-        bash-language-server
+      # Bash
+      bash-language-server
 
-        # Python
-        black
-        pyright
+      # Python
+      black
+      pyright
 
-        # Markdown
-        marksman
+      # Markdown
+      marksman
 
-        # HCL
-        terraform-ls
+      # HCL
+      terraform-ls
 
-        # Misc
-        dockerfile-language-server
-        fortls
-        taplo
-        yaml-language-server
-        bash-language-server
-        neocmakelsp
-        mesonlsp
-      ];
+      # Misc
+      dockerfile-language-server
+      fortls
+      taplo
+      yaml-language-server
+      bash-language-server
+      neocmakelsp
+      mesonlsp
+    ];
     languages = {
       language-server = {
         typescript-language-server = {
