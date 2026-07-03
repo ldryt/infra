@@ -19,7 +19,7 @@
     extraPackages = with pkgs; [
       # Nix
       nil
-      nixfmt-rfc-style
+      nixfmt
 
       # YAML
       yaml-language-server

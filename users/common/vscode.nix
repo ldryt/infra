@@ -5,7 +5,7 @@
     direnv
 
     nil
-    nixfmt-rfc-style
+    nixfmt
 
     yarn
     eslint

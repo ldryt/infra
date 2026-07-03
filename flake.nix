@@ -80,7 +80,7 @@
       forAllSystems = lib.genAttrs systems;
     in
     {
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt);
 
       nixosConfigurations = lib.genAttrs (builtins.attrNames (builtins.readDir ./hosts)) (
         name:
