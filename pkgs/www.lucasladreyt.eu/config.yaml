@@ -1,5 +1,5 @@
 baseURL: https://www.lucasladreyt.eu/
-languageCode: en-US
+locale: en-US
 title: Lucas Ladreyt
 theme: PaperMod
 enableRobotsTXT: true
