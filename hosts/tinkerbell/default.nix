@@ -16,7 +16,6 @@
     ../../modules/geoclue.nix
     ../../modules/steam.nix
     ../../modules/nix-settings.nix
-    ../../modules/elasticsearch.nix
 
     ../../modules/dns.nix
     ../../modules/impermanence.nix

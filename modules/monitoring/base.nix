@@ -5,7 +5,7 @@ let
 in
 {
   options.ldryt-infra.monitoring.base = {
-    enable = lib.mkEnableOption "monitoring config (node_exporter + promtail)";
+    enable = lib.mkEnableOption "monitoring config (node_exporter + fluent-bit)";
 
     listenAddress = lib.mkOption {
       type = lib.types.str;
@@ -32,35 +32,26 @@ in
       ];
     };
 
-    services.promtail = {
+    services.fluent-bit = {
       enable = true;
-      configuration = {
-        server.http_listen_port = common.ports.promtail;
-        clients = [
-          { url = "http://${common.wg.server.ip}:${toString common.ports.loki}/loki/api/v1/push"; }
-        ];
-        scrape_configs = [
-          {
-            job_name = "journal";
-            journal = {
-              max_age = "12h";
-              labels = {
-                job = "systemd-journal";
-                host = config.networking.hostName;
-              };
-            };
-            relabel_configs = [
-              {
-                source_labels = [ "__journal__systemd_unit" ];
-                target_label = "unit";
-              }
-              {
-                source_labels = [ "__journal__priority" ];
-                target_label = "level";
-              }
-            ];
-          }
-        ];
+      settings = {
+        pipeline = {
+          inputs = [
+            {
+              name = "systemd";
+              tag = "journal";
+            }
+          ];
+          outputs = [
+            {
+              name = "loki";
+              match = "*";
+              host = common.wg.server.ip;
+              port = common.ports.loki;
+              labels = "job=systemd-journal, host=${config.networking.hostName}, unit=$_SYSTEMD_UNIT, level=$PRIORITY";
+            }
+          ];
+        };
       };
     };
   };

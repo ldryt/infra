@@ -53,7 +53,7 @@
       ".local/share/direnv"
       ".local/share/wluma"
       ".config/SuperSlicer"
-      ".mozilla"
+      ".config/mozilla/firefox"
       ".thunderbird"
       ".terraform.d"
       ".config/dconf"

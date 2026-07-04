@@ -9,9 +9,9 @@
     HandleLidSwitchDocked = "ignore";
   };
 
-  systemd.sleep.extraConfig = ''
-    HibernateDelaySec=30m
-  '';
+  systemd.sleep.settings.Sleep = {
+    HibernateDelaySec = "30m";
+  };
 
   services.upower = {
     enable = true;

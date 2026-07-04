@@ -12,13 +12,13 @@
     ];
   };
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-25.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
     nixpkgs-pie.url = "git+https://gitlab.cri.epita.fr/forge/infra/nixpie.git";
     home-manager-unstable.url = "github:nix-community/home-manager";
     home-manager = {
-      url = "github:nix-community/home-manager/release-25.11";
+      url = "github:nix-community/home-manager/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sops-nix = {
@@ -48,7 +48,7 @@
     nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     impermanence.url = "github:nix-community/impermanence";
-    mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-25.11";
+    mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-26.05";
     stm32cubeide.url = "github:ldryt/stm32cubeide-nix";
   };
   outputs =
@@ -80,7 +80,7 @@
       forAllSystems = lib.genAttrs systems;
     in
     {
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt-rfc-style);
+      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.nixfmt);
 
       nixosConfigurations = lib.genAttrs (builtins.attrNames (builtins.readDir ./hosts)) (
         name:

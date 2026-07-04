@@ -1,7 +1,8 @@
-{ firefox-addons, ... }:
+{ config, firefox-addons, ... }:
 {
   programs.firefox = {
     enable = true;
+    configPath = "${config.xdg.configHome}/mozilla/firefox";
     profiles.default = {
       extensions.packages = with firefox-addons.packages."x86_64-linux"; [
         ublock-origin

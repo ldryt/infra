@@ -33,12 +33,12 @@
   sops.secrets."services/postfix/certs/acme/env" = { };
 
   ldryt-infra.persist.directories = [
-    config.mailserver.mailDirectory
+    config.mailserver.storage.path
     config.mailserver.indexDir
     {
-      directory = config.mailserver.dkimKeyDirectory;
-      user = "opendkim";
-      group = "opendkim";
+      directory = config.mailserver.dkim.keyDirectory;
+      user = "rspamd";
+      group = "rspamd";
       mode = "0750";
     }
     {
@@ -64,7 +64,7 @@
       "lucasladreyt.eu"
     ];
 
-    loginAccounts = {
+    accounts = {
       "ldryt@ldryt.dev" = {
         hashedPasswordFile = config.sops.secrets."services/mailserver/users/ldryt/password".path;
         aliases = [
@@ -83,15 +83,13 @@
       };
     };
 
-    # https://nixos-mailserver.readthedocs.io/en/latest/options.html#cmdoption-arg-mailserver.certificateScheme
-    certificateScheme = "acme";
+    x509.useACMEHost = "${config.ldryt-infra.dns.records.mailserver}";
 
-    dkimKeyBits = 4096;
+    dkim.defaults.keyLength = 4096;
 
     fullTextSearch = {
       enable = true;
       autoIndex = true;
-      enforced = "body";
     };
     indexDir = "/var/lib/dovecot/indices";
   };
@@ -110,8 +108,8 @@
   ldryt-infra.backups.repos.mailserver = {
     passwordFile = config.sops.secrets."backups/restic/repos/mailserver/password".path;
     paths = [
-      config.mailserver.mailDirectory
-      config.mailserver.dkimKeyDirectory
+      config.mailserver.storage.path
+      config.mailserver.dkim.keyDirectory
     ];
   };
 

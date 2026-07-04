@@ -6,60 +6,56 @@
   ];
 
   programs.helix = {
-    extraPackages =
-      with pkgs;
-      with nodePackages;
-      with python311Packages;
-      [
-        # TeX
-        texlab
-        ltex-ls
-        evince
+    extraPackages = with pkgs; [
+      # TeX
+      texlab
+      ltex-ls
+      evince
 
-        # Rust
-        rust-analyzer
-        rustfmt
-        clang-tools
-        lldb
+      # Rust
+      rust-analyzer
+      rustfmt
+      clang-tools
+      lldb
 
-        # GO
-        gopls
-        gotools
+      # GO
+      gopls
+      gotools
 
-        # Typescript
-        vscode-langservers-extracted
-        prettier
-        typescript
-        typescript-language-server
+      # Typescript
+      vscode-langservers-extracted
+      prettier
+      typescript
+      typescript-language-server
 
-        # Bash
-        bash-language-server
+      # Bash
+      bash-language-server
 
-        # Python
-        black
-        pyright
+      # Python
+      black
+      pyright
 
-        # Markdown
-        marksman
+      # Markdown
+      marksman
 
-        # HCL
-        terraform-ls
+      # HCL
+      terraform-ls
 
-        # Misc
-        dockerfile-language-server
-        fortls
-        taplo
-        yaml-language-server
-        bash-language-server
-        neocmakelsp
-        mesonlsp
-      ];
+      # Misc
+      dockerfile-language-server
+      fortls
+      taplo
+      yaml-language-server
+      bash-language-server
+      neocmakelsp
+      mesonlsp
+    ];
     languages = {
       language-server = {
         typescript-language-server = {
           command = "typescript-language-server";
           args = [ "--stdio" ];
-          config.tsserver.path = "${pkgs.nodePackages.typescript}/bin/tsserver";
+          config.tsserver.path = "${pkgs.typescript}/bin/tsserver";
         };
         eslint = {
           command = "vscode-eslint-language-server";
