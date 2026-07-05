@@ -38,25 +38,28 @@ in
     "-${config.sops.secrets."services/owntracks/mqtt_mobile_passwords".path}"
   ];
   environment.etc = {
-    "mosquitto-acls/internal.acl".text = ''
-      pattern readwrite #
-    '';
-    "mosquitto-acls/mobile.acl".text = ''
-      pattern readwrite owntracks/%u/#
-      pattern read owntracks/#
-    '';
-    "mosquitto-conf.d/10-owntracks-listeners.conf".text = ''
-      listener ${toString mqttInternalPort} 127.0.0.1
-      allow_anonymous false
-      password_file ${config.sops.secrets."services/owntracks/mqtt_internal_passwords".path}
-      acl_file /etc/mosquitto-acls/internal.acl
+    "mosquitto-conf.d/10-owntracks-listeners.conf".text =
+      let
+        internalAcl = pkgs.writeText "internal.acl" ''
+          pattern readwrite #
+        '';
+        mobileAcl = pkgs.writeText "mobile.acl" ''
+          pattern readwrite owntracks/%u/#
+          pattern read owntracks/#
+        '';
+      in
+      ''
+        listener ${toString mqttInternalPort} 127.0.0.1
+        allow_anonymous false
+        password_file ${config.sops.secrets."services/owntracks/mqtt_internal_passwords".path}
+        acl_file ${internalAcl}
 
-      listener ${toString mqttProxiedPort} 127.0.0.1
-      protocol websockets
-      allow_anonymous false
-      password_file ${config.sops.secrets."services/owntracks/mqtt_mobile_passwords".path}
-      acl_file /etc/mosquitto-acls/mobile.acl
-    '';
+        listener ${toString mqttProxiedPort} 127.0.0.1
+        protocol websockets
+        allow_anonymous false
+        password_file ${config.sops.secrets."services/owntracks/mqtt_mobile_passwords".path}
+        acl_file ${mobileAcl}
+      '';
   };
   services.mosquitto = {
     enable = true;
