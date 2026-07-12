@@ -29,6 +29,11 @@
 
   fileSystems."/nix".neededForBoot = true;
 
+  services.beesd.filesystems.crypted = {
+    spec = "/nix";
+    hashTableSizeMB = 2048;
+  };
+
   boot.binfmt = {
     emulatedSystems = [ "aarch64-linux" ];
     preferStaticEmulators = true;
