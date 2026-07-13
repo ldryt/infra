@@ -27,18 +27,4 @@
   sops.age.keyFile = "/nix/persist/sops_age_tinkerbell.key";
 
   system.stateVersion = "23.05";
-
-  nix.distributedBuilds = true;
-  nix.buildMachines = [
-    {
-      hostName = "luke.ldryt.dev";
-      system = "aarch64-linux";
-      maxJobs = 4;
-      sshUser = "colon";
-      sshKey = "/home/ldryt/.ssh/colon@luke.pem";
-      supportedFeatures = [ "big-parallel" ];
-      publicHostKey = "c3NoLWVkMjU1MTkgQUFBQUMzTnphQzFsWkRJMU5URTVBQUFBSUd2aVJCUzhCOHhnVEJLQXowOWo4akhNN2VOcmR1MU5FL0VrZGVhTFhEUmUgcm9vdEBsdWtlCg==";
-    }
-  ];
-  nix.settings.builders-use-substitutes = true;
 }
