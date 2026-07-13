@@ -2,7 +2,10 @@
 {
   security.acme = {
     acceptTerms = true;
-    defaults.email = "useless@useless.com";
+    defaults = {
+      email = "useless@useless.com";
+      dnsResolver = "1.1.1.1:53";
+    };
   };
 
   networking.firewall.allowedTCPPorts = [
