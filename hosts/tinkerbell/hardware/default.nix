@@ -32,6 +32,18 @@
   services.beesd.filesystems.crypted = {
     spec = "/nix";
     hashTableSizeMB = 2048;
+    verbosity = "crit";
+    extraOptions = [
+      "--loadavg-target"
+      "4.0"
+      "--thread-min"
+      "1"
+    ];
+  };
+  systemd.services."beesd@crypted".serviceConfig = {
+    CPUSchedulingPolicy = "idle";
+    CPUWeight = 10;
+    IOWeight = 10;
   };
 
   boot.binfmt = {
