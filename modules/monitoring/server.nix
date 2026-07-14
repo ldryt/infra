@@ -156,7 +156,7 @@ in
                       summary: "High Memory Pressure on {{ $labels.instance }}: {{ $value | printf \"%.1f\" }}% stall time"
 
                   - alert: LowDisk
-                    expr: (node_filesystem_avail_bytes{mountpoint=~"${allMountsRegex}"} / node_filesystem_size_bytes{mountpoint=~"${allMountsRegex}"}) * 100 < 15
+                    expr: (node_filesystem_avail_bytes{mountpoint=~"${allMountsRegex}"} / node_filesystem_size_bytes{mountpoint=~"${allMountsRegex}"}) * 100 < 8
                     for: 5m
                     labels:
                       severity: warning
@@ -164,7 +164,7 @@ in
                       summary: "Low disk on {{ $labels.instance }}{{ $labels.mountpoint }}: {{ $value | printf \"%.1f\" }}% free"
 
                   - alert: CriticalDisk
-                    expr: (node_filesystem_avail_bytes{mountpoint=~"${allMountsRegex}"} / node_filesystem_size_bytes{mountpoint=~"${allMountsRegex}"}) * 100 < 5
+                    expr: (node_filesystem_avail_bytes{mountpoint=~"${allMountsRegex}"} / node_filesystem_size_bytes{mountpoint=~"${allMountsRegex}"}) * 100 < 3
                     for: 2m
                     labels:
                       severity: critical
