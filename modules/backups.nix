@@ -75,7 +75,7 @@ in
                 type = types.listOf (types.enum (attrNames cfg.hosts));
                 default = [
                   "glouton"
-                  # "domus"
+                  "domus"
                   "gdrive"
                 ];
               };
