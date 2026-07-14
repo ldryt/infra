@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  pkgs-unstable,
   ...
 }:
 let
@@ -153,6 +152,13 @@ in
       enable = true;
       checkConfig = false;
       wrapperFeatures.gtk = true;
+      systemd = {
+        enable = true;
+        dbusImplementation = "broker";
+        extraCommands = lib.mkAfter [
+          "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"
+        ];
+      };
       extraSessionCommands = ''
         export SDL_VIDEODRIVER="wayland,x11,windows"
         export QT_QPA_PLATFORM="wayland;xcb"
@@ -205,13 +211,6 @@ in
             "Ctrl+Print" =
               "exec sh -c 'kill -2 $(pidof wf-recorder) || { test ! $? -eq 0 && wf-recorder -g \"$(slurp)\" --audio=\"$(pactl info | grep \"Default Sink\" | cut -d \" \" -f3)\".monitor -f ~/Pictures/Screenshots/recording_\"$(date +'%Y-%m-%d_%H:%M:%S')_$(hostname)\".mp4; }'";
           };
-        startup = [
-          {
-            # https://archive.is/CDQxh
-            command = "systemctl --user import-environment PATH && systemctl --user restart xdg-desktop-portal.service";
-          }
-          { command = "${pkgs.sway-audio-idle-inhibit}/bin/sway-audio-idle-inhibit"; }
-        ];
         input = {
           "type:touchpad" = {
             tap = "enabled";
