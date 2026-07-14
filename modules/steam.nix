@@ -2,6 +2,17 @@
 {
   programs.steam = {
     enable = true;
+    gamescopeSession = {
+      enable = true;
+      args = [
+        "--prefer-output"
+        "DP-3"
+        "-W"
+        "2560"
+        "-H"
+        "1440"
+      ];
+    };
     protontricks.enable = true;
     extraCompatPackages = [
       pkgs.proton-ge-bin
@@ -17,10 +28,5 @@
       "steam-run"
       "xow_dongle-firmware"
     ];
-
-  environment.systemPackages = with pkgs; [
-    steamcmd
-    steam-tui
-  ];
   hardware.xone.enable = true;
 }

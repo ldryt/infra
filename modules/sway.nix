@@ -1,11 +1,14 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
   security.polkit.enable = true;
   services.dbus.enable = true;
   programs.dconf.enable = true;
 
-  # Note: this should be in the home-manager config,
-  # but it only works here...
+  # sway config from hm, for tuigreet
+  services.displayManager.sessionPackages = [
+    config.home-manager.users.ldryt.wayland.windowManager.sway.package
+  ];
+  # darkman config in hm
   xdg.portal = {
     enable = true;
     xdgOpenUsePortal = true;
