@@ -5,6 +5,10 @@
     ../../../modules/dnscrypt-proxy.nix
   ];
 
+  ldryt-infra.persist.files = [
+    "/var/lib/NetworkManager/secret_key"
+  ];
+
   networking = {
     hostName = "tinkerbell";
     networkmanager = {
