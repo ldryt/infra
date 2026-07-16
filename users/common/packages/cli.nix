@@ -7,6 +7,7 @@
     iftop
     nethogs
     nvtopPackages.amd
+    amdgpu_top
     perf
     wavemon
     usbutils
@@ -27,6 +28,7 @@
     sd
     jq
     git-crypt
+    openssl
     nix-tree
     restic
     rclone
