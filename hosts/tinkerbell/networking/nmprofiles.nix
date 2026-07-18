@@ -39,7 +39,7 @@ let
   };
   mkEapWifi = ssid: id: pass: {
     "802-1x" = {
-      eap = "peap;";
+      eap = "peap";
       identity = id;
       password = pass;
       phase2-auth = "mschapv2";
