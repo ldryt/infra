@@ -24,29 +24,19 @@
     initrd.availableKernelModules = [
       "nvme"
       "xhci_pci"
-      "thunderbolt"
       "uas"
       "usb_storage"
-      "sd_mod"
     ];
     kernelModules = [
       "kvm-amd"
     ];
-    kernelParams = [
-      "clocksource=tsc"
-      "tsc=reliable"
-    ];
 
     loader.efi.canTouchEfiVariables = true;
 
-    loader.timeout = 1;
+    loader.timeout = 10;
     loader.systemd-boot = {
       configurationLimit = 20;
       consoleMode = "auto";
-      memtest86 = {
-        enable = true;
-        sortKey = "z_memtest86";
-      };
     };
 
     # Lanzaboote currently replaces the systemd-boot module
