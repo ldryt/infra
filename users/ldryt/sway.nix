@@ -24,22 +24,18 @@ in
   ];
 
   home.packages = with pkgs; [
-    # Screenshots
     slurp
     grim
     wf-recorder
-    # Wallpaper
     swaybg
-    # Clipboard
     wl-clipboard
     clipman
-    # Screen brightness
     brightnessctl
-    # Control media players
     playerctl
+    bzmenu
+    nerd-fonts.symbols-only
   ];
 
-  # Idle and locking management
   services.swayidle = {
     enable = true;
     extraArgs = [ "-d" ];
@@ -59,7 +55,6 @@ in
     ];
   };
 
-  # Specify cursor
   home.pointerCursor = {
     name = "Adwaita";
     package = pkgs.adwaita-icon-theme;
@@ -70,13 +65,10 @@ in
     };
   };
 
-  # A lightweight overlay volume/backlight/progress/anything bar
   services.wob.enable = true;
 
-  # Command-line utility and library for controlling media players that implement MPRIS
   services.playerctld.enable = true;
 
-  # Day/night gamma adjustments
   services.gammastep = {
     enable = true;
     enableVerboseLogging = true;
@@ -86,7 +78,6 @@ in
     longitude = 2.3;
   };
 
-  # Automatically switches dark-mode
   services.darkman = {
     enable = true;
     settings = {
@@ -106,6 +97,8 @@ in
       '';
     };
   };
+
+  services.mako.enable = true;
 
   xdg = {
     mimeApps = {
@@ -192,9 +185,11 @@ in
             wobSocket = "$XDG_RUNTIME_DIR/wob.sock";
             wpctlToWob = "&& wpctl get-volume @DEFAULT_SINK@ | awk '/\[MUTED\]/ {print 0; next} {print int($2 * 100)}' > ${wobSocket}";
             brightnessctlToWob = "| awk '/Current brightness:/ { print int($3 / 255 * 100)}' > ${wobSocket}";
+            dmenuFlags = "-i -l 10 -fn 'Symbols Nerd Font Mono 12'";
+            dmenuLauncher = "${pkgs.dmenu-wayland}/bin/dmenu-wl ${dmenuFlags} -p '{hint}'";
           in
           lib.mkOptionDefault {
-            "${mod}+d" = "exec ${pkgs.dmenu-wayland}/bin/dmenu-wl_run";
+            "${mod}+d" = "exec ${pkgs.dmenu-wayland}/bin/dmenu-wl_run ${dmenuFlags}";
             "${mod}+b" = "exec zen-beta";
             "${mod}+f" = "fullscreen";
             "${mod}+l" = "exec \"${lock-cmd}\"";
@@ -206,6 +201,12 @@ in
             "XF86AudioRaiseVolume" = "exec wpctl set-volume @DEFAULT_SINK@ 5%+ ${wpctlToWob}";
             "XF86MonBrightnessDown" = "exec brightnessctl set 5%- ${brightnessctlToWob}";
             "XF86MonBrightnessUp" = "exec brightnessctl set 5%+ ${brightnessctlToWob}";
+            "${mod}+Shift+b" =
+              "exec ${pkgs.bzmenu}/bin/bzmenu -l custom --launcher-command \"${dmenuLauncher}\" --interactive";
+            "${mod}+Shift+a" =
+              "exec ${pkgs.pwmenu}/bin/pwmenu -l custom --launcher-command \"${dmenuLauncher}\" --interactive";
+            "${mod}+Shift+o" =
+              "exec ${pkgs.pwmenu}/bin/pwmenu -l custom --launcher-command \"${dmenuLauncher}\" -m output-devices";
             "Print" =
               "exec grim -g \"$(slurp)\" - | tee ~/Pictures/Screenshots/screenshot_\"$(date +'%Y-%m-%d_%H:%M:%S')_$(hostname)\".jpg | wl-copy";
             "Ctrl+Print" =
