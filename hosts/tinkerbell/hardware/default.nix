@@ -35,7 +35,7 @@
     verbosity = "crit";
     extraOptions = [
       "--loadavg-target"
-      "4.0"
+      "1.0"
       "--thread-min"
       "1"
     ];
