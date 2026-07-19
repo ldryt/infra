@@ -35,6 +35,10 @@ terraform {
       source  = "valodim/desec"
       version = "~>0.6.1"
     }
+    scaleway = {
+      source  = "scaleway/scaleway"
+      version = "~>2.0"
+    }
   }
 }
 
@@ -59,34 +63,46 @@ locals {
     for r in local.dns_list : r
     if r.service == "mailserver"
   ])
-  servers = {
-    "silvermist" = {
-      id        = hcloud_server.silvermist_server.id
-      ip        = hcloud_primary_ip.silvermist_ipv4.ip_address
-      ssh_port  = 22
-      sops_file = "${path.module}/../hosts/silvermist/secrets.yaml"
+  servers = merge(
+    {
+      "silvermist" = {
+        id        = hcloud_server.silvermist_server.id
+        ip        = hcloud_primary_ip.silvermist_ipv4.ip_address
+        ssh_port  = 22
+        sops_file = "${path.module}/../hosts/silvermist/secrets.yaml"
+      },
+      "domus" = {
+        id        = "domus-2026-06-25"
+        ip        = "82.67.219.252"
+        ssh_port  = 34971
+        sops_file = "${path.module}/../hosts/domus/secrets.yaml"
+        luks      = true
+      },
+      "printer" = {
+        id         = "printer-id-2026-01-14"
+        ip         = "printer.local"
+        ssh_port   = 22
+        sops_file  = "${path.module}/../hosts/printer/secrets.yaml"
+        no_install = true
+        dns        = false
+      }
+      "luke" = {
+        id        = "luke-id-2025-12-12"
+        ip        = "129.151.231.71"
+        ssh_port  = 22
+        sops_file = "${path.module}/../hosts/luke/secrets.yaml"
+      }
     },
-    "domus" = {
-      id        = "domus-2026-06-25"
-      ip        = "82.67.219.252"
-      ssh_port  = 34971
-      sops_file = "${path.module}/../hosts/domus/secrets.yaml"
-      luks = true
-    },
-    "printer" = {
-      id         = "printer-id-2026-01-14"
-      ip         = "printer.local"
-      ssh_port   = 22
-      sops_file  = "${path.module}/../hosts/printer/secrets.yaml"
-      no_install = true
-    }
-    "luke" = {
-      id        = "luke-id-2025-12-12"
-      ip        = "129.151.231.71"
-      ssh_port  = 22
-      sops_file = "${path.module}/../hosts/luke/secrets.yaml"
-    }
-  }
+    var.vidia ? {
+      "vidia" = {
+        id        = one(scaleway_instance_server.vidia[*].id)
+        ip        = one(scaleway_instance_ip.vidia[*].address)
+        ssh_port  = 22
+        sops_file = "${path.module}/../hosts/vidia/secrets.yaml"
+        dns       = false
+      }
+    } : {}
+  )
 }
 
 
@@ -100,6 +116,23 @@ variable "desec_token" {
   sensitive = true
 }
 
+variable "scw_access_key" {
+  type      = string
+  sensitive = true
+}
+variable "scw_secret_key" {
+  type      = string
+  sensitive = true
+}
+variable "scw_project_id" {
+  type      = string
+  sensitive = true
+}
+
+variable "vidia" {
+  type    = bool
+  default = false
+}
 
 provider "sops" {}
 
@@ -109,4 +142,12 @@ provider "desec" {
 
 provider "hcloud" {
   token = var.hcloud_token
+}
+
+provider "scaleway" {
+  access_key = var.scw_access_key
+  secret_key = var.scw_secret_key
+  project_id = var.scw_project_id
+  region     = "fr-par"
+  zone       = "fr-par-2"
 }

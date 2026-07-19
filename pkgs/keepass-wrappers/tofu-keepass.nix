@@ -8,6 +8,15 @@ let
     "state_passphrase"
     "desec_token"
     "hcloud_token"
+    "ovh_application_key"
+    "ovh_application_secret"
+    "ovh_consumer_key"
+    "openstack_username"
+    "openstack_password"
+    "openstack_project_id"
+    "scw_access_key"
+    "scw_secret_key"
+    "scw_project_id"
   ];
   TF_VAR_ATTR = "notes";
 

@@ -19,7 +19,7 @@ module "deploy" {
   target_user        = "colon"
   deployment_ssh_key = nonsensitive(data.sops_file.secrets[each.key].data["nixos-anywhere.deploy.colon.sshKey"])
 
-  install_user    = "root"
+  install_user    = lookup(each.value, "install_user", "root")
   install_ssh_key = nonsensitive(data.sops_file.secrets[each.key].data["nixos-anywhere.install.sshKey"])
 
   extra_files_script = "${path.module}/deploy-keys.sh"
@@ -34,7 +34,7 @@ module "deploy" {
       "SERVER_SOPS_KEY" = nonsensitive(data.sops_file.secrets[each.key].data["nixos-anywhere.install.self-sops-key"])
     },
     lookup(each.value, "luks", false) ? {
-      "LUKS_PASSPHRASE" = nonsensitive(data.sops_file.secrets[each.key].data["disko.luks.passphrase"])
+      "LUKS_PASSPHRASE"   = nonsensitive(data.sops_file.secrets[each.key].data["disko.luks.passphrase"])
       "SECUREBOOT_BUNDLE" = nonsensitive(data.sops_file.secrets[each.key].data["secureboot.bundle"])
     } : {}
   )

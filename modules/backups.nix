@@ -94,6 +94,11 @@ in
                 default = [ ];
               };
 
+              exclude = mkOption {
+                type = types.listOf types.str;
+                default = [ ];
+              };
+
               backupPrepareCommand = mkOption {
                 type = types.nullOr types.str;
                 default = null;
@@ -171,6 +176,7 @@ in
                   inherit (repoCfg)
                     user
                     paths
+                    exclude
                     backupPrepareCommand
                     backupCleanupCommand
                     timerConfig

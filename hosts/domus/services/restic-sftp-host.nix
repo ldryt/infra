@@ -23,6 +23,7 @@ in
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGb0ZhjF+uNHovVeddQ7ZikoMl3DuQmajM3o6QYx3inm ldryt@tinkerbell"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIK/FQMGmX4ufehnHBclgRxiUK0uVd6fGFHxP8MiQmKo colon@luke"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMaNQCMEUxGla8VAR3X0ihEcZ5glaFWlQQMveDrQ9mQR colon@printer"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILDpUpSM4JpWGZajuofRk9GhirC4pQAB8auCEVoUZZRW backups@vidia"
     ];
   };
 
