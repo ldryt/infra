@@ -46,16 +46,14 @@ terraform {
 locals {
   dns = jsondecode(file("${path.module}/../dns.json"))
   dns_list = flatten([
-    for zone, servers in local.dns : [
-      for name, services in servers : [
-        for service, subname in services : {
-          fqdn    = "${subname}.${zone}"
-          zone    = zone
-          service = service
-          subname = subname
-          ip      = local.servers[name].ip
-        }
-      ]
+    for zone, services in local.dns : [
+      for service, v in services : {
+        service = service
+        subname = v[0]
+        fqdn    = "${v[0]}.${zone}"
+        zone    = zone
+        ips     = [for host in slice(v, 1, length(v)) : local.servers[host].ip]
+      }
     ]
   ])
   dns_records = { for r in local.dns_list : r.fqdn => r }

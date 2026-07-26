@@ -1,31 +1,88 @@
 {
   "ldryt.dev": {
-    "luke": {
-      "nix-cache": "nix-cache"
-    },
-    "silvermist": {
-      "ldryt-web": "www",
-      "authelia": "auth",
-      "vaultwarden": "pass",
-      "mailserver": "mx",
-      "mailserver-autoconfig": "autoconfig",
-      "immich": "pics",
-      "ocis": "files",
-      "radicale": "cal",
-      "grafana": "monitor",
-      "coturn": "ice",
-      "firefox-syncserver": "firesync",
-      "umami": "sweet",
-      "owntracks": "ot",
-      "printer": "printer",
-      "calibre-web": "calibre",
-      "farmlab": "farmlab",
-      "wallabag": "wallabag"
-    }
+    "nix-cache": [
+      "nix-cache",
+      "luke"
+    ],
+    "ldryt-web": [
+      "www",
+      "silvermist"
+    ],
+    "authelia": [
+      "auth",
+      "silvermist"
+    ],
+    "vaultwarden": [
+      "pass",
+      "silvermist"
+    ],
+    "mailserver": [
+      "mx",
+      "silvermist"
+    ],
+    "mailserver-autoconfig": [
+      "autoconfig",
+      "silvermist"
+    ],
+    "immich": [
+      "pics",
+      "silvermist"
+    ],
+    "ocis": [
+      "files",
+      "silvermist"
+    ],
+    "radicale": [
+      "cal",
+      "silvermist"
+    ],
+    "grafana": [
+      "monitor",
+      "silvermist"
+    ],
+    "coturn": [
+      "ice",
+      "silvermist"
+    ],
+    "firefox-syncserver": [
+      "firesync",
+      "silvermist"
+    ],
+    "umami": [
+      "sweet",
+      "silvermist"
+    ],
+    "owntracks": [
+      "ot",
+      "silvermist"
+    ],
+    "printer": [
+      "printer",
+      "silvermist"
+    ],
+    "calibre-web": [
+      "calibre",
+      "silvermist"
+    ],
+    "adguardhome": [
+      "dns",
+      "luke",
+      "silvermist",
+      "domus"
+    ],
+    "farmlab": [
+      "farmlab",
+      "silvermist"
+    ],
+    "wallabag": [
+      "wallabag",
+      "silvermist"
+    ]
   },
   "lucasladreyt.eu": {
-    "silvermist": {
-      "eu-web": "www"
-    }
+    "eu-web": [
+      "www",
+      "silvermist"
+    ]
   }
 }

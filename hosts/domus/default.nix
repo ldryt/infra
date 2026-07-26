@@ -5,9 +5,11 @@
     ./networking.nix
     ./users.nix
 
+    ./services/adguardhome.nix
     ./services/syncthing.nix
     ./services/restic-sftp-host.nix
 
+    ../../modules/nginx.nix
     ../../modules/openssh.nix
     ../../modules/nix-settings.nix
     ../../modules/fail2ban.nix

@@ -15,10 +15,8 @@ with lib;
     let
       dns = builtins.fromJSON (builtins.readFile ../dns.json);
 
-      getServices = hosts: foldl' (acc: hostRecords: acc // hostRecords) { } (attrValues hosts);
-
       recordsByZone = mapAttrs (
-        zoneName: hosts: mapAttrs (_: subdomain: "${subdomain}.${zoneName}") (getServices hosts)
+        zone: services: mapAttrs (_: v: "${builtins.head v}.${zone}") services
       ) dns;
 
       allRecords = foldl' (acc: zoneRecords: acc // zoneRecords) { } (attrValues recordsByZone);

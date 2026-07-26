@@ -5,6 +5,7 @@
     ./networking.nix
     ./users.nix
 
+    ./services/adguardhome.nix
     ./services/authelia
     # ./services/farmlab-tunnel.nix
     ./services/coturn.nix

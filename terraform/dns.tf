@@ -1,13 +1,13 @@
 resource "desec_rrset" "root_web_aliases" {
   for_each = {
-    for r in local.dns_list : r.zone => r.ip
+    for r in local.dns_list : r.zone => r.ips
     if r.subname == "www"
   }
 
   domain  = each.key
   subname = ""
   type    = "A"
-  records = [each.value]
+  records = each.value
   ttl     = 86400
 }
 
@@ -27,7 +27,7 @@ resource "desec_rrset" "services_subdomains" {
   domain  = each.value.zone
   subname = each.value.subname
   type    = "A"
-  records = [each.value.ip]
+  records = each.value.ips
   ttl     = 86400
 }
 
