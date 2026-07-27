@@ -2,8 +2,7 @@
 {
   imports = [
     ./hardware
-    ./services/streaming.nix
-    ./services/backups.nix
+    ./services/h100-380-llama.nix
 
     ../../modules/nix-settings.nix
     ../../modules/openssh.nix
@@ -24,16 +23,6 @@
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIF6wYQsWcmEu7zyET74f4rJEjeGVsBn91OIQXc2lV1gG colon@vidia"
     ];
   };
-
-  users.users.ldryt = {
-    isNormalUser = true;
-    uid = 1000;
-  };
-
-  ldryt-infra.persist.users.ldryt.directories = [
-    ".local/share/Steam"
-    ".config/sunshine"
-  ];
 
   networking = {
     enableIPv6 = false;

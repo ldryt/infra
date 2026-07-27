@@ -139,7 +139,12 @@ in
 
     networking.firewall.allowedTCPPorts = [ 853 ];
 
-    ldryt-infra.persist.directories = [ "/var/lib/AdGuardHome" ];
+    ldryt-infra.persist.directories = [
+      {
+        directory = "/var/lib/private/AdGuardHome";
+        mode = "0700";
+      }
+    ];
 
     sops.secrets."services/adguardhome/acme/env" = { };
 

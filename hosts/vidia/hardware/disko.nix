@@ -40,6 +40,31 @@
         };
       };
     };
+    disk.ssd = {
+      device = "/dev/nvme0n1";
+      type = "disk";
+      content = {
+        type = "gpt";
+        partitions = {
+          tmp = {
+            size = "128G";
+            content = {
+              type = "filesystem";
+              format = "ext4";
+              mountpoint = "/tmp";
+            };
+          };
+          models = {
+            size = "100%";
+            content = {
+              type = "filesystem";
+              format = "ext4";
+              mountpoint = "/models";
+            };
+          };
+        };
+      };
+    };
     nodev."/" = {
       fsType = "tmpfs";
       mountOptions = [

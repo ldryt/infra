@@ -93,7 +93,8 @@ provider "registry.opentofu.org/scaleway/scaleway" {
 }
 
 provider "registry.opentofu.org/terraform-provider-openstack/openstack" {
-  version = "3.4.0"
+  version     = "3.4.0"
+  constraints = "~> 3.0"
   hashes = [
     "h1:MVSoVvhjbu7s1pfYfsiYED8A++XfAoyOlSX1x9PW68E=",
     "zh:11b3c88e24197a29b13cf5ab41771944bd16707b561645323e8cbb4f1da00b7b",

@@ -14,7 +14,6 @@ module "deploy" {
   instance_id     = each.value.id
   target_host     = each.value.ip
   target_port     = each.value.ssh_port
-  build_on_remote = false
 
   target_user        = "colon"
   deployment_ssh_key = nonsensitive(data.sops_file.secrets[each.key].data["nixos-anywhere.deploy.colon.sshKey"])
@@ -40,6 +39,7 @@ module "deploy" {
   )
 
   debug_logging = true
+  build_on_remote = true
 }
 
 module "build" {

@@ -39,6 +39,10 @@ terraform {
       source  = "scaleway/scaleway"
       version = "~>2.0"
     }
+    openstack = {
+      source  = "terraform-provider-openstack/openstack"
+      version = "~>3.0"
+    }
   }
 }
 
@@ -76,14 +80,14 @@ locals {
         sops_file = "${path.module}/../hosts/domus/secrets.yaml"
         luks      = true
       },
-      "printer" = {
-        id         = "printer-id-2026-01-14"
-        ip         = "printer.local"
-        ssh_port   = 22
-        sops_file  = "${path.module}/../hosts/printer/secrets.yaml"
-        no_install = true
-        dns        = false
-      }
+      # "printer" = {
+      #   id         = "printer-id-2026-01-14"
+      #   ip         = "printer.local"
+      #   ssh_port   = 22
+      #   sops_file  = "${path.module}/../hosts/printer/secrets.yaml"
+      #   no_install = true
+      #   dns        = false
+      # }
       "luke" = {
         id        = "luke-id-2025-12-12"
         ip        = "129.151.231.71"
@@ -92,12 +96,13 @@ locals {
       }
     },
     var.vidia ? {
-      "vidia" = {
-        id        = one(scaleway_instance_server.vidia[*].id)
-        ip        = one(scaleway_instance_ip.vidia[*].address)
-        ssh_port  = 22
-        sops_file = "${path.module}/../hosts/vidia/secrets.yaml"
-        dns       = false
+        "vidia" = {
+        id           = one(openstack_compute_instance_v2.vidia[*].id)
+        ip           = one(openstack_compute_instance_v2.vidia[*].access_ip_v4)
+        ssh_port     = 22
+        sops_file    = "${path.module}/../hosts/vidia/secrets.yaml"
+        install_user = "debian"
+        dns          = false
       }
     } : {}
   )
@@ -148,4 +153,9 @@ provider "scaleway" {
   project_id = var.scw_project_id
   region     = "fr-par"
   zone       = "fr-par-2"
+}
+
+provider "openstack" {
+  auth_url    = "https://auth.cloud.ovh.net/v3/" # Authentication URL
+  domain_name = "default" # Domain name - Always at 'default' for OVHcloud
 }
