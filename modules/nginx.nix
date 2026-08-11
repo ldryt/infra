@@ -4,7 +4,7 @@
     acceptTerms = true;
     defaults = {
       email = "useless@useless.com";
-      dnsResolver = "1.1.1.1:53";
+      dnsResolver = "ns1.desec.io:53";
     };
   };
 

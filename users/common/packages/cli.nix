@@ -18,6 +18,7 @@
     iperf3
     iw
     wget
+    dig
 
     opentofu
     sops

@@ -72,8 +72,8 @@ in
       port = 43000;
       settings = {
         dns = {
-          bind_hosts = [ "0.0.0.0" ];
-          port = 53;
+          bind_hosts = [ "127.0.0.1" ];
+          port = 0;
           anonymize_client_ip = true;
 
           use_http3_upstreams = true;
