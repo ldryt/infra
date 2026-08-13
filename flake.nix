@@ -49,7 +49,6 @@
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     impermanence.url = "github:nix-community/impermanence";
     mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-26.05";
-    stm32cubeide.url = "github:ldryt/stm32cubeide-nix";
   };
   outputs =
     {
@@ -66,7 +65,6 @@
       nixos-raspberrypi,
       impermanence,
       mailserver,
-      stm32cubeide,
       ...
     }@inputs:
     let
