@@ -40,6 +40,7 @@ in
             {
               name = "systemd";
               tag = "journal";
+              read_from_tail = "on";
             }
           ];
           outputs = [
