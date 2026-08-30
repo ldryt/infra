@@ -3,7 +3,7 @@
   security.acme = {
     acceptTerms = true;
     defaults = {
-      email = "useless@useless.com";
+      email = "security@ldryt.dev";
       dnsResolver = "ns1.desec.io:53";
     };
   };
