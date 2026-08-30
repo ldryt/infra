@@ -1,9 +1,5 @@
 {
   "ldryt.dev": {
-    "nix-cache": [
-      "nix-cache",
-      "luke"
-    ],
     "ldryt-web": [
       "www",
       "silvermist"

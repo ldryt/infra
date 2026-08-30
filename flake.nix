@@ -1,16 +1,4 @@
 {
-  nixConfig = {
-    extra-substituters = [
-      "https://nix-cache.ldryt.dev?priority=100"
-      "https://nix-community.cachix.org?priority=50"
-      "https://s3.cri.epita.fr/cri-nix-cache.s3.cri.epita.fr?priority=90"
-    ];
-    extra-trusted-public-keys = [
-      "nix-cache.ldryt.dev:LcILZm4hXqCkD31rz94/W+hhvap6ZZJZn9nt3gqvlDg="
-      "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      "cache.nix.cri.epita.fr:qDIfJpZWGBWaGXKO3wZL1zmC+DikhMwFRO4RVE6VVeo="
-    ];
-  };
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
@@ -149,29 +137,5 @@
             ];
           };
         };
-
-      ghaMatrix =
-        (builtins.map (name: {
-          inherit name;
-          platform = self.nixosConfigurations.${name}.config.nixpkgs.system;
-          target = ".#nixosConfigurations.${name}.config.system.build.toplevel";
-        }) (builtins.attrNames self.nixosConfigurations))
-        ++ (builtins.map (name: {
-          inherit name;
-          platform = self.homeConfigurations.${name}.pkgs.stdenv.hostPlatform.system;
-          target = ".#homeConfigurations.\\\"${name}\\\".activationPackage";
-        }) (builtins.attrNames self.homeConfigurations))
-        ++ (builtins.concatLists (
-          builtins.map (
-            platform:
-            let
-              isCompatible = name: (self.packages.${platform}.${name}.system) == platform;
-            in
-            builtins.map (name: {
-              inherit name platform;
-              target = ".#packages.${platform}.${name}";
-            }) (builtins.filter isCompatible (builtins.attrNames self.packages.${platform}))
-          ) (builtins.attrNames self.packages)
-        ));
     };
 }
