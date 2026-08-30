@@ -41,7 +41,7 @@ in
           publicKey = "CzUHVmitMA/I/j7p0E0pW2IYtVx7r+ofgUGMC5roEnk=";
           roles = [ "server" ];
         };
-        luke = {
+        domus = {
           ip = "10.114.44.2";
           publicKey = "+OpKi943ZB5i18dFxBmjV4Eu5t9fv6AcMJyYKq272kA=";
           roles = [ "ml" ];
@@ -69,11 +69,11 @@ in
       };
       clipModel = lib.mkOption {
         type = lib.types.str;
-        default = "ViT-SO400M-16-SigLIP2-384__webli";
+        default = "ViT-B-16-SigLIP2__webli";
       };
       ocrModel = lib.mkOption {
         type = lib.types.str;
-        default = "PP-OCRv5_server";
+        default = "PP-OCRv5_mobile";
       };
       facialModel = lib.mkOption {
         type = lib.types.str;
@@ -184,6 +184,13 @@ in
           };
         };
 
+        systemd.services.immich-server.serviceConfig = {
+          MemoryHigh = "1G";
+          MemoryMax = "1536M";
+          MemorySwapMax = "512M";
+          OOMPolicy = "kill";
+        };
+
         # https://github.com/NixOS/nixpkgs/issues/369379#issuecomment-3082247079
         sops.secrets."services/immich/oidc/clientSecret".owner = config.services.immich.user;
         sops.secrets."services/immich/mail/clearPassword".owner = config.services.immich.user;
@@ -235,9 +242,9 @@ in
               job = {
                 thumbnailGeneration.concurrency = 4;
                 videoConversion.concurrency = 2;
-                smartSearch.concurrency = 2;
-                faceDetection.concurrency = 2;
-                ocr.concurrency = 2;
+                smartSearch.concurrency = 1;
+                faceDetection.concurrency = 1;
+                ocr.concurrency = 1;
               };
               logging = {
                 enabled = true;
@@ -250,7 +257,7 @@ in
                   maxResolution = 1280;
                 };
                 facialRecognition.modelName = cfg.ml.facialModel;
-                availabilityChecks.timeout = 5000;
+                availabilityChecks.timeout = 30000;
               };
               newVersionCheck.enabled = false;
               oauth = {

@@ -4,5 +4,6 @@
   modules = [
     inputs.disko.nixosModules.disko
     inputs.lanzaboote.nixosModules.lanzaboote
+    inputs.nixarr.nixosModules.default
   ];
 }

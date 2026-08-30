@@ -77,6 +77,14 @@
     "wallabag": [
       "wallabag",
       "silvermist"
+    ],
+    "jellyfin": [
+      "watch",
+      "domus"
+    ],
+    "seerr": [
+      "request.watch",
+      "domus"
     ]
   },
   "lucasladreyt.eu": {

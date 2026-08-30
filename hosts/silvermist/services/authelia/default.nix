@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 let
   autheliaInternalAddress = "localhost:44092";
   dataDir = "/var/lib/authelia-${config.services.authelia.instances.main.name}";
@@ -9,6 +14,7 @@ in
     ./immich.nix
     # ./paperless.nix
     ./grafana.nix
+    ./media.nix
   ];
 
   ldryt-infra.persist.directories = [

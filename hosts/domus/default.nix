@@ -6,6 +6,7 @@
     ./users.nix
 
     ./services/adguardhome.nix
+    ./services/media.nix
     ./services/syncthing.nix
     ./services/restic-sftp-host.nix
 
