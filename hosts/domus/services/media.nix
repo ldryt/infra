@@ -53,14 +53,23 @@ in
     };
   };
 
-  ldryt-infra.persist.directories = [
-    stateDir
-    {
-      directory = mediaDir;
-      mode = "2775";
-      group = "media";
-    }
-  ];
+  ldryt-infra.persist.directories = [ stateDir ];
+
+  fileSystems."${mediaDir}" = {
+    device = "/dev/mapper/media";
+    fsType = "ext4";
+    options = [
+      "nofail"
+      "x-systemd.automount"
+      "x-systemd.device-timeout=10s"
+      "x-systemd.idle-timeout=5min"
+    ];
+  };
+
+  systemd.tmpfiles.rules = [ "d ${mediaDir} 2775 root media -" ];
+  systemd.services.radarr.unitConfig.RequiresMountsFor = [ mediaDir ];
+  systemd.services.sonarr.unitConfig.RequiresMountsFor = [ mediaDir ];
+  systemd.services.transmission.unitConfig.RequiresMountsFor = [ mediaDir ];
 
   nixarr = {
     enable = true;
@@ -143,6 +152,7 @@ in
 
   systemd.services.jellyfin = {
     environment.JELLYFIN_SSO_CONFIG_FILE = flowfinConfig;
+    unitConfig.RequiresMountsFor = [ mediaDir ];
     serviceConfig.ExecStartPre = [
       (pkgs.writeShellScript "install-flowfin" ''
         mkdir -p ${stateDir}/jellyfin/data/plugins
