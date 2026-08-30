@@ -252,6 +252,7 @@ in
                   timeout: 5s
                   http:
                     valid_status_codes: [401, 403, 302]
+                    follow_redirects: false
                 tcp_connect:
                   prober: tcp
                   timeout: 5s
