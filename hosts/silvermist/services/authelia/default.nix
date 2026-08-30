@@ -139,9 +139,17 @@ in
   };
 
   sops.secrets."backups/restic/repos/authelia/password" = { };
+  # Online SQLite snapshot so the backup is consistent without stopping Authelia.
   ldryt-infra.backups.repos.authelia = {
     passwordFile = config.sops.secrets."backups/restic/repos/authelia/password".path;
-    paths = [ config.services.authelia.instances.main.settings.storage.local.path ];
+    paths = [ "${dataDir}/backup" ];
+    backupPrepareCommand = ''
+      ${pkgs.coreutils}/bin/mkdir -p ${dataDir}/backup
+      ${pkgs.sqlite}/bin/sqlite3 ${config.services.authelia.instances.main.settings.storage.local.path} ".backup '${dataDir}/backup/db.sqlite3'"
+    '';
+    backupCleanupCommand = ''
+      ${pkgs.coreutils}/bin/rm -rf ${dataDir}/backup
+    '';
   };
 
   services.redis.servers."authelia-${config.services.authelia.instances.main.name}" = {
