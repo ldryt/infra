@@ -124,6 +124,7 @@ in
       settings-sync.transmission.enable = true;
     };
   };
+  services.flaresolverr.enable = true;
 
   hardware.graphics.enable = true;
   users.users.jellyfin.extraGroups = [
