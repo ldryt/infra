@@ -7,6 +7,7 @@
 
     ./services/adguardhome.nix
     ./services/media.nix
+    ./services/immich-machine-learning.nix
     ./services/syncthing.nix
     ./services/restic-sftp-host.nix
 
