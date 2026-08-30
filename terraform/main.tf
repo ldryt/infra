@@ -88,12 +88,12 @@ locals {
       #   no_install = true
       #   dns        = false
       # }
-      "luke" = {
-        id        = "luke-id-2025-12-12"
-        ip        = "129.151.231.71"
-        ssh_port  = 22
-        sops_file = "${path.module}/../hosts/luke/secrets.yaml"
-      }
+      # "luke" = {
+      #   id        = "luke-id-2025-12-12"
+      #   ip        = "129.151.231.71"
+      #   ssh_port  = 22
+      #   sops_file = "${path.module}/../hosts/luke/secrets.yaml"
+      # }
     },
     var.vidia ? {
         "vidia" = {

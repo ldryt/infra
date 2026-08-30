@@ -16,11 +16,6 @@ rec {
         pubKey = "nuR6GcYBc1yejUQg0rVJXbsKl2+Y4GwjIwnMRzyavVs=";
         isEphemeral = true;
       };
-      luke = {
-        ip = "10.44.128.3";
-        pubKey = "mpUwzziqZqgtgdrWxlkqISi+LLssmmnP+gHoBRVRhm0=";
-        isEphemeral = false;
-      };
       printer = {
         ip = "10.44.128.5";
         pubKey = "oIj9Q5nKQ0BSCVzlbu6lAx97l9Kzu7Vltlp7jqVSGjc=";
