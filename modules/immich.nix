@@ -248,7 +248,7 @@ in
               };
               logging = {
                 enabled = true;
-                level = "debug";
+                level = "log";
               };
               machineLearning = {
                 clip.modelName = cfg.ml.clipModel;
