@@ -104,9 +104,9 @@ in
     device = "/dev/mapper/media";
     fsType = "ext4";
     options = [
+      "defaults"
       "nofail"
       "x-systemd.automount"
-      "x-systemd.device-timeout=10s"
       "x-systemd.idle-timeout=5min"
     ];
   };

@@ -11,6 +11,8 @@
     options = [
       "defaults"
       "nofail"
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=5min"
       "subvol=domus-syncthing"
     ];
   };
