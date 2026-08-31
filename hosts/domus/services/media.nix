@@ -1,11 +1,18 @@
 {
   config,
+  lib,
   pkgs,
   ...
 }:
 let
   mediaDir = "/mnt/media";
   stateDir = "/var/lib/nixarr";
+  mediaAdminApps = {
+    radarr = config.services.radarr.settings.server.port;
+    sonarr = config.services.sonarr.settings.server.port;
+    prowlarr = config.services.prowlarr.settings.server.port;
+    transmission = config.services.transmission.settings.rpc-port;
+  };
 
   seerrOidc = pkgs.seerr.overrideAttrs (
     finalAttrs: _: {
@@ -216,7 +223,79 @@ in
     mv "$settings_file.new" "$settings_file"
   '';
 
-  services.prowlarr.settings.auth.required = "DisabledForLocalAddresses";
-  services.sonarr.settings.auth.required = "DisabledForLocalAddresses";
-  services.radarr.settings.auth.required = "DisabledForLocalAddresses";
+  services.nginx.virtualHosts = lib.mapAttrs' (
+    name: port:
+    lib.nameValuePair config.ldryt-infra.dns.records.${name} {
+      enableACME = true;
+      forceSSL = true;
+      extraConfig = ''
+        location /internal/authelia/authz {
+          internal;
+          proxy_pass https://${config.ldryt-infra.dns.records.authelia}/api/authz/auth-request;
+
+          proxy_set_header X-Original-Method $request_method;
+          proxy_set_header X-Original-URL $scheme://$http_host$request_uri;
+          proxy_set_header X-Forwarded-For $remote_addr;
+          proxy_set_header Content-Length "";
+          proxy_set_header Connection "";
+
+          proxy_pass_request_body off;
+          proxy_ssl_server_name on;
+          proxy_ssl_name ${config.ldryt-infra.dns.records.authelia};
+          proxy_ssl_verify on;
+          proxy_ssl_trusted_certificate ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt;
+          proxy_next_upstream error timeout invalid_header http_500 http_502 http_503;
+          proxy_redirect http:// $scheme://;
+          proxy_http_version 1.1;
+          proxy_cache_bypass $cookie_session;
+          proxy_no_cache $cookie_session;
+          proxy_buffers 4 32k;
+          client_body_buffer_size 128k;
+
+          send_timeout 5m;
+          proxy_read_timeout 240;
+          proxy_send_timeout 240;
+          proxy_connect_timeout 240;
+        }
+      '';
+
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:${toString port}";
+        proxyWebsockets = true;
+        extraConfig = ''
+          auth_request /internal/authelia/authz;
+
+          auth_request_set $user $upstream_http_remote_user;
+          auth_request_set $groups $upstream_http_remote_groups;
+          auth_request_set $name $upstream_http_remote_name;
+          auth_request_set $email $upstream_http_remote_email;
+
+          proxy_set_header Remote-User $user;
+          proxy_set_header Remote-Groups $groups;
+          proxy_set_header Remote-Email $email;
+          proxy_set_header Remote-Name $name;
+
+          auth_request_set $redirection_url $upstream_http_location;
+          error_page 401 =302 $redirection_url;
+        '';
+      };
+    }
+  ) mediaAdminApps;
+
+  ldryt-infra.monitoring.blackbox.targets.http_protected = lib.mapAttrsToList (
+    name: _: "https://${config.ldryt-infra.dns.records.${name}}/"
+  ) mediaAdminApps;
+
+  services.prowlarr.settings = {
+    auth.required = "DisabledForLocalAddresses";
+    server.bindaddress = "127.0.0.1";
+  };
+  services.sonarr.settings = {
+    auth.required = "DisabledForLocalAddresses";
+    server.bindaddress = "127.0.0.1";
+  };
+  services.radarr.settings = {
+    auth.required = "DisabledForLocalAddresses";
+    server.bindaddress = "127.0.0.1";
+  };
 }

@@ -73,6 +73,22 @@
       "wallabag",
       "silvermist"
     ],
+    "radarr": [
+      "radarr.watch",
+      "domus"
+    ],
+    "sonarr": [
+      "sonarr.watch",
+      "domus"
+    ],
+    "prowlarr": [
+      "prowlarr.watch",
+      "domus"
+    ],
+    "transmission": [
+      "transmission.watch",
+      "domus"
+    ],
     "jellyfin": [
       "watch",
       "domus"
