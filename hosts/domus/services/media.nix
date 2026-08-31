@@ -243,6 +243,7 @@ in
           proxy_ssl_server_name on;
           proxy_ssl_name ${config.ldryt-infra.dns.records.authelia};
           proxy_ssl_verify on;
+          proxy_ssl_verify_depth 2;
           proxy_ssl_trusted_certificate ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt;
           proxy_next_upstream error timeout invalid_header http_500 http_502 http_503;
           proxy_redirect http:// $scheme://;
