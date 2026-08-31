@@ -185,9 +185,8 @@ in
         };
 
         systemd.services.immich-server.serviceConfig = {
-          MemoryHigh = "1G";
           MemoryMax = "1536M";
-          MemorySwapMax = "512M";
+          MemorySwapMax = 0;
           OOMPolicy = "kill";
         };
 
