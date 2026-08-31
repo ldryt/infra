@@ -9,8 +9,9 @@
     ../common/git.nix
     ../common/vscode.nix
     ../common/zen-browser.nix
+    ../common/ghostty.nix
 
-    ./sway.nix
+    ./gnome.nix
     ./packages.nix
     ./firefox.nix
     ./thunderbird.nix

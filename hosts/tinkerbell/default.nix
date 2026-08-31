@@ -11,8 +11,7 @@
     ./services/docker.nix
     ./services/libvirt.nix
 
-    ../../modules/greetd.nix
-    ../../modules/sway.nix
+    ../../modules/gnome.nix
     ../../modules/geoclue.nix
     ../../modules/steam.nix
     ../../modules/nix-settings.nix

@@ -10,7 +10,6 @@
         two-finger-scrolling-enabled = true;
       };
       "org/gnome/desktop/interface" = {
-        text-scaling-factor = 1.2;
         color-scheme = "prefer-dark";
         enable-hot-corners = true;
       };
@@ -31,8 +30,8 @@
         enabled-extensions = [ "launch-new-instance@gnome-shell-extensions.gcampax.github.com" ];
         favorite-apps = [
           "org.gnome.Nautilus.desktop"
-          "org.gnome.Console.desktop"
-          "firefox.desktop"
+          "com.mitchellh.ghostty.desktop"
+          "zen-browser.desktop"
           "thunderbird.desktop"
           "org.gnome.Calculator.desktop"
           "org.gnome.TextEditor.desktop"
@@ -51,9 +50,6 @@
         toggle-fullscreen = [ "<Super>f" ];
         switch-applications = [ ];
         switch-windows = [ "<Alt>Tab" ];
-      };
-      "org/gnome/Console" = {
-        font-scale = 1.15;
       };
     };
   };
