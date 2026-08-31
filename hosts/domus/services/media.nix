@@ -95,6 +95,7 @@ in
     content = builtins.toJSON {
       main = {
         applicationUrl = "https://${config.ldryt-infra.dns.records.seerr}";
+        mediaServerType = 4; # NOT_CONFIGURED
         oidcLogin = true;
       };
       oidc.providers = [
