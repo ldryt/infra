@@ -50,8 +50,12 @@
     mode = "0600";
     text = ''
       # <volume-name> <encrypted-device> [key-file] [options]
-      2a37-data UUID=2a37da19-450e-4119-adfa-7cb42edb76ba ${config.sops.secrets."system/2a37-key".path}
-      media UUID=9a4a7e6c-bad1-4b1e-84d1-60d146b64e2a ${config.sops.secrets."system/media-key".path}
+      2a37-data UUID=2a37da19-450e-4119-adfa-7cb42edb76ba ${
+        config.sops.secrets."system/2a37-key".path
+      } nofail,x-systemd.device-timeout=5s
+      media UUID=9a4a7e6c-bad1-4b1e-84d1-60d146b64e2a ${
+        config.sops.secrets."system/media-key".path
+      } nofail,x-systemd.device-timeout=5s
     '';
   };
 

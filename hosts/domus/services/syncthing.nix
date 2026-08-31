@@ -1,4 +1,8 @@
-{ config, ... }:
+{
+  config,
+  lib,
+  ...
+}:
 {
   sops.secrets."services/syncthing/key".owner = config.services.syncthing.user;
   sops.secrets."services/syncthing/cert".owner = config.services.syncthing.user;
@@ -12,6 +16,7 @@
       "defaults"
       "nofail"
       "x-systemd.automount"
+      "x-systemd.device-timeout=5s"
       "x-systemd.idle-timeout=5min"
       "subvol=domus-syncthing"
     ];
@@ -72,5 +77,10 @@
         );
     };
   };
-  systemd.services.syncthing.environment.STNODEFAULTFOLDER = "true";
+
+  users.users.${config.services.syncthing.user}.createHome = lib.mkForce false;
+  systemd.services.syncthing = {
+    environment.STNODEFAULTFOLDER = "true";
+    unitConfig.ConditionPathExists = "/dev/disk/by-uuid/2a37da19-450e-4119-adfa-7cb42edb76ba";
+  };
 }
