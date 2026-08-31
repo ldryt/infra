@@ -37,6 +37,7 @@
 
       # Markdown
       marksman
+      mdformat
 
       # HCL
       terraform-ls
@@ -153,6 +154,19 @@
             command = "black";
             args = [
               "--quiet"
+              "-"
+            ];
+          };
+          auto-format = true;
+        }
+        {
+          name = "markdown";
+          language-servers = [ "marksman" ];
+          formatter = {
+            command = "mdformat";
+            args = [
+              "--wrap"
+              "95"
               "-"
             ];
           };
