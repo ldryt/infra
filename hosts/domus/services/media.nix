@@ -7,6 +7,24 @@ let
   mediaDir = "/mnt/media";
   stateDir = "/var/lib/nixarr";
 
+  seerrOidc = pkgs.seerr.overrideAttrs (
+    finalAttrs: _: {
+      version = "preview-new-oidc-0bfd615";
+      src = pkgs.fetchFromGitHub {
+        owner = "seerr-team";
+        repo = "seerr";
+        rev = "0bfd615c0dcd13b30b15bdf0aa98e23669f55cd2";
+        hash = "sha256-YPpicQlArAqWnRbUbtUYlwTJk0AGxcaeQmaYNT0vogo=";
+      };
+      pnpmDeps = pkgs.fetchPnpmDeps {
+        inherit (finalAttrs) pname version src;
+        pnpm = pkgs.pnpm_10.override { nodejs-slim = pkgs.nodejs-slim_22; };
+        fetcherVersion = 3;
+        hash = "sha256-7nBkeXGJfDRSvNesOjOK+Mtzp6SlBvbytyfsQl9eh/Y=";
+      };
+    }
+  );
+
   flowfin = pkgs.fetchzip {
     url = "https://github.com/Flowfin/jellyfin-plugin-sso/releases/download/4.3.0-beta.52/community-sso-for-jellyfin_4.3.0.52.zip";
     hash = "sha256-gxPX5uvfvt41Gf0jF860HVKZp60+GcOvfwWKmhI3XAc=";
@@ -40,8 +58,6 @@ let
       };
     }
   );
-  autheliaDomain = config.ldryt-infra.dns.records.authelia;
-  seerrDomain = config.ldryt-infra.dns.records.seerr;
   acmeMail = "security@ldryt.dev";
 in
 {
@@ -50,6 +66,28 @@ in
     "services/media/jellyfin/oidc_secret" = {
       owner = "jellyfin";
       restartUnits = [ "jellyfin.service" ];
+    };
+    "services/media/seerr/oidc_secret" = { };
+  };
+  sops.templates."seerr-oidc.json" = {
+    owner = "seerr";
+    restartUnits = [ "seerr.service" ];
+    content = builtins.toJSON {
+      main = {
+        applicationUrl = "https://${config.ldryt-infra.dns.records.seerr}";
+        oidcLogin = true;
+      };
+      oidc.providers = [
+        {
+          slug = "authelia";
+          name = "Authelia";
+          issuerUrl = "https://${config.ldryt-infra.dns.records.authelia}";
+          clientId = "seerr";
+          clientSecret = config.sops.placeholder."services/media/seerr/oidc_secret";
+          scopes = "openid profile email groups";
+          newUserLogin = true;
+        }
+      ];
     };
   };
 
@@ -99,6 +137,7 @@ in
 
     seerr = {
       enable = true;
+      package = seerrOidc;
       expose.https = {
         enable = true;
         domainName = config.ldryt-infra.dns.records.seerr;
@@ -163,59 +202,19 @@ in
     ];
   };
 
-  services.nginx.virtualHosts."${seerrDomain}" = {
-    locations."/".extraConfig = ''
-      auth_request /internal/authelia/authz;
+  systemd.services.seerr.preStart = ''
+    umask 0077
 
-      auth_request_set $user $upstream_http_remote_user;
-      auth_request_set $groups $upstream_http_remote_groups;
-      auth_request_set $name $upstream_http_remote_name;
-      auth_request_set $email $upstream_http_remote_email;
+    settings_file=${stateDir}/seerr/settings.json
+    if ! test -s "$settings_file"; then
+      printf '{}\n' > "$settings_file"
+    fi
 
-      proxy_set_header Remote-User $user;
-      proxy_set_header Remote-Groups $groups;
-      proxy_set_header Remote-Name $name;
-      proxy_set_header Remote-Email $email;
-
-      auth_request_set $redirection_url $upstream_http_location;
-      error_page 401 =302 $redirection_url;
-    '';
-
-    locations."/internal/authelia/authz" = {
-      recommendedProxySettings = false;
-      proxyPass = "https://${autheliaDomain}/api/authz/auth-request";
-      extraConfig = ''
-        internal;
-
-        proxy_ssl_server_name on;
-        proxy_ssl_name ${autheliaDomain};
-        proxy_ssl_verify on;
-        proxy_ssl_verify_depth 3;
-        proxy_ssl_trusted_certificate ${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt;
-
-        proxy_set_header Host ${autheliaDomain};
-        proxy_set_header X-Original-Method $request_method;
-        proxy_set_header X-Original-URL $scheme://$http_host$request_uri;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_set_header Content-Length "";
-        proxy_set_header Connection "";
-
-        proxy_pass_request_body off;
-        proxy_next_upstream error timeout invalid_header http_500 http_502 http_503;
-        proxy_redirect http:// $scheme://;
-        proxy_http_version 1.1;
-        proxy_cache_bypass $cookie_session;
-        proxy_no_cache $cookie_session;
-        proxy_buffers 4 32k;
-        client_body_buffer_size 128k;
-
-        send_timeout 5m;
-        proxy_read_timeout 240;
-        proxy_send_timeout 240;
-        proxy_connect_timeout 240;
-      '';
-    };
-  };
+    ${pkgs.jq}/bin/jq -s '.[0] * .[1]' "$settings_file" ${
+      config.sops.templates."seerr-oidc.json".path
+    } > "$settings_file.new"
+    mv "$settings_file.new" "$settings_file"
+  '';
 
   services.prowlarr.settings.auth.required = "DisabledForLocalAddresses";
   services.sonarr.settings.auth.required = "DisabledForLocalAddresses";
