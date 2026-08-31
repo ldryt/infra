@@ -7,11 +7,24 @@
 let
   mediaDir = "/mnt/media";
   stateDir = "/var/lib/nixarr";
+  qbittorrentApi = {
+    host = "192.168.15.1";
+    port = config.nixarr.qbittorrent.webuiPort;
+  };
   mediaAdminApps = {
-    radarr = config.services.radarr.settings.server.port;
-    sonarr = config.services.sonarr.settings.server.port;
-    prowlarr = config.services.prowlarr.settings.server.port;
-    transmission = config.services.transmission.settings.rpc-port;
+    radarr = {
+      host = "127.0.0.1";
+      port = config.services.radarr.settings.server.port;
+    };
+    sonarr = {
+      host = "127.0.0.1";
+      port = config.services.sonarr.settings.server.port;
+    };
+    prowlarr = {
+      host = "127.0.0.1";
+      port = config.services.prowlarr.settings.server.port;
+    };
+    qbittorrent = qbittorrentApi;
   };
 
   seerrOidc = pkgs.seerr.overrideAttrs (
@@ -114,7 +127,7 @@ in
   systemd.tmpfiles.rules = [ "d ${mediaDir} 2775 root media -" ];
   systemd.services.radarr.unitConfig.RequiresMountsFor = [ mediaDir ];
   systemd.services.sonarr.unitConfig.RequiresMountsFor = [ mediaDir ];
-  systemd.services.transmission.unitConfig.RequiresMountsFor = [ mediaDir ];
+  systemd.services.qbittorrent.unitConfig.RequiresMountsFor = [ mediaDir ];
 
   nixarr = {
     enable = true;
@@ -127,9 +140,10 @@ in
       proxyListenAddr = "127.0.0.1";
     };
 
-    transmission = {
+    qbittorrent = {
       enable = true;
       vpn.enable = true;
+      qui.enable = false;
       peerPort = 39656;
     };
 
@@ -159,17 +173,42 @@ in
 
     sonarr = {
       enable = true;
-      settings-sync.transmission = {
-        enable = true;
-        config.fields.tvCategory = "sonarr";
-      };
+      settings-sync.downloadClients = [
+        {
+          enable = true;
+          name = "qBittorrent";
+          implementation = "QBittorrent";
+          fields = {
+            inherit (qbittorrentApi) host port;
+            tvCategory = "sonarr";
+          };
+        }
+      ];
     };
 
     radarr = {
       enable = true;
-      settings-sync.transmission.enable = true;
+      settings-sync.downloadClients = [
+        {
+          enable = true;
+          name = "qBittorrent";
+          implementation = "QBittorrent";
+          fields = {
+            inherit (qbittorrentApi) host port;
+            movieCategory = "radarr";
+          };
+        }
+      ];
     };
   };
+
+  vpnNamespaces.wg.portMappings = lib.mkAfter [
+    {
+      from = config.nixarr.qbittorrent.webuiPort;
+      to = config.nixarr.qbittorrent.webuiPort;
+    }
+  ];
+
   services.flaresolverr.enable = true;
 
   hardware.graphics.enable = true;
@@ -224,7 +263,7 @@ in
   '';
 
   services.nginx.virtualHosts = lib.mapAttrs' (
-    name: port:
+    name: app:
     lib.nameValuePair config.ldryt-infra.dns.records.${name} {
       enableACME = true;
       forceSSL = true;
@@ -261,7 +300,7 @@ in
       '';
 
       locations."/" = {
-        proxyPass = "http://127.0.0.1:${toString port}";
+        proxyPass = "http://${app.host}:${toString app.port}";
         proxyWebsockets = true;
         extraConfig = ''
           auth_request /internal/authelia/authz;
@@ -288,14 +327,17 @@ in
   ) mediaAdminApps;
 
   services.prowlarr.settings = {
+    auth.method = "External";
     auth.required = "DisabledForLocalAddresses";
     server.bindaddress = "127.0.0.1";
   };
   services.sonarr.settings = {
+    auth.method = "External";
     auth.required = "DisabledForLocalAddresses";
     server.bindaddress = "127.0.0.1";
   };
   services.radarr.settings = {
+    auth.method = "External";
     auth.required = "DisabledForLocalAddresses";
     server.bindaddress = "127.0.0.1";
   };

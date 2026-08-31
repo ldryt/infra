@@ -85,8 +85,8 @@
       "prowlarr.watch",
       "domus"
     ],
-    "transmission": [
-      "transmission.watch",
+    "qbittorrent": [
+      "qbittorrent.watch",
       "domus"
     ],
     "jellyfin": [

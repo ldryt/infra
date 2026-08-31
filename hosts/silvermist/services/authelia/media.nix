@@ -7,7 +7,7 @@
         config.ldryt-infra.dns.records.radarr
         config.ldryt-infra.dns.records.sonarr
         config.ldryt-infra.dns.records.prowlarr
-        config.ldryt-infra.dns.records.transmission
+        config.ldryt-infra.dns.records.qbittorrent
       ];
       policy = "two_factor";
     }
