@@ -1,4 +1,12 @@
 { pkgs, ... }:
+let
+  mdformat = pkgs.mdformat.withPlugins (
+    ps: with ps; [
+      mdformat-gfm
+      mdformat-frontmatter
+    ]
+  );
+in
 {
   imports = [
     ./minimal.nix
@@ -163,14 +171,14 @@
           name = "markdown";
           language-servers = [ "marksman" ];
           formatter = {
-            command = "mdformat";
+            command = "${mdformat}/bin/mdformat";
             args = [
               "--wrap"
-              "95"
+              "80"
               "-"
             ];
           };
-          auto-format = true;
+          auto-format = false;
         }
       ];
     };
