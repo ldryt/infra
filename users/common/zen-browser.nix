@@ -49,7 +49,7 @@
 
       search = {
         force = true;
-        default = "Kagi";
+        default = "google";
         engines = {
           "Kagi" = {
             urls = [ { template = "https://kagi.com/search?q={searchTerms}"; } ];
