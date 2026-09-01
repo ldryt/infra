@@ -114,7 +114,7 @@
 
     loader.timeout = 1;
     loader.systemd-boot = {
-      configurationLimit = 20;
+      configurationLimit = 8;
       consoleMode = "auto";
       memtest86 = {
         enable = true;
@@ -124,14 +124,20 @@
 
     # Lanzaboote currently replaces the systemd-boot module
     # Options from 'config.boot.loader.systemd-boot' are inherited
-    #
-    # To register password in TPM:
-    # > sudo systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+2+7+12 --wipe-slot=tpm2 /dev/nvme0n1p2
     loader.systemd-boot.enable = false;
     initrd.systemd.enable = true;
     lanzaboote = {
       enable = true;
       pkiBundle = "/etc/secureboot";
+      measuredBoot = {
+        enable = true;
+        pcrs = [
+          0
+          2
+          4
+          7
+        ];
+      };
     };
   };
 
