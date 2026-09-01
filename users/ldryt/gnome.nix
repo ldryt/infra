@@ -31,7 +31,7 @@
         favorite-apps = [
           "org.gnome.Nautilus.desktop"
           "com.mitchellh.ghostty.desktop"
-          "zen-browser.desktop"
+          "zen-beta.desktop"
           "thunderbird.desktop"
           "org.gnome.Calculator.desktop"
           "org.gnome.TextEditor.desktop"
