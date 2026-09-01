@@ -16,6 +16,7 @@
     ../../modules/nix-settings.nix
     ../../modules/fail2ban.nix
     ../../modules/syncthing-relay.nix
+    ../../modules/podman.nix
 
     ../../modules/colon-user.nix
     ../../modules/impermanence.nix
