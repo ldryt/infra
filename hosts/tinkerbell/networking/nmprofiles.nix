@@ -61,7 +61,8 @@ let
   mkWireguard =
     {
       name,
-      address,
+      ipv4Address ? null,
+      ipv6Address ? null,
       privateKey,
       peerPubKey,
       endpoint,
@@ -77,13 +78,26 @@ let
         type = "wireguard";
         inherit autoconnect;
       };
-      ipv4 = {
-        address1 = address;
-        method = "manual";
-      };
-      ipv6 = {
-        method = "disabled";
-      };
+      ipv4 =
+        if ipv4Address != null then
+          {
+            address1 = ipv4Address;
+            method = "manual";
+          }
+        else
+          {
+            method = "disabled";
+          };
+      ipv6 =
+        if ipv6Address != null then
+          {
+            address1 = ipv6Address;
+            method = "manual";
+          }
+        else
+          {
+            method = "disabled";
+          };
       wireguard = {
         inherit mtu;
         private-key = privateKey;
@@ -110,7 +124,7 @@ in
     profiles = {
       wg_GNB = mkWireguard {
         name = "wg_GNB";
-        address = "192.168.27.65/32";
+        ipv4Address = "192.168.27.65/32";
         privateKey = "$wg_GNB_PRIVATE_KEY";
         peerPubKey = "auwq1FbYBSiMBTktf105iLyIv6CRPIK5KGy9zvdVNhE=";
         endpoint = "$wg_GNB_ENDPOINT";
@@ -120,13 +134,24 @@ in
       };
       wg_ORY = mkWireguard {
         name = "wg_ORY";
-        address = "192.168.27.65/32";
+        ipv4Address = "192.168.27.65/32";
         privateKey = "$wg_ORY_PRIVATE_KEY";
         peerPubKey = "J+mdhyF9Qk4I7R7NbF++bGW6rNI7qQVx/DnrX5cihno=";
         endpoint = "$wg_ORY_ENDPOINT";
         allowedIPs = "0.0.0.0/0;192.168.27.64/27;192.168.1.0/24;";
         presharedKey = "$wg_ORY_PRESHARED_KEY";
         mtu = "1360";
+      };
+      wg_AMS = mkWireguard {
+        name = "wg_AMS";
+        ipv4Address = "10.129.91.56/32";
+        ipv6Address = "fd7d:76ee:e68f:a993:e8c:b8cd:a814:4024/128";
+        privateKey = "$wg_AMS_PRIVATE_KEY";
+        peerPubKey = "PyLCXAQT8KkM4T+dUsOQfn+Ub3pGxfGlxkIApuig+hk=";
+        endpoint = "$wg_AMS_ENDPOINT";
+        allowedIPs = "0.0.0.0/0;::/0";
+        presharedKey = "$wg_AMS_PRESHARED_KEY";
+        mtu = "1320";
       };
       LYS = mkWifi "$LYS_SSID" "$LYS_PWD" // {
         ipv4 = {
