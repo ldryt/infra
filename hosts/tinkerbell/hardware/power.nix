@@ -11,6 +11,22 @@
     LidSwitchIgnoreInhibited = true;
   };
 
+  # GNOME otherwise takes low-level ownership of these events, preventing
+  # logind's suspend-then-hibernate actions from running at all.  Keep root
+  # able to inhibit them, but make logind authoritative for desktop sessions.
+  security.polkit.extraConfig = ''
+    polkit.addRule(function(action, subject) {
+      const hardwareEventInhibitors = [
+        "org.freedesktop.login1.inhibit-handle-power-key",
+        "org.freedesktop.login1.inhibit-handle-lid-switch"
+      ];
+
+      if (hardwareEventInhibitors.indexOf(action.id) !== -1 && subject.user !== "root") {
+        return polkit.Result.NO;
+      }
+    });
+  '';
+
   systemd.sleep.settings.Sleep = {
     HibernateDelaySec = "30m";
   };
