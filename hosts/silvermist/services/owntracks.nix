@@ -106,11 +106,12 @@ in
 
   services.nginx.virtualHosts."${config.ldryt-infra.dns.records.owntracks}" =
     let
-      owntracks-frontend = pkgs.stdenv.mkDerivation {
+      owntracks-frontend = pkgs.stdenv.mkDerivation rec {
         pname = "owntracks-frontend";
+        # renovate: datasource=github-releases depName=owntracks/frontend
         version = "v2.15.3";
         src = pkgs.fetchzip {
-          url = "https://github.com/owntracks/frontend/releases/download/v2.15.3/v2.15.3-dist.zip";
+          url = "https://github.com/owntracks/frontend/releases/download/${version}/${version}-dist.zip";
           sha256 = "sha256-iy+yISPcOD/2lTyJUb1eI3wufLku1mKfVDm0+Dy8OKk=";
         };
         configJs = pkgs.writeText "config.js" ''

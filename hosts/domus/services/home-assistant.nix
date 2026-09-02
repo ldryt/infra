@@ -7,6 +7,7 @@ in
   virtualisation.oci-containers = {
     backend = "podman";
     containers.home-assistant = {
+      # renovate: datasource=docker depName=ghcr.io/home-assistant/home-assistant
       image = "ghcr.io/home-assistant/home-assistant:2025.3.3";
       environment.TZ = "Europe/Paris";
       volumes = [

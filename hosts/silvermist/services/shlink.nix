@@ -25,6 +25,7 @@ in
   virtualisation.oci-containers.containers = {
     "shlink-server" = {
       hostname = "shlink-server";
+      # renovate: datasource=docker depName=ghcr.io/shlinkio/shlink
       image = "ghcr.io/shlinkio/shlink:4.4.6";
       environment = {
         DEFAULT_DOMAIN = config.ldryt-infra.dns.zone;
@@ -45,6 +46,7 @@ in
     };
     "shlink-db" = {
       hostname = "shlink-db";
+      # renovate: datasource=docker depName=postgres
       image = "docker.io/library/postgres:16.2";
       environment = {
         POSTGRES_USER = "postgres";

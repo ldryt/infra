@@ -33,6 +33,7 @@ let
       src = pkgs.fetchFromGitHub {
         owner = "seerr-team";
         repo = "seerr";
+        # renovate: datasource=git-refs depName=https://github.com/seerr-team/seerr currentValue=develop
         rev = "0bfd615c0dcd13b30b15bdf0aa98e23669f55cd2";
         hash = "sha256-YPpicQlArAqWnRbUbtUYlwTJk0AGxcaeQmaYNT0vogo=";
       };
@@ -46,7 +47,14 @@ let
   );
 
   flowfin = pkgs.fetchzip {
-    url = "https://github.com/Flowfin/jellyfin-plugin-sso/releases/download/4.3.0-beta.52/community-sso-for-jellyfin_4.3.0.52.zip";
+    url =
+      let
+        # renovate: datasource=github-releases depName=Flowfin/jellyfin-plugin-sso
+        version = "4.3.0-beta.52";
+      in
+      "https://github.com/Flowfin/jellyfin-plugin-sso/releases/download/${version}/community-sso-for-jellyfin_${
+        builtins.replaceStrings [ "-beta" ] [ "." ] version
+      }.zip";
     hash = "sha256-gxPX5uvfvt41Gf0jF860HVKZp60+GcOvfwWKmhI3XAc=";
     stripRoot = false;
   };

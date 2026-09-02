@@ -2,11 +2,13 @@
 let
   camera-streamer = pkgs.stdenv.mkDerivation {
     pname = "camera-streamer";
+    # renovate: datasource=github-releases depName=ayufan/camera-streamer
     version = "0.4.0";
 
     src = pkgs.fetchFromGitHub {
       owner = "ayufan";
       repo = "camera-streamer";
+      # renovate: datasource=github-releases depName=ayufan/camera-streamer
       tag = "v0.4.0";
       fetchSubmodules = true;
       hash = "sha256-XcMWZGHOA7oEOY6PVDPe1s+yO88z9778adx1rtIqbAQ=";

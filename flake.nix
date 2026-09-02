@@ -137,5 +137,29 @@
             ];
           };
         };
+
+      ghaMatrix =
+        (builtins.map (name: {
+          inherit name;
+          platform = self.nixosConfigurations.${name}.config.nixpkgs.system;
+          target = ".#nixosConfigurations.${name}.config.system.build.toplevel";
+        }) (builtins.attrNames self.nixosConfigurations))
+        ++ (builtins.map (name: {
+          inherit name;
+          platform = self.homeConfigurations.${name}.pkgs.stdenv.hostPlatform.system;
+          target = ".#homeConfigurations.\"${name}\".activationPackage";
+        }) (builtins.attrNames self.homeConfigurations))
+        ++ (builtins.concatLists (
+          builtins.map (
+            platform:
+            let
+              isCompatible = name: (self.packages.${platform}.${name}.system) == platform;
+            in
+            builtins.map (name: {
+              inherit name platform;
+              target = ".#packages.${platform}.${name}";
+            }) (builtins.filter isCompatible (builtins.attrNames self.packages.${platform}))
+          ) (builtins.attrNames self.packages)
+        ));
     };
 }

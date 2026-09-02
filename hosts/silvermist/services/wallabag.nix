@@ -23,6 +23,7 @@ in
 
   sops.secrets."services/wallabag/env" = { };
   virtualisation.oci-containers.containers.wallabag = {
+    # renovate: datasource=docker depName=wallabag/wallabag
     image = "docker.io/wallabag/wallabag:2.6.14@sha256:4a527e027e0d59e87c14225ef11e005af3d4890374202ad319ce5e63dfc66709";
     ports = [ "127.0.0.1:${toString port}:80" ];
     environment = {
