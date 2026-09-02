@@ -24,7 +24,6 @@
                 type = "luks";
                 name = "crypted";
                 askPassword = true;
-                postCreateHook = "systemd-cryptenroll --tpm2-device=auto --tpm2-pcrs=0+2+7+12 /dev/nvme0n1p2";
                 settings.allowDiscards = true;
                 content = {
                   type = "btrfs";

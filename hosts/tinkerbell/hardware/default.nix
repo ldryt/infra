@@ -137,6 +137,10 @@
           4
           7
         ];
+        autoCryptenroll = {
+          enable = true;
+          device = "/dev/nvme0n1p2";
+        };
       };
     };
   };
