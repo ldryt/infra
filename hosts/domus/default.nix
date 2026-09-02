@@ -56,7 +56,7 @@
       } nofail,x-systemd.device-timeout=5s
       media UUID=9a4a7e6c-bad1-4b1e-84d1-60d146b64e2a ${
         config.sops.secrets."system/media-key".path
-      } nofail,x-systemd.device-timeout=5s
+      } nofail,x-systemd.device-timeout=30s
     '';
   };
 
