@@ -5,8 +5,10 @@
   services.logind.settings.Login = {
     HandlePowerKey = "suspend-then-hibernate";
     HandlePowerKeyLongPress = "poweroff";
+    PowerKeyIgnoreInhibited = true;
     HandleLidSwitch = "suspend-then-hibernate";
     HandleLidSwitchDocked = "ignore";
+    LidSwitchIgnoreInhibited = true;
   };
 
   systemd.sleep.settings.Sleep = {
