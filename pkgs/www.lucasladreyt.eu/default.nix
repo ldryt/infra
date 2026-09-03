@@ -6,7 +6,7 @@ pkgs.stdenv.mkDerivation {
     owner = "adityatelange";
     repo = "hugo-PaperMod";
     # renovate: datasource=git-refs depName=https://github.com/adityatelange/hugo-PaperMod currentValue=master
-    rev = "7d061d56d4664bd9c8241eb904994c98b928f0c8";
+    rev = "d3768854d00ad003b0a8dbdba254ce9224377a01";
     sha256 = "sha256-+OyrkV+9TELJOoz1qL63Ad95jobRQfv6RpoHKhemDfM=";
   };
   nativeBuildInputs = [ pkgs.hugo ];
