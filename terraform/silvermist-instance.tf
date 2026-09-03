@@ -5,7 +5,6 @@ resource "hcloud_primary_ip" "silvermist_ipv4" {
   name          = "silvermist_ipv4"
   location      = "fsn1"
   type          = "ipv4"
-  assignee_type = "server"
   auto_delete   = true
 }
 
