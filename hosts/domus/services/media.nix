@@ -35,7 +35,7 @@ let
         repo = "seerr";
         # renovate: datasource=git-refs depName=https://github.com/seerr-team/seerr currentValue=develop
         rev = "17fc4cc659e121ce1bde82188a29a8b07c2dccf9";
-        hash = "sha256-YPpicQlArAqWnRbUbtUYlwTJk0AGxcaeQmaYNT0vogo=";
+        hash = "sha256-9WPCL02lEIdjNK/OSOT28p3VskETE3kYd0mMRHXpN+s=";
       };
       pnpmDeps = pkgs.fetchPnpmDeps {
         inherit (finalAttrs) pname version src;
