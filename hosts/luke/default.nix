@@ -7,8 +7,6 @@
 
     ./services/adguardhome.nix
     ./services/syncthing.nix
-    ./services/nix-cache.nix
-    ./services/immich-machine-learning.nix
     ./services/cachefilesd.nix
 
     ../../modules/nix-settings.nix
@@ -20,7 +18,6 @@
 
     ../../modules/backups.nix
     ../../modules/dns.nix
-    ../../modules/monitoring/client.nix
     ../../modules/impermanence.nix
     ../../modules/colon-user.nix
   ];
@@ -38,12 +35,6 @@
       domus.sshKey = config.sops.secrets."backups/restic/hosts/domus/sshKey".path;
       gdrive.rcloneConfigFile = config.sops.secrets."backups/restic/hosts/gdrive/rclone.conf".path;
     };
-  };
-
-  sops.secrets."services/monitoring/wg/privateKey" = { };
-  ldryt-infra.monitoring.client = {
-    enable = true;
-    wg.privateKeyFile = config.sops.secrets."services/monitoring/wg/privateKey".path;
   };
 
   time.timeZone = "Europe/Paris";
