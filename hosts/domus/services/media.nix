@@ -53,7 +53,7 @@ let
         version = "4.3.0-beta.52";
       in
       "https://github.com/Flowfin/jellyfin-plugin-sso/releases/download/${version}/community-sso-for-jellyfin_${
-        builtins.replaceStrings [ "-beta" ] [ "." ] version
+        builtins.replaceStrings [ "-beta." ] [ "." ] version
       }.zip";
     hash = "sha256-gxPX5uvfvt41Gf0jF860HVKZp60+GcOvfwWKmhI3XAc=";
     stripRoot = false;
