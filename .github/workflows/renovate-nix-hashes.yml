@@ -2,19 +2,20 @@ name: Renovate Nix hashes
 
 on:
   pull_request:
-    types: [opened, synchronize, reopened]
 
 permissions:
   contents: write
 
 jobs:
   discover:
-    if: github.actor == 'renovate[bot]' && startsWith(github.head_ref, 'renovate/')
+    if: github.actor == 'renovate[bot]'
     runs-on: ubuntu-24.04
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.head_ref }}
       - uses: DeterminateSystems/determinate-nix-action@v3
       - id: matrix
         run: echo "matrix=$(nix eval --json .#ghaMatrix)" >> "$GITHUB_OUTPUT"
@@ -22,7 +23,6 @@ jobs:
   fix-hashes:
     needs: discover
     strategy:
-      fail-fast: false
       max-parallel: 1
       matrix:
         include: ${{ fromJson(needs.discover.outputs.matrix) }}
@@ -30,13 +30,12 @@ jobs:
       ${{
         matrix.platform == 'aarch64-linux' && 'ubuntu-24.04-arm' ||
         matrix.platform == 'aarch64-darwin' && 'macos-15' ||
-        matrix.platform == 'x86_64-darwin' && 'macos-15-intel' ||
+        matrix.platform == 'x86_64-darwin' && 'macos-15' ||
         'ubuntu-24.04'
       }}
     steps:
       - uses: actions/checkout@v6
         with:
-          fetch-depth: 0
           ref: ${{ github.head_ref }}
 
       - uses: DeterminateSystems/determinate-nix-action@v3
@@ -50,10 +49,9 @@ jobs:
 
           determinate-nixd fix hashes --auto-apply
 
-          git diff --quiet && exit 1
+          git diff --quiet && exit 0
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add --update
-          git commit -m "chore: update Nix hashes"
+          git commit -am "chore: update Nix hashes"
           git push origin "HEAD:$BRANCH"
