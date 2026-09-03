@@ -8,7 +8,7 @@ permissions:
 
 jobs:
   discover:
-    if: github.actor == 'renovate[bot]'
+    if: startsWith(github.head_ref, 'renovate/')
     runs-on: ubuntu-24.04
     outputs:
       matrix: ${{ steps.matrix.outputs.matrix }}
