@@ -1,5 +1,6 @@
 {
   inputs,
+  config,
   pkgs,
   lib,
   modulesPath,
@@ -45,6 +46,7 @@
     CPUWeight = 10;
     IOWeight = 10;
   };
+  systemd.services."beesd@crypted".unitConfig.ConditionACPower = true;
 
   boot.binfmt = {
     emulatedSystems = [ "aarch64-linux" ];
@@ -65,6 +67,9 @@
   };
 
   services.udev.extraRules = ''
+    SUBSYSTEM=="power_supply", KERNEL=="ACAD", ATTR{online}=="0", RUN+="${config.systemd.package}/bin/systemctl --no-block stop beesd@crypted.service"
+    SUBSYSTEM=="power_supply", KERNEL=="ACAD", ATTR{online}=="1", RUN+="${config.systemd.package}/bin/systemctl --no-block start beesd@crypted.service"
+
     # Disable Logitech G703 autosuspend (avoiding 1s wake-up delay)
     ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="046d", ATTR{idProduct}=="c539", ATTR{power/autosuspend}="-1"
   '';
