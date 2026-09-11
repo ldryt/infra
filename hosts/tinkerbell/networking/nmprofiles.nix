@@ -173,8 +173,8 @@ in
       rosetta = mkWifi "rosetta" "$ROSETTA_PWD";
       tp420ia = mkWifi "tp420ia" "$TP420IA_PWD";
       IONIS = mkEapWifi "IONIS" "$eduroam_ID" "$eduroam_PWD";
-      Eduroam = mkEapWifi "Eduroam" "$eduroam_ID" "$eduroam_PWD";
-      eduroam = mkEapWifi "eduroam" "$eduroam_ID" "$eduroam_PWD";
+      # Eduroam = mkEapWifi "Eduroam" "$eduroam_ID" "$eduroam_PWD";
+      # eduroam = mkEapWifi "eduroam" "$eduroam_ID" "$eduroam_PWD";
     };
   };
 }
