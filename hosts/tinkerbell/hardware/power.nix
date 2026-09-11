@@ -1,5 +1,11 @@
-{ pkgs, ... }:
+{ config, pkgs, ... }:
 {
+  environment.systemPackages = [
+    pkgs.powertop
+    pkgs.sysstat
+    config.boot.kernelPackages.turbostat
+  ];
+
   services.power-profiles-daemon.enable = true;
 
   services.logind.settings.Login = {
