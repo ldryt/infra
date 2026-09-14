@@ -171,7 +171,7 @@
         url =
           let
             # renovate: datasource=git-refs depName=https://github.com/raspberrypi/firmware currentValue=master
-            revision = "0ea28740607daed588912930379ed6ad40cfc4be";
+            revision = "ae2a7dc5330b7ea2c7107e5c4cb6b2691355bb9c";
           in
           "https://github.com/raspberrypi/firmware/raw/${revision}/boot/overlays/vc4-kms-v3d-pi4.dtbo";
         hash = "sha256-FV7AcfJqjUXEUk7gDFA3rXzrjMgdIhZAudnXF3xBbd8=";
