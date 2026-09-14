@@ -30,14 +30,14 @@ let
   seerrOidc = pkgs.seerr.overrideAttrs (
     finalAttrs: _: {
       version = "preview-new-oidc-0bfd615";
-      src = pkgs.fetchFromGitHub {
+      src = pkgs.testers.invalidateFetcherByDrvHash pkgs.fetchFromGitHub {
         owner = "seerr-team";
         repo = "seerr";
         # renovate: datasource=git-refs depName=https://github.com/seerr-team/seerr currentValue=develop
         rev = "0bfd615c0dcd13b30b15bdf0aa98e23669f55cd2";
         hash = "sha256-YPpicQlArAqWnRbUbtUYlwTJk0AGxcaeQmaYNT0vogo=";
       };
-      pnpmDeps = pkgs.fetchPnpmDeps {
+      pnpmDeps = pkgs.testers.invalidateFetcherByDrvHash pkgs.fetchPnpmDeps {
         inherit (finalAttrs) pname version src;
         pnpm = pkgs.pnpm_10.override { nodejs-slim = pkgs.nodejs-slim_22; };
         fetcherVersion = 3;
