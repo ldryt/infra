@@ -26,7 +26,7 @@ in
     "shlink-server" = {
       hostname = "shlink-server";
       # renovate: datasource=docker depName=ghcr.io/shlinkio/shlink
-      image = "ghcr.io/shlinkio/shlink:4.4.6";
+      image = "ghcr.io/shlinkio/shlink:4.6.0";
       environment = {
         DEFAULT_DOMAIN = config.ldryt-infra.dns.zone;
         IS_HTTPS_ENABLED = "true";
