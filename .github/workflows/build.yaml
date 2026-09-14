@@ -1,0 +1,58 @@
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    env:
+      RENOVATE: ${{ startsWith(github.head_ref, 'renovate/') }}
+    strategy:
+      fail-fast: false
+      max-parallel: ${{ startsWith(github.head_ref, 'renovate/') && 1 || 4 }}
+      matrix:
+        runner: [ubuntu-24.04, ubuntu-24.04-arm, macos-15, macos-15-intel]
+    runs-on: ${{ matrix.runner }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          token: ${{ secrets.GH_TOKEN_INFRA_NIX_FLAKE_UPDATE }}
+      - uses: jlumbroso/free-disk-space@v1.3.1
+        if: runner.os == 'Linux'
+      - uses: DeterminateSystems/determinate-nix-action@v3
+        with:
+          extra-conf: |
+            extra-substituters = https://nix-cache.ldryt.dev?priority=100
+            extra-trusted-public-keys = nix-cache.ldryt.dev:z/MoLMpYfoLlXZMnlLUif6nF3hMVj7+6zGiZE4LxLZ0=
+      - name: Build and repair Renovate hashes
+        run: |
+          fixed=false
+          while ! nix flake check -L --keep-going; do
+            test "$RENOVATE" = true
+            determinate-nixd fix hashes --auto-apply
+            git diff --quiet && exit 1
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git commit -am 'fix(nix): update dependency hashes'
+            fixed=true
+          done
+          if $fixed; then git push origin "HEAD:$GITHUB_HEAD_REF"; fi
+      - name: Cache
+        if: github.event_name == 'push'
+        continue-on-error: true
+        env:
+          SSH_KNOWN_HOSTS: ${{ vars.SSH_KNOWN_HOSTS }}
+          NIX_CACHE_SSH_PRIVKEY: ${{ secrets.NIX_CACHE_SSH_PRIVKEY }}
+        run: |
+          mkdir -p ~/.ssh
+          printf '%s\n' "$SSH_KNOWN_HOSTS" >> ~/.ssh/known_hosts
+          eval "$(ssh-agent -s)"
+          printf '%s\n' "$NIX_CACHE_SSH_PRIVKEY" | ssh-add -
+          nix eval --json ".#checks.$(nix config show system)" | jq -r '.[]' |
+            nix copy --stdin --to ssh://nix-ssh@nix-cache.ldryt.dev

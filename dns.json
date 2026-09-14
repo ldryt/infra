@@ -96,6 +96,10 @@
     "seerr": [
       "request.watch",
       "domus"
+    ],
+    "nix-cache": [
+      "nix-cache",
+      "domus"
     ]
   },
   "lucasladreyt.eu": {

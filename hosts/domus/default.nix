@@ -10,6 +10,7 @@
     ./services/immich-machine-learning.nix
     ./services/syncthing.nix
     ./services/restic-sftp-host.nix
+    ./services/nix-cache.nix
 
     ../../modules/nginx.nix
     ../../modules/openssh.nix

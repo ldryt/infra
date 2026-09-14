@@ -46,17 +46,8 @@
     {
       self,
       nixpkgs,
-      nixpkgs-unstable,
       nixpkgs-master,
-      nixpkgs-pie,
       home-manager,
-      sops-nix,
-      disko,
-      lanzaboote,
-      nixos-hardware,
-      nixos-raspberrypi,
-      impermanence,
-      mailserver,
       ...
     }@inputs:
     let
@@ -133,33 +124,22 @@
             };
             modules = [
               ./users/lucas.ladreyt
-              sops-nix.homeManagerModules.sops
+              inputs.sops-nix.homeManagerModules.sops
             ];
           };
         };
 
-      ghaMatrix =
-        (builtins.map (name: {
-          inherit name;
-          platform = self.nixosConfigurations.${name}.config.nixpkgs.system;
-          target = ".#nixosConfigurations.${name}.config.system.build.toplevel";
-        }) (builtins.attrNames self.nixosConfigurations))
-        ++ (builtins.map (name: {
-          inherit name;
-          platform = self.homeConfigurations.${name}.pkgs.stdenv.hostPlatform.system;
-          target = ".#homeConfigurations.\"${name}\".activationPackage";
-        }) (builtins.attrNames self.homeConfigurations))
-        ++ (builtins.concatLists (
-          builtins.map (
-            platform:
-            let
-              isCompatible = name: (self.packages.${platform}.${name}.system) == platform;
-            in
-            builtins.map (name: {
-              inherit name platform;
-              target = ".#packages.${platform}.${name}";
-            }) (builtins.filter isCompatible (builtins.attrNames self.packages.${platform}))
-          ) (builtins.attrNames self.packages)
-        ));
+      checks = forAllSystems (
+        system:
+        lib.filterAttrs (_: drv: drv.system == system) (
+          self.packages.${system}
+          // lib.mapAttrs' (
+            name: host: lib.nameValuePair "nixos-${name}" host.config.system.build.toplevel
+          ) self.nixosConfigurations
+          // lib.mapAttrs' (
+            name: home: lib.nameValuePair "home-${name}" home.activationPackage
+          ) self.homeConfigurations
+        )
+      );
     };
 }
