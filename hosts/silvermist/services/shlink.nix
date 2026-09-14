@@ -47,7 +47,7 @@ in
     "shlink-db" = {
       hostname = "shlink-db";
       # renovate: datasource=docker depName=postgres
-      image = "docker.io/library/postgres:16.2";
+      image = "docker.io/library/postgres:16.15";
       environment = {
         POSTGRES_USER = "postgres";
         POSTGRES_DB = "shlink";
