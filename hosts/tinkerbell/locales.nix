@@ -2,6 +2,17 @@
 {
   time.timeZone = lib.mkDefault "Europe/Paris";
   services.automatic-timezoned.enable = true;
+  systemd.services.automatic-timezoned = {
+    wants = [
+      "network-online.target"
+      "time-sync.target"
+    ];
+    after = [
+      "network-online.target"
+      "time-sync.target"
+    ];
+    serviceConfig.Restart = "on-failure";
+  };
 
   i18n.defaultLocale = "en_US.UTF-8";
   i18n.extraLocaleSettings = {
