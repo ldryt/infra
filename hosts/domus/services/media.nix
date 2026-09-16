@@ -41,7 +41,7 @@ let
         inherit (finalAttrs) pname version src;
         pnpm = pkgs.pnpm_10.override { nodejs-slim = pkgs.nodejs-slim_22; };
         fetcherVersion = 3;
-        hash = "sha256-7nBkeXGJfDRSvNesOjOK+Mtzp6SlBvbytyfsQl9eh/Y=";
+        hash = "sha256-9eO0wAfScNIG673Mh4HR5PY3LS59uX1zgsRKheiuEJM=";
       };
     }
   );
