@@ -1,9 +1,16 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
 {
   services.nginx.virtualHosts."${config.ldryt-infra.dns.records.eu-web}" = {
     enableACME = true;
     forceSSL = true;
-    root = "${(pkgs.callPackage ../../../pkgs/www.lucasladreyt.eu { })}/public";
+    root = "${
+      (pkgs.callPackage ../../../pkgs/www.lucasladreyt.eu { theme = inputs.papermod; })
+    }/public";
     extraConfig = ''
       more_clear_headers "X-Robots-Tag";
     '';

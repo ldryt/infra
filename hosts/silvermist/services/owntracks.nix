@@ -1,4 +1,8 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  ...
+}:
 let
   recorderPort = 4073;
   recorderStateDir = "/var/lib/owntracks-recorder";
@@ -106,33 +110,26 @@ in
 
   services.nginx.virtualHosts."${config.ldryt-infra.dns.records.owntracks}" =
     let
-      owntracks-frontend = pkgs.stdenv.mkDerivation rec {
-        pname = "owntracks-frontend";
-        # renovate: datasource=github-releases depName=owntracks/frontend
-        version = "v2.15.3";
-        src = pkgs.fetchzip {
-          url = "https://github.com/owntracks/frontend/releases/download/${version}/${version}-dist.zip";
-          sha256 = "sha256-iy+yISPcOD/2lTyJUb1eI3wufLku1mKfVDm0+Dy8OKk=";
-        };
-        configJs = pkgs.writeText "config.js" ''
-          window.owntracks = window.owntracks || {};
-          window.owntracks.config = {
-            api: {
-              baseUrl: "https://${config.ldryt-infra.dns.records.owntracks}"
-            },
-            router: {
-              basePath: ""
-            }
-          };
-        '';
-        installPhase = ''
-          runHook preInstall
-          mkdir -p $out
-          cp -r ./* $out/
-          cp $configJs $out/config/config.js
-          runHook postInstall
-        '';
-      };
+      owntracks-frontend =
+        pkgs.runCommand "owntracks-frontend"
+          {
+            configJs = pkgs.writeText "config.js" ''
+              window.owntracks = window.owntracks || {};
+              window.owntracks.config = {
+                api: {
+                  baseUrl: "https://${config.ldryt-infra.dns.records.owntracks}"
+                },
+                router: {
+                  basePath: ""
+                }
+              };
+            '';
+          }
+          ''
+            mkdir -p "$out"
+            cp -r --no-preserve=mode ${pkgs.owntracks-frontend}/share/owntracks-frontend/. "$out/"
+            cp "$configJs" "$out/config/config.js"
+          '';
 
       autheliaLocation = ./authelia/nginx-location.conf;
       autheliaRequest = ./authelia/nginx-authrequest.conf;

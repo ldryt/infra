@@ -1,5 +1,29 @@
 {
   "nodes": {
+    "alacritty-gruvbox-dark": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-EMMhMy0a62OHk4eIIuHWCVt1HhuRyUE7XLk42sgdozA=",
+        "type": "file",
+        "url": "https://raw.githubusercontent.com/alacritty/alacritty-theme/refs/heads/master/themes/gruvbox_dark.toml"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://raw.githubusercontent.com/alacritty/alacritty-theme/refs/heads/master/themes/gruvbox_dark.toml"
+      }
+    },
+    "alacritty-gruvbox-light": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-mgQoALvwbqsV1gmjjbiGV8e1V7mu012xSkoMSWMbbBI=",
+        "type": "file",
+        "url": "https://raw.githubusercontent.com/alacritty/alacritty-theme/refs/heads/master/themes/gruvbox_light.toml"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://raw.githubusercontent.com/alacritty/alacritty-theme/refs/heads/master/themes/gruvbox_light.toml"
+      }
+    },
     "argononed": {
       "flake": false,
       "locked": {
@@ -30,6 +54,25 @@
         "owner": "simple-nixos-mailserver",
         "repo": "blobs",
         "type": "gitlab"
+      }
+    },
+    "camera-streamer-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1763833130,
+        "narHash": "sha256-XcMWZGHOA7oEOY6PVDPe1s+yO88z9778adx1rtIqbAQ=",
+        "ref": "main",
+        "rev": "45a3b1f766eafeebe1f8393aba59f0082c17983e",
+        "revCount": 457,
+        "submodules": true,
+        "type": "git",
+        "url": "https://github.com/ayufan/camera-streamer"
+      },
+      "original": {
+        "ref": "main",
+        "submodules": true,
+        "type": "git",
+        "url": "https://github.com/ayufan/camera-streamer"
       }
     },
     "crane": {
@@ -184,6 +227,18 @@
         "owner": "numtide",
         "repo": "flake-utils",
         "type": "github"
+      }
+    },
+    "flowfin-release": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-7Yf/XHjWQcVLWsFWwkr8FR3pbog6X2XgMzcpZ4DFSQo=",
+        "type": "file",
+        "url": "https://api.github.com/repos/Flowfin/jellyfin-plugin-sso/releases/latest"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://api.github.com/repos/Flowfin/jellyfin-plugin-sso/releases/latest"
       }
     },
     "futils": {
@@ -784,6 +839,23 @@
         "type": "github"
       }
     },
+    "papermod": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1766241549,
+        "narHash": "sha256-+OyrkV+9TELJOoz1qL63Ad95jobRQfv6RpoHKhemDfM=",
+        "ref": "master",
+        "rev": "7d061d56d4664bd9c8241eb904994c98b928f0c8",
+        "revCount": 1159,
+        "type": "git",
+        "url": "https://github.com/adityatelange/hugo-PaperMod"
+      },
+      "original": {
+        "ref": "master",
+        "type": "git",
+        "url": "https://github.com/adityatelange/hugo-PaperMod"
+      }
+    },
     "pre-commit": {
       "inputs": {
         "flake-compat": "flake-compat",
@@ -808,8 +880,12 @@
     },
     "root": {
       "inputs": {
+        "alacritty-gruvbox-dark": "alacritty-gruvbox-dark",
+        "alacritty-gruvbox-light": "alacritty-gruvbox-light",
+        "camera-streamer-src": "camera-streamer-src",
         "disko": "disko",
         "firefox-addons": "firefox-addons",
+        "flowfin-release": "flowfin-release",
         "home-manager": "home-manager",
         "home-manager-unstable": "home-manager-unstable",
         "impermanence": "impermanence",
@@ -823,7 +899,10 @@
         "nixpkgs-master": "nixpkgs-master",
         "nixpkgs-pie": "nixpkgs-pie",
         "nixpkgs-unstable": "nixpkgs-unstable",
+        "papermod": "papermod",
+        "seerr-src": "seerr-src",
         "sops-nix": "sops-nix",
+        "vc4-kms-v3d-pi4": "vc4-kms-v3d-pi4",
         "zen-browser": "zen-browser"
       }
     },
@@ -845,6 +924,23 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
+        "type": "github"
+      }
+    },
+    "seerr-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1780169619,
+        "narHash": "sha256-YPpicQlArAqWnRbUbtUYlwTJk0AGxcaeQmaYNT0vogo=",
+        "owner": "seerr-team",
+        "repo": "seerr",
+        "rev": "0bfd615c0dcd13b30b15bdf0aa98e23669f55cd2",
+        "type": "github"
+      },
+      "original": {
+        "owner": "seerr-team",
+        "ref": "develop",
+        "repo": "seerr",
         "type": "github"
       }
     },
@@ -932,6 +1028,18 @@
         "owner": "numtide",
         "repo": "treefmt-nix",
         "type": "github"
+      }
+    },
+    "vc4-kms-v3d-pi4": {
+      "flake": false,
+      "locked": {
+        "narHash": "sha256-Q4nefDWAJOAP2Dq+EzesVnPMVnD/LBeKnXzDovD4L/U=",
+        "type": "file",
+        "url": "https://github.com/raspberrypi/firmware/raw/0ea28740607daed588912930379ed6ad40cfc4be/boot/overlays/vc4-kms-v3d-pi4.dtbo"
+      },
+      "original": {
+        "type": "file",
+        "url": "https://github.com/raspberrypi/firmware/raw/master/boot/overlays/vc4-kms-v3d-pi4.dtbo"
       }
     },
     "vpnconfinement": {

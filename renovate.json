@@ -13,9 +13,7 @@
       "customType": "regex",
       "managerFilePatterns": ["/\\.nix$/"],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s+(?:version|tag)\\s*=\\s*\"(?<currentValue>[^\"]+)\";",
-        "# renovate: datasource=(?<datasource>docker) depName=(?<depName>\\S+)\\s+image\\s*=\\s*\"[^\"]*:(?<currentValue>[^\"@]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?\";",
-        "# renovate: datasource=(?<datasource>git-refs) depName=(?<depName>\\S+) currentValue=(?<currentValue>\\S+)\\s+(?:rev|revision)\\s*=\\s*\"(?<currentDigest>[a-f0-9]{40})\";"
+        "# renovate: datasource=(?<datasource>docker) depName=(?<depName>\\S+)\\s+image\\s*=\\s*\"[^\"@]*:(?<currentValue>[^\"@]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?\";"
       ]
     }
   ]

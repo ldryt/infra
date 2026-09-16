@@ -1,9 +1,6 @@
-{ pkgs, ... }:
+{ inputs, ... }:
 let
-  gruvbox-dark-theme = pkgs.fetchurl {
-    url = "https://raw.githubusercontent.com/alacritty/alacritty-theme/refs/heads/master/themes/gruvbox_dark.toml";
-    hash = "sha256-hdperHMsuJugodM0IyueJV6QH0l40+XrVRKnHRQRbqc=";
-  };
+  gruvbox-dark-theme = inputs.alacritty-gruvbox-dark.outPath;
 in
 {
   programs.alacritty = {
