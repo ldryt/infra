@@ -34,14 +34,14 @@ let
         owner = "seerr-team";
         repo = "seerr";
         # renovate: datasource=git-refs depName=https://github.com/seerr-team/seerr currentValue=develop
-        rev = "0bfd615c0dcd13b30b15bdf0aa98e23669f55cd2";
-        hash = "sha256-YPpicQlArAqWnRbUbtUYlwTJk0AGxcaeQmaYNT0vogo=";
+        rev = "59d5947b4df8591882bda70ae199f3a708e2d02b";
+        hash = "sha256-u+vm3bxNhYsiJD5R1yaXxK8lR0PUhLi+mAa8NSjuI8A=";
       };
       pnpmDeps = pkgs.testers.invalidateFetcherByDrvHash pkgs.fetchPnpmDeps {
         inherit (finalAttrs) pname version src;
         pnpm = pkgs.pnpm_10.override { nodejs-slim = pkgs.nodejs-slim_22; };
         fetcherVersion = 3;
-        hash = "sha256-7nBkeXGJfDRSvNesOjOK+Mtzp6SlBvbytyfsQl9eh/Y=";
+        hash = "sha256-9eO0wAfScNIG673Mh4HR5PY3LS59uX1zgsRKheiuEJM=";
       };
     }
   );
