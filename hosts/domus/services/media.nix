@@ -34,7 +34,7 @@ let
         owner = "seerr-team";
         repo = "seerr";
         # renovate: datasource=git-refs depName=https://github.com/seerr-team/seerr currentValue=develop
-        rev = "0bfd615c0dcd13b30b15bdf0aa98e23669f55cd2";
+        rev = "59d5947b4df8591882bda70ae199f3a708e2d02b";
         hash = "sha256-YPpicQlArAqWnRbUbtUYlwTJk0AGxcaeQmaYNT0vogo=";
       };
       pnpmDeps = pkgs.testers.invalidateFetcherByDrvHash pkgs.fetchPnpmDeps {
