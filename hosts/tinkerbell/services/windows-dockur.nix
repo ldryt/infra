@@ -8,7 +8,7 @@ in
 {
   virtualisation.oci-containers.containers."windows-${winVersion}" = {
     # renovate: datasource=docker depName=ghcr.io/dockur/windows
-    image = "ghcr.io/dockur/windows:2.10@sha256:8d5918162e2ecc5da08c611676ecf958f96b35ba7e45bdb2a0774641d94c07f0";
+    image = "ghcr.io/dockur/windows:6.05@sha256:32cc92715a6c5dc1f63142d3be11059279d64d0faa7519618a07290b3076f9f2";
     user = "root:root";
     autoStart = false;
     environment = {
