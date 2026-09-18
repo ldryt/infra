@@ -1,5 +1,33 @@
 {
   inputs = {
+    seerr-src = {
+      url = "github:seerr-team/seerr/develop";
+      flake = false;
+    };
+    papermod = {
+      url = "git+https://github.com/adityatelange/hugo-PaperMod?ref=master";
+      flake = false;
+    };
+    camera-streamer-src = {
+      url = "git+https://github.com/ayufan/camera-streamer?ref=main&submodules=1";
+      flake = false;
+    };
+    flowfin-release = {
+      url = "file+https://api.github.com/repos/Flowfin/jellyfin-plugin-sso/releases/latest";
+      flake = false;
+    };
+    alacritty-gruvbox-dark = {
+      url = "file+https://raw.githubusercontent.com/alacritty/alacritty-theme/refs/heads/master/themes/gruvbox_dark.toml";
+      flake = false;
+    };
+    alacritty-gruvbox-light = {
+      url = "file+https://raw.githubusercontent.com/alacritty/alacritty-theme/refs/heads/master/themes/gruvbox_light.toml";
+      flake = false;
+    };
+    vc4-kms-v3d-pi4 = {
+      url = "file+https://github.com/raspberrypi/firmware/raw/master/boot/overlays/vc4-kms-v3d-pi4.dtbo";
+      flake = false;
+    };
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/nixos-unstable";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
@@ -100,7 +128,7 @@
         {
           sops-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/sops-keepass.nix { };
           tofu-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/tofu-keepass.nix { };
-          www-lucasladreyt-eu = pkgs.callPackage ./pkgs/www.lucasladreyt.eu { };
+          www-lucasladreyt-eu = pkgs.callPackage ./pkgs/www.lucasladreyt.eu { theme = inputs.papermod; };
           sdImage-printer = self.nixosConfigurations.printer.config.system.build.sdImage;
         }
       );
@@ -120,6 +148,7 @@
           "lucas.ladreyt" = home-manager.lib.homeManagerConfiguration {
             inherit pkgs;
             extraSpecialArgs = {
+              inherit inputs;
               inherit pkgs-master;
             };
             modules = [

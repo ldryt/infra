@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ inputs, ... }:
 {
   # --- Display
   #
@@ -167,15 +167,7 @@
     {
       # More info: https://github.com/raspberrypi/firmware/blob/0ea28740607daed588912930379ed6ad40cfc4be/boot/overlays/README#L5679
       name = "vc4-kms-v3d-pi4";
-      dtboFile = pkgs.fetchurl {
-        url =
-          let
-            # renovate: datasource=git-refs depName=https://github.com/raspberrypi/firmware currentValue=master
-            revision = "0ea28740607daed588912930379ed6ad40cfc4be";
-          in
-          "https://github.com/raspberrypi/firmware/raw/${revision}/boot/overlays/vc4-kms-v3d-pi4.dtbo";
-        hash = "sha256-FV7AcfJqjUXEUk7gDFA3rXzrjMgdIhZAudnXF3xBbd8=";
-      };
+      dtboFile = inputs.vc4-kms-v3d-pi4.outPath;
     }
   ];
 }

@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   ...
@@ -29,14 +30,8 @@ let
 
   seerrOidc = pkgs.seerr.overrideAttrs (
     finalAttrs: _: {
-      version = "preview-new-oidc-0bfd615";
-      src = pkgs.testers.invalidateFetcherByDrvHash pkgs.fetchFromGitHub {
-        owner = "seerr-team";
-        repo = "seerr";
-        # renovate: datasource=git-refs depName=https://github.com/seerr-team/seerr currentValue=develop
-        rev = "0bfd615c0dcd13b30b15bdf0aa98e23669f55cd2";
-        hash = "sha256-YPpicQlArAqWnRbUbtUYlwTJk0AGxcaeQmaYNT0vogo=";
-      };
+      version = "preview-new-oidc-${inputs.seerr-src.shortRev}";
+      src = inputs.seerr-src;
       pnpmDeps = pkgs.testers.invalidateFetcherByDrvHash pkgs.fetchPnpmDeps {
         inherit (finalAttrs) pname version src;
         pnpm = pkgs.pnpm_10.override { nodejs-slim = pkgs.nodejs-slim_22; };
@@ -46,18 +41,20 @@ let
     }
   );
 
-  flowfin = pkgs.fetchzip {
-    url =
-      let
-        # renovate: datasource=github-releases depName=Flowfin/jellyfin-plugin-sso
-        version = "4.3.0-beta.52";
-      in
-      "https://github.com/Flowfin/jellyfin-plugin-sso/releases/download/${version}/community-sso-for-jellyfin_${
-        builtins.replaceStrings [ "-beta." ] [ "." ] version
-      }.zip";
-    hash = "sha256-gxPX5uvfvt41Gf0jF860HVKZp60+GcOvfwWKmhI3XAc=";
-    stripRoot = false;
+  flowfinRelease = builtins.fromJSON (builtins.readFile inputs.flowfin-release);
+  flowfinAsset = builtins.head (
+    builtins.filter (asset: lib.hasSuffix ".zip" asset.name) flowfinRelease.assets
+  );
+  flowfinArchive = pkgs.fetchurl {
+    url = flowfinAsset.browser_download_url;
+    sha256 = lib.removePrefix "sha256:" flowfinAsset.digest;
   };
+
+  # Preserve the ZIP's root layout.
+  flowfin = pkgs.runCommand "flowfin" { nativeBuildInputs = [ pkgs.unzip ]; } ''
+    mkdir -p "$out"
+    unzip -q ${flowfinArchive} -d "$out"
+  '';
   flowfinConfig = pkgs.writeText "flowfin-sso.json" (
     builtins.toJSON {
       FormatVersion = 1;

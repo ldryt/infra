@@ -1,13 +1,7 @@
-{ pkgs, config, ... }:
+{ inputs, config, ... }:
 let
-  gruvbox-dark-theme = pkgs.fetchurl {
-    url = "https://raw.githubusercontent.com/alacritty/alacritty-theme/refs/heads/master/themes/gruvbox_dark.toml";
-    hash = "sha256-hdperHMsuJugodM0IyueJV6QH0l40+XrVRKnHRQRbqc=";
-  };
-  gruvbox-light-theme = pkgs.fetchurl {
-    url = "https://raw.githubusercontent.com/alacritty/alacritty-theme/refs/heads/master/themes/gruvbox_light.toml";
-    hash = "sha256-7jwcsFzo7mVe6kUZLXYolUy9pWKtTMO19KOMQM13ZYY=";
-  };
+  gruvbox-dark-theme = inputs.alacritty-gruvbox-dark.outPath;
+  gruvbox-light-theme = inputs.alacritty-gruvbox-light.outPath;
 in
 {
   # from https://github.com/alacritty/alacritty/issues/5999#issuecomment-2367121745
