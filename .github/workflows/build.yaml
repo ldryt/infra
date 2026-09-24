@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7
         with:
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          ref: ${{ startsWith(github.head_ref, 'renovate/') && github.head_ref || github.event.pull_request.head.sha || github.sha }}
           token: ${{ secrets.GH_TOKEN_INFRA_NIX_FLAKE_UPDATE }}
       - uses: jlumbroso/free-disk-space@v1.3.1
         if: runner.os == 'Linux'
