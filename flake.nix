@@ -12,10 +12,6 @@
       url = "git+https://github.com/ayufan/camera-streamer?ref=main&submodules=1";
       flake = false;
     };
-    flowfin-release = {
-      url = "file+https://api.github.com/repos/Flowfin/jellyfin-plugin-sso/releases/latest";
-      flake = false;
-    };
     alacritty-gruvbox-dark = {
       url = "file+https://raw.githubusercontent.com/alacritty/alacritty-theme/refs/heads/master/themes/gruvbox_dark.toml";
       flake = false;

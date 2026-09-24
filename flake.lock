@@ -229,18 +229,6 @@
         "type": "github"
       }
     },
-    "flowfin-release": {
-      "flake": false,
-      "locked": {
-        "narHash": "sha256-7Yf/XHjWQcVLWsFWwkr8FR3pbog6X2XgMzcpZ4DFSQo=",
-        "type": "file",
-        "url": "https://api.github.com/repos/Flowfin/jellyfin-plugin-sso/releases/latest"
-      },
-      "original": {
-        "type": "file",
-        "url": "https://api.github.com/repos/Flowfin/jellyfin-plugin-sso/releases/latest"
-      }
-    },
     "futils": {
       "inputs": {
         "systems": "systems_2"
@@ -885,7 +873,6 @@
         "camera-streamer-src": "camera-streamer-src",
         "disko": "disko",
         "firefox-addons": "firefox-addons",
-        "flowfin-release": "flowfin-release",
         "home-manager": "home-manager",
         "home-manager-unstable": "home-manager-unstable",
         "impermanence": "impermanence",

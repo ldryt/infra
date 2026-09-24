@@ -41,20 +41,14 @@ let
     }
   );
 
-  flowfinRelease = builtins.fromJSON (builtins.readFile inputs.flowfin-release);
-  flowfinAsset = builtins.head (
-    builtins.filter (asset: lib.hasSuffix ".zip" asset.name) flowfinRelease.assets
-  );
-  flowfinArchive = pkgs.fetchurl {
-    url = flowfinAsset.browser_download_url;
-    sha256 = lib.removePrefix "sha256:" flowfinAsset.digest;
+  # renovate: datasource=github-releases depName=Flowfin/jellyfin-plugin-sso extractVersion=^(?<version>4\.\d+\.\d+)-stable$
+  flowfinVersion = "4.3.0";
+  flowfin = pkgs.fetchzip {
+    name = "flowfin-${flowfinVersion}";
+    url = "https://github.com/Flowfin/jellyfin-plugin-sso/releases/download/${flowfinVersion}-stable/community-sso-for-jellyfin_${flowfinVersion}.0.zip";
+    hash = "sha256-MA4A1+TCMOBErdF5prsI0EaaiQvsB3Y8PYOEoHQt8LI=";
+    stripRoot = false;
   };
-
-  # Preserve the ZIP's root layout.
-  flowfin = pkgs.runCommand "flowfin" { nativeBuildInputs = [ pkgs.unzip ]; } ''
-    mkdir -p "$out"
-    unzip -q ${flowfinArchive} -d "$out"
-  '';
   flowfinConfig = pkgs.writeText "flowfin-sso.json" (
     builtins.toJSON {
       FormatVersion = 1;
