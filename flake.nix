@@ -12,16 +12,8 @@
       url = "git+https://github.com/ayufan/camera-streamer?ref=main&submodules=1";
       flake = false;
     };
-    alacritty-gruvbox-dark = {
-      url = "file+https://raw.githubusercontent.com/alacritty/alacritty-theme/refs/heads/master/themes/gruvbox_dark.toml";
-      flake = false;
-    };
-    alacritty-gruvbox-light = {
-      url = "file+https://raw.githubusercontent.com/alacritty/alacritty-theme/refs/heads/master/themes/gruvbox_light.toml";
-      flake = false;
-    };
-    vc4-kms-v3d-pi4 = {
-      url = "file+https://github.com/raspberrypi/firmware/raw/master/boot/overlays/vc4-kms-v3d-pi4.dtbo";
+    alacritty-theme = {
+      url = "github:alacritty/alacritty-theme";
       flake = false;
     };
     nixpkgs.url = "github:nixos/nixpkgs/nixos-26.05";

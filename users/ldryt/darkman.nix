@@ -1,7 +1,7 @@
 { inputs, config, ... }:
 let
-  gruvbox-dark-theme = inputs.alacritty-gruvbox-dark.outPath;
-  gruvbox-light-theme = inputs.alacritty-gruvbox-light.outPath;
+  gruvbox-dark-theme = "${inputs.alacritty-theme}/themes/gruvbox_dark.toml";
+  gruvbox-light-theme = "${inputs.alacritty-theme}/themes/gruvbox_light.toml";
 in
 {
   # from https://github.com/alacritty/alacritty/issues/5999#issuecomment-2367121745

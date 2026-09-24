@@ -1,6 +1,6 @@
 { inputs, ... }:
 let
-  gruvbox-dark-theme = inputs.alacritty-gruvbox-dark.outPath;
+  gruvbox-dark-theme = "${inputs.alacritty-theme}/themes/gruvbox_dark.toml";
 in
 {
   programs.alacritty = {

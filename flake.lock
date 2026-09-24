@@ -1,27 +1,19 @@
 {
   "nodes": {
-    "alacritty-gruvbox-dark": {
+    "alacritty-theme": {
       "flake": false,
       "locked": {
-        "narHash": "sha256-EMMhMy0a62OHk4eIIuHWCVt1HhuRyUE7XLk42sgdozA=",
-        "type": "file",
-        "url": "https://raw.githubusercontent.com/alacritty/alacritty-theme/refs/heads/master/themes/gruvbox_dark.toml"
+        "lastModified": 1789092203,
+        "narHash": "sha256-pfpujHc6+shftp+idGOA70NXKR8ASIIbdNb4eMCXb7U=",
+        "owner": "alacritty",
+        "repo": "alacritty-theme",
+        "rev": "ab88d5a80d676b5dc6157e91aba8067f2078dc94",
+        "type": "github"
       },
       "original": {
-        "type": "file",
-        "url": "https://raw.githubusercontent.com/alacritty/alacritty-theme/refs/heads/master/themes/gruvbox_dark.toml"
-      }
-    },
-    "alacritty-gruvbox-light": {
-      "flake": false,
-      "locked": {
-        "narHash": "sha256-mgQoALvwbqsV1gmjjbiGV8e1V7mu012xSkoMSWMbbBI=",
-        "type": "file",
-        "url": "https://raw.githubusercontent.com/alacritty/alacritty-theme/refs/heads/master/themes/gruvbox_light.toml"
-      },
-      "original": {
-        "type": "file",
-        "url": "https://raw.githubusercontent.com/alacritty/alacritty-theme/refs/heads/master/themes/gruvbox_light.toml"
+        "owner": "alacritty",
+        "repo": "alacritty-theme",
+        "type": "github"
       }
     },
     "argononed": {
@@ -868,8 +860,7 @@
     },
     "root": {
       "inputs": {
-        "alacritty-gruvbox-dark": "alacritty-gruvbox-dark",
-        "alacritty-gruvbox-light": "alacritty-gruvbox-light",
+        "alacritty-theme": "alacritty-theme",
         "camera-streamer-src": "camera-streamer-src",
         "disko": "disko",
         "firefox-addons": "firefox-addons",
@@ -889,7 +880,6 @@
         "papermod": "papermod",
         "seerr-src": "seerr-src",
         "sops-nix": "sops-nix",
-        "vc4-kms-v3d-pi4": "vc4-kms-v3d-pi4",
         "zen-browser": "zen-browser"
       }
     },
@@ -1015,18 +1005,6 @@
         "owner": "numtide",
         "repo": "treefmt-nix",
         "type": "github"
-      }
-    },
-    "vc4-kms-v3d-pi4": {
-      "flake": false,
-      "locked": {
-        "narHash": "sha256-Q4nefDWAJOAP2Dq+EzesVnPMVnD/LBeKnXzDovD4L/U=",
-        "type": "file",
-        "url": "https://github.com/raspberrypi/firmware/raw/0ea28740607daed588912930379ed6ad40cfc4be/boot/overlays/vc4-kms-v3d-pi4.dtbo"
-      },
-      "original": {
-        "type": "file",
-        "url": "https://github.com/raspberrypi/firmware/raw/master/boot/overlays/vc4-kms-v3d-pi4.dtbo"
       }
     },
     "vpnconfinement": {

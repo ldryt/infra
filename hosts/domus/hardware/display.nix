@@ -1,4 +1,4 @@
-{ inputs, ... }:
+{ pkgs, ... }:
 {
   # --- Display
   #
@@ -167,7 +167,7 @@
     {
       # More info: https://github.com/raspberrypi/firmware/blob/0ea28740607daed588912930379ed6ad40cfc4be/boot/overlays/README#L5679
       name = "vc4-kms-v3d-pi4";
-      dtboFile = inputs.vc4-kms-v3d-pi4.outPath;
+      dtboFile = "${pkgs.raspberrypifw}/share/raspberrypi/boot/overlays/vc4-kms-v3d-pi4.dtbo";
     }
   ];
 }
