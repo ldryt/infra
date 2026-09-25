@@ -152,6 +152,9 @@
   ldryt-infra.persist.directories = [
     "/var/lib/fprint"
     "/var/lib/bluetooth"
+    "/var/lib/auto-cryptenroll"
+    "/var/lib/pcrlock.d"
+    "/var/lib/systemd"
     "/etc/secureboot"
   ];
 
