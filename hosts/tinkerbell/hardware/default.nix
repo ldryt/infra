@@ -138,7 +138,6 @@
         enable = true;
         pcrs = [
           0
-          1
           2
           7
         ];
