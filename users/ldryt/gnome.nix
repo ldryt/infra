@@ -30,7 +30,10 @@
         power-button-action = "nothing"; # managed by systemd-logind
       };
       "org/gnome/shell" = {
-        enabled-extensions = [ "launch-new-instance@gnome-shell-extensions.gcampax.github.com" ];
+        enabled-extensions = [
+          "launch-new-instance@gnome-shell-extensions.gcampax.github.com"
+          "gsconnect@andyholmes.github.io"
+        ];
         favorite-apps = [
           "org.gnome.Nautilus.desktop"
           "com.mitchellh.ghostty.desktop"

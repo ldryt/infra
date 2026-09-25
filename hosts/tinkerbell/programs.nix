@@ -2,6 +2,10 @@
 {
   programs.nix-ld.enable = true;
   programs.bcc.enable = true;
+  programs.kdeconnect = {
+    enable = true;
+    package = pkgs.gnomeExtensions.gsconnect;
+  };
   programs.gnupg.agent = {
     enable = true;
     enableSSHSupport = true;
