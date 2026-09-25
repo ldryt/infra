@@ -26,7 +26,7 @@ in
     "shlink-server" = {
       hostname = "shlink-server";
       # renovate: datasource=docker depName=ghcr.io/shlinkio/shlink
-      image = "ghcr.io/shlinkio/shlink:4.4.6";
+      image = "ghcr.io/shlinkio/shlink:4.4.6@sha256:1a697baca56ab8821783e0ce53eb4fb22e51bb66749ec50581adc0cb6d031d7a";
       environment = {
         DEFAULT_DOMAIN = config.ldryt-infra.dns.zone;
         IS_HTTPS_ENABLED = "true";
@@ -47,7 +47,7 @@ in
     "shlink-db" = {
       hostname = "shlink-db";
       # renovate: datasource=docker depName=postgres
-      image = "docker.io/library/postgres:16.2";
+      image = "docker.io/library/postgres:16.2@sha256:4aea012537edfad80f98d870a36e6b90b4c09b27be7f4b4759d72db863baeebb";
       environment = {
         POSTGRES_USER = "postgres";
         POSTGRES_DB = "shlink";
