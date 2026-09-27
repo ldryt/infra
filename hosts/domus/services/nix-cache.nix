@@ -7,6 +7,8 @@
     bindAddress = "127.0.0.1";
     secretKeyFile = config.sops.secrets."services/nix-cache/priv-key".path;
   };
+  # prevent stale cache metadata after GC
+  systemd.services.nix-serve.environment.NIX_CONFIG = "narinfo-cache-positive-ttl = 0";
   services.nginx.virtualHosts."${config.ldryt-infra.dns.records.nix-cache}" = {
     forceSSL = true;
     enableACME = true;
