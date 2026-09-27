@@ -19,6 +19,7 @@
     iw
     wget
     dig
+    mosh
 
     opentofu
     sops

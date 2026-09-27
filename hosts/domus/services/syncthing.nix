@@ -81,6 +81,7 @@
   users.users.${config.services.syncthing.user}.createHome = lib.mkForce false;
   systemd.services.syncthing = {
     environment.STNODEFAULTFOLDER = "true";
+    serviceConfig.UMask = "0002";
     unitConfig.ConditionPathExists = "/dev/disk/by-uuid/2a37da19-450e-4119-adfa-7cb42edb76ba";
   };
 }

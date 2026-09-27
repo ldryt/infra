@@ -20,11 +20,14 @@
     ../../modules/podman.nix
 
     ../../modules/colon-user.nix
+    ../../modules/ldryt-remote-user.nix
     ../../modules/impermanence.nix
     ../../modules/backups.nix
     ../../modules/dns.nix
     ../../modules/monitoring/client.nix
   ];
+
+  nixpkgs.config.allowUnfree = true;
 
   sops.defaultSopsFile = ./secrets.yaml;
   sops.age.keyFile = "/nix/persist/sops_age_domus.key";
