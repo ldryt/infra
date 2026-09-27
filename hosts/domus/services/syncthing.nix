@@ -42,7 +42,6 @@
       folders =
         let
           folderCfg = {
-            type = "receiveonly";
             devices = [
               "tinkerbell"
               "silvermist"
