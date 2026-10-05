@@ -120,7 +120,7 @@ in
       "defaults"
       "nofail"
       "x-systemd.automount"
-      "x-systemd.device-timeout=5s"
+      "x-systemd.device-timeout=60s"
       "x-systemd.idle-timeout=5min"
     ];
   };
