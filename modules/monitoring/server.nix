@@ -125,7 +125,7 @@ in
                 rules:
                   - alert: HostDown
                     expr: up{instance!~"${ephemeralClientsRegex}"} == 0
-                    for: 1m
+                    for: 10m
                     labels:
                       severity: critical
                     annotations:
@@ -133,7 +133,7 @@ in
 
                   - alert: HighCPUPressure
                     expr: rate(node_pressure_cpu_waiting_seconds_total[5m]) * 100 > 80
-                    for: 5m
+                    for: 45m
                     labels:
                       severity: critical
                     annotations:
@@ -141,7 +141,7 @@ in
 
                   - alert: HighIOPressure
                     expr: rate(node_pressure_io_waiting_seconds_total[5m]) * 100 > 65
-                    for: 5m
+                    for: 45m
                     labels:
                       severity: critical
                     annotations:
@@ -149,7 +149,7 @@ in
 
                   - alert: HighMemoryPressure
                     expr: rate(node_pressure_memory_waiting_seconds_total[5m]) * 100 > 65
-                    for: 5m
+                    for: 45m
                     labels:
                       severity: critical
                     annotations:
@@ -189,7 +189,7 @@ in
 
                   - alert: WireguardPeerOffline
                     expr: (time() - wireguard_latest_handshake_seconds{public_key!~"${ephemeralWgPubKeysRegex}"}) > 300
-                    for: 2m
+                    for: 10m
                     labels:
                       severity: critical
                     annotations:
@@ -207,7 +207,7 @@ in
                 rules:
                   - alert: ProbeUnreachable
                     expr: probe_success{job!="blackbox_tcp_fail"} == 0
-                    for: 2m
+                    for: 5m
                     labels:
                       severity: critical
                     annotations:
@@ -215,7 +215,7 @@ in
 
                   - alert: PortExposed
                     expr: probe_success{job="blackbox_tcp_fail"} == 1
-                    for: 2m
+                    for: 5m
                     labels:
                       severity: critical
                     annotations:
