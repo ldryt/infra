@@ -170,6 +170,7 @@ in
       VNO = mkWifi "$VNO_SSID" "$VNO_PWD";
       GNB = mkWifi "$GNB_SSID" "$GNB_PWD";
       ORY = mkSaeWifi "$ORY_SSID" "$ORY_PWD";
+      MST = mkSaeWifi "$MST_SSID" "$MST_PWD";
       rosetta = mkWifi "rosetta" "$ROSETTA_PWD";
       tp420ia = mkWifi "tp420ia" "$TP420IA_PWD";
       IONIS = mkEapWifi "IONIS" "$eduroam_ID" "$eduroam_PWD";
