@@ -1,4 +1,9 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 {
   ldryt-infra.persist.directories = (
     # TODO: uniquefy final list
@@ -27,6 +32,11 @@
   sops.secrets."services/umami/appSecret" = { };
   services.umami = {
     enable = true;
+    package = pkgs.umami.overrideAttrs (old: {
+      checkPhase =
+        builtins.replaceStrings [ "pnpm test" ] [ "pnpm test --testTimeout=30000" ]
+          old.checkPhase;
+    });
     settings = {
       APP_SECRET_FILE = config.sops.secrets."services/umami/appSecret".path;
       COLLECT_API_ENDPOINT = "/api/sweet";

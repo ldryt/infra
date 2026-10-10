@@ -119,7 +119,7 @@
 
     loader.timeout = 1;
     loader.systemd-boot = {
-      configurationLimit = 8;
+      configurationLimit = 4;
       consoleMode = "auto";
       memtest86 = {
         enable = true;
