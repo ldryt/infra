@@ -9,6 +9,12 @@
   sops.secrets."services/syncthing/devices/luke/encryptionPassword".owner =
     config.services.syncthing.user;
 
+  sops.secrets."backups/restic/repos/syncthing-silvermist/password" = { };
+  ldryt-infra.backups.repos.syncthing = {
+    passwordFile = config.sops.secrets."backups/restic/repos/syncthing-silvermist/password".path;
+    paths = [ config.services.syncthing.dataDir ];
+  };
+
   fileSystems."/var/lib/syncthing" = {
     device = "/dev/mapper/2a37-data";
     fsType = "btrfs";

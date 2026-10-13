@@ -205,5 +205,14 @@ in
         );
       in
       listToAttrs all;
+
+    systemd.services = mapAttrs' (
+      name: _: nameValuePair "restic-backups-${name}" {
+        serviceConfig = {
+          Restart = "on-failure";
+          RestartSec = "5min";
+        };
+      }
+    ) config.services.restic.backups;
   };
 }
