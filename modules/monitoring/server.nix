@@ -28,10 +28,6 @@ in
     };
 
     alertmanager = {
-      telegram = {
-        botTokenFile = lib.mkOption { type = lib.types.path; };
-        chatId = lib.mkOption { type = lib.types.int; };
-      };
       mail = {
         passwordFile = lib.mkOption { type = lib.types.path; };
         recipient = lib.mkOption { type = lib.types.str; };
@@ -312,7 +308,7 @@ in
             routes = [
               {
                 matchers = [ "severity=\"critical\"" ];
-                receiver = "telegram";
+                receiver = "email";
                 repeat_interval = "2h";
               }
               {
@@ -333,16 +329,6 @@ in
                   from = "graph@ldryt.dev";
                   auth_username = "graph@ldryt.dev";
                   auth_password_file = cfg.alertmanager.mail.passwordFile;
-                }
-              ];
-            }
-            {
-              name = "telegram";
-              telegram_configs = [
-                {
-                  bot_token_file = cfg.alertmanager.telegram.botTokenFile;
-                  chat_id = cfg.alertmanager.telegram.chatId;
-                  send_resolved = true;
                 }
               ];
             }

@@ -59,10 +59,6 @@
     group = "alertmanager_sops";
     mode = "0440";
   };
-  sops.secrets."services/monitoring/alertmanager/botToken" = {
-    group = "alertmanager_sops";
-    mode = "0440";
-  };
   ldryt-infra.monitoring.server = {
     enable = true;
     wg.privateKeyFile = config.sops.secrets."services/monitoring/wg/privateKey".path;
@@ -74,10 +70,6 @@
       oidcClientId = "2NADHAc~yxd~kNvfJg4PwJNXE1ErhAcQ2~9FPZEh2TgxLY_GIJdv1LluQGKv38iSy~JYNxo.";
     };
     alertmanager = {
-      telegram = {
-        botTokenFile = config.sops.secrets."services/monitoring/alertmanager/botToken".path;
-        chatId = 7676142062;
-      };
       mail = {
         passwordFile = config.sops.secrets."services/grafana/mail/clearPassword".path;
         recipient = "postmaster+alerts@ldryt.dev";
