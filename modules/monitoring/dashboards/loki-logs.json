@@ -55,7 +55,7 @@
       "targetBlank": true,
       "title": "View In Explore",
       "type": "link",
-      "url": "/explore?orgId=1&left=[\"now-1h\",\"now\",\"Loki\",{\"expr\":\"{job=~\\\"$app\\\", instance=~\\\"^$instance$\\\"}\"},{\"ui\":[true,true,true,\"none\"]}]"
+      "url": "/explore?orgId=1&left=[\"now-1h\",\"now\",\"Loki\",{\"expr\":\"{job=~\\\"$app\\\", host=~\\\"${host:regex}\\\", level=~\\\"${level:regex}\\\"}\"},{\"ui\":[true,true,true,\"none\"]}]"
     },
     {
       "$$hashKey": "object:61",
@@ -114,7 +114,7 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "sum(count_over_time({job=~\"$app\", instance=~\"^$instance$\"} |= \"$search\" | logfmt | label_format _level=\"{{.level}}{{.detected_level}}{{.severity}}\" | _level=~\"(?i)($level)\" [$__interval]))",
+          "expr": "sum(count_over_time({job=~\"$app\", host=~\"${host:regex}\", level=~\"${level:regex}\"} |= \"$search\" [$__interval]))",
           "legendFormat": "",
           "refId": "A"
         }
@@ -186,7 +186,7 @@
       },
       "targets": [
         {
-          "expr": "{job=~\"$app\", instance=~\"^$instance$\"} |= \"$search\" | logfmt | label_format _level=\"{{.level}}{{.detected_level}}{{.severity}}\" | _level=~\"(?i)($level)\"",
+          "expr": "{job=~\"$app\", host=~\"${host:regex}\", level=~\"${level:regex}\"} |= \"$search\"",
           "hide": false,
           "legendFormat": "",
           "refId": "A"
@@ -248,17 +248,20 @@
         "type": "textbox"
       },
       {
-        "allValue": null,
-        "current": {},
+        "allValue": ".*",
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
         "datasource": "Loki",
-        "definition": "label_values(instance)",
+        "definition": "label_values(host)",
         "hide": 0,
         "includeAll": true,
-        "label": "Instance",
+        "label": "Host",
         "multi": true,
-        "name": "instance",
+        "name": "host",
         "options": [],
-        "query": "label_values(instance)",
+        "query": "label_values(host)",
         "refresh": 1,
         "regex": "",
         "skipUrlSync": false,
@@ -267,7 +270,10 @@
       },
       {
         "allValue": ".*",
-        "current": {},
+        "current": {
+          "text": "All",
+          "value": "$__all"
+        },
         "datasource": "Loki",
         "hide": 0,
         "includeAll": true,
@@ -275,7 +281,7 @@
         "multi": true,
         "name": "level",
         "options": [],
-        "query": "info, warn, warning, error, critical, debug, trace",
+        "query": "Emergency : 0, Alert : 1, Critical : 2, Error : 3, Warning : 4, Notice : 5, Info : 6, Debug : 7",
         "skipUrlSync": false,
         "sort": 1,
         "type": "custom"
