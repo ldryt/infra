@@ -439,6 +439,7 @@ in
               type = "alertmanager";
               access = "proxy";
               url = "http://127.0.0.1:${toString common.ports.alertmanager}";
+              jsonData.implementation = "prometheus";
             }
           ];
           dashboards.settings.providers = [
