@@ -11,6 +11,7 @@ in
     after = [ "network.target" ];
     wantedBy = [ "multi-user.target" ];
     serviceConfig.Type = "oneshot";
+    serviceConfig.RemainAfterExit = true;
     script = ''
       check=$(${pkgs.podman}/bin/podman network ls | grep "${podmanNetwork}" || true)
       if [ -z "$check" ];
@@ -18,6 +19,15 @@ in
         else echo "${podmanNetwork} already exists in podman"
       fi
     '';
+  };
+
+  systemd.services.podman-shlink-server = {
+    requires = [ "init-shlink-network.service" ];
+    after = [ "init-shlink-network.service" ];
+  };
+  systemd.services.podman-shlink-db = {
+    requires = [ "init-shlink-network.service" ];
+    after = [ "init-shlink-network.service" ];
   };
 
   sops.secrets."services/shlink/server/env".owner = config.users.users.colon.name;
@@ -61,7 +71,8 @@ in
   services.nginx.virtualHosts."${config.ldryt-infra.dns.zone}" = {
     enableACME = true;
     forceSSL = true;
-    locations."/${subfolder}".proxyPass = "http://127.0.0.1:${internalPort}";
+    locations."= /${subfolder}".proxyPass = "http://127.0.0.1:${internalPort}";
+    locations."^~ /${subfolder}/".proxyPass = "http://127.0.0.1:${internalPort}";
   };
 
   sops.secrets."backups/restic/repos/shlink/password" = { };
@@ -70,12 +81,13 @@ in
     paths = [ backupsTmpDir ];
     backupPrepareCommand = ''
       ${pkgs.bash}/bin/bash -c '
+        set -euo pipefail
         if ! mkdir -p "${backupsTmpDir}"; then
           echo "Could not create backup folder '${backupsTmpDir}'" >&2
           exit 1
         fi
 
-        ${pkgs.podman}/bin/podman exec -t shlink-db \
+        ${pkgs.podman}/bin/podman exec shlink-db \
           pg_dumpall -c -U ${config.virtualisation.oci-containers.containers.shlink-db.environment.POSTGRES_USER} | \
           ${pkgs.gzip}/bin/gzip > "${backupsTmpDir}/shlink-db-dump.sql.gz"
       '

@@ -14,6 +14,7 @@
     ./services/syncthing.nix
     ./services/immich.nix
     ./services/frontpage.nix
+    ./services/shlink.nix
     ./services/umami.nix
     ./services/owntracks.nix
     ./services/calibre-web.nix

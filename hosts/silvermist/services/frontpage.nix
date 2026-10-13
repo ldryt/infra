@@ -28,7 +28,7 @@
   services.nginx.virtualHosts."${config.ldryt-infra.dns.zone}" = {
     enableACME = true;
     forceSSL = true;
-    globalRedirect = config.ldryt-infra.dns.records.eu-web;
+    locations."/".return = "301 https://${config.ldryt-infra.dns.records.eu-web}$request_uri";
     extraConfig = ''
       more_clear_headers "X-Robots-Tag";
     '';
