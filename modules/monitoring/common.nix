@@ -29,6 +29,7 @@ rec {
     lokiGrpc = 44192;
     prometheus = 44141;
     nodeExporter = 44191;
+    wireguardExporter = 44194;
     blackbox = 44190;
     grafana = 44144;
     alertmanager = 44193;

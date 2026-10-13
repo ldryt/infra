@@ -268,6 +268,13 @@ in
               };
             }) allWgPeers;
           }
+          {
+            job_name = "wireguard";
+            static_configs = map (host: {
+              targets = [ "${host.ip}:${toString common.ports.wireguardExporter}" ];
+              labels.instance = host.hostname;
+            }) allWgPeers;
+          }
         ]
         ++ (lib.mapAttrsToList (module: targets: {
           job_name = "blackbox_${module}";

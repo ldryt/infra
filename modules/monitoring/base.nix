@@ -32,6 +32,17 @@ in
       ];
     };
 
+    services.prometheus.exporters.wireguard = {
+      enable = true;
+      port = common.ports.wireguardExporter;
+      listenAddress = cfg.listenAddress;
+      interfaces = [ ]; # every interfaces
+    };
+
+    networking.firewall.interfaces."${common.wg.int}".allowedTCPPorts = [
+      common.ports.wireguardExporter
+    ];
+
     services.fluent-bit = {
       enable = true;
       settings = {
