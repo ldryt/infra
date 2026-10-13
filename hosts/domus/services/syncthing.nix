@@ -61,7 +61,10 @@
             ];
             versioning = {
               type = "simple";
-              params.keep = "10";
+              params = {
+                keep = "2";
+                cleanoutDays = "7";
+              };
             };
           };
           folderIds = [
