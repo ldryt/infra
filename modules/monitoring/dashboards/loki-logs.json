@@ -207,7 +207,10 @@
     "list": [
       {
         "allValue": null,
-        "current": {},
+        "current": {
+          "text": "systemd-journal",
+          "value": "systemd-journal"
+        },
         "datasource": "Loki",
         "definition": "label_values(job)",
         "hide": 0,
