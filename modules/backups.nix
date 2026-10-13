@@ -123,9 +123,9 @@ in
                 type = types.listOf types.str;
                 default = [
                   "--keep-daily 7"
-                  "--keep-weekly 8"
-                  "--keep-monthly 12"
-                  "--keep-yearly 100"
+                  "--keep-weekly 4"
+                  "--keep-monthly 3"
+                  "--keep-yearly 2"
                   "--group-by host"
                 ];
               };

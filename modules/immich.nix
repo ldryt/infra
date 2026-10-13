@@ -200,7 +200,7 @@ in
               backup.database = {
                 enabled = true;
                 cronExpression = "0 */6 * * *";
-                keepLastAmount = 60;
+                keepLastAmount = 8;
               };
               ffmpeg = {
                 transcode = "all";
