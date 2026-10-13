@@ -293,6 +293,7 @@ in
       };
 
       users.groups.alertmanager_sops = { };
+      systemd.tmpfiles.rules = [ "d /var/lib/private 0700 root root -" ];
       systemd.services.alertmanager.serviceConfig.SupplementaryGroups = [ "alertmanager_sops" ];
       services.prometheus.alertmanager = {
         enable = true;
