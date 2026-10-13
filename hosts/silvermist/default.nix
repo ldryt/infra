@@ -70,6 +70,11 @@
       oidcClientId = "2NADHAc~yxd~kNvfJg4PwJNXE1ErhAcQ2~9FPZEh2TgxLY_GIJdv1LluQGKv38iSy~JYNxo.";
     };
     alertmanager = {
+      shortLinks = {
+        nodes = "https://ldryt.dev/link/alerts-nodes";
+        logs = "https://ldryt.dev/link/alerts-logs";
+        blackbox = "https://ldryt.dev/link/alerts-probes";
+      };
       mail = {
         passwordFile = config.sops.secrets."services/grafana/mail/clearPassword".path;
         recipient = "postmaster+alerts@ldryt.dev";

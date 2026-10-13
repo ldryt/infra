@@ -28,6 +28,11 @@ in
     };
 
     alertmanager = {
+      shortLinks = lib.mkOption {
+        type = lib.types.attrsOf lib.types.str;
+        default = { };
+        description = "Plain-text Shlink URLs for nodes, logs, and blackbox dashboards.";
+      };
       mail = {
         passwordFile = lib.mkOption { type = lib.types.path; };
         recipient = lib.mkOption { type = lib.types.str; };
@@ -39,6 +44,9 @@ in
     let
       toRegex = builtins.concatStringsSep "|";
       escapePubKey = lib.replaceStrings [ "+" ] [ "[+]" ];
+      nodeDashboard = "https://${config.ldryt-infra.dns.records.grafana}/d/rYdddlPWk?var-job=nodes&var-nodename=All&var-node={{ $labels.instance | urlquery }}";
+      probeDashboard = "https://${config.ldryt-infra.dns.records.grafana}/d/xtkCtBkiz?var-target={{ $labels.instance | urlquery }}";
+      logsDashboard = "https://${config.ldryt-infra.dns.records.grafana}/d/sadlil-loki-apps-dashboard?var-host={{ $labels.instance | urlquery }}";
 
       allWgPeers = [ common.wg.server ] ++ builtins.attrValues common.wg.clients;
       ephemeralWgPeers = builtins.filter (p: p.isEphemeral or false) allWgPeers;
@@ -126,6 +134,8 @@ in
                       severity: critical
                     annotations:
                       summary: "Host {{ $labels.instance }} is down"
+                      dashboard_url: "${nodeDashboard}"
+                      short_url: "${cfg.alertmanager.shortLinks.nodes or ""}"
 
                   - alert: HighCPUPressure
                     expr: rate(node_pressure_cpu_waiting_seconds_total[5m]) * 100 > 80
@@ -134,6 +144,8 @@ in
                       severity: critical
                     annotations:
                       summary: "High CPU Pressure on {{ $labels.instance }}: {{ $value | printf \"%.1f\" }}% stall time"
+                      dashboard_url: "${nodeDashboard}"
+                      short_url: "${cfg.alertmanager.shortLinks.nodes or ""}"
 
                   - alert: HighIOPressure
                     expr: rate(node_pressure_io_waiting_seconds_total[5m]) * 100 > 65
@@ -142,6 +154,8 @@ in
                       severity: critical
                     annotations:
                       summary: "High I/O wait times on {{ $labels.instance }}: {{ $value | printf \"%.1f\" }}% stall time"
+                      dashboard_url: "${nodeDashboard}"
+                      short_url: "${cfg.alertmanager.shortLinks.nodes or ""}"
 
                   - alert: HighMemoryPressure
                     expr: rate(node_pressure_memory_waiting_seconds_total[5m]) * 100 > 65
@@ -150,6 +164,8 @@ in
                       severity: critical
                     annotations:
                       summary: "High Memory Pressure on {{ $labels.instance }}: {{ $value | printf \"%.1f\" }}% stall time"
+                      dashboard_url: "${nodeDashboard}"
+                      short_url: "${cfg.alertmanager.shortLinks.nodes or ""}"
 
                   - alert: LowDisk
                     expr: (node_filesystem_avail_bytes{mountpoint=~"${allMountsRegex}"} / node_filesystem_size_bytes{mountpoint=~"${allMountsRegex}"}) * 100 < 8
@@ -158,6 +174,8 @@ in
                       severity: warning
                     annotations:
                       summary: "Low disk on {{ $labels.instance }}{{ $labels.mountpoint }}: {{ $value | printf \"%.1f\" }}% free"
+                      dashboard_url: "${nodeDashboard}"
+                      short_url: "${cfg.alertmanager.shortLinks.nodes or ""}"
 
                   - alert: CriticalDisk
                     expr: (node_filesystem_avail_bytes{mountpoint=~"${allMountsRegex}"} / node_filesystem_size_bytes{mountpoint=~"${allMountsRegex}"}) * 100 < 3
@@ -166,6 +184,8 @@ in
                       severity: critical
                     annotations:
                       summary: "Critical disk on {{ $labels.instance }}{{ $labels.mountpoint }}: {{ $value | printf \"%.1f\" }}% free"
+                      dashboard_url: "${nodeDashboard}"
+                      short_url: "${cfg.alertmanager.shortLinks.nodes or ""}"
 
                   - alert: SystemdUnitFailed
                     expr: node_systemd_unit_state{state="failed"} == 1
@@ -174,6 +194,8 @@ in
                       severity: critical
                     annotations:
                       summary: "Systemd unit {{ $labels.name }} failed on {{ $labels.instance }}"
+                      dashboard_url: "${logsDashboard}"
+                      short_url: "${cfg.alertmanager.shortLinks.logs or ""}"
 
                   - alert: OOMKillTriggered
                     expr: increase(node_vmstat_oom_kill[5m]) > 0
@@ -182,6 +204,8 @@ in
                       severity: critical
                     annotations:
                       summary: "OOM Kill was triggered on {{ $labels.instance }}."
+                      dashboard_url: "${nodeDashboard}"
+                      short_url: "${cfg.alertmanager.shortLinks.nodes or ""}"
 
                   - alert: WireguardPeerOffline
                     expr: (time() - wireguard_latest_handshake_seconds{public_key!~"${ephemeralWgPubKeysRegex}"}) > 300
@@ -190,6 +214,8 @@ in
                       severity: critical
                     annotations:
                       summary: 'Peer ${wgPeerNameTemplate} has lost connection to {{ $labels.instance }}'
+                      dashboard_url: "${nodeDashboard}"
+                      short_url: "${cfg.alertmanager.shortLinks.nodes or ""}"
 
                   - alert: HostReboot
                     expr: time() - node_boot_time_seconds < 60 * 5
@@ -198,6 +224,8 @@ in
                       severity: warning
                     annotations:
                       summary: "{{ $labels.instance }} just rebooted"
+                      dashboard_url: "${nodeDashboard}"
+                      short_url: "${cfg.alertmanager.shortLinks.nodes or ""}"
 
               - name: blackbox
                 rules:
@@ -208,6 +236,8 @@ in
                       severity: critical
                     annotations:
                       summary: "{{ $labels.instance }} probe failed ({{ $labels.job }})"
+                      dashboard_url: "${probeDashboard}"
+                      short_url: "${cfg.alertmanager.shortLinks.blackbox or ""}"
 
                   - alert: PortExposed
                     expr: probe_success{job="blackbox_tcp_fail"} == 1
@@ -216,6 +246,8 @@ in
                       severity: critical
                     annotations:
                       summary: "Port {{ $labels.instance }} is exposed"
+                      dashboard_url: "${probeDashboard}"
+                      short_url: "${cfg.alertmanager.shortLinks.blackbox or ""}"
 
                   - alert: SSLCertExpiring
                     expr: probe_ssl_earliest_cert_expiry - time() < 86400 * 20
@@ -224,6 +256,8 @@ in
                       severity: critical
                     annotations:
                       summary: "SSL Certificate for {{ $labels.instance }} expires in less than 20 days"
+                      dashboard_url: "${probeDashboard}"
+                      short_url: "${cfg.alertmanager.shortLinks.blackbox or ""}"
           ''
         ];
         alertmanagers = [
@@ -307,6 +341,13 @@ in
         port = common.ports.alertmanager;
         listenAddress = "127.0.0.1";
         configuration = {
+          inhibit_rules = [
+            {
+              source_matchers = [ "alertname=\"CriticalDisk\"" ];
+              target_matchers = [ "alertname=\"LowDisk\"" ];
+              equal = [ "instance" "mountpoint" ];
+            }
+          ];
           route = {
             receiver = "email";
             group_by = [
@@ -337,6 +378,15 @@ in
                   from = "graph@ldryt.dev";
                   auth_username = "graph@ldryt.dev";
                   auth_password_file = cfg.alertmanager.mail.passwordFile;
+                  headers.Subject = "[{{ .Status | toUpper }}] {{ .CommonLabels.alertname }} on {{ .CommonLabels.instance }}";
+                  html = "";
+                  text = ''
+                    {{ range .Alerts }}{{ .Annotations.summary }}
+                    View dashboard: {{ .Annotations.dashboard_url }}
+                    {{ with .Annotations.short_url }}{{ . }}{{ end }}
+
+                    {{ end }}
+                  '';
                 }
               ];
             }
