@@ -11,7 +11,7 @@
     super-slicer-beta
     evolution
     obsidian
-    telegram-desktop
+    signal-desktop
     parsec-bin
     libreoffice
     digikam
