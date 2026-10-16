@@ -2,7 +2,7 @@
 {
   imports = [
     ./nmprofiles.nix
-    ../../../modules/dnscrypt-proxy.nix
+    ../../../modules/nextdns.nix
   ];
 
   ldryt-infra.persist.files = [
@@ -18,6 +18,11 @@
         macAddress = "stable-ssid";
       };
       logLevel = "INFO";
+      settings.connectivity = {
+        enable = true;
+        uri = "http://nmcheck.gnome.org/check_network_status.txt";
+        response = "NetworkManager is online";
+      };
     };
     firewall = {
       allowedTCPPorts = [
@@ -27,6 +32,10 @@
       # Don't drop wireguard packets
       checkReversePath = "loose";
     };
+  };
+  services.avahi = {
+    enable = true;
+    nssmdns4 = true;
   };
   hardware.wirelessRegulatoryDatabase = true;
   boot.extraModprobeConfig = ''
