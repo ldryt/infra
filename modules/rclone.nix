@@ -45,6 +45,7 @@ in
   };
 
   config = {
+    ldryt-infra.persist.directories = [ "/var/lib/rclone" ];
     environment.systemPackages = [ pkgs.rclone ];
     sops.secrets."system/rclone/rclone.conf" = { };
     fileSystems = lib.mapAttrs' mount config.ldryt-infra.rclone.mounts;
