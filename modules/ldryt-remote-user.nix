@@ -24,7 +24,7 @@ in
     users.users.ldryt = {
       inherit (cfg) uid;
       isNormalUser = true;
-      hashedPassword = "!";
+      hashedPassword = lib.mkDefault "!";
       openssh.authorizedKeys.keys = cfg.authorizedKeys;
     };
 
