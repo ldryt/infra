@@ -1,4 +1,4 @@
-{ ... }:
+{ config, ... }:
 {
   ldryt-infra.users.colon = {
     enable = true;
@@ -16,5 +16,22 @@
     ];
   };
 
-  users.users.ldryt.extraGroups = [ "syncthing" ];
+  sops.secrets."users/ldryt/hashedPassword".neededForUsers = true;
+  users.users.ldryt = {
+    extraGroups = [ "syncthing" ];
+    hashedPassword = null;
+    hashedPasswordFile = config.sops.secrets."users/ldryt/hashedPassword".path;
+  };
+
+  security.sudo.extraRules = [
+    {
+      users = [ "ldryt" ];
+      commands = [
+        {
+          command = "ALL";
+          options = [ "PASSWD" ];
+        }
+      ];
+    }
+  ];
 }
