@@ -5,6 +5,7 @@
     ./services/h100-380-llama.nix
 
     ../../modules/nix-settings.nix
+    ../../modules/rclone.nix
     ../../modules/openssh.nix
     ../../modules/impermanence.nix
     ../../modules/colon-user.nix
@@ -13,6 +14,7 @@
   nixpkgs.config.allowUnfree = true;
 
   sops.defaultSopsFile = ./secrets.yaml;
+  ldryt-infra.rclone.mounts.scratchpad.umask = "0007";
   sops.age.keyFile = "/nix/persist/sops_age_vidia.key";
 
   ldryt-infra.users.colon = {

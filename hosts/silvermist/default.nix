@@ -37,6 +37,7 @@
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
+  ldryt-infra.rclone.mounts.scratchpad.umask = "0007";
   sops.age.keyFile = "/nix/sops_age_silvermist.key";
 
   sops.secrets."backups/restic/hosts/domus/sshKey" = { };

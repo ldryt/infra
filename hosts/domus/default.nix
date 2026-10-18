@@ -33,6 +33,15 @@
   sops.defaultSopsFile = ./secrets.yaml;
   sops.age.keyFile = "/nix/persist/sops_age_domus.key";
 
+  ldryt-infra.rclone.mounts = {
+    onedrive = { };
+    gdrive = { };
+    glouton = { };
+    rbackups.user = "ldryt";
+    photos-2004-2017 = { };
+    scratchpad.umask = "0007";
+  };
+
   sops.secrets."backups/restic/hosts/glouton/sshKey" = { };
   sops.secrets."backups/restic/repos/domus/password" = { };
   ldryt-infra.backups.hosts = {

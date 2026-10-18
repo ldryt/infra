@@ -23,6 +23,7 @@
   ];
 
   sops.defaultSopsFile = ./secrets.yaml;
+  ldryt-infra.rclone.mounts.scratchpad.umask = "0007";
   sops.age.keyFile = "/nix/persist/sops_age_printer.key";
 
   sops.secrets."backups/restic/hosts/glouton/sshKey" = { };

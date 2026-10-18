@@ -1,6 +1,7 @@
 { ... }:
 {
   imports = [
+    ../../modules/rclone.nix
     ./hardware
     ./networking
     ./users.nix
@@ -23,6 +24,7 @@
   nixpkgs.config.allowUnfree = true;
 
   sops.defaultSopsFile = ./secrets.yaml;
+  ldryt-infra.rclone.mounts.scratchpad.umask = "0007";
   sops.age.keyFile = "/nix/persist/sops_age_tinkerbell.key";
 
   system.stateVersion = "23.05";
