@@ -193,109 +193,105 @@ in
         # https://github.com/NixOS/nixpkgs/issues/369379#issuecomment-3082247079
         sops.secrets."services/immich/oidc/clientSecret".owner = config.services.immich.user;
         sops.secrets."services/immich/mail/clearPassword".owner = config.services.immich.user;
-        sops.templates."immich.json" =
-          let
-            settings = {
-              server.externalDomain = "https://${config.ldryt-infra.dns.records.immich}";
-              backup.database = {
+        sops.templates."immich.json" = {
+          owner = config.services.immich.user;
+          restartUnits = [
+            "immich-server.service"
+            "immich-machine-learning.service"
+          ];
+          content = lib.strings.toJSON {
+            server.externalDomain = "https://${config.ldryt-infra.dns.records.immich}";
+            backup.database = {
+              enabled = true;
+              cronExpression = "0 */6 * * *";
+              keepLastAmount = 8;
+            };
+            ffmpeg = {
+              transcode = "all";
+              acceptedAudioCodecs = [ "aac" ];
+              acceptedContainers = [ ];
+              acceptedVideoCodecs = [ "hevc" ];
+              targetAudioCodec = "aac";
+              targetResolution = "1080";
+              targetVideoCodec = "hevc";
+              crf = 30;
+              maxBitrate = "0";
+              preset = "medium";
+              twoPass = false;
+            };
+            storageTemplate = {
+              enabled = true;
+              hashVerificationEnabled = true;
+              template = "{{#if album}}{{album}}{{else}}{{y}}/{{WW}}{{/if}}/{{HH}}/{{filetype}}_{{y}}{{MM}}{{dd}}-{{HH}}{{mm}}{{ss}}{{SSS}}_{{assetId}}";
+            };
+            image = {
+              fullsize = {
                 enabled = true;
-                cronExpression = "0 */6 * * *";
-                keepLastAmount = 8;
+                format = "webp";
+                quality = 90;
               };
-              ffmpeg = {
-                transcode = "all";
-                acceptedAudioCodecs = [ "aac" ];
-                acceptedContainers = [ ];
-                acceptedVideoCodecs = [ "hevc" ];
-                targetAudioCodec = "aac";
-                targetResolution = "1080";
-                targetVideoCodec = "hevc";
-                crf = 30;
-                maxBitrate = "0";
-                preset = "medium";
-                twoPass = false;
+              preview = {
+                format = "jpeg";
+                progressive = true;
+                quality = 80;
+                size = 1080;
               };
-              storageTemplate = {
-                enabled = true;
-                hashVerificationEnabled = true;
-                template = "{{#if album}}{{album}}{{else}}{{y}}/{{WW}}{{/if}}/{{HH}}/{{filetype}}_{{y}}{{MM}}{{dd}}-{{HH}}{{mm}}{{ss}}{{SSS}}_{{assetId}}";
-              };
-              image = {
-                fullsize = {
-                  enabled = true;
-                  format = "webp";
-                  quality = 90;
-                };
-                preview = {
-                  format = "jpeg";
-                  progressive = true;
-                  quality = 80;
-                  size = 1080;
-                };
-                thumbnail = {
-                  format = "webp";
-                  quality = 70;
-                  size = 250;
-                };
-              };
-              job = {
-                thumbnailGeneration.concurrency = 4;
-                videoConversion.concurrency = 2;
-                smartSearch.concurrency = 1;
-                faceDetection.concurrency = 1;
-                ocr.concurrency = 1;
-              };
-              logging = {
-                enabled = true;
-                level = "log";
-              };
-              machineLearning = {
-                clip.modelName = cfg.ml.clipModel;
-                ocr = {
-                  modelName = cfg.ml.ocrModel;
-                  maxResolution = 1280;
-                };
-                facialRecognition.modelName = cfg.ml.facialModel;
-                availabilityChecks.timeout = 30000;
-              };
-              newVersionCheck.enabled = false;
-              oauth = {
-                enabled = true;
-                autoRegister = true;
-                autoLaunch = true;
-                buttonText = "Login with ${config.ldryt-infra.dns.records.authelia}";
-                defaultStorageQuota = 5;
-                clientId = cfg.oidc.clientID;
-                clientSecret = config.sops.placeholder."services/immich/oidc/clientSecret";
-                issuerUrl = "https://${config.ldryt-infra.dns.records.authelia}/.well-known/openid-configuration";
-                signingAlgorithm = cfg.oidc.signingAlg;
-                profileSigningAlgorithm = cfg.oidc.signingAlg;
-                scope = "openid email profile immich_scope";
-                storageLabelClaim = "preferred_username";
-                storageQuotaClaim = "immich_quota";
-                roleClaim = "immich_role";
-              };
-              passwordLogin.enabled = false;
-              notifications.smtp = {
-                enabled = true;
-                from = cfg.smtpSender;
-                transport = {
-                  host = "${config.ldryt-infra.dns.records.mailserver}";
-                  port = 465;
-                  username = cfg.smtpSender;
-                  password = config.sops.placeholder."services/immich/mail/clearPassword";
-                };
+              thumbnail = {
+                format = "webp";
+                quality = 70;
+                size = 250;
               };
             };
-          in
-          {
-            owner = config.services.immich.user;
-            restartUnits = [
-              "immich-server.service"
-              "immich-machine-learning.service"
-            ];
-            content = lib.strings.toJSON settings;
+            job = {
+              thumbnailGeneration.concurrency = 4;
+              videoConversion.concurrency = 2;
+              smartSearch.concurrency = 1;
+              faceDetection.concurrency = 1;
+              ocr.concurrency = 1;
+            };
+            logging = {
+              enabled = true;
+              level = "log";
+            };
+            machineLearning = {
+              clip.modelName = cfg.ml.clipModel;
+              ocr = {
+                modelName = cfg.ml.ocrModel;
+                maxResolution = 1280;
+              };
+              facialRecognition.modelName = cfg.ml.facialModel;
+              availabilityChecks.timeout = 30000;
+            };
+            newVersionCheck.enabled = false;
+            oauth = {
+              enabled = true;
+              autoRegister = true;
+              autoLaunch = true;
+              buttonText = "Login with ${config.ldryt-infra.dns.records.authelia}";
+              defaultStorageQuota = 5;
+              clientId = cfg.oidc.clientID;
+              clientSecret = config.sops.placeholder."services/immich/oidc/clientSecret";
+              issuerUrl = "https://${config.ldryt-infra.dns.records.authelia}/.well-known/openid-configuration";
+              signingAlgorithm = cfg.oidc.signingAlg;
+              profileSigningAlgorithm = cfg.oidc.signingAlg;
+              scope = "openid email profile immich_scope";
+              storageLabelClaim = "preferred_username";
+              storageQuotaClaim = "immich_quota";
+              roleClaim = "immich_role";
+            };
+            passwordLogin.enabled = false;
+            notifications.smtp = {
+              enabled = true;
+              from = cfg.smtpSender;
+              transport = {
+                host = "${config.ldryt-infra.dns.records.mailserver}";
+                port = 465;
+                username = cfg.smtpSender;
+                password = config.sops.placeholder."services/immich/mail/clearPassword";
+              };
+            };
           };
+        };
 
         environment.systemPackages = [
           pkgs.cifs-utils
