@@ -184,12 +184,6 @@ in
           };
         };
 
-        systemd.services.immich-server.serviceConfig = {
-          MemoryMax = "1536M";
-          MemorySwapMax = 0;
-          OOMPolicy = "kill";
-        };
-
         # https://github.com/NixOS/nixpkgs/issues/369379#issuecomment-3082247079
         sops.secrets."services/immich/oidc/clientSecret".owner = config.services.immich.user;
         sops.secrets."services/immich/mail/clearPassword".owner = config.services.immich.user;
@@ -293,10 +287,7 @@ in
           };
         };
 
-        environment.systemPackages = [
-          pkgs.cifs-utils
-          pkgs.rclone
-        ];
+        environment.systemPackages = [ pkgs.cifs-utils ];
 
         sops.secrets."system/smb/glouton/immich-library/credentials" = { };
         fileSystems."${cfg.mediaLocation}" = {
@@ -329,30 +320,21 @@ in
           ];
         };
 
-        sops.secrets."system/rclone/gdrive-photos-2004-2017-crypted/rclone.conf" = { };
-        fileSystems."${cfg.gdriveArchiveMount}" = {
-          device = "gdrive-photos-2004-2017-crypted:/";
-          fsType = "rclone";
-          options = [
-            "nodev"
-            "nofail"
-
-            "allow_other"
-            "default_permissions"
-            "uid=${toString config.services.immich.user}"
-            "gid=${toString config.services.immich.group}"
-            "umask=007"
-
-            "cache-dir=/var/cache/rclone-vfs-1"
-            "vfs-cache-mode=full"
-            "vfs-cache-min-free-space=5G"
-            "vfs-cache-max-age=6w"
-
-            "log-level=DEBUG"
-
-            "args2env"
-            "config=${config.sops.secrets."system/rclone/gdrive-photos-2004-2017-crypted/rclone.conf".path}"
-          ];
+        users.groups.immich-archive.gid = 1445;
+        users.users.${config.services.immich.user}.extraGroups = [ "immich-archive" ];
+        ldryt-infra.rclone.mounts.photos-2004-2017 = {
+          mountPoint = cfg.gdriveArchiveMount;
+          group = "immich-archive";
+          umask = "0027";
+          readOnly = true;
+        };
+        systemd.services.immich-server = {
+          serviceConfig = {
+            MemoryMax = "1536M";
+            MemorySwapMax = 0;
+            OOMPolicy = "kill";
+          };
+          unitConfig.RequiresMountsFor = [ cfg.gdriveArchiveMount ];
         };
       })
 
