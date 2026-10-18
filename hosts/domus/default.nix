@@ -22,6 +22,7 @@
     ../../modules/colon-user.nix
     ../../modules/ldryt-remote-user.nix
     ../../modules/impermanence.nix
+    ../../modules/rclone.nix
     ../../modules/backups.nix
     ../../modules/dns.nix
     ../../modules/monitoring/client.nix
@@ -34,13 +35,9 @@
 
   sops.secrets."backups/restic/hosts/glouton/sshKey" = { };
   sops.secrets."backups/restic/repos/domus/password" = { };
-  sops.secrets."backups/restic/hosts/gdrive/rclone.conf" = { };
-  ldryt-infra.backups = {
-    hosts = {
-      glouton.sshKey = config.sops.secrets."backups/restic/hosts/glouton/sshKey".path;
-      domus.enable = false;
-      gdrive.rcloneConfigFile = config.sops.secrets."backups/restic/hosts/gdrive/rclone.conf".path;
-    };
+  ldryt-infra.backups.hosts = {
+    glouton.sshKey = config.sops.secrets."backups/restic/hosts/glouton/sshKey".path;
+    domus.enable = false;
   };
 
   sops.secrets."services/monitoring/wg/privateKey" = { };

@@ -2,7 +2,6 @@
   config,
   lib,
   utils,
-  pkgs,
   ...
 }:
 with lib;
@@ -31,11 +30,6 @@ in
               default = null;
             };
 
-            rcloneConfigFile = mkOption {
-              type = types.nullOr types.path;
-              default = null;
-            };
-
             sshKey = mkOption {
               type = types.str;
               default = "";
@@ -60,7 +54,7 @@ in
               default = [
                 "glouton"
                 "domus"
-                "gdrive"
+                "onedrive"
               ];
             };
 
@@ -126,15 +120,13 @@ in
   };
 
   config = {
-    environment.systemPackages = mkIf (any (h: h.rcloneRemote != null) (attrValues cfg.hosts)) [ pkgs.rclone ];
-
     ldryt-infra.backups.hosts = {
       glouton.url = "u391790-sub3@u391790-sub3.your-storagebox.de";
       domus = {
         url = "restic-backups@domus.ldryt.dev";
         port = 22;
       };
-      gdrive.rcloneRemote = "gdrive";
+      onedrive.rcloneRemote = "onedrive";
     };
 
     services.restic.backups = listToAttrs (
@@ -150,7 +142,7 @@ in
             nameValuePair "${repoName}@${hostName}" (
               (removeAttrs repo [ "hosts" ])
               // {
-                inherit (host) rcloneConfigFile;
+                rcloneConfigFile = if isRclone then config.sops.secrets."system/rclone/rclone.conf".path else null;
                 initialize = true;
                 repository =
                   if isRclone then
