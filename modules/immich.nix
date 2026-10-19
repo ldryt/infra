@@ -59,7 +59,7 @@ in
     };
     gdriveArchiveMount = lib.mkOption {
       type = lib.types.str;
-      default = "/mnt/gdrive-photos-2004-2017";
+      default = "/mnt/photos-2004-2017";
     };
 
     ml = {
