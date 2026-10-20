@@ -26,9 +26,7 @@
         in
         {
           "uBlock0@raymondhill.net" = extension "ublock-origin";
-          "idcac-pub@guus.ninja" = extension "istilldontcareaboutcookies";
           "sponsorBlocker@ajay.app" = extension "sponsorblock";
-          "addon@darkreader.org" = extension "darkreader";
           "@testpilot-containers" = extension "multi-account-containers";
         };
     };
