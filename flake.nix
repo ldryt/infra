@@ -1,7 +1,7 @@
 {
   inputs = {
     seerr-src = {
-      url = "github:seerr-team/seerr/develop";
+      url = "github:michaelhthomas/seerr/2e523125e8e7262af44309c70db20fe2d7ca28a3";
       flake = false;
     };
     papermod = {
