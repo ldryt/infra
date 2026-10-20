@@ -1,23 +1,19 @@
 {
-  lib,
   config,
   pkgs,
   ...
 }:
 {
-  ldryt-infra.persist.directories = (
-    # TODO: uniquefy final list
-    lib.optionals (!config.services.immich.enable) [
-      {
-        directory = config.services.postgresqlBackup.location;
-        user = "postgres";
-      }
-      {
-        directory = config.services.postgresql.dataDir;
-        user = "postgres";
-      }
-    ]
-  );
+  ldryt-infra.persist.directories = [
+    {
+      directory = config.services.postgresqlBackup.location;
+      user = "postgres";
+    }
+    {
+      directory = config.services.postgresql.dataDir;
+      user = "postgres";
+    }
+  ];
   sops.secrets."backups/restic/repos/umami/password" = { };
   ldryt-infra.backups.repos.umami = {
     passwordFile = config.sops.secrets."backups/restic/repos/umami/password".path;

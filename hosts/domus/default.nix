@@ -7,7 +7,7 @@
 
     ./services/adguardhome.nix
     ./services/media.nix
-    ./services/immich-machine-learning.nix
+    ./services/immich.nix
     ./services/syncthing.nix
     ./services/restic-sftp-host.nix
     ./services/nix-cache.nix
@@ -38,7 +38,6 @@
     gdrive = { };
     glouton = { };
     rbackups.user = "ldryt";
-    photos-2004-2017 = { };
     scratchpad.umask = "0007";
   };
 

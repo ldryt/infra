@@ -12,7 +12,6 @@
     ./services/mailserver
     ./services/radicale.nix
     ./services/syncthing.nix
-    ./services/immich.nix
     ./services/frontpage.nix
     ./services/shlink.nix
     ./services/umami.nix
