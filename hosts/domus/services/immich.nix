@@ -105,6 +105,11 @@ in
     package = pkgs-master.immich;
     mediaLocation = "/mnt/immich";
     accelerationDevices = [ "/dev/dri/renderD128" ];
+    machine-learning.environment = {
+      MACHINE_LEARNING_MODEL_REVISION = "v2";
+      MACHINE_LEARNING_MODEL_INTRA_OP_THREADS = "2";
+      MACHINE_LEARNING_REQUEST_THREADS = "2";
+    };
     settings = {
       server.externalDomain = "https://${config.ldryt-infra.dns.records.immich}";
       backup.database = {
@@ -158,7 +163,7 @@ in
       machineLearning = {
         clip.modelName = "ViT-B-16-SigLIP2__webli";
         ocr = {
-          modelName = "PP-OCRv5_mobile";
+          modelName = "PP-OCRv6_tiny";
           maxResolution = 1280;
         };
         facialRecognition.modelName = "buffalo_l";
