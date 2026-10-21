@@ -9,10 +9,12 @@ in
     {
       directory = dataDir;
       user = config.services.calibre-web.user;
+      group = config.services.calibre-web.group;
     }
     {
       directory = libraryDir;
       user = config.services.calibre-web.user;
+      group = config.services.calibre-web.group;
     }
   ];
 

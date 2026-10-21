@@ -15,7 +15,6 @@
     ./services/shlink.nix
     ./services/umami.nix
     ./services/owntracks.nix
-    ./services/calibre-web.nix
     ./services/wallabag.nix
     ./services/cachefilesd.nix
 

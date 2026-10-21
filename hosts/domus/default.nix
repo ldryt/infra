@@ -9,6 +9,7 @@
     ./services/media.nix
     ./services/immich.nix
     ./services/radicale.nix
+    ./services/calibre-web.nix
     ./services/syncthing.nix
     ./services/restic-sftp-host.nix
     ./services/nix-cache.nix
