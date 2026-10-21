@@ -904,17 +904,17 @@
     "seerr-src": {
       "flake": false,
       "locked": {
-        "lastModified": 1791603928,
-        "narHash": "sha256-k8qWhsSBnQXfGk/xEmb2+4tlw6xY8viwWzEQUBxtrNs=",
+        "lastModified": 1773760723,
+        "narHash": "sha256-VP1nhvQJkGPrPx1wrgllvzn424vx4d8bnHUs/KSgKdI=",
         "owner": "michaelhthomas",
         "repo": "seerr",
-        "rev": "2e523125e8e7262af44309c70db20fe2d7ca28a3",
+        "rev": "10f23f009d22cbaf4befc8692f7bf9bf33640b3a",
         "type": "github"
       },
       "original": {
         "owner": "michaelhthomas",
         "repo": "seerr",
-        "rev": "2e523125e8e7262af44309c70db20fe2d7ca28a3",
+        "rev": "10f23f009d22cbaf4befc8692f7bf9bf33640b3a",
         "type": "github"
       }
     },
