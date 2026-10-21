@@ -1,5 +1,12 @@
 { config, ... }:
 {
+  users.groups.rbackups.gid = 1930;
+  users.users.rbackups = {
+    isSystemUser = true;
+    uid = 1930;
+    group = "rbackups";
+  };
+
   ldryt-infra.users.colon = {
     enable = true;
     authorizedKeys = [
