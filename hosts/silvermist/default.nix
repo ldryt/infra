@@ -15,7 +15,6 @@
     ./services/shlink.nix
     ./services/umami.nix
     ./services/owntracks.nix
-    ./services/wallabag.nix
     ./services/cachefilesd.nix
 
     ../../modules/nginx.nix
