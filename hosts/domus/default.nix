@@ -21,6 +21,7 @@
     ../../modules/fail2ban.nix
     ../../modules/syncthing-relay.nix
     ../../modules/podman.nix
+    ../../modules/libvirt.nix
 
     ../../modules/colon-user.nix
     ../../modules/ldryt-remote-user.nix
