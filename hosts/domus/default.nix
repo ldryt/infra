@@ -40,11 +40,6 @@
     onedrive = { };
     gdrive = { };
     glouton = { };
-    rbackups = {
-      user = "rbackups";
-      group = "rbackups";
-      umask = "0077";
-    };
     scratchpad.umask = "0007";
   };
 
