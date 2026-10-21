@@ -10,7 +10,6 @@
     # ./services/farmlab-tunnel.nix
     ./services/coturn.nix
     ./services/mailserver
-    ./services/radicale.nix
     ./services/syncthing.nix
     ./services/frontpage.nix
     ./services/shlink.nix

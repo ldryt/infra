@@ -4,7 +4,14 @@ let
   dataDir = "/var/lib/radicale/collections";
 in
 {
-  ldryt-infra.persist.directories = [ dataDir ];
+  ldryt-infra.persist.directories = [
+    {
+      directory = dataDir;
+      user = config.services.radicale.user;
+      group = config.services.radicale.group;
+      mode = "0750";
+    }
+  ];
 
   sops.secrets."backups/restic/repos/radicale/password" = { };
   ldryt-infra.backups.repos.radicale = {

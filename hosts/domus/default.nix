@@ -8,6 +8,7 @@
     ./services/adguardhome.nix
     ./services/media.nix
     ./services/immich.nix
+    ./services/radicale.nix
     ./services/syncthing.nix
     ./services/restic-sftp-host.nix
     ./services/nix-cache.nix
