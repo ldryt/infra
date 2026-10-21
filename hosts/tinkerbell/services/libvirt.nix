@@ -6,6 +6,8 @@ let
   gpuPciAddress = "pci_0000_c1_00_0";
 in
 {
+  imports = [ ../../../modules/libvirt.nix ];
+
   boot = {
     kernelParams = [
       "amd_iommu=on"
@@ -21,13 +23,6 @@ in
   };
 
   virtualisation.libvirtd = {
-    enable = true;
-    qemu = {
-      runAsRoot = false;
-      # ovmf.enable = true;
-    };
-    onBoot = "ignore";
-    onShutdown = "shutdown";
     hooks.qemu = {
       # "passthrough-prepare-begin.sh" = lib.getExe (
       #   pkgs.writeShellApplication {
@@ -101,7 +96,6 @@ in
   };
 
   users.users.${user}.extraGroups = [
-    "libvirtd"
     "qemu-libvirtd"
   ];
 
@@ -114,5 +108,4 @@ in
     "f /dev/shm/looking-glass 0660 ${user} qemu-libvirtd -"
   ];
 
-  ldryt-infra.persist.directories = [ "/var/lib/libvirt" ];
 }
