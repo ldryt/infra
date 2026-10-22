@@ -17,6 +17,7 @@ let
     lib.nameValuePair mountPoint {
       device = "${name}:";
       fsType = "rclone";
+      depends = [ "/var/lib/rclone/cache" ];
       options = [
         "nodev"
         "nofail"
@@ -31,8 +32,7 @@ let
         "umask=${umask}"
         "cache-dir=/var/lib/rclone/cache/${name}"
         "vfs-cache-mode=full"
-        "vfs-cache-max-size=20G"
-        "vfs-cache-min-free-space=5G"
+        "vfs-cache-min-free-space=30G"
         "vfs-cache-max-age=168h"
       ]
       ++ lib.optional readOnly "ro";

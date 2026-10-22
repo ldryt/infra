@@ -44,6 +44,18 @@
     scratchpad.umask = "0007";
   };
 
+  fileSystems."/var/lib/rclone/cache" = {
+    device = "/dev/mapper/rclone-cache";
+    fsType = "ext4";
+    options = [
+      "noatime"
+      "nodev"
+      "nosuid"
+      "nofail"
+      "x-systemd.device-timeout=30s"
+    ];
+  };
+
   sops.secrets."backups/restic/hosts/glouton/sshKey" = { };
   sops.secrets."backups/restic/hosts/domus/sshKey" = { };
   sops.secrets."backups/restic/repos/domus/password" = { };
@@ -63,10 +75,14 @@
 
   sops.secrets."system/2a37-key" = { };
   sops.secrets."system/media-key" = { };
+  sops.secrets."system/rclone/cache-key" = { };
   environment.etc.crypttab = {
     mode = "0600";
     text = ''
       # <volume-name> <encrypted-device> [key-file] [options]
+      rclone-cache /dev/disk/by-partuuid/57eb13a5-7816-4624-ae39-43ad41571c7b ${
+        config.sops.secrets."system/rclone/cache-key".path
+      } luks,nofail,x-systemd.device-timeout=30s
       2a37-data UUID=2a37da19-450e-4119-adfa-7cb42edb76ba ${
         config.sops.secrets."system/2a37-key".path
       } nofail,x-systemd.device-timeout=5s
