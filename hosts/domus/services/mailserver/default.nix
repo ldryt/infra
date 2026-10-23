@@ -69,6 +69,9 @@
     group = config.services.postfix.group;
   };
 
+  services.dovecot2.settings."service anvil"."unix_listener anvil-connect-limit".group =
+    config.mailserver.storage.group;
+
   mailserver = {
     enable = true;
     stateVersion = 3;
