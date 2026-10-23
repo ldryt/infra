@@ -5,5 +5,6 @@
     inputs.disko.nixosModules.disko
     inputs.lanzaboote.nixosModules.lanzaboote
     inputs.nixarr.nixosModules.default
+    inputs.mailserver.nixosModules.mailserver
   ];
 }

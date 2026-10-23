@@ -2,11 +2,11 @@
   "ldryt.dev": {
     "ldryt-web": [
       "www",
-      "silvermist"
+      "domus"
     ],
     "authelia": [
       "auth",
-      "silvermist"
+      "domus"
     ],
     "vaultwarden": [
       "pass",
@@ -14,11 +14,11 @@
     ],
     "mailserver": [
       "mx",
-      "silvermist"
+      "domus"
     ],
     "mailserver-autoconfig": [
       "autoconfig",
-      "silvermist"
+      "domus"
     ],
     "immich": [
       "pics",
@@ -34,11 +34,11 @@
     ],
     "grafana": [
       "monitor",
-      "silvermist"
+      "domus"
     ],
     "coturn": [
       "ice",
-      "silvermist"
+      "domus"
     ],
     "firefox-syncserver": [
       "firesync",
@@ -46,11 +46,11 @@
     ],
     "umami": [
       "sweet",
-      "silvermist"
+      "domus"
     ],
     "owntracks": [
       "ot",
-      "silvermist"
+      "domus"
     ],
     "printer": [
       "printer",
@@ -105,7 +105,7 @@
   "lucasladreyt.eu": {
     "eu-web": [
       "www",
-      "silvermist"
+      "domus"
     ]
   }
 }

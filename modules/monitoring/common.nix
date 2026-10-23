@@ -5,16 +5,15 @@ rec {
     subnet = "/24";
     port = 44821;
     server = {
-      hostname = "silvermist";
+      hostname = "domus";
       ip = "10.44.128.1";
-      pubKey = "N2D8K/2DZE7DwZlDhJdKw+kgyocQMJT5kr9IJ+wpdFA=";
+      pubKey = "nuR6GcYBc1yejUQg0rVJXbsKl2+Y4GwjIwnMRzyavVs=";
     };
 
     clients = builtins.mapAttrs (hostname: v: v // { inherit hostname; }) {
-      domus = {
+      silvermist = {
         ip = "10.44.128.2";
-        pubKey = "nuR6GcYBc1yejUQg0rVJXbsKl2+Y4GwjIwnMRzyavVs=";
-        isEphemeral = true;
+        pubKey = "N2D8K/2DZE7DwZlDhJdKw+kgyocQMJT5kr9IJ+wpdFA=";
       };
       printer = {
         ip = "10.44.128.5";

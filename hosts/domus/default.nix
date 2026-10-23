@@ -6,6 +6,14 @@
     ./users.nix
 
     ./services/adguardhome.nix
+    ./services/frontpage.nix
+    ./services/shlink.nix
+    ./services/umami.nix
+    ./services/owntracks.nix
+    ./services/coturn.nix
+    ./services/authelia
+    ./services/mailserver
+    ./services/monitoring.nix
     ./services/media.nix
     ./services/immich.nix
     ./services/radicale.nix
@@ -29,7 +37,6 @@
     ../../modules/rclone.nix
     ../../modules/backups.nix
     ../../modules/dns.nix
-    ../../modules/monitoring/client.nix
   ];
 
   nixpkgs.config.allowUnfree = true;
@@ -65,12 +72,6 @@
       enable = true;
       sshKey = config.sops.secrets."backups/restic/hosts/domus/sshKey".path;
     };
-  };
-
-  sops.secrets."services/monitoring/wg/privateKey" = { };
-  ldryt-infra.monitoring.client = {
-    enable = true;
-    wg.privateKeyFile = config.sops.secrets."services/monitoring/wg/privateKey".path;
   };
 
   sops.secrets."system/2a37-key" = { };

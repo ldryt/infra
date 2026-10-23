@@ -33,8 +33,22 @@
   sops.secrets."services/postfix/certs/acme/env" = { };
 
   ldryt-infra.persist.directories = [
-    config.mailserver.storage.path
-    config.mailserver.indexDir
+    {
+      directory = config.mailserver.storage.path;
+      user = config.mailserver.storage.owner;
+      group = config.mailserver.storage.group;
+    }
+    {
+      directory = config.mailserver.indexDir;
+      user = config.mailserver.storage.owner;
+      group = config.mailserver.storage.group;
+    }
+    "/var/lib/postfix"
+    {
+      directory = config.services.redis.servers.rspamd.settings.dir;
+      user = config.services.redis.servers.rspamd.user;
+      group = config.services.redis.servers.rspamd.group;
+    }
     {
       directory = config.mailserver.dkim.keyDirectory;
       user = "rspamd";

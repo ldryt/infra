@@ -2,10 +2,10 @@ resource "hcloud_primary_ip" "silvermist_ipv4" {
   labels = {
     "silvermist" : true
   }
-  name          = "silvermist_ipv4"
-  location      = "fsn1"
-  type          = "ipv4"
-  auto_delete   = true
+  name        = "silvermist_ipv4"
+  location    = "fsn1"
+  type        = "ipv4"
+  auto_delete = true
 }
 
 resource "hcloud_ssh_key" "silvermist_ssh_key" {
@@ -40,5 +40,5 @@ resource "hcloud_server" "silvermist_server" {
 resource "hcloud_rdns" "silvermist_rdns" {
   server_id  = hcloud_server.silvermist_server.id
   ip_address = hcloud_primary_ip.silvermist_ipv4.ip_address
-  dns_ptr    = local.mailserver_record.fqdn
+  dns_ptr    = "silvermist.ldryt.dev"
 }

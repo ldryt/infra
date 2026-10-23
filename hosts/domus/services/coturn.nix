@@ -43,6 +43,7 @@ in
     pkey = "${config.security.acme.certs.${realm}.directory}/key.pem";
 
     extraConfig = ''
+      external-ip=82.67.219.252
       fingerprint
       syslog
       verbose

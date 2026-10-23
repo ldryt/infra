@@ -24,6 +24,7 @@ in
     {
       directory = "/var/lib/${config.systemd.services.owntracks-recorder.serviceConfig.StateDirectory}";
       user = "owntracks";
+      group = "owntracks";
     }
   ];
 

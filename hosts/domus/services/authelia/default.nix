@@ -18,8 +18,19 @@ in
   ];
 
   ldryt-infra.persist.directories = [
-    dataDir
-    config.services.redis.servers."authelia-${config.services.authelia.instances.main.name}".settings.dir
+    {
+      directory = dataDir;
+      user = config.services.authelia.instances.main.user;
+      group = config.services.authelia.instances.main.group;
+    }
+    {
+      directory =
+        config.services.redis.servers."authelia-${config.services.authelia.instances.main.name}".settings.dir;
+      user =
+        config.services.redis.servers."authelia-${config.services.authelia.instances.main.name}".user;
+      group =
+        config.services.redis.servers."authelia-${config.services.authelia.instances.main.name}".group;
+    }
   ];
 
   ldryt-infra.monitoring.blackbox.targets = {
