@@ -8,7 +8,7 @@ in
     backend = "podman";
     containers.home-assistant = {
       # renovate: datasource=docker depName=ghcr.io/home-assistant/home-assistant
-      image = "ghcr.io/home-assistant/home-assistant:2025.3.3@sha256:b67d76f5d0bacf55cf6c914be379a0436a1da1f8acb94ee08e3b108d46cf8c58";
+      image = "ghcr.io/home-assistant/home-assistant:2026.10.4@sha256:23f4dfbb69ce76315dbc4de7915504f1c2dcecd7ca2648113a493a385972e133";
       environment.TZ = "Europe/Paris";
       volumes = [
         "home-assistant:/config"
