@@ -96,6 +96,9 @@
           // (meta.specialArgs or { });
           modules = [
             ./hosts/${name}
+            ({ lib, pkgs, ... }: {
+              boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
+            })
             inputs.sops-nix.nixosModules.sops
             inputs.impermanence.nixosModules.impermanence
             inputs.home-manager.nixosModules.home-manager
