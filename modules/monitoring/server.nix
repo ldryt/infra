@@ -345,7 +345,10 @@ in
             {
               source_matchers = [ "alertname=\"CriticalDisk\"" ];
               target_matchers = [ "alertname=\"LowDisk\"" ];
-              equal = [ "instance" "mountpoint" ];
+              equal = [
+                "instance"
+                "mountpoint"
+              ];
             }
           ];
           route = {
@@ -403,6 +406,12 @@ in
             log_level = "warn";
           };
           auth_enabled = false;
+          limits_config.retention_period = "2160h";
+          compactor = {
+            working_directory = config.services.loki.dataDir + "/compactor";
+            retention_enabled = true;
+            delete_request_store = "filesystem";
+          };
           common = {
             instance_addr = "127.0.0.1";
             path_prefix = config.services.loki.dataDir;

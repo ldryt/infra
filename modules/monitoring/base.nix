@@ -43,15 +43,26 @@ in
       common.ports.wireguardExporter
     ];
 
+    ldryt-infra.persist.directories = [
+      {
+        directory = "/var/lib/private/fluent-bit";
+        mode = "0700";
+      }
+    ];
+    systemd.services.fluent-bit.serviceConfig.StateDirectory = "fluent-bit";
+
     services.fluent-bit = {
       enable = true;
       settings = {
+        service."storage.path" = "/var/lib/fluent-bit/buffer";
         pipeline = {
           inputs = [
             {
               name = "systemd";
               tag = "journal";
               read_from_tail = "on";
+              db = "/var/lib/fluent-bit/journal.db";
+              "storage.type" = "filesystem";
             }
           ];
           outputs = [
@@ -60,7 +71,9 @@ in
               match = "*";
               host = common.wg.server.ip;
               port = common.ports.loki;
-              labels = "job=systemd-journal, host=${config.networking.hostName}, unit=$_SYSTEMD_UNIT, level=$PRIORITY";
+              retry_limit = "no_limits";
+              "storage.total_limit_size" = "256M";
+              labels = "job=systemd-journal, host=${config.networking.hostName}";
             }
           ];
         };
