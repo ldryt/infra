@@ -67,12 +67,12 @@ locals {
   ])
   servers = merge(
     {
-      "silvermist" = {
-        id        = hcloud_server.silvermist_server.id
-        ip        = hcloud_primary_ip.silvermist_ipv4.ip_address
-        ssh_port  = 22
-        sops_file = "${path.module}/../hosts/silvermist/secrets.yaml"
-      },
+      # "silvermist" = {
+      #   id        = hcloud_server.silvermist_server.id
+      #   ip        = hcloud_primary_ip.silvermist_ipv4.ip_address
+      #   ssh_port  = 22
+      #   sops_file = "${path.module}/../hosts/silvermist/secrets.yaml"
+      # },
       "domus" = {
         id        = "domus-2026-06-25"
         ip        = "82.67.219.252"

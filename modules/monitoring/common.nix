@@ -11,10 +11,6 @@ rec {
     };
 
     clients = builtins.mapAttrs (hostname: v: v // { inherit hostname; }) {
-      silvermist = {
-        ip = "10.44.128.2";
-        pubKey = "N2D8K/2DZE7DwZlDhJdKw+kgyocQMJT5kr9IJ+wpdFA=";
-      };
       printer = {
         ip = "10.44.128.5";
         pubKey = "oIj9Q5nKQ0BSCVzlbu6lAx97l9Kzu7Vltlp7jqVSGjc=";

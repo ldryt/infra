@@ -8,10 +8,6 @@
       "auth",
       "domus"
     ],
-    "vaultwarden": [
-      "pass",
-      "silvermist"
-    ],
     "mailserver": [
       "mx",
       "domus"
@@ -23,10 +19,6 @@
     "immich": [
       "pics",
       "domus"
-    ],
-    "ocis": [
-      "files",
-      "silvermist"
     ],
     "radicale": [
       "cal",
@@ -40,10 +32,6 @@
       "ice",
       "domus"
     ],
-    "firefox-syncserver": [
-      "firesync",
-      "silvermist"
-    ],
     "umami": [
       "sweet",
       "domus"
@@ -52,22 +40,13 @@
       "ot",
       "domus"
     ],
-    "printer": [
-      "printer",
-      "silvermist"
-    ],
     "calibre-web": [
       "calibre",
       "domus"
     ],
     "adguardhome": [
       "dns",
-      "silvermist",
       "domus"
-    ],
-    "farmlab": [
-      "farmlab",
-      "silvermist"
     ],
     "wallabag": [
       "wallabag",

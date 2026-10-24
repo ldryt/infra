@@ -37,12 +37,6 @@
     domus.sshKey = config.sops.secrets."backups/restic/hosts/domus/sshKey".path;
   };
 
-  sops.secrets."services/monitoring/wg/privateKey" = { };
-  ldryt-infra.monitoring.client = {
-    enable = true;
-    wg.privateKeyFile = config.sops.secrets."services/monitoring/wg/privateKey".path;
-  };
-
   time.timeZone = "Europe/Paris";
 
   system.stateVersion = "23.05";
