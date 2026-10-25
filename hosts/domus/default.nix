@@ -98,5 +98,7 @@
     34971
   ];
 
+  time.timeZone = "Europe/Paris";
+
   system.stateVersion = "25.11";
 }
