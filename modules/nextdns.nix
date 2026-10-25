@@ -17,7 +17,21 @@
       "127.0.0.1"
       "::1"
     ];
-    networkmanager.dns = "none";
+    networkmanager = {
+      dns = "none";
+      dispatcherScripts = [
+        {
+          source = pkgs.writeShellScript "nextdns-network-change" ''
+            # Discard stale upstream connections once the new network is ready.
+            case "$2" in
+              up|vpn-up|vpn-down)
+                ${pkgs.systemd}/bin/systemctl --no-block try-restart nextdns.service
+                ;;
+            esac
+          '';
+        }
+      ];
+    };
   };
 
   systemd.services.nextdns = {
