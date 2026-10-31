@@ -1,0 +1,17 @@
+[Unit]
+Description=Issue and renew {{ acme_domain }} certificate
+{% if acme_scope == 'system' %}
+RequiresMountsFor={{ acme_directory }}
+Wants=network-online.target
+After=network-online.target
+{% endif %}
+
+[Service]
+Type=oneshot
+Environment=DESEC_TOKEN_FILE={{ acme_token_file }}
+Environment=DESEC_PROPAGATION_TIMEOUT=600
+UMask=0077
+ExecStart={% if acme_scope == 'system' %}/usr/bin/kvmd-pstrun -- {% endif %}/usr/bin/lego run --path {{ acme_directory }} --email security@ldryt.dev --domains {{ acme_domain }} --dns desec --dns.resolvers 1.1.1.1:53 --accept-tos --deploy-hook "{{ acme_reload_command }}"
+NoNewPrivileges=true
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6
+TimeoutStartSec=900

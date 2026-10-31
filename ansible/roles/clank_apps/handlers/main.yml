@@ -6,11 +6,6 @@
     - 9999
     - 8081
 
-- name: Restart certificate timer
-  ansible.builtin.systemd_service:
-    name: acme.timer
-    state: restarted
-
 - name: Restart matter
   ansible.builtin.systemd_service:
     name: matter.service

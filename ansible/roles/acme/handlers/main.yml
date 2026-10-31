@@ -1,0 +1,5 @@
+- name: Restart ACME timer
+  ansible.builtin.systemd_service:
+    name: "{{ acme_name }}.timer"
+    scope: "{{ acme_scope }}"
+    state: restarted

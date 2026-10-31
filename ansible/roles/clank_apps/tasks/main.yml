@@ -14,7 +14,6 @@
     - .config/containers/systemd
     - .config/systemd/user
     - .config/nginx
-    - .config/acme
     - .local/share/home-assistant
     - .local/share/matter
     - .local/share/ingress
@@ -52,15 +51,6 @@
     - service
     - socket
   notify: Restart radio relays
-
-- name: Install certificate renewal
-  ansible.builtin.copy:
-    src: "srv/automation/home/.config/systemd/user/acme.{{ item }}"
-    dest: "/srv/automation/home/.config/systemd/user/acme.{{ item }}"
-  loop:
-    - service
-    - timer
-  notify: Restart certificate timer
 
 - name: Install Home Assistant startup
   ansible.builtin.copy:
@@ -116,27 +106,23 @@
     dest: /srv/automation/home/.config/nginx/nginx.conf
   notify: Restart gateway
 
-- name: Install deSEC token
-  ansible.builtin.copy:
-    content: "{{ automation_desec_token }}"
-    dest: /srv/automation/home/.config/acme/desec-token
-  no_log: true
-  diff: false
-  tags: secrets
-
-- name: Reload user manager
-  ansible.builtin.systemd_service:
-    daemon_reload: true
-
-- name: Issue first certificate
-  ansible.builtin.command: systemctl --user start acme.service
-  args:
-    creates: /srv/automation/home/.lego/certificates/ha.ldryt.dev.crt
+- name: Configure Home Assistant certificate
+  ansible.builtin.import_role:
+    name: acme
+  vars:
+    acme_name: acme
+    acme_scope: user
+    acme_unit_directory: /srv/automation/home/.config/systemd/user
+    acme_directory: /srv/automation/home/.lego
+    acme_token_file: /srv/automation/home/.lego/desec-token
+    acme_domain: ha.ldryt.dev
+    acme_token: "{{ automation_desec_token }}"
+    acme_reload_command: /usr/bin/systemctl --user try-reload-or-restart gateway.service
 
 - name: Apply service changes
   ansible.builtin.meta: flush_handlers
 
-- name: Enable radio relays and certificate timer
+- name: Enable radio relays
   ansible.builtin.systemd_service:
     name: "{{ item }}"
     enabled: true
@@ -144,7 +130,6 @@
   loop:
     - radio@9999.socket
     - radio@8081.socket
-    - acme.timer
 
 - name: Start containers
   ansible.builtin.systemd_service:
