@@ -81,7 +81,7 @@
     mode = "0600";
     text = ''
       # <volume-name> <encrypted-device> [key-file] [options]
-      rclone-cache /dev/disk/by-partuuid/57eb13a5-7816-4624-ae39-43ad41571c7b ${
+      rclone-cache /dev/disk/by-partuuid/3ed96de3-d902-4c78-87b4-bc15ba1a44a1 ${
         config.sops.secrets."system/rclone/cache-key".path
       } luks,nofail,x-systemd.device-timeout=30s
       2a37-data UUID=2a37da19-450e-4119-adfa-7cb42edb76ba ${
