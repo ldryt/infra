@@ -13,7 +13,7 @@ Volume=%h/.local/share/matter:/data
 Volume=%t/matter:/run/matter
 Volume=/run/dbus:/run/dbus:ro
 Environment=STORAGE_PATH=/data LISTEN_ADDRESS=/run/matter/api.sock
-Environment=PRIMARY_INTERFACE=eth0 BLUETOOTH_ADAPTER=0 NOBLE_BINDINGS=dbus
+Environment=MATTER_NETWORK_PORT=5540 BLUETOOTH_ADAPTER=0 NOBLE_BINDINGS=dbus
 Environment=PRODUCTION_MODE=true TZ=Europe/Paris
 NoNewPrivileges=true
 DropCapability=ALL

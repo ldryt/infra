@@ -1,0 +1,12 @@
+interface=wlan0
+driver=nl80211
+ssid=Clank
+country_code=FR
+hw_mode=g
+channel=1
+ap_isolate=1
+wpa=2
+wpa_key_mgmt=WPA-PSK
+rsn_pairwise=CCMP
+{# shortcut: clank_wifi_psk is an 8–63 character passphrase; use wpa_psk for a raw hex key. #}
+wpa_passphrase={{ clank_wifi_psk }}

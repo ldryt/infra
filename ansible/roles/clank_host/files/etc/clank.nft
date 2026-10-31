@@ -1,0 +1,25 @@
+destroy table inet clank
+table inet clank {
+    chain wifi_input {
+        udp sport 68 udp dport 67 accept
+        ip6 hoplimit 255 icmpv6 type { 133, 135, 136 } accept
+        ip6 hoplimit 1 icmpv6 type { 130, 131, 132, 143 } accept
+        ip ttl 255 udp dport 5353 accept
+        ip6 hoplimit 255 udp dport 5353 accept
+        udp dport 5540 accept
+        tcp dport 5540 accept
+        counter drop
+    }
+
+    chain input {
+        type filter hook input priority -10; policy accept;
+        ct state established,related accept
+        iifname "wlan0" jump wifi_input
+    }
+
+    chain forward {
+        type filter hook forward priority -10; policy accept;
+        iifname "wlan0" counter drop
+        oifname "wlan0" counter drop
+    }
+}

@@ -1,0 +1,13 @@
+[Unit]
+Description=Clank network isolation
+Wants=network-pre.target
+Before=network-pre.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/nft -f /etc/clank.nft
+ExecReload=/usr/bin/nft -f /etc/clank.nft
+
+[Install]
+WantedBy=multi-user.target

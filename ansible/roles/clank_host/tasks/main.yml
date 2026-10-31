@@ -27,6 +27,8 @@
       - lego
       - bluez
       - bluez-utils
+      - hostapd
+      - nftables
     state: present
 
 - name: Create automation group
@@ -146,3 +148,72 @@
   notify:
     - Reload host services
     - Restart radio
+
+- name: Create network configuration directories
+  ansible.builtin.file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  loop:
+    - /etc/hostapd
+    - /etc/systemd/system/hostapd.service.d
+
+- name: Install network isolation
+  ansible.builtin.copy:
+    src: etc/clank.nft
+    dest: /etc/clank.nft
+    validate: /usr/bin/nft --check --file %s
+  notify: Reload network isolation
+
+- name: Install network services
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "/{{ item }}"
+  loop:
+    - etc/systemd/system/clank-network.service
+    - etc/systemd/system/hostapd.service.d/clank.conf
+  notify:
+    - Reload host services
+    - Restart access point
+
+- name: Configure access point addresses
+  ansible.builtin.copy:
+    src: etc/systemd/network/wlan0.network
+    dest: /etc/systemd/network/wlan0.network
+  notify: Reconfigure Wi-Fi network
+
+- name: Configure access point
+  ansible.builtin.template:
+    src: etc/hostapd/clank.conf.j2
+    dest: /etc/hostapd/clank.conf
+    mode: '0600'
+  no_log: true
+  diff: false
+  tags: secrets
+  notify: Restart access point
+
+- name: Keep PiKVM discovery off untrusted Wi-Fi
+  community.general.ini_file:
+    path: /etc/avahi/avahi-daemon.conf
+    section: server
+    option: deny-interfaces
+    value: wlan0
+    no_extra_spaces: true
+    mode: '0644'
+  notify: Restart Avahi
+
+- name: Disable Wi-Fi client mode
+  ansible.builtin.systemd_service:
+    name: wpa_supplicant@wlan0.service
+    enabled: false
+    state: stopped
+
+- name: Enable isolated Wi-Fi services
+  ansible.builtin.systemd_service:
+    name: "{{ item }}"
+    daemon_reload: true
+    enabled: true
+    state: started
+  loop:
+    - clank-network.service
+    - hostapd.service

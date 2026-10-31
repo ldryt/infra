@@ -13,3 +13,4 @@ automation_egress_hosts:
   - brands.home-assistant.io
 automation_desec_token: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).desec_token }}"
 pikvm_domain: pikvm.ldryt.dev
+clank_wifi_psk: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).clank_wifi_psk }}"

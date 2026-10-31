@@ -11,3 +11,22 @@
   ansible.builtin.systemd_service:
     name: bluetooth.service
     state: restarted
+
+- name: Reload network isolation
+  ansible.builtin.systemd_service:
+    name: clank-network.service
+    state: reloaded
+
+- name: Reconfigure Wi-Fi network
+  ansible.builtin.command: networkctl reload
+  changed_when: true
+
+- name: Restart access point
+  ansible.builtin.systemd_service:
+    name: hostapd.service
+    state: restarted
+
+- name: Restart Avahi
+  ansible.builtin.systemd_service:
+    name: avahi-daemon.service
+    state: restarted
