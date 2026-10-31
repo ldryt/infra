@@ -119,6 +119,7 @@
         {
           sops-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/sops-keepass.nix { };
           tofu-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/tofu-keepass.nix { };
+          ansible-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/ansible-keepass.nix { };
           www-lucasladreyt-eu = pkgs.callPackage ./pkgs/www.lucasladreyt.eu { theme = inputs.papermod; };
           sdImage-printer = self.nixosConfigurations.printer.config.system.build.sdImage;
         }
