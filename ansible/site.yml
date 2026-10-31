@@ -1,0 +1,16 @@
+- name: Deploy Clank
+  hosts: automation
+  gather_facts: false
+  become: true
+  become_user: automation
+  environment:
+    XDG_RUNTIME_DIR: /run/user/1100
+  module_defaults:
+    ansible.builtin.systemd_service:
+      scope: user
+    ansible.builtin.copy:
+      mode: '0600'
+    ansible.builtin.template:
+      mode: '0600'
+  roles:
+    - clank_apps

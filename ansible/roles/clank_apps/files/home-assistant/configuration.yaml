@@ -1,0 +1,13 @@
+default_config:
+recorder:
+  purge_keep_days: 7
+  commit_interval: 30
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+ingress:
+  matter:
+    title: Matter
+    icon: mdi:chip
+    require_admin: true
+    url: http://gateway:5580

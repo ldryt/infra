@@ -59,3 +59,7 @@ creation_rules:
     key_groups:
       - age:
         - *ldryt
+  - path_regex: ansible/secrets/[^/]+\.yaml$
+    key_groups:
+      - age:
+        - *ldryt

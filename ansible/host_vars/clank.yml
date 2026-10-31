@@ -1,0 +1,14 @@
+automation_storage_uuid: 05da507d-ed5f-434d-bbb5-08275ed5de10
+automation_images:
+  home_assistant: ghcr.io/home-assistant/home-assistant:2026.10.4@sha256:23f4dfbb69ce76315dbc4de7915504f1c2dcecd7ca2648113a493a385972e133
+  matter: ghcr.io/matter-js/matterjs-server:1.5.5@sha256:ee149c7c67eff0e90f131e8f0d628f7b099591ec58473c8cda1209e8ae4df66e
+  gateway: docker.io/library/nginx:1.30-alpine@sha256:47928bf67eb62a1863cb08d9ecb52d3e704304ba614eaee17884204677702951
+  multipan: docker.io/b2un0/silabs-multipan-docker:2.4.4@sha256:9476ed7845db9ca6474f738439c10eef8ea7a980ee144764ff97f62261e1e361
+automation_ingress:
+  commit: 6c88cc7f257debf54d1fb4fd3851d48d087a38a5
+  checksum: sha256:b0be3cb73d1e802a530ea33c4c63acbc01cdab45083668536ee91752df2ba94a
+automation_egress_hosts:
+  - vector.openstreetmap.org
+  - tile.openstreetmap.org
+  - brands.home-assistant.io
+automation_desec_token: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).desec_token }}"

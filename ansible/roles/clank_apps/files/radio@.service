@@ -1,0 +1,10 @@
+[Unit]
+Description=Forward radio API %i to loopback
+PartOf=radio@%i.socket
+
+[Service]
+ExecStart=/usr/lib/systemd/systemd-socket-proxyd 127.0.0.1:%i
+NoNewPrivileges=true
+RestrictAddressFamilies=AF_UNIX AF_INET
+Restart=on-failure
+RestartSec=10

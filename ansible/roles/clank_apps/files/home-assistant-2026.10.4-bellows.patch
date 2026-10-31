@@ -1,0 +1,12 @@
+diff --git a/bellows/ezsp/__init__.py b/bellows/ezsp/__init__.py
+--- a/bellows/ezsp/__init__.py
++++ b/bellows/ezsp/__init__.py
+@@ -144,7 +144,7 @@
+ 
+     async def startup_reset(self) -> None:
+         for attempt in range(RESET_ATTEMPTS):
+-            self._protocol = v4.EZSPv4(self.handle_callback, self._gw)
++            self._switch_protocol_version(v4.EZSPv4.VERSION)
+ 
+             try:
+                 await self._startup_reset()

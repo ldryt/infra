@@ -1,0 +1,193 @@
+- name: Configure host
+  block:
+    - name: Make root writable
+      ansible.builtin.command: /usr/bin/rw
+      changed_when: false
+
+    - name: Mount storage
+      ansible.posix.mount:
+        path: /srv/automation
+        src: "UUID={{ automation_storage_uuid }}"
+        fstype: ext4
+        opts: defaults,nofail
+        state: mounted
+
+    - name: Check storage UUID
+      ansible.builtin.command: findmnt -n -o UUID --mountpoint /srv/automation
+      register: clank_host_storage
+      changed_when: false
+      failed_when: clank_host_storage.rc != 0 or clank_host_storage.stdout != automation_storage_uuid
+      check_mode: false
+
+    - name: Protect mount point
+      ansible.builtin.file:
+        path: /srv/automation
+        state: directory
+
+    - name: Install runtime
+      community.general.pacman:
+        name: [podman, crun, lego, bluez, bluez-utils]
+        state: present
+
+    - name: Check subordinate IDs
+      ansible.builtin.command:
+        argv:
+          - /usr/bin/python3
+          - -c
+          - |
+            from pathlib import Path
+            import grp
+            import pwd
+            for filename in ('subuid', 'subgid'):
+                path = Path('/etc') / filename
+                for line in path.read_text().splitlines() if path.exists() else []:
+                    if not line.strip() or line.startswith('#'):
+                        continue
+                    account, start, count = line.split(':')
+                    assert account == 'automation' or int(start) >= 265536 or int(start) + int(count) <= 200000, f'{filename}: range overlaps {account}'
+            assert not any(200000 <= entry.pw_uid < 265536 for entry in pwd.getpwall()), 'Subordinate range overlaps a host UID'
+            assert not any(200000 <= entry.gr_gid < 265536 for entry in grp.getgrall()), 'Subordinate range overlaps a host GID'
+      changed_when: false
+      check_mode: false
+
+    - name: Create automation group
+      ansible.builtin.group:
+        name: automation
+        gid: 1100
+
+    - name: Create automation user
+      ansible.builtin.user:
+        name: automation
+        uid: 1100
+        group: automation
+        home: /srv/automation/home
+        create_home: false
+        shell: /usr/bin/nologin
+        groups: ''
+        password_lock: true
+
+    - name: Allocate subordinate IDs
+      ansible.builtin.lineinfile:
+        path: "/etc/{{ item }}"
+        regexp: '^automation:'
+        line: automation:200000:65536
+        create: true
+        mode: '0644'
+      loop: [subuid, subgid]
+
+    - name: Create automation home
+      ansible.builtin.file:
+        path: /srv/automation/home
+        state: directory
+        owner: automation
+        group: automation
+        mode: '0700'
+
+    - name: Create radio directories
+      ansible.builtin.file:
+        path: "/srv/automation/radio/{{ item }}"
+        state: directory
+        mode: '0700'
+      loop: ['', data, containers, tmp]
+
+    - name: Create config directories
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+      loop:
+        - /etc/containers/systemd
+        - /etc/tmpfiles.d
+        - /etc/sysctl.d
+        - /etc/systemd/system/user@1100.service.d
+
+    - name: Install user manager config
+      ansible.builtin.copy:
+        src: "{{ item | basename }}"
+        dest: "/{{ item }}"
+      loop:
+        - etc/systemd/system/user@1100.service.d/clank.conf
+        - etc/tmpfiles.d/clank-linger.conf
+      notify: Reload host services
+
+    - name: Enable Thread forwarding
+      ansible.posix.sysctl:
+        name: net.ipv6.conf.all.forwarding
+        value: '1'
+        sysctl_file: /etc/sysctl.d/90-clank-thread.conf
+        sysctl_set: true
+        reload: false
+
+    - name: Configure Bluetooth boot
+      ansible.builtin.replace:
+        path: "{{ item.path }}"
+        regexp: "{{ item.regexp }}"
+        replace: "{{ item.replace }}"
+      loop:
+        - {path: /boot/config.txt, regexp: '(?m)^(enable_uart=1|dtoverlay=disable-bt)\n', replace: ''}
+        - {path: /boot/cmdline.txt, regexp: '(^| )console=(serial0|ttyAMA0),\S+ ?', replace: '\1'}
+      notify: Reboot host
+
+    - name: Allow Bluetooth stalls during Matter commissioning
+      community.general.ini_file:
+        path: /etc/bluetooth/main.conf
+        section: LE
+        option: ConnectionSupervisionTimeout
+        value: '600' # 6 seconds, in 10 ms units.
+        mode: '0644'
+      notify: Restart Bluetooth
+
+    - name: Mount Bluetooth state in RAM
+      ansible.posix.mount:
+        path: /var/lib/bluetooth
+        src: tmpfs
+        fstype: tmpfs
+        opts: nodev,nosuid,mode=0700
+        state: mounted
+
+    - name: Enable Bluetooth
+      ansible.builtin.systemd_service:
+        name: bluetooth.service
+        enabled: true
+
+    - name: Install radio startup
+      ansible.builtin.copy:
+        src: multipan-start
+        dest: /srv/automation/radio/start
+        mode: '0755'
+      notify: Restart radio
+
+    - name: Install radio container
+      ansible.builtin.template:
+        src: clank-multipan.container.j2
+        dest: /etc/containers/systemd/clank-multipan.container
+        owner: root
+        group: root
+        mode: '0644'
+      notify:
+        - Reload host services
+        - Restart radio
+  always:
+    - name: Close write window
+      block:
+        - name: Stop keyring sync
+          ansible.builtin.systemd_service:
+            name: archlinux-keyring-wkd-sync.service
+            state: stopped
+      always:
+        - name: Restore read-only root
+          ansible.builtin.command: /usr/bin/ro
+          changed_when: false
+
+- name: Apply service changes
+  ansible.builtin.meta: flush_handlers
+
+- name: Enable lingering
+  ansible.builtin.command: systemd-tmpfiles --create /etc/tmpfiles.d/clank-linger.conf
+  args:
+    creates: /var/lib/systemd/linger/automation
+
+- name: Start host services
+  ansible.builtin.systemd_service:
+    name: "{{ item }}.service"
+    state: started
+  loop: [user@1100, clank-multipan, bluetooth]

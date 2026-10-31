@@ -1,0 +1,17 @@
+- name: Reload host services
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+
+- name: Restart radio
+  ansible.builtin.systemd_service:
+    name: clank-multipan.service
+    state: restarted
+
+- name: Restart Bluetooth
+  ansible.builtin.systemd_service:
+    name: bluetooth.service
+    state: restarted
+
+- name: Reboot host
+  ansible.builtin.reboot:
+    reboot_timeout: 180

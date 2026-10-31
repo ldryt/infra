@@ -1,0 +1,138 @@
+- name: Check storage UUID
+  ansible.builtin.command: findmnt -n -o UUID --mountpoint /srv/automation
+  register: clank_apps_storage
+  changed_when: false
+  failed_when: clank_apps_storage.rc != 0 or clank_apps_storage.stdout != automation_storage_uuid
+  check_mode: false
+
+- name: Create directories
+  ansible.builtin.file:
+    path: "/srv/automation/home/{{ item }}"
+    state: directory
+    mode: '0700'
+  loop:
+    - .config/containers/systemd
+    - .config/systemd/user
+    - .config/nginx
+    - .config/acme
+    - .local/share/home-assistant
+    - .local/share/matter
+    - .local/share/ingress
+    - .cache/tmp
+
+- name: Install networks
+  ansible.builtin.copy:
+    src: "{{ item }}.network"
+    dest: "/srv/automation/home/.config/containers/systemd/{{ item }}.network"
+  loop: [internal, edge]
+  notify: Restart home-assistant
+
+- name: Install containers
+  ansible.builtin.template:
+    src: "{{ item }}.container.j2"
+    dest: "/srv/automation/home/.config/containers/systemd/{{ item }}.container"
+  loop: [home-assistant, matter]
+  notify: "Restart {{ item }}"
+
+- name: Install gateway
+  ansible.builtin.template:
+    src: gateway.container.j2
+    dest: /srv/automation/home/.config/containers/systemd/gateway.container
+  notify: Restart gateway
+
+- name: Install radio relays
+  ansible.builtin.copy:
+    src: "radio@.{{ item }}"
+    dest: "/srv/automation/home/.config/systemd/user/radio@.{{ item }}"
+  loop: [service, socket]
+  notify: Restart radio relays
+
+- name: Install certificate renewal
+  ansible.builtin.copy:
+    src: "acme.{{ item }}"
+    dest: "/srv/automation/home/.config/systemd/user/acme.{{ item }}"
+  loop: [service, timer]
+  notify: Restart certificate timer
+
+- name: Install Home Assistant startup
+  ansible.builtin.copy:
+    src: home-assistant-start
+    dest: /srv/automation/home/.local/share/home-assistant-start
+    mode: '0755'
+  notify: Restart home-assistant
+
+- name: Install Home Assistant patch
+  ansible.builtin.copy:
+    src: home-assistant-2026.10.4-bellows.patch
+    dest: /srv/automation/home/.local/share/home-assistant-2026.10.4-bellows.patch
+  notify: Restart home-assistant
+
+- name: Download ingress
+  ansible.builtin.get_url:
+    url: "https://github.com/lovelylain/hass_ingress/archive/{{ automation_ingress.commit }}.tar.gz"
+    dest: /srv/automation/home/.cache/ingress.tar.gz
+    checksum: "{{ automation_ingress.checksum }}"
+    mode: '0600'
+
+- name: Install ingress
+  ansible.builtin.unarchive:
+    src: /srv/automation/home/.cache/ingress.tar.gz
+    dest: /srv/automation/home/.local/share/ingress/
+    remote_src: true
+    include:
+      - "hass_ingress-{{ automation_ingress.commit }}/custom_components/ingress/"
+    extra_opts: [--strip-components=3]
+    mode: 'u=rwX,go='
+  notify: Restart home-assistant
+
+- name: Configure Home Assistant
+  ansible.builtin.copy:
+    src: home-assistant/configuration.yaml
+    dest: /srv/automation/home/.local/share/home-assistant/configuration.yaml
+  notify: Restart home-assistant
+
+- name: Seed Home Assistant files
+  ansible.builtin.copy:
+    src: "home-assistant/{{ item }}.yaml"
+    dest: "/srv/automation/home/.local/share/home-assistant/{{ item }}.yaml"
+    force: false
+  loop: [automations, scenes, scripts]
+
+- name: Configure gateway
+  ansible.builtin.template:
+    src: nginx.conf.j2
+    dest: /srv/automation/home/.config/nginx/nginx.conf
+  notify: Restart gateway
+
+- name: Install deSEC token
+  ansible.builtin.copy:
+    content: "{{ automation_desec_token }}"
+    dest: /srv/automation/home/.config/acme/desec-token
+  no_log: true
+  diff: false
+  tags: secrets
+
+- name: Reload user manager
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+
+- name: Issue first certificate
+  ansible.builtin.command: systemctl --user start acme.service
+  args:
+    creates: /srv/automation/home/.lego/certificates/ha.ldryt.dev.crt
+
+- name: Apply service changes
+  ansible.builtin.meta: flush_handlers
+
+- name: Enable radio relays and certificate timer
+  ansible.builtin.systemd_service:
+    name: "{{ item }}"
+    enabled: true
+    state: started
+  loop: [radio@9999.socket, radio@8081.socket, acme.timer]
+
+- name: Start containers
+  ansible.builtin.systemd_service:
+    name: "{{ item }}.service"
+    state: started
+  loop: [matter, home-assistant, gateway]

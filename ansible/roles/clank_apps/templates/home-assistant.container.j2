@@ -1,0 +1,25 @@
+[Unit]
+Wants=gateway.service
+
+[Container]
+Image={{ automation_images.home_assistant }}
+ContainerName=home-assistant
+Network=internal.network
+NetworkAlias=ha
+Volume=%h/.local/share/home-assistant:/config
+Volume=%h/.local/share/ingress:/config/custom_components/ingress:ro
+Volume=%h/.local/share/home-assistant-start:/usr/local/bin/home-assistant-start:ro
+Volume=%h/.local/share/home-assistant-2026.10.4-bellows.patch:/usr/local/share/home-assistant-2026.10.4-bellows.patch:ro
+Entrypoint=/usr/local/bin/home-assistant-start
+Environment=TZ=Europe/Paris HA_DISABLE_LOG_FILE=1
+NoNewPrivileges=true
+DropCapability=NET_RAW
+
+[Service]
+Environment=TMPDIR=%h/.cache/tmp
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target

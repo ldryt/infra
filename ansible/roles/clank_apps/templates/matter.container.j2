@@ -1,0 +1,33 @@
+[Unit]
+Description=Matter controller
+
+[Container]
+Image={{ automation_images.matter }}
+ContainerName=matter
+Network=host
+UserNS=keep-id
+# This image's USER overrides keep-id on Clank's Podman build.
+User=1100
+Group=1100
+Volume=%h/.local/share/matter:/data
+Volume=%t/matter:/run/matter
+Volume=/run/dbus:/run/dbus:ro
+Environment=STORAGE_PATH=/data LISTEN_ADDRESS=/run/matter/api.sock
+Environment=PRIMARY_INTERFACE=eth0 BLUETOOTH_ADAPTER=0 NOBLE_BINDINGS=dbus
+Environment=PRODUCTION_MODE=true TZ=Europe/Paris
+NoNewPrivileges=true
+DropCapability=ALL
+StopTimeout=30
+
+[Service]
+Environment=TMPDIR=%h/.cache/tmp
+RuntimeDirectory=matter
+RuntimeDirectoryMode=0700
+RuntimeDirectoryPreserve=yes
+UMask=0077
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target

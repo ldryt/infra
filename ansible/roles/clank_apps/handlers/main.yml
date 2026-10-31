@@ -1,0 +1,25 @@
+- name: Restart radio relays
+  ansible.builtin.systemd_service:
+    name: "radio@{{ item }}.socket"
+    state: restarted
+  loop: [9999, 8081]
+
+- name: Restart certificate timer
+  ansible.builtin.systemd_service:
+    name: acme.timer
+    state: restarted
+
+- name: Restart matter
+  ansible.builtin.systemd_service:
+    name: matter.service
+    state: restarted
+
+- name: Restart home-assistant
+  ansible.builtin.systemd_service:
+    name: home-assistant.service
+    state: restarted
+
+- name: Restart gateway
+  ansible.builtin.systemd_service:
+    name: gateway.service
+    state: restarted

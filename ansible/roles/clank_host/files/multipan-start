@@ -1,0 +1,8 @@
+#!/bin/sh
+set -eu
+cd /etc/s6-overlay/s6-rc.d
+grep -qF -- '--ezsp-listen "::"' zigbeed/run
+grep -qF 'otbr_rest_listen="::"' otbr-agent/run
+sed -i 's/"::"/"127.0.0.1"/g' zigbeed/run otbr-agent/run
+rm user/contents.d/otbr-web
+exec /init

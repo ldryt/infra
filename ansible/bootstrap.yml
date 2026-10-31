@@ -1,0 +1,16 @@
+- name: Provision Clank
+  hosts: automation
+  gather_facts: false
+  become: true
+  become_user: root
+  module_defaults:
+    ansible.builtin.copy:
+      owner: root
+      group: root
+      mode: '0644'
+    ansible.builtin.file:
+      owner: root
+      group: root
+      mode: '0755'
+  roles:
+    - clank_host

@@ -1,0 +1,5 @@
+all:
+  children:
+    automation:
+      hosts:
+        clank:

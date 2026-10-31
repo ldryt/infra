@@ -1,0 +1,11 @@
+[Unit]
+Description=Private radio API %i
+
+[Socket]
+ListenStream=%t/radio/%i.sock
+DirectoryMode=0700
+SocketMode=0600
+RemoveOnStop=true
+
+[Install]
+WantedBy=sockets.target
