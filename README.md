@@ -3,98 +3,95 @@
 ## Overview
 
 ```mermaid
-flowchart LR
-    subgraph internet["Internet"]
-        remote(["Remote HA clients"])
-        roaming(["tinkerbell, roaming"])
-        web(["Internet hosts"])
+flowchart TB
+    tinkerbell["<b>tinkerbell</b><br/><small>laptop</small>"]
+
+    subgraph home["Home"]
+        freebox{{"Freebox"}}
+        domus["<b>domus</b><br/><small>homeserver</small>"]
+        clank["<b>clank</b><br/><small>PiKVM + HA</small>"]
+        printer["<b>printer</b><br/><small>3D printer</small>"]
     end
 
-    subgraph freebox["Freebox, 82.67.219.252"]
-        fwd["Port forward<br/><small>:48448 -> clank, hairpin from LAN</small>"]
-        wg["WireGuard server<br/><small>192.168.27.64/27</small>"]
-        fw["NAT + IPv6 firewall"]
+    subgraph hetzner["Hetzner"]
+        silvermist["<b>silvermist</b>"]
+        storagebox[("Storage Box")]
     end
-
-    subgraph lan["LAN 192.168.1.0/24"]
-        lanclients(["LAN clients"])
-        domus["domus"]
-        clank["clank<br/><small>192.168.1.3, 2a01:...:1ad1</small>"]
-        lanmatter(["Matter devices"])
+    subgraph oracle["Oracle"]
+        luke["<b>luke</b>"]
     end
-
-    subgraph attached["Only reachable through clank"]
-        wifi(["Wi-Fi Clank<br/><small>192.168.50.0/24, isolated</small>"])
-        radiodev(["Zigbee / Thread / BLE devices"])
+    subgraph scaleway["Scaleway"]
+        vidia["<b>vidia</b><br/><small>LLMs, streaming</small>"]
     end
+    onedrive[("OneDrive")]
+    gdrive[("Google Drive")]
 
-    remote -->|"HTTPS ha.ldryt.dev"| fwd
-    roaming -->|WireGuard| wg
-    web <-->|egress| fw
-    fwd -->|":48448"| clank
-    fw <-->|egress| clank
-    wg -.->|"ssh, PiKVM UI"| clank
-    domus -.->|ssh| clank
-    lanclients -->|"PiKVM UI :443"| clank
-    clank -->|"KVM: HDMI, USB, power"| domus
-    clank -->|"Matter, Thread routing"| lanmatter
-    clank -->|"Matter :5540"| wifi
-    clank -->|"Zigbee, Thread, BLE"| radiodev
+    tinkerbell -.-> freebox
+    tinkerbell <--> domus
+    tinkerbell <--> luke
+    tinkerbell <--> silvermist
+    freebox --> domus
+    freebox --> clank
+    clank --> domus
+    printer -.-> silvermist
+    printer -.-> domus
+    vidia --> domus
+    domus <--> luke
+    domus <--> silvermist
+    luke <--> silvermist
+    domus --> storagebox
+    domus --> onedrive
+    domus --> gdrive
+    luke --> storagebox
+    luke --> onedrive
+    silvermist --> storagebox
+    silvermist --> onedrive
 ```
 
 ## clank
 
 ```mermaid
-flowchart TB
-    lan(["LAN, eth0<br/><small>192.168.1.3, 2a01:...:1ad1<br/>Freebox forwards :48448 here</small>"])
-    domus(["domus"])
-    internet(["Internet, via Freebox"])
+flowchart LR
+    lan(["LAN<br/><small>192.168.1.3</small>"])
+    internet(["Internet"])
 
-    subgraph clank["clank, PiKVM OS"]
-        subgraph auto["user automation, UID 1100, shared by all apps"]
-            lego_ha["lego<br/><small>ha.ldryt.dev cert, DNS-01 via deSEC</small>"]
-            subgraph edge["Podman edge network"]
-                gateway["nginx gateway<br/><small>TLS :48448, egress SNI allowlist<br/>also on internal network<br/>read-only, caps: none</small>"]
-            end
-            subgraph internal["Podman internal network, no route out"]
-                ha["Home Assistant"]
-            end
-            relays["radio socket relays"]
-            subgraph hostnet["host network"]
-                matter["Matter server<br/><small>API on unix socket<br/>caps: none</small>"]
-            end
+    subgraph clank["<b>clank</b> (PiKVM OS)"]
+        subgraph kvm["root services"]
+            sshd["sshd"]
+            kvmnginx["kvmd-nginx"]
+            kvmd["kvmd"]
         end
-        subgraph root["root"]
-            sshd["sshd :22"]
-            kvmd["PiKVM UI<br/><small>kvmd + nginx :443</small>"]
-            lego_pikvm["lego<br/><small>pikvm.ldryt.dev cert, DNS-01 via deSEC</small>"]
-            subgraph rootful["rootful Podman, host network"]
-                multipan["MultiPAN<br/><small>Zigbee + Thread border router<br/>APIs on 127.0.0.1<br/>caps: +NET_ADMIN</small>"]
-            end
+        subgraph apps["rootless services"]
+            gateway["nginx gateway"]
+            ha["Home Assistant<br/><small>isolated</small>"]
+            matter["Matter server"]
+        end
+        subgraph sys["root radio services"]
+            multipan["MultiPAN<br/><small>Zigbee + Thread</small>"]
             bluez["BlueZ"]
-            ap["hostapd + nftables<br/><small>wlan0: no forwarding, no gateway<br/>eth0: inbound not filtered</small>"]
+            ap["hostapd"]
         end
     end
 
-    wifi(["Wi-Fi Clank<br/><small>192.168.50.0/24, isolated</small>"])
-    radiodev(["Zigbee / Thread / BLE devices"])
+    wifi(["WiFi devices<br/><small>isolated</small>"])
+    radio(["Zigbee / Thread / BLE devices"])
+    lanmatter(["LAN Matter devices"])
+    domus(["domus"])
 
-    lan -->|":48448"| gateway
-    lan -->|":443"| kvmd
-    domus -.->|"ssh, also tinkerbell via VPN"| sshd
-    gateway <-->|"UI :8123 / APIs :9999 :8081 :5580"| ha
-    gateway -->|unix| relays
-    gateway -->|unix| matter
-    relays -->|"127.0.0.1"| multipan
-    lego_ha -->|cert| gateway
-    lego_pikvm -->|cert| kvmd
-    gateway -->|"HTTPS, allowlisted hosts"| internet
-    matter -->|D-Bus| bluez
-    matter -->|"Matter IPv6"| lan
-    multipan -->|"Thread routing"| lan
-    matter -->|":5540, mDNS"| wifi
-    ap -->|WPA2| wifi
-    multipan -->|"Zigbee, Thread"| radiodev
-    bluez -->|BLE| radiodev
-    kvmd -->|"KVM: HDMI, USB, power"| domus
+    lan -->|"HTTPS :48448"| gateway
+    lan -->|"HTTPS :443"| kvmnginx
+    kvmnginx -->|unix| kvmd
+    lan -.->|"SSH :22"| sshd
+    gateway -->|"HTTP :8123"| ha
+    gateway -->|"HTTP :5580"| matter
+    gateway -->|socket| multipan
+    gateway -->|allowlisted HTTPS| internet
+    kvmd -->|"HDMI, USB, ATX"| domus
+    matter --> bluez
+    matter -->|"Matter :5540"| wifi
+    ap --> wifi
+    multipan --> radio
+    bluez --> radio
+    matter -->|"Matter :5540"| lanmatter
+    multipan -->|Thread border router| lanmatter
 ```
