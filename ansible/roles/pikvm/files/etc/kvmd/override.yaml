@@ -1,0 +1,11 @@
+kvmd:
+  gpio:
+    scheme:
+      power_button:
+        pin: 26
+        mode: output
+    view:
+      header:
+        title: Buttons
+      table:
+        - - "power_button|Power"

@@ -1,6 +1,7 @@
 - name: Provision Clank
   hosts: automation
   gather_facts: false
+  force_handlers: true
   become: true
   become_user: root
   module_defaults:
@@ -8,9 +9,61 @@
       owner: root
       group: root
       mode: '0644'
+    ansible.builtin.template:
+      owner: root
+      group: root
+      mode: '0644'
     ansible.builtin.file:
       owner: root
       group: root
-      mode: '0755'
-  roles:
-    - clank_host
+  tasks:
+    - name: Configure host
+      block:
+        - name: Make root writable
+          ansible.builtin.command: /usr/bin/rw
+          changed_when: false
+          tags: always
+
+        - name: Configure automation host
+          ansible.builtin.import_role:
+            name: clank_host
+
+        - name: Configure PiKVM
+          ansible.builtin.import_role:
+            name: pikvm
+      always:
+        - name: Close write window
+          block:
+            - name: Stop keyring sync
+              ansible.builtin.systemd_service:
+                name: archlinux-keyring-wkd-sync.service
+                state: stopped
+              tags: always
+          always:
+            - name: Restore read-only root
+              ansible.builtin.command: /usr/bin/ro
+              changed_when: false
+              tags: always
+
+    - name: Apply service changes
+      ansible.builtin.meta: flush_handlers
+      tags: always
+
+    - name: Enable lingering
+      ansible.builtin.command: systemd-tmpfiles --create /etc/tmpfiles.d/clank-linger.conf
+      args:
+        creates: /var/lib/systemd/linger/automation
+
+    - name: Start host services
+      ansible.builtin.systemd_service:
+        name: "{{ item }}.service"
+        state: started
+      loop:
+        - user@1100
+        - clank-multipan
+        - bluetooth
+
+  handlers:
+    - name: Reboot host
+      ansible.builtin.reboot:
+        reboot_timeout: 180

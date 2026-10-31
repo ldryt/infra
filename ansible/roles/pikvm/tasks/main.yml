@@ -1,0 +1,45 @@
+- name: Set hostname
+  ansible.builtin.hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Configure PiKVM boot
+  ansible.builtin.copy:
+    src: boot/config.txt
+    dest: /boot/config.txt
+    mode: '0755' # VFAT is mounted with fmask=0022.
+  notify: Reboot host
+
+- name: Configure PiKVM controls
+  ansible.builtin.copy:
+    src: etc/kvmd/override.yaml
+    dest: /etc/kvmd/override.yaml
+    validate: /usr/bin/kvmd --override-config %s --dump-config
+  notify:
+    - Restart PiKVM
+    - Restart PiKVM nginx
+
+- name: Configure PiKVM certificate
+  ansible.builtin.import_role:
+    name: acme
+  vars:
+    acme_name: pikvm-acme
+    acme_scope: system
+    acme_unit_directory: /etc/systemd/system
+    acme_directory: /var/lib/kvmd/pst/data/acme
+    acme_token_file: /etc/kvmd/desec-token
+    acme_domain: "{{ pikvm_domain }}"
+    acme_token: "{{ automation_desec_token }}"
+    acme_reload_command: /usr/bin/systemctl try-reload-or-restart kvmd-nginx.service
+
+- name: Install PiKVM certificate links
+  ansible.builtin.file:
+    src: "/var/lib/kvmd/pst/data/acme/certificates/{{ pikvm_domain }}.{{ item }}"
+    path: "/etc/kvmd/nginx/ssl/server.{{ item }}"
+    state: link
+    follow: false
+    force: true
+  loop:
+    - crt
+    - key
+  notify: Restart PiKVM nginx
+

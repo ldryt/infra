@@ -1,0 +1,20 @@
+# See /boot/overlays/README for all available options
+initramfs initramfs-linux.img followkernel
+
+dtoverlay=cma,cma-128
+hdmi_force_hotplug=1
+gpu_mem=128
+dtoverlay=tc358743
+dtoverlay=dwc2,dr_mode=peripheral
+
+# green activity LED
+dtparam=act_led_trigger=none
+dtparam=act_led_activelow=off
+
+# red power LED
+dtparam=pwr_led_trigger=none
+dtparam=pwr_led_activelow=on
+
+# ethernet jack LEDs (4 = off)
+dtparam=eth_led0=4
+dtparam=eth_led1=4
