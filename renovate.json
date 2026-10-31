@@ -1,20 +1,43 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
-  "enabledManagers": ["nix", "terraform", "github-actions", "custom.regex"],
+  "extends": [
+    "config:recommended"
+  ],
+  "enabledManagers": [
+    "nix",
+    "terraform",
+    "github-actions",
+    "ansible-galaxy",
+    "custom.regex"
+  ],
   "nix": {
     "enabled": true
   },
   "lockFileMaintenance": {
     "enabled": true
   },
+  "packageRules": [
+    {
+      "matchFileNames": [
+        "ansible/**"
+      ],
+      "matchPackageNames": [
+        "ghcr.io/home-assistant/home-assistant"
+      ],
+      "prBodyNotes": [
+        "/!\\ Check the bundled bellows version and that `ansible/roles/clank_apps/files/srv/automation/home/.local/share/bellows-ezsp-reset.patch` still applies before deploying. /!\\"
+      ]
+    }
+  ],
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": ["/\\.nix$/"],
+      "managerFilePatterns": [
+        "/\\.nix$/",
+        "/^ansible/.+\\.ya?ml$/"
+      ],
       "matchStrings": [
-        "# renovate: datasource=(?<datasource>docker) depName=(?<depName>\\S+)\\s+image\\s*=\\s*\"[^\"@]*:(?<currentValue>[^\"@]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?\";",
-        "# renovate: datasource=(?<datasource>github-releases) depName=(?<depName>\\S+)(?: extractVersion=(?<extractVersion>\\S+))?\\s+[A-Za-z0-9_-]+\\s*=\\s*\"(?<currentValue>[^\"]+)\";"
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)(?: extractVersion=(?<extractVersion>\\S+))?\\n.*?[:=] *\"?(?:[^\"@\\s]+:)?(?<currentValue>[^\"@\\s]+)(?:@(?<currentDigest>sha256:\\w+))?"
       ]
     }
   ]

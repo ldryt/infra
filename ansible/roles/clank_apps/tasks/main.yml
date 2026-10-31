@@ -61,8 +61,8 @@
 
 - name: Install Home Assistant patch
   ansible.builtin.copy:
-    src: srv/automation/home/.local/share/home-assistant-2026.10.4-bellows.patch
-    dest: /srv/automation/home/.local/share/home-assistant-2026.10.4-bellows.patch
+    src: srv/automation/home/.local/share/bellows-ezsp-reset.patch
+    dest: /srv/automation/home/.local/share/bellows-ezsp-reset.patch
   notify: Restart home-assistant
 
 - name: Download ingress

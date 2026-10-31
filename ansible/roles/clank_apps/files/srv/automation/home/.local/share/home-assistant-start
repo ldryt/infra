@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 # HA 2026.10.4 / Bellows 1.1.0: keep the EZSP version in sync after reset.
-patch=/usr/local/share/home-assistant-2026.10.4-bellows.patch
+patch=/usr/local/share/bellows-ezsp-reset.patch
 git -C /usr/local/lib/python3.14/site-packages apply --reverse --check "$patch" 2>/dev/null ||
     git -C /usr/local/lib/python3.14/site-packages apply "$patch"
 exec /init "$@"
