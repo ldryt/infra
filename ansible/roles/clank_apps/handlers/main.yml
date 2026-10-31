@@ -2,7 +2,9 @@
   ansible.builtin.systemd_service:
     name: "radio@{{ item }}.socket"
     state: restarted
-  loop: [9999, 8081]
+  loop:
+    - 9999
+    - 8081
 
 - name: Restart certificate timer
   ansible.builtin.systemd_service:

@@ -22,48 +22,56 @@
 
 - name: Install networks
   ansible.builtin.copy:
-    src: "{{ item }}.network"
+    src: "srv/automation/home/.config/containers/systemd/{{ item }}.network"
     dest: "/srv/automation/home/.config/containers/systemd/{{ item }}.network"
-  loop: [internal, edge]
+  loop:
+    - internal
+    - edge
   notify: Restart home-assistant
 
 - name: Install containers
   ansible.builtin.template:
-    src: "{{ item }}.container.j2"
+    src: "srv/automation/home/.config/containers/systemd/{{ item }}.container.j2"
     dest: "/srv/automation/home/.config/containers/systemd/{{ item }}.container"
-  loop: [home-assistant, matter]
+  loop:
+    - home-assistant
+    - matter
   notify: "Restart {{ item }}"
 
 - name: Install gateway
   ansible.builtin.template:
-    src: gateway.container.j2
+    src: srv/automation/home/.config/containers/systemd/gateway.container.j2
     dest: /srv/automation/home/.config/containers/systemd/gateway.container
   notify: Restart gateway
 
 - name: Install radio relays
   ansible.builtin.copy:
-    src: "radio@.{{ item }}"
+    src: "srv/automation/home/.config/systemd/user/radio@.{{ item }}"
     dest: "/srv/automation/home/.config/systemd/user/radio@.{{ item }}"
-  loop: [service, socket]
+  loop:
+    - service
+    - socket
   notify: Restart radio relays
 
 - name: Install certificate renewal
   ansible.builtin.copy:
-    src: "acme.{{ item }}"
+    src: "srv/automation/home/.config/systemd/user/acme.{{ item }}"
     dest: "/srv/automation/home/.config/systemd/user/acme.{{ item }}"
-  loop: [service, timer]
+  loop:
+    - service
+    - timer
   notify: Restart certificate timer
 
 - name: Install Home Assistant startup
   ansible.builtin.copy:
-    src: home-assistant-start
+    src: srv/automation/home/.local/share/home-assistant-start
     dest: /srv/automation/home/.local/share/home-assistant-start
     mode: '0755'
   notify: Restart home-assistant
 
 - name: Install Home Assistant patch
   ansible.builtin.copy:
-    src: home-assistant-2026.10.4-bellows.patch
+    src: srv/automation/home/.local/share/home-assistant-2026.10.4-bellows.patch
     dest: /srv/automation/home/.local/share/home-assistant-2026.10.4-bellows.patch
   notify: Restart home-assistant
 
@@ -81,26 +89,30 @@
     remote_src: true
     include:
       - "hass_ingress-{{ automation_ingress.commit }}/custom_components/ingress/"
-    extra_opts: [--strip-components=3]
+    extra_opts:
+      - --strip-components=3
     mode: 'u=rwX,go='
   notify: Restart home-assistant
 
 - name: Configure Home Assistant
   ansible.builtin.copy:
-    src: home-assistant/configuration.yaml
+    src: srv/automation/home/.local/share/home-assistant/configuration.yaml
     dest: /srv/automation/home/.local/share/home-assistant/configuration.yaml
   notify: Restart home-assistant
 
 - name: Seed Home Assistant files
   ansible.builtin.copy:
-    src: "home-assistant/{{ item }}.yaml"
+    src: "srv/automation/home/.local/share/home-assistant/{{ item }}.yaml"
     dest: "/srv/automation/home/.local/share/home-assistant/{{ item }}.yaml"
     force: false
-  loop: [automations, scenes, scripts]
+  loop:
+    - automations
+    - scenes
+    - scripts
 
 - name: Configure gateway
   ansible.builtin.template:
-    src: nginx.conf.j2
+    src: srv/automation/home/.config/nginx/nginx.conf.j2
     dest: /srv/automation/home/.config/nginx/nginx.conf
   notify: Restart gateway
 
@@ -129,10 +141,16 @@
     name: "{{ item }}"
     enabled: true
     state: started
-  loop: [radio@9999.socket, radio@8081.socket, acme.timer]
+  loop:
+    - radio@9999.socket
+    - radio@8081.socket
+    - acme.timer
 
 - name: Start containers
   ansible.builtin.systemd_service:
     name: "{{ item }}.service"
     state: started
-  loop: [matter, home-assistant, gateway]
+  loop:
+    - matter
+    - home-assistant
+    - gateway

@@ -26,7 +26,12 @@
 
     - name: Install runtime
       community.general.pacman:
-        name: [podman, crun, lego, bluez, bluez-utils]
+        name:
+          - podman
+          - crun
+          - lego
+          - bluez
+          - bluez-utils
         state: present
 
     - name: Check subordinate IDs
@@ -73,7 +78,9 @@
         line: automation:200000:65536
         create: true
         mode: '0644'
-      loop: [subuid, subgid]
+      loop:
+        - subuid
+        - subgid
 
     - name: Create automation home
       ansible.builtin.file:
@@ -88,7 +95,11 @@
         path: "/srv/automation/radio/{{ item }}"
         state: directory
         mode: '0700'
-      loop: ['', data, containers, tmp]
+      loop:
+        - ''
+        - data
+        - containers
+        - tmp
 
     - name: Create config directories
       ansible.builtin.file:
@@ -102,7 +113,7 @@
 
     - name: Install user manager config
       ansible.builtin.copy:
-        src: "{{ item | basename }}"
+        src: "{{ item }}"
         dest: "/{{ item }}"
       loop:
         - etc/systemd/system/user@1100.service.d/clank.conf
@@ -123,8 +134,12 @@
         regexp: "{{ item.regexp }}"
         replace: "{{ item.replace }}"
       loop:
-        - {path: /boot/config.txt, regexp: '(?m)^(enable_uart=1|dtoverlay=disable-bt)\n', replace: ''}
-        - {path: /boot/cmdline.txt, regexp: '(^| )console=(serial0|ttyAMA0),\S+ ?', replace: '\1'}
+        - path: /boot/config.txt
+          regexp: '(?m)^(enable_uart=1|dtoverlay=disable-bt)\n'
+          replace: ''
+        - path: /boot/cmdline.txt
+          regexp: '(^| )console=(serial0|ttyAMA0),\S+ ?'
+          replace: '\1'
       notify: Reboot host
 
     - name: Allow Bluetooth stalls during Matter commissioning
@@ -151,14 +166,14 @@
 
     - name: Install radio startup
       ansible.builtin.copy:
-        src: multipan-start
+        src: srv/automation/radio/start
         dest: /srv/automation/radio/start
         mode: '0755'
       notify: Restart radio
 
     - name: Install radio container
       ansible.builtin.template:
-        src: clank-multipan.container.j2
+        src: etc/containers/systemd/clank-multipan.container.j2
         dest: /etc/containers/systemd/clank-multipan.container
         owner: root
         group: root
@@ -190,4 +205,7 @@
   ansible.builtin.systemd_service:
     name: "{{ item }}.service"
     state: started
-  loop: [user@1100, clank-multipan, bluetooth]
+  loop:
+    - user@1100
+    - clank-multipan
+    - bluetooth
