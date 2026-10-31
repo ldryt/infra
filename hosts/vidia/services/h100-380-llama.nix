@@ -12,6 +12,9 @@ in
     cudaForwardCompat = false;
   };
 
+  # nvidia-open doesn't build against linuxPackages_latest (7.2.8: strncpy removed)
+  boot.kernelPackages = pkgs.linuxPackages;
+
   hardware.graphics.enable = true;
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia = {
