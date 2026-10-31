@@ -3,6 +3,7 @@
 ## Overview
 
 ```mermaid
+%%{init: {"theme": "dark", "themeVariables": {"lineColor": "#888"}}}%%
 flowchart TB
     tinkerbell["<b>tinkerbell</b><br/><small>laptop</small>"]
 
@@ -46,11 +47,13 @@ flowchart TB
     luke --> onedrive
     silvermist --> storagebox
     silvermist --> onedrive
+    clank ~~~ vidia
 ```
 
 ## clank
 
 ```mermaid
+%%{init: {"theme": "dark", "themeVariables": {"lineColor": "#888"}}}%%
 flowchart LR
     lan(["LAN<br/><small>192.168.1.3</small>"])
     internet(["Internet"])
@@ -63,7 +66,7 @@ flowchart LR
         end
         subgraph apps["rootless services"]
             gateway["nginx gateway"]
-            ha["Home Assistant<br/><small>isolated</small>"]
+            ha["Home Assistant"]
             matter["Matter server"]
         end
         subgraph sys["root radio services"]
@@ -73,25 +76,27 @@ flowchart LR
         end
     end
 
-    wifi(["WiFi devices<br/><small>isolated</small>"])
+    wifi(["WiFi devices"])
     radio(["Zigbee / Thread / BLE devices"])
     lanmatter(["LAN Matter devices"])
     domus(["domus"])
 
     lan -->|"HTTPS :48448"| gateway
     lan -->|"HTTPS :443"| kvmnginx
-    kvmnginx -->|unix| kvmd
     lan -.->|"SSH :22"| sshd
+    kvmnginx --> kvmd
     gateway -->|"HTTP :8123"| ha
-    gateway -->|"HTTP :5580"| matter
-    gateway -->|socket| multipan
+    ha -->|":443 :5580 :8081 :9999"| gateway
+    gateway -->|unix| matter
+    gateway -->|"socket relay"| multipan
     gateway -->|allowlisted HTTPS| internet
-    kvmd -->|"HDMI, USB, ATX"| domus
+    kvmd <-->|"HDMI, USB, ATX"| domus
     matter --> bluez
-    matter -->|"Matter :5540"| wifi
-    ap --> wifi
-    multipan --> radio
-    bluez --> radio
-    matter -->|"Matter :5540"| lanmatter
-    multipan -->|Thread border router| lanmatter
+    matter <-->|"Matter :5540"| wifi
+    matter <-->|"Matter :5540"| lanmatter
+    ap <--> wifi
+    multipan <--> radio
+    bluez <--> radio
+    multipan <-->|Thread border router| lanmatter
+    ha ~~~ internet
 ```
