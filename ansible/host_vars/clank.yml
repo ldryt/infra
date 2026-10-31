@@ -18,3 +18,12 @@ automation_egress_hosts:
 automation_desec_token: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).desec_token }}"
 pikvm_domain: pikvm.ldryt.dev
 clank_wifi_psk: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).clank_wifi_psk }}"
+restic_paths:
+  - /srv/automation/home/.local/share/home-assistant
+  - /srv/automation/home/.local/share/matter
+  - /srv/automation/radio/data
+restic_cache_directory: /srv/automation/restic-cache
+restic_rclone_config: /srv/automation/restic-rclone.conf
+restic_password: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).restic_password }}"
+restic_ssh_key: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).restic_ssh_key }}"
+restic_rclone_conf: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).restic_rclone_conf }}"

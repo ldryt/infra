@@ -31,6 +31,10 @@
         - name: Configure PiKVM
           ansible.builtin.import_role:
             name: pikvm
+
+        - name: Configure backups
+          ansible.builtin.import_role:
+            name: restic
       always:
         - name: Close write window
           block:

@@ -1,0 +1,17 @@
+restic_repo: "{{ inventory_hostname }}"
+restic_hosts:
+  domus:
+    url: restic-backups@domus.ldryt.dev
+    port: 22
+  onedrive:
+    rclone_remote: onedrive
+restic_paths: []
+restic_exclude: []
+restic_prune_opts:
+  - --keep-daily 7
+  - --keep-weekly 4
+  - --keep-monthly 3
+  - --keep-yearly 2
+  - --group-by host
+restic_cache_directory: /var/cache/restic
+restic_rclone_config: /etc/restic/rclone.conf

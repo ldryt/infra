@@ -1,0 +1,25 @@
+{% set rclone = item.value.rclone_remote is defined %}
+{% set opts = '' if rclone else ' -o ${SFTP_COMMAND}' %}
+{% set sh_opts = '' if rclone else ' -o "$SFTP_COMMAND"' %}
+[Unit]
+Description=Back up {{ restic_repo }} to {{ item.key }}
+RequiresMountsFor={{ restic_paths | join(' ') }}
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=oneshot
+{% if rclone %}
+Environment=RESTIC_REPOSITORY=rclone:{{ item.value.rclone_remote }}:restic-repo-{{ restic_repo }}
+Environment=RCLONE_CONFIG={{ restic_rclone_config }}
+{% else %}
+Environment=RESTIC_REPOSITORY=sftp:{{ item.value.url }}:restic-repo-{{ restic_repo }}
+Environment="SFTP_COMMAND=sftp.command=ssh {{ item.value.url }} -p {{ item.value.port }} -i /etc/restic/ssh-key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -s sftp"
+{% endif %}
+Environment=RESTIC_PASSWORD_FILE=/etc/restic/password
+Environment=RESTIC_CACHE_DIR={{ restic_cache_directory }}
+ExecStartPre=/bin/sh -c '/usr/bin/restic{{ sh_opts }} cat config >/dev/null || /usr/bin/restic{{ sh_opts }} init'
+ExecStart=/usr/bin/restic{{ opts }} backup{% for e in restic_exclude %} --exclude {{ e }}{% endfor %} {{ restic_paths | join(' ') }}
+ExecStart=/usr/bin/restic{{ opts }} forget --prune {{ restic_prune_opts | join(' ') }}
+Restart=on-failure
+RestartSec=5min
