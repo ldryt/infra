@@ -9,9 +9,15 @@ automation_images:
   gateway: docker.io/library/nginx:1.30-alpine@sha256:47928bf67eb62a1863cb08d9ecb52d3e704304ba614eaee17884204677702951
   # renovate: datasource=docker depName=docker.io/b2un0/silabs-multipan-docker
   multipan: docker.io/b2un0/silabs-multipan-docker:2.4.4@sha256:9476ed7845db9ca6474f738439c10eef8ea7a980ee144764ff97f62261e1e361
-automation_ingress:
-  commit: 6c88cc7f257debf54d1fb4fd3851d48d087a38a5
-  checksum: sha256:b0be3cb73d1e802a530ea33c4c63acbc01cdab45083668536ee91752df2ba94a
+automation_custom_components:
+  ingress:
+    url: https://github.com/lovelylain/hass_ingress/archive/6c88cc7f257debf54d1fb4fd3851d48d087a38a5.tar.gz
+    root: hass_ingress-6c88cc7f257debf54d1fb4fd3851d48d087a38a5
+    checksum: sha256:b0be3cb73d1e802a530ea33c4c63acbc01cdab45083668536ee91752df2ba94a
+  adaptive_lighting:
+    url: https://github.com/basnijholt/adaptive-lighting/archive/refs/tags/v1.32.0.tar.gz
+    root: adaptive-lighting-1.32.0
+    checksum: sha256:ac29d5e76cb8461e882f0f13c60fd438b83fdce0e23e18690f50ed3f10a07934
 automation_domain: ha.ldryt.dev
 automation_ezsp_port: 9999
 automation_otbr_port: 8081

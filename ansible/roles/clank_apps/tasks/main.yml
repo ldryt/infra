@@ -16,7 +16,8 @@
     - .config/nginx
     - .local/share/home-assistant
     - .local/share/matter
-    - .local/share/ingress
+    - .local/share/custom_components/ingress
+    - .local/share/custom_components/adaptive_lighting
     - .cache/tmp
 
 - name: Install containers
@@ -60,23 +61,29 @@
     label: "{{ item.path }}"
   notify: Restart apps
 
-- name: Download ingress
+- name: Download custom components
   ansible.builtin.get_url:
-    url: "https://github.com/lovelylain/hass_ingress/archive/{{ automation_ingress.commit }}.tar.gz"
-    dest: /srv/automation/home/.cache/ingress.tar.gz
-    checksum: "{{ automation_ingress.checksum }}"
+    url: "{{ item.value.url }}"
+    dest: "/srv/automation/home/.cache/{{ item.key }}.tar.gz"
+    checksum: "{{ item.value.checksum }}"
     mode: '0600'
+  loop: "{{ automation_custom_components | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
 
-- name: Install ingress
+- name: Install custom components
   ansible.builtin.unarchive:
-    src: /srv/automation/home/.cache/ingress.tar.gz
-    dest: /srv/automation/home/.local/share/ingress/
+    src: "/srv/automation/home/.cache/{{ item.key }}.tar.gz"
+    dest: "/srv/automation/home/.local/share/custom_components/{{ item.key }}/"
     remote_src: true
     include:
-      - "hass_ingress-{{ automation_ingress.commit }}/custom_components/ingress/"
+      - "{{ item.value.root }}/custom_components/{{ item.key }}/"
     extra_opts:
       - --strip-components=3
     mode: 'u=rwX,go='
+  loop: "{{ automation_custom_components | dict2items }}"
+  loop_control:
+    label: "{{ item.key }}"
   notify: Restart apps
 
 - name: Seed Home Assistant files
