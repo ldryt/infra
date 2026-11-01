@@ -57,6 +57,7 @@
     - path: srv/automation/home/.local/share/home-assistant-start
       mode: '0755'
     - path: srv/automation/home/.local/share/bellows-ezsp-reset.patch
+    - path: srv/automation/home/.local/share/home-assistant/
   loop_control:
     label: "{{ item.path }}"
   notify: Restart apps
@@ -88,7 +89,7 @@
 
 - name: Seed Home Assistant files
   ansible.builtin.copy:
-    src: "srv/automation/home/.local/share/home-assistant/{{ item }}.yaml"
+    content: "{{ '{}' if item == 'scripts' else '[]' }}\n"
     dest: "/srv/automation/home/.local/share/home-assistant/{{ item }}.yaml"
     force: false
   loop:

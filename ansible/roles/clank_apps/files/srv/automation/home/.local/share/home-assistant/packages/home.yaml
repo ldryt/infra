@@ -1,0 +1,125 @@
+schedule:
+  night:
+    name: Night
+    monday: &night
+      - from: '00:00:00'
+        to: '07:00:00'
+      - from: '23:00:00'
+        to: '24:00:00'
+    tuesday: *night
+    wednesday: *night
+    thursday: *night
+    friday: *night
+    saturday: *night
+    sunday: *night
+
+input_boolean:
+  night_mode:
+    name: Night mode
+    icon: mdi:weather-night
+
+adaptive_lighting:
+  - <<: &adaptive_lighting
+      max_color_temp: 4000
+      sleep_color_temp: 2000
+      sleep_brightness: 10
+    name: Kitchen
+    lights:
+      - light.light_bulb_kitchen_main
+      - light.light_bulb_kitchen_secondary
+  - <<: *adaptive_lighting
+    name: Living Room
+    lights:
+      - light.light_bulb_living_room_main
+      - light.light_bulb_living_room_secondary
+
+automation:
+  - id: night_schedule
+    alias: Night schedule
+    triggers:
+      - trigger: state
+        entity_id: schedule.night
+        to: ['on', 'off']
+    actions:
+      - action: input_boolean.turn_{{ trigger.to_state.state }}
+        target:
+          entity_id: input_boolean.night_mode
+
+  - id: night_mode
+    alias: Night mode
+    triggers:
+      - trigger: state
+        entity_id: input_boolean.night_mode
+        to: ['on', 'off']
+    actions:
+      - action: switch.turn_{{ trigger.to_state.state }}
+        target:
+          entity_id:
+            - switch.adaptive_lighting_kitchen_sleep_mode
+            - switch.adaptive_lighting_living_room_sleep_mode
+
+  - id: leaving_home
+    alias: Leaving home
+    triggers:
+      - trigger: state
+        entity_id: person.lucas
+        from: home
+    actions:
+      - action: light.turn_off
+        target:
+          entity_id:
+            - light.lights_kitchen
+            - light.lights_living_room
+            - light.air_quality_monitor_living_room_display
+      - if:
+          - condition: state
+            entity_id: binary_sensor.window_sensor_living_room
+            state: 'on'
+        then:
+          - action: notify.mobile_app_rosetta
+            data:
+              title: Window open
+              message: You left with the living room window open.
+
+  - id: door_while_away
+    alias: Door opened while away
+    triggers:
+      - trigger: state
+        entity_id: binary_sensor.door_sensor_entrance
+        to: 'on'
+    conditions:
+      - condition: state
+        entity_id: person.lucas
+        state: not_home
+    actions:
+      - action: notify.mobile_app_rosetta
+        data:
+          title: Front door opened
+          message: The front door opened while you are away.
+          data:
+            priority: high
+            ttl: 0
+
+  - id: low_batteries
+    alias: Low batteries
+    triggers:
+      - trigger: time
+        at: '10:00:00'
+        weekday: sun
+    variables:
+      low: >-
+        {% set ns = namespace(names=[]) %}
+        {% for s in states.sensor
+             if s.attributes.device_class == 'battery' and s.state | is_number
+             and s.state | float < 20 and not s.entity_id.startswith('sensor.rosetta') %}
+          {% set ns.names = ns.names + [s.name ~ ' (' ~ s.state | int ~ '%)'] %}
+        {% endfor %}
+        {{ ns.names | join(', ') }}
+    conditions:
+      - condition: template
+        value_template: '{{ low != "" }}'
+    actions:
+      - action: notify.mobile_app_rosetta
+        data:
+          title: Low batteries
+          message: '{{ low }}'

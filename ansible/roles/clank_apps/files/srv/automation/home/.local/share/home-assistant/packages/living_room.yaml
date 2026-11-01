@@ -1,0 +1,173 @@
+light:
+  - platform: group
+    name: Lights Living Room
+    unique_id: lights_living_room
+    entities:
+      - light.light_bulb_living_room_main
+      - light.light_bulb_living_room_secondary
+
+template:
+  - sensor:
+      - name: CO2 living room
+        unique_id: co2_living_room
+        state: "{{ states('sensor.air_quality_monitor_living_room_carbon_dioxide') | float(0) | round | int }}"
+        availability: "{{ has_value('sensor.air_quality_monitor_living_room_carbon_dioxide') }}"
+      - name: PM2.5 living room
+        unique_id: pm2_5_living_room
+        state: "{{ states('sensor.air_quality_monitor_living_room_pm2_5') | float(0) | round | int }}"
+        availability: "{{ has_value('sensor.air_quality_monitor_living_room_pm2_5') }}"
+
+automation:
+  - id: living_room_button
+    alias: Living room button
+    triggers:
+      - trigger: event.received
+        target:
+          entity_id: event.button_living_room_button_1
+        options:
+          event_type: [multi_press_1]
+        id: toggle
+      - trigger: event.received
+        target:
+          entity_id: event.button_living_room_button_1
+        options:
+          event_type: [multi_press_2]
+        id: white
+      - trigger: event.received
+        target:
+          entity_id: event.button_living_room_button_1
+        options:
+          event_type: [long_press]
+        id: warm
+    actions:
+      - choose:
+          - conditions:
+              - condition: trigger
+                id: toggle
+            sequence:
+              - action: light.toggle
+                target:
+                  entity_id:
+                    - light.lights_living_room
+                    - light.air_quality_monitor_living_room_display
+          - conditions:
+              - condition: trigger
+                id: white
+            sequence:
+              - action: light.turn_on
+                target:
+                  entity_id: light.lights_living_room
+                data:
+                  color_temp_kelvin: 2785
+                  brightness_pct: 100
+          - conditions:
+              - condition: trigger
+                id: warm
+            sequence:
+              - action: light.turn_on
+                target:
+                  entity_id: light.lights_living_room
+                data:
+                  color_temp_kelvin: 2000
+                  brightness_pct: 33
+                  transition: 2
+
+  - id: living_room_presence
+    alias: Living room presence
+    triggers:
+      - trigger: state
+        entity_id: binary_sensor.motion_sensor_living_room_occupancy
+        to: 'on'
+        id: occupied
+      - trigger: numeric_state
+        entity_id: sensor.motion_sensor_living_room_illuminance
+        below: 100
+        id: occupied
+      - trigger: state
+        entity_id: binary_sensor.motion_sensor_living_room_occupancy
+        to: 'off'
+        for:
+          minutes: 5
+        id: empty
+      - trigger: state
+        entity_id: input_boolean.night_mode
+        to: 'on'
+        id: night
+    actions:
+      - choose:
+          - conditions:
+              - condition: trigger
+                id: occupied
+              - condition: state
+                entity_id: binary_sensor.motion_sensor_living_room_occupancy
+                state: 'on'
+              - condition: state
+                entity_id: input_boolean.night_mode
+                state: 'off'
+            sequence:
+              - action: light.turn_on
+                target:
+                  entity_id: light.air_quality_monitor_living_room_display
+              - if:
+                  - condition: state
+                    entity_id: light.lights_living_room
+                    state: 'off'
+                  - condition: numeric_state
+                    entity_id: sensor.motion_sensor_living_room_illuminance
+                    below: 100
+                then:
+                  - action: light.turn_on
+                    target:
+                      entity_id: light.lights_living_room
+          - conditions:
+              - condition: trigger
+                id: empty
+            sequence:
+              - action: light.turn_off
+                target:
+                  entity_id:
+                    - light.lights_living_room
+                    - light.air_quality_monitor_living_room_display
+          - conditions:
+              - condition: trigger
+                id: night
+            sequence:
+              - action: light.turn_off
+                target:
+                  entity_id: light.air_quality_monitor_living_room_display
+
+  - id: co2_high
+    alias: CO2 high
+    triggers:
+      - trigger: numeric_state
+        entity_id: sensor.air_quality_monitor_living_room_carbon_dioxide
+        above: 700
+        for:
+          minutes: 10
+        id: high
+      - trigger: numeric_state
+        entity_id: sensor.air_quality_monitor_living_room_carbon_dioxide
+        below: 600
+        id: ok
+    actions:
+      - if:
+          - condition: trigger
+            id: high
+        then:
+          - action: light.turn_on
+            target:
+              entity_id: light.air_quality_monitor_living_room_display
+          - action: notify.mobile_app_rosetta
+            data:
+              title: CO₂ high
+              message: >-
+                Living room at {{ states('sensor.air_quality_monitor_living_room_carbon_dioxide') }} ppm,
+                open the window.
+              data:
+                tag: co2
+        else:
+          - action: notify.mobile_app_rosetta
+            data:
+              message: clear_notification
+              data:
+                tag: co2
