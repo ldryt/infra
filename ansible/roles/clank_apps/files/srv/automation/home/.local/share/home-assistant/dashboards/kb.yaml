@@ -1,0 +1,212 @@
+views:
+  - title: KB
+    path: home
+    type: sections
+    max_columns: 3
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: House
+            icon: mdi:home
+          - type: tile
+            entity: person.lucas
+          - type: tile
+            entity: input_boolean.night_mode
+            name: Night mode
+          - type: tile
+            entity: switch.adaptive_lighting_kitchen
+            name: Adaptive kitchen
+          - type: tile
+            entity: switch.adaptive_lighting_living_room
+            name: Adaptive living room
+          - type: picture-elements
+            image: /local/floorplan/plan.svg
+            grid_options: &full
+              columns: full
+            elements:
+              - type: image
+                entity: binary_sensor.motion_sensor_kitchen_occupancy
+                image: /local/floorplan/motion_kitchen.svg
+                state_filter: &hidden_when_off {'off': opacity(0), unavailable: opacity(0), unknown: opacity(0)}
+                style: &kitchen {left: 21.00%, top: 21.00%, width: 35.85%}
+              - type: image
+                entity: binary_sensor.motion_sensor_living_room_occupancy
+                image: /local/floorplan/motion_living_room.svg
+                state_filter: *hidden_when_off
+                style: &living_room {left: 67.92%, top: 32.08%, width: 58.00%}
+              - type: image
+                entity: binary_sensor.motion_sensor_entrance_occupancy
+                image: /local/floorplan/motion_entrance.svg
+                state_filter: *hidden_when_off
+                style: {left: 21.00%, top: 67.92%, width: 35.85%}
+              - type: image
+                entity: binary_sensor.motion_sensor_bathroom_occupancy
+                image: /local/floorplan/motion_bathroom.svg
+                state_filter: *hidden_when_off
+                style: {left: 79.00%, top: 79.00%, width: 35.85%}
+              - type: image
+                entity: light.lights_kitchen
+                image: /local/floorplan/light_kitchen.svg
+                state_filter: *hidden_when_off
+                tap_action: &toggle
+                  action: toggle
+                hold_action: &details
+                  action: more-info
+                style: *kitchen
+              - type: image
+                entity: light.lights_living_room
+                image: /local/floorplan/light_living_room.svg
+                state_filter: *hidden_when_off
+                tap_action: *toggle
+                hold_action: *details
+                style: *living_room
+              - type: image
+                entity: binary_sensor.door_sensor_entrance
+                image: /local/floorplan/door_entrance.svg
+                state_filter: *hidden_when_off
+                style: {left: 25.38%, top: 90.00%, width: 14.46%}
+              - type: image
+                entity: binary_sensor.window_sensor_living_room
+                image: /local/floorplan/window_living_room.svg
+                state_filter: *hidden_when_off
+                style: {left: 67.92%, top: 3.08%, width: 37.69%}
+              - type: image
+                entity: binary_sensor.door_sensor_fridge
+                image: /local/floorplan/door_fridge.svg
+                state_filter: *hidden_when_off
+                style: {left: 8.00%, top: 17.23%, width: 9.23%}
+              - type: state-label
+                entity: sensor.air_quality_monitor_living_room_temperature
+                style: {<<: &reading {font-size: 'clamp(11px, 2.8vw, 14px)', font-weight: 500, color: 'var(--primary-text-color)'}, left: 55.38%, top: 24.31%}
+              - type: state-label
+                entity: sensor.air_quality_monitor_living_room_humidity
+                style: {<<: *reading, left: 69.23%, top: 24.31%}
+              - type: state-label
+                entity: sensor.co2_living_room
+                prefix: 'CO₂ '
+                tap_action:
+                  action: more-info
+                  entity: sensor.air_quality_monitor_living_room_carbon_dioxide
+                style: {<<: *reading, left: 55.38%, top: 28.92%}
+              - type: state-label
+                entity: sensor.pm2_5_living_room
+                prefix: 'PM₂.₅ '
+                tap_action:
+                  action: more-info
+                  entity: sensor.air_quality_monitor_living_room_pm2_5
+                style: {<<: *reading, left: 69.23%, top: 28.92%}
+              - type: state-label
+                entity: sensor.temperature_sensor_entrance_temperature
+                style: {<<: *reading, left: 20.15%, top: 57.23%}
+              - type: state-label
+                entity: sensor.temperature_sensor_entrance_humidity
+                style: {<<: *reading, left: 30.92%, top: 57.23%}
+      - type: grid
+        cards:
+          - type: heading
+            heading: Living room
+            icon: mdi:sofa
+          - type: tile
+            entity: light.lights_living_room
+            name: Lights
+            features: &brightness
+              - type: light-brightness
+            grid_options: *full
+          - type: tile
+            entity: light.light_bulb_living_room_main
+            name: Main
+          - type: tile
+            entity: light.light_bulb_living_room_secondary
+            name: Secondary
+          - type: tile
+            entity: light.air_quality_monitor_living_room_display
+            name: CO₂ screen
+          - type: tile
+            entity: binary_sensor.motion_sensor_living_room_occupancy
+            name: Motion
+          - type: tile
+            entity: binary_sensor.window_sensor_living_room
+            name: Window
+          - type: tile
+            entity: sensor.air_quality_monitor_living_room_temperature
+            name: Temperature
+            features: &trend
+              - type: trend-graph
+                hours_to_show: 24
+          - type: tile
+            entity: sensor.air_quality_monitor_living_room_humidity
+            name: Humidity
+            features: *trend
+          - type: tile
+            entity: sensor.air_quality_monitor_living_room_carbon_dioxide
+            name: CO₂
+            features: *trend
+          - type: tile
+            entity: sensor.air_quality_monitor_living_room_pm2_5
+            name: PM2.5
+            features: *trend
+          - type: tile
+            entity: sensor.motion_sensor_living_room_illuminance
+            name: Light level
+            features: *trend
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: Kitchen
+            icon: mdi:fridge-outline
+          - type: tile
+            entity: light.lights_kitchen
+            name: Lights
+            features: *brightness
+            grid_options: *full
+          - type: tile
+            entity: light.light_bulb_kitchen_main
+            name: Main
+          - type: tile
+            entity: light.light_bulb_kitchen_secondary
+            name: Secondary
+          - type: tile
+            entity: binary_sensor.door_sensor_fridge
+            name: Fridge
+          - type: tile
+            entity: binary_sensor.motion_sensor_kitchen_occupancy
+            name: Motion
+          - type: tile
+            entity: sensor.motion_sensor_kitchen_illuminance
+            name: Light level
+            features: *trend
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: Entrance
+            icon: mdi:door
+          - type: tile
+            entity: binary_sensor.door_sensor_entrance
+            name: Front door
+          - type: tile
+            entity: binary_sensor.motion_sensor_entrance_occupancy
+            name: Motion
+          - type: tile
+            entity: sensor.temperature_sensor_entrance_temperature
+            name: Temperature
+            features: *trend
+          - type: tile
+            entity: sensor.temperature_sensor_entrance_humidity
+            name: Humidity
+            features: *trend
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: Bathroom
+            icon: mdi:shower
+          - type: tile
+            entity: binary_sensor.motion_sensor_bathroom_occupancy
+            name: Motion
+          - type: tile
+            entity: sensor.motion_sensor_bathroom_illuminance
+            name: Light level
+            features: *trend

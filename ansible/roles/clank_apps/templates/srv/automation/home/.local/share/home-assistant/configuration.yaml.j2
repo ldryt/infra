@@ -8,6 +8,13 @@ recorder:
 automation: !include automations.yaml
 script: !include scripts.yaml
 scene: !include scenes.yaml
+lovelace:
+  dashboards:
+    dashboard-kb:
+      mode: yaml
+      title: KB
+      icon: mdi:home-assistant
+      filename: dashboards/kb.yaml
 ingress:
   matter:
     title: Matter
