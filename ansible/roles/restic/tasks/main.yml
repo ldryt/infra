@@ -3,6 +3,7 @@
     name:
       - restic
       - rclone
+      - sqlite
 
 - name: Create restic directories
   ansible.builtin.file:
@@ -13,6 +14,13 @@
     - /etc/restic
     - "{{ restic_cache_directory }}"
 
+- name: Create SQLite snapshot directories
+  ansible.builtin.file:
+    path: "{{ restic_sqlite_directory }}/{{ item }}"
+    state: directory
+    mode: '0700'
+  loop: "{{ restic_hosts.keys() if restic_sqlite_databases else [] }}"
+
 - name: Install restic secrets
   ansible.builtin.copy:
     content: "{{ item.content }}"
@@ -21,7 +29,6 @@
   loop:
     - { dest: /etc/restic/password, content: "{{ restic_password }}" }
     - { dest: /etc/restic/ssh-key, content: "{{ restic_ssh_key }}\n" }
-    # rclone rewrites this file when it refreshes the OneDrive token.
     - { dest: "{{ restic_rclone_config }}", content: "{{ restic_rclone_conf }}" }
   loop_control:
     label: "{{ item.dest }}"

@@ -27,6 +27,16 @@ restic_paths:
   - /srv/automation/home/.local/share/home-assistant
   - /srv/automation/home/.local/share/matter
   - /srv/automation/radio/data
+restic_exclude:
+  - /srv/automation/home/.local/share/home-assistant/.cache
+  - /srv/automation/home/.local/share/home-assistant/deps
+  - /srv/automation/home/.local/share/home-assistant/tts
+  - /srv/automation/home/.local/share/home-assistant/.ha_run.lock
+  - /srv/automation/home/.local/share/home-assistant/home-assistant.log*
+  - /srv/automation/home/.local/share/home-assistant/home-assistant_v2.db*
+restic_sqlite_databases:
+  - /srv/automation/home/.local/share/home-assistant/zigbee.db
+restic_sqlite_directory: /srv/automation/restic-sqlite
 restic_cache_directory: /srv/automation/restic-cache
 restic_rclone_config: /srv/automation/restic-rclone.conf
 desec_token: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).desec_token }}"

@@ -1,9 +1,12 @@
 {% set rclone = item.value.rclone_remote is defined %}
 {% set opts = '' if rclone else ' -o ${SFTP_COMMAND}' %}
 {% set sh_opts = '' if rclone else ' -o "$SFTP_COMMAND"' %}
+{% set sqlite_dir = restic_sqlite_directory ~ '/' ~ item.key %}
+{% set paths = restic_paths + ([sqlite_dir] if restic_sqlite_databases else []) %}
+{% set excludes = restic_exclude + restic_sqlite_databases | product(['', '-wal', '-shm']) | map('join') | list %}
 [Unit]
 Description=Back up {{ restic_repo }} to {{ item.key }}
-RequiresMountsFor={{ restic_paths | join(' ') }}
+RequiresMountsFor={{ paths | join(' ') }}
 Wants=network-online.target
 After=network-online.target
 
@@ -19,7 +22,10 @@ Environment="SFTP_COMMAND=sftp.command=ssh {{ item.value.url }} -p {{ item.value
 Environment=RESTIC_PASSWORD_FILE=/etc/restic/password
 Environment=RESTIC_CACHE_DIR={{ restic_cache_directory }}
 ExecStartPre=/bin/sh -c '/usr/bin/restic{{ sh_opts }} cat config >/dev/null || /usr/bin/restic{{ sh_opts }} init'
-ExecStart=/usr/bin/restic{{ opts }} backup{% for e in restic_exclude %} --exclude {{ e }}{% endfor %} {{ restic_paths | join(' ') }}
+{% for db in restic_sqlite_databases %}
+ExecStartPre=/usr/bin/sqlite3 {{ db }} ".backup {{ sqlite_dir }}/{{ db | basename }}"
+{% endfor %}
+ExecStart=/usr/bin/restic{{ opts }} backup{% for e in excludes %} --exclude {{ e }}{% endfor %} {{ paths | join(' ') }}
 ExecStart=/usr/bin/restic{{ opts }} forget --prune {{ restic_prune_opts | join(' ') }}
 Restart=on-failure
 RestartSec=5min

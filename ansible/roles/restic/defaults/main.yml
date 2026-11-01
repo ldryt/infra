@@ -7,6 +7,8 @@ restic_hosts:
     rclone_remote: onedrive
 restic_paths: []
 restic_exclude: []
+restic_sqlite_databases: []
+restic_sqlite_directory: /var/lib/restic/sqlite
 restic_prune_opts:
   - --keep-daily 7
   - --keep-weekly 4
