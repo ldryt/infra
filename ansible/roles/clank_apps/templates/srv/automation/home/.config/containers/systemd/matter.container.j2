@@ -7,13 +7,13 @@ ContainerName=matter
 Network=host
 UserNS=keep-id
 # This image's USER overrides keep-id on Clank's Podman build.
-User=1100
-Group=1100
+User={{ automation_uid }}
+Group={{ automation_uid }}
 Volume=%h/.local/share/matter:/data
 Volume=%t/matter:/run/matter
 Volume=/run/dbus:/run/dbus:ro
 Environment=STORAGE_PATH=/data LISTEN_ADDRESS=/run/matter/api.sock
-Environment=MATTER_NETWORK_PORT=5540 BLUETOOTH_ADAPTER=0 NOBLE_BINDINGS=dbus
+Environment=MATTER_NETWORK_PORT={{ automation_matter_port }} BLUETOOTH_ADAPTER=0 NOBLE_BINDINGS=dbus
 Environment=PRODUCTION_MODE=true TZ=Europe/Paris
 NoNewPrivileges=true
 DropCapability=ALL

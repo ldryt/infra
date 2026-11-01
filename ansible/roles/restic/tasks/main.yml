@@ -3,7 +3,6 @@
     name:
       - restic
       - rclone
-    state: present
 
 - name: Create restic directories
   ansible.builtin.file:
@@ -17,23 +16,15 @@
 - name: Install restic secrets
   ansible.builtin.copy:
     content: "{{ item.content }}"
-    dest: "/etc/restic/{{ item.name }}"
+    dest: "{{ item.dest }}"
     mode: '0600'
   loop:
-    - { name: password, content: "{{ restic_password }}" }
-    - { name: ssh-key, content: "{{ restic_ssh_key }}\n" }
+    - { dest: /etc/restic/password, content: "{{ restic_password }}" }
+    - { dest: /etc/restic/ssh-key, content: "{{ restic_ssh_key }}\n" }
+    # rclone rewrites this file when it refreshes the OneDrive token.
+    - { dest: "{{ restic_rclone_config }}", content: "{{ restic_rclone_conf }}" }
   loop_control:
-    label: "{{ item.name }}"
-  no_log: true
-  diff: false
-  tags: secrets
-
-# rclone rewrites this file when it refreshes the OneDrive token.
-- name: Install rclone config
-  ansible.builtin.copy:
-    content: "{{ restic_rclone_conf }}"
-    dest: "{{ restic_rclone_config }}"
-    mode: '0600'
+    label: "{{ item.dest }}"
   no_log: true
   diff: false
   tags: secrets
@@ -45,17 +36,23 @@
   loop: "{{ restic_hosts | dict2items }}"
   loop_control:
     label: "{{ item.key }}"
+  register: restic_services
 
 - name: Install backup timers
   ansible.builtin.copy:
     src: restic-backups.timer
     dest: "/etc/systemd/system/restic-backups-{{ item }}.timer"
   loop: "{{ restic_hosts.keys() }}"
+  register: restic_timers
+
+- name: Reload backup units
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+  when: restic_services is changed or restic_timers is changed
 
 - name: Enable backup timers
   ansible.builtin.systemd_service:
     name: "restic-backups-{{ item }}.timer"
-    daemon_reload: true
     enabled: true
     state: started
   loop: "{{ restic_hosts.keys() }}"

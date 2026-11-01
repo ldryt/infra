@@ -15,7 +15,7 @@ AddDevice=/dev/net/tun
 Volume=/srv/automation/radio/data:/data
 Volume=/srv/automation/radio/start:/usr/local/bin/multipan-start:ro
 Entrypoint=/usr/local/bin/multipan-start
-Environment=DEVICE=/dev/ttyMultipan BAUDRATE=230400 EZSP_LISTEN_PORT=9999
+Environment=DEVICE=/dev/ttyMultipan BAUDRATE=230400 EZSP_LISTEN_PORT={{ automation_ezsp_port }}
 Environment=BACKBONE_IF=eth0
 NoNewPrivileges=true
 StopTimeout=30

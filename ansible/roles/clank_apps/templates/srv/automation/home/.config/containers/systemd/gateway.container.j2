@@ -1,7 +1,10 @@
 [Unit]
 Wants=matter.service
-Requires=radio@9999.socket radio@8081.socket
-After=home-assistant.service matter.service radio@9999.socket radio@8081.socket
+After=home-assistant.service matter.service
+{% for port in automation_radio_ports %}
+Requires=radio@{{ port }}.socket
+After=radio@{{ port }}.socket
+{% endfor %}
 PartOf=home-assistant.service
 
 [Container]

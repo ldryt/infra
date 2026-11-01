@@ -24,22 +24,23 @@
   ansible.builtin.template:
     src: acme.service.j2
     dest: "{{ acme_unit_directory }}/{{ acme_name }}.service"
-    mode: "{{ '0644' if acme_scope == 'system' else '0600' }}"
+  register: acme_service
 
 - name: Install certificate timer
   ansible.builtin.copy:
     src: acme.timer
     dest: "{{ acme_unit_directory }}/{{ acme_name }}.timer"
-    mode: "{{ '0644' if acme_scope == 'system' else '0600' }}"
+  register: acme_timer
   notify: Restart ACME timer
 
 - name: Reload certificate manager
   ansible.builtin.systemd_service:
     scope: "{{ acme_scope }}"
     daemon_reload: true
+  when: acme_service is changed or acme_timer is changed
 
 - name: Issue first certificate
-  ansible.builtin.command: "systemctl {{ '--user' if acme_scope == 'user' else '' }} start {{ acme_name }}.service"
+  ansible.builtin.command: systemctl --{{ acme_scope }} start {{ acme_name }}.service
   args:
     creates: "{{ acme_directory }}/certificates/{{ acme_domain }}.crt"
 

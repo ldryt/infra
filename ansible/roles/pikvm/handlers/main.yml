@@ -1,9 +1,7 @@
 - name: Restart PiKVM
   ansible.builtin.systemd_service:
-    name: kvmd.service
+    name: "{{ item }}.service"
     state: restarted
-
-- name: Restart PiKVM nginx
-  ansible.builtin.systemd_service:
-    name: kvmd-nginx.service
-    state: restarted
+  loop:
+    - kvmd
+    - kvmd-nginx

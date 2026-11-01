@@ -3,7 +3,6 @@
   gather_facts: false
   force_handlers: true
   become: true
-  become_user: root
   module_defaults:
     ansible.builtin.copy:
       owner: root
@@ -16,6 +15,10 @@
     ansible.builtin.file:
       owner: root
       group: root
+    ansible.builtin.lineinfile:
+      mode: '0644'
+    community.general.ini_file:
+      mode: '0644'
   tasks:
     - name: Configure host
       block:
@@ -37,17 +40,16 @@
             name: restic
       always:
         - name: Close write window
+          tags: always
           block:
             - name: Stop keyring sync
               ansible.builtin.systemd_service:
                 name: archlinux-keyring-wkd-sync.service
                 state: stopped
-              tags: always
           always:
             - name: Restore read-only root
               ansible.builtin.command: /usr/bin/ro
               changed_when: false
-              tags: always
 
     - name: Apply service changes
       ansible.builtin.meta: flush_handlers
@@ -63,7 +65,7 @@
         name: "{{ item }}.service"
         state: started
       loop:
-        - user@1100
+        - user@{{ automation_uid }}
         - clank-multipan
         - bluetooth
 

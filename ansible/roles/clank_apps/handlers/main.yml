@@ -1,22 +1,20 @@
+- name: Reload user units
+  ansible.builtin.systemd_service:
+    daemon_reload: true
+  listen: Restart apps
+
 - name: Restart radio relays
   ansible.builtin.systemd_service:
     name: "radio@{{ item }}.socket"
     state: restarted
+  loop: "{{ automation_radio_ports }}"
+  listen: Restart apps
+
+- name: Restart apps
+  ansible.builtin.systemd_service:
+    name: "{{ item }}.service"
+    state: restarted
   loop:
-    - 9999
-    - 8081
-
-- name: Restart matter
-  ansible.builtin.systemd_service:
-    name: matter.service
-    state: restarted
-
-- name: Restart home-assistant
-  ansible.builtin.systemd_service:
-    name: home-assistant.service
-    state: restarted
-
-- name: Restart gateway
-  ansible.builtin.systemd_service:
-    name: gateway.service
-    state: restarted
+    - matter
+    - home-assistant
+    - gateway

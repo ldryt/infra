@@ -1,0 +1,5 @@
+acme_name: acme
+acme_scope: system
+acme_unit_directory: "{{ '/etc/systemd/system' if acme_scope == 'system' else '~/.config/systemd/user' }}"
+acme_token: "{{ desec_token }}"
+acme_token_file: "{{ acme_directory }}/desec-token"

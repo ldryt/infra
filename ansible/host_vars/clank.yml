@@ -1,3 +1,4 @@
+automation_uid: 1100
 automation_storage_uuid: 05da507d-ed5f-434d-bbb5-08275ed5de10
 automation_images:
   # renovate: datasource=docker depName=ghcr.io/home-assistant/home-assistant
@@ -11,19 +12,25 @@ automation_images:
 automation_ingress:
   commit: 6c88cc7f257debf54d1fb4fd3851d48d087a38a5
   checksum: sha256:b0be3cb73d1e802a530ea33c4c63acbc01cdab45083668536ee91752df2ba94a
+automation_domain: ha.ldryt.dev
+automation_ezsp_port: 9999
+automation_otbr_port: 8081
+automation_radio_ports: "{{ [automation_ezsp_port, automation_otbr_port] }}"
+automation_matter_port: 5540
+automation_matter_api_port: 5580
 automation_egress_hosts:
   - vector.openstreetmap.org
   - tile.openstreetmap.org
   - brands.home-assistant.io
-automation_desec_token: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).desec_token }}"
 pikvm_domain: pikvm.ldryt.dev
-clank_wifi_psk: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).clank_wifi_psk }}"
 restic_paths:
   - /srv/automation/home/.local/share/home-assistant
   - /srv/automation/home/.local/share/matter
   - /srv/automation/radio/data
 restic_cache_directory: /srv/automation/restic-cache
 restic_rclone_config: /srv/automation/restic-rclone.conf
+desec_token: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).desec_token }}"
+clank_wifi_psk: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).clank_wifi_psk }}"
 restic_password: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).restic_password }}"
 restic_ssh_key: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).restic_ssh_key }}"
 restic_rclone_conf: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).restic_rclone_conf }}"

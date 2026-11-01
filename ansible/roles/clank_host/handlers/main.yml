@@ -1,32 +1,20 @@
-- name: Reload host services
+- name: Reload host units
   ansible.builtin.systemd_service:
     daemon_reload: true
-
-- name: Restart radio
-  ansible.builtin.systemd_service:
-    name: clank-multipan.service
-    state: restarted
-
-- name: Restart Bluetooth
-  ansible.builtin.systemd_service:
-    name: bluetooth.service
-    state: restarted
-
-- name: Reload network isolation
-  ansible.builtin.systemd_service:
-    name: clank-network.service
-    state: reloaded
+  listen: Restart host services
 
 - name: Reconfigure Wi-Fi network
   ansible.builtin.command: networkctl reload
   changed_when: true
+  listen: Restart host services
 
-- name: Restart access point
+- name: Restart host services
   ansible.builtin.systemd_service:
-    name: hostapd.service
+    name: "{{ item }}.service"
     state: restarted
-
-- name: Restart Avahi
-  ansible.builtin.systemd_service:
-    name: avahi-daemon.service
-    state: restarted
+  loop:
+    - clank-network
+    - hostapd
+    - avahi-daemon
+    - bluetooth
+    - clank-multipan

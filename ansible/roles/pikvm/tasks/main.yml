@@ -14,26 +14,21 @@
     src: etc/kvmd/override.yaml
     dest: /etc/kvmd/override.yaml
     validate: /usr/bin/kvmd --override-config %s --dump-config
-  notify:
-    - Restart PiKVM
-    - Restart PiKVM nginx
+  notify: Restart PiKVM
 
 - name: Configure PiKVM certificate
   ansible.builtin.import_role:
     name: acme
   vars:
     acme_name: pikvm-acme
-    acme_scope: system
-    acme_unit_directory: /etc/systemd/system
-    acme_directory: /var/lib/kvmd/pst/data/acme
+    acme_directory: "{{ pikvm_acme_directory }}"
     acme_token_file: /etc/kvmd/desec-token
     acme_domain: "{{ pikvm_domain }}"
-    acme_token: "{{ automation_desec_token }}"
-    acme_reload_command: /usr/bin/systemctl try-reload-or-restart kvmd-nginx.service
+    acme_reload_service: kvmd-nginx.service
 
 - name: Install PiKVM certificate links
   ansible.builtin.file:
-    src: "/var/lib/kvmd/pst/data/acme/certificates/{{ pikvm_domain }}.{{ item }}"
+    src: "{{ pikvm_acme_directory }}/certificates/{{ pikvm_domain }}.{{ item }}"
     path: "/etc/kvmd/nginx/ssl/server.{{ item }}"
     state: link
     follow: false
@@ -41,5 +36,5 @@
   loop:
     - crt
     - key
-  notify: Restart PiKVM nginx
+  notify: Restart PiKVM
 

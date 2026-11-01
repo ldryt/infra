@@ -4,7 +4,7 @@
   become: true
   become_user: automation
   environment:
-    XDG_RUNTIME_DIR: /run/user/1100
+    XDG_RUNTIME_DIR: /run/user/{{ automation_uid }}
   module_defaults:
     ansible.builtin.systemd_service:
       scope: user
