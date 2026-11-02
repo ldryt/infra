@@ -100,22 +100,14 @@ automation:
         from: home
     conditions:
       - "{{ now() - states.binary_sensor.door_sensor_entrance.last_changed < timedelta(minutes=15) }}"
+      - condition: state
+        entity_id: binary_sensor.window_sensor_living_room
+        state: 'on'
     actions:
-      - action: light.turn_off
-        target:
-          entity_id:
-            - light.lights_kitchen
-            - light.lights_living_room
-            - light.air_quality_monitor_living_room_display
-      - if:
-          - condition: state
-            entity_id: binary_sensor.window_sensor_living_room
-            state: 'on'
-        then:
-          - action: notify.mobile_app_rosetta
-            data:
-              title: Window open
-              message: You left with the living room window open.
+      - action: notify.mobile_app_rosetta
+        data:
+          title: Window open
+          message: You left with the living room window open.
 
   - id: door_while_away
     alias: Door opened while away
