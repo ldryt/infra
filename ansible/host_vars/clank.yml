@@ -25,13 +25,16 @@ automation_otbr_port: 8081
 automation_radio_ports: "{{ [automation_ezsp_port, automation_otbr_port] }}"
 automation_matter_port: 5540
 automation_matter_api_port: 5580
+automation_wifi_devices:
+  - name: living_room_radar
+    mac: '18:8b:0e:91:05:5c'
+    ip: 192.168.50.88
+    esphome_gateway_port: 6053
 automation_egress_hosts:
   - vector.openstreetmap.org
   - tile.openstreetmap.org
   - brands.home-assistant.io
-  # Push relay for phone notifications when the app isn't connected to HA
   - mobile-apps.home-assistant.io
-  # Weather for the lights (sends the home coordinates rounded to 2 decimals)
   - api.open-meteo.com
 pikvm_domain: pikvm.ldryt.dev
 restic_paths:

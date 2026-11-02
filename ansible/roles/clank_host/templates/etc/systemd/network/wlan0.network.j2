@@ -19,6 +19,12 @@ LLMNR=no
 EmitRouter=no
 EmitDNS=no
 
+{% for device in automation_wifi_devices %}
+[DHCPServerStaticLease]
+MACAddress={{ device.mac }}
+Address={{ device.ip }}
+
+{% endfor %}
 [IPv6SendRA]
 RouterLifetimeSec=0
 EmitDNS=no

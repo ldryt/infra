@@ -111,7 +111,7 @@
     path: /etc/bluetooth/main.conf
     section: LE
     option: ConnectionSupervisionTimeout
-    value: '600' # 6 seconds, in 10 ms units.
+    value: '600'
   notify: Restart host services
 
 - name: Mount Bluetooth state in RAM
@@ -155,8 +155,13 @@
     - etc/tmpfiles.d/clank-linger.conf
     - etc/systemd/system/clank-network.service
     - etc/systemd/system/hostapd.service.d/clank.conf
-    - etc/systemd/network/wlan0.network
   register: clank_host_services
+  notify: Restart host services
+
+- name: Configure Wi-Fi network
+  ansible.builtin.template:
+    src: etc/systemd/network/wlan0.network.j2
+    dest: /etc/systemd/network/wlan0.network
   notify: Restart host services
 
 - name: Configure access point
