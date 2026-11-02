@@ -28,6 +28,8 @@ automation_egress_hosts:
   - vector.openstreetmap.org
   - tile.openstreetmap.org
   - brands.home-assistant.io
+  # Push relay for phone notifications when the app isn't connected to HA
+  - mobile-apps.home-assistant.io
 pikvm_domain: pikvm.ldryt.dev
 restic_paths:
   - /srv/automation/home/.local/share/home-assistant
