@@ -1,0 +1,94 @@
+blueprint:
+  name: Room lights
+  description: >-
+    Button and presence for light.lights_<room>. The PIRs miss me sitting still,
+    so the room only counts as left once another room sees motion (sensor.last_motion).
+  domain: automation
+  input:
+    room:
+    button:
+    off_after:
+    extra:
+      default: []
+    auto_on_at_night:
+      default: true
+
+trigger_variables:
+  room: !input room
+variables:
+  extra: !input extra
+  auto_on_at_night: !input auto_on_at_night
+  lights: light.lights_{{ room }}
+  left_scene: scene.{{ room }}_left
+  on_lights: >-
+    {{ 'light.light_bulb_' ~ room ~ '_secondary'
+       if is_state('input_boolean.night_mode', 'on') else lights }}
+
+triggers:
+  - trigger: event.received
+    target:
+      entity_id: !input button
+    options:
+      event_type: [multi_press_1, multi_press_2, long_press]
+    id: button
+  - trigger: state
+    entity_id: sensor.last_motion
+    not_from: [unavailable, unknown]
+    to: !input room
+    id: entered
+  - trigger: template
+    value_template: "{{ not is_state('sensor.last_motion', room) }}"
+    for: !input off_after
+    id: left
+
+actions:
+  - choose:
+      - conditions: "{{ trigger.id == 'button' and trigger.to_state.attributes.event_type == 'multi_press_1' }}"
+        sequence:
+          - action: light.turn_{{ 'on' if is_state(lights, 'off') else 'off' }}
+            target:
+              entity_id: "{{ [on_lights if is_state(lights, 'off') else lights] + extra }}"
+      - conditions:
+          - condition: trigger
+            id: button
+        sequence:
+          - action: light.turn_on
+            target:
+              entity_id: "{{ lights }}"
+            data: >-
+              {{ {'color_temp_kelvin': 2785, 'brightness_pct': 100}
+                 if trigger.to_state.attributes.event_type == 'multi_press_2'
+                 else {'color_temp_kelvin': 2000, 'brightness_pct': 33, 'transition': 2} }}
+      - conditions:
+          - condition: trigger
+            id: entered
+        sequence:
+          - variables:
+              was_on: >-
+                {{ states[left_scene] is not none
+                   and now() - states[left_scene].last_changed < timedelta(minutes=30) }}
+          - if: "{{ states[left_scene] is not none }}"
+            then:
+              - action: scene.delete
+                target:
+                  entity_id: "{{ left_scene }}"
+          - condition: template
+            value_template: "{{ auto_on_at_night or is_state('input_boolean.night_mode', 'off') }}"
+          - action: light.turn_on
+            target:
+              entity_id: >-
+                {% set dark = states('sensor.solar_radiation') | float(0 if is_state('sun.sun', 'below_horizon') else 200) < 110 %}
+                {{ extra + ([on_lights] if is_state(lights, 'off') and (was_on or dark) else []) }}
+      - conditions:
+          - condition: trigger
+            id: left
+        sequence:
+          - if: "{{ is_state(lights, 'on') }}"
+            then:
+              - action: scene.create
+                data:
+                  scene_id: "{{ room }}_left"
+                  snapshot_entities: "{{ [lights] }}"
+          - action: light.turn_off
+            target:
+              entity_id: "{{ [lights] + extra }}"
