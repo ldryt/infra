@@ -6,17 +6,6 @@ light:
       - light.light_bulb_living_room_main
       - light.light_bulb_living_room_secondary
 
-template:
-  - sensor:
-      - name: CO2 living room
-        unique_id: co2_living_room
-        state: "{{ states('sensor.air_quality_monitor_living_room_carbon_dioxide') | float(0) | round | int }}"
-        availability: "{{ has_value('sensor.air_quality_monitor_living_room_carbon_dioxide') }}"
-      - name: PM2.5 living room
-        unique_id: pm2_5_living_room
-        state: "{{ states('sensor.air_quality_monitor_living_room_pm2_5') | float(0) | round | int }}"
-        availability: "{{ has_value('sensor.air_quality_monitor_living_room_pm2_5') }}"
-
 automation:
   - id: living_room_button
     alias: Living room button

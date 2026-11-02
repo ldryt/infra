@@ -83,18 +83,10 @@ views:
                 entity: sensor.air_quality_monitor_living_room_humidity
                 style: {<<: *reading, left: 69.23%, top: 24.31%}
               - type: state-label
-                entity: sensor.co2_living_room
-                prefix: 'CO₂ '
-                tap_action:
-                  action: more-info
-                  entity: sensor.air_quality_monitor_living_room_carbon_dioxide
+                entity: sensor.air_quality_monitor_living_room_carbon_dioxide
                 style: {<<: *reading, left: 55.38%, top: 28.92%}
               - type: state-label
-                entity: sensor.pm2_5_living_room
-                prefix: 'PM₂.₅ '
-                tap_action:
-                  action: more-info
-                  entity: sensor.air_quality_monitor_living_room_pm2_5
+                entity: sensor.air_quality_monitor_living_room_pm2_5
                 style: {<<: *reading, left: 69.23%, top: 28.92%}
               - type: state-label
                 entity: sensor.temperature_sensor_entrance_temperature
