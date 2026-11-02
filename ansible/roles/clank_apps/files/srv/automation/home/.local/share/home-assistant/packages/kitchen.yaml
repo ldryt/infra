@@ -41,6 +41,9 @@ automation:
           - trigger: state
             entity_id: binary_sensor.door_sensor_fridge
             to: 'off'
+      - condition: state
+        entity_id: input_boolean.away_mode
+        state: 'off'
       - action: scene.turn_on
         target:
           entity_id: scene.kitchen_before_fridge_alert

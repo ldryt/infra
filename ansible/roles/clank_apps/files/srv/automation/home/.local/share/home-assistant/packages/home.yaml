@@ -14,6 +14,9 @@ schedule:
     sunday: *night
 
 input_boolean:
+  away_mode:
+    name: Away mode
+    icon: mdi:home-export-outline
   night_mode:
     name: Night mode
     icon: mdi:weather-night
@@ -98,16 +101,36 @@ automation:
       - trigger: state
         entity_id: person.lucas
         from: home
+        not_to: [unknown, unavailable]
+        for:
+          minutes: 2
     conditions:
       - "{{ now() - states.binary_sensor.door_sensor_entrance.last_changed < timedelta(minutes=15) }}"
       - condition: state
-        entity_id: binary_sensor.window_sensor_living_room
-        state: 'on'
+        entity_id: binary_sensor.door_sensor_entrance
+        state: 'off'
     actions:
-      - action: notify.mobile_app_rosetta
-        data:
-          title: Window open
-          message: You left with the living room window open.
+      - action: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.away_mode
+      - if: "{{ is_state('binary_sensor.window_sensor_living_room', 'on') }}"
+        then:
+          - action: notify.mobile_app_rosetta
+            data:
+              title: Window open
+              message: You left with the living room window open.
+
+  - id: arriving_home
+    alias: Arriving home
+    triggers:
+      - trigger: state
+        entity_id: binary_sensor.door_sensor_entrance
+        from: 'off'
+        to: 'on'
+    actions:
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.away_mode
 
   - id: door_while_away
     alias: Door opened while away

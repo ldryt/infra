@@ -40,6 +40,10 @@ triggers:
     value_template: "{{ not is_state('sensor.last_motion', room) }}"
     for: !input off_after
     id: left
+  - trigger: state
+    entity_id: input_boolean.away_mode
+    to: 'on'
+    id: left
 
 actions:
   - choose:
@@ -62,6 +66,9 @@ actions:
       - conditions:
           - condition: trigger
             id: entered
+          - condition: state
+            entity_id: input_boolean.away_mode
+            state: 'off'
         sequence:
           - variables:
               was_on: >-

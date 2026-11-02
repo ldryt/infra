@@ -30,6 +30,9 @@ automation:
         entity_id: person.lucas
         state: home
       - condition: state
+        entity_id: input_boolean.away_mode
+        state: 'off'
+      - condition: state
         entity_id: sensor.rosetta_next_alarm
         attribute: Package
         state: com.android.deskclock
@@ -78,9 +81,11 @@ automation:
           - condition: trigger
             id: high
         then:
-          - action: light.turn_on
-            target:
-              entity_id: light.air_quality_monitor_living_room_display
+          - if: "{{ is_state('input_boolean.away_mode', 'off') and is_state('input_boolean.night_mode', 'off') }}"
+            then:
+              - action: light.turn_on
+                target:
+                  entity_id: light.air_quality_monitor_living_room_display
           - action: notify.mobile_app_rosetta
             data:
               title: CO₂ high
