@@ -1,5 +1,5 @@
 homeassistant:
-  external_url: https://{{ automation_domain }}
+  external_url: https://{{ automation_domain }}:{{ automation_https_port }}
   packages: !include_dir_named packages
 default_config:
 recorder:

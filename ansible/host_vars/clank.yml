@@ -19,6 +19,7 @@ automation_custom_components:
     root: adaptive-lighting-1.32.0
     checksum: sha256:ac29d5e76cb8461e882f0f13c60fd438b83fdce0e23e18690f50ed3f10a07934
 automation_domain: ha.ldryt.dev
+automation_https_port: 48448
 automation_ezsp_port: 9999
 automation_otbr_port: 8081
 automation_radio_ports: "{{ [automation_ezsp_port, automation_otbr_port] }}"
