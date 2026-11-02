@@ -18,6 +18,48 @@ automation:
         extra: [light.air_quality_monitor_living_room_display]
         auto_on_at_night: false
 
+  - id: wake_up
+    alias: Wake up
+    triggers:
+      - trigger: time
+        at:
+          entity_id: sensor.rosetta_next_alarm
+          offset: '-00:40:00'
+    conditions:
+      - condition: state
+        entity_id: person.lucas
+        state: home
+      - condition: state
+        entity_id: sensor.rosetta_next_alarm
+        attribute: Package
+        state: com.android.deskclock
+      - condition: state
+        entity_id: light.light_bulb_living_room_secondary
+        state: 'off'
+    actions:
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.night_mode
+      - wait_template: "{{ is_state('switch.adaptive_lighting_living_room_sleep_mode', 'off') }}"
+        timeout: 10
+      - action: adaptive_lighting.set_manual_control
+        data:
+          entity_id: switch.adaptive_lighting_living_room
+          lights: light.light_bulb_living_room_secondary
+      - repeat:
+          for_each: "{{ range(-9, 8) | list }}"
+          sequence:
+            - condition: template
+              value_template: "{{ repeat.first or is_state('light.light_bulb_living_room_secondary', 'on') }}"
+            - action: light.turn_on
+              target:
+                entity_id: light.light_bulb_living_room_secondary
+              data:
+                brightness_pct: "{{ 10 * 10 ** (repeat.item / 7) }}"
+                color_temp_kelvin: 6500
+                transition: 240
+            - delay: 240
+
   - id: co2_high
     alias: CO2 high
     triggers:
