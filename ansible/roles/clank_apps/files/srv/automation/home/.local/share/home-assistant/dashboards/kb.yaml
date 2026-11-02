@@ -118,6 +118,13 @@ views:
             entity: binary_sensor.motion_sensor_living_room_occupancy
             name: Motion
           - type: tile
+            entity: binary_sensor.living_room_radar_presence
+            name: Presence
+            tap_action:
+              action: navigate
+              navigation_path: /dashboard-kb/radar
+            hold_action: *details
+          - type: tile
             entity: binary_sensor.window_sensor_living_room
             name: Window
           - type: tile
@@ -202,3 +209,111 @@ views:
             entity: sensor.motion_sensor_bathroom_illuminance
             name: Light level
             features: *trend
+
+  - title: Radar
+    path: radar
+    icon: mdi:radar
+    type: sections
+    max_columns: 2
+    sections:
+      - type: grid
+        cards:
+          - type: entities
+            title: Living room radar
+            show_header_toggle: false
+            entities:
+              - entity: binary_sensor.living_room_radar_presence
+                name: Presence
+              - entity: binary_sensor.living_room_radar_moving_target
+                name: Moving
+              - entity: binary_sensor.living_room_radar_still_target
+                name: Still
+              - type: conditional
+                conditions:
+                  - entity: binary_sensor.living_room_radar_moving_target
+                    state: 'on'
+                row:
+                  entity: sensor.living_room_radar_moving_distance
+                  name: Moving distance
+              - type: conditional
+                conditions:
+                  - entity: binary_sensor.living_room_radar_still_target
+                    state: 'on'
+                row:
+                  entity: sensor.living_room_radar_still_distance
+                  name: Still distance
+              - entity: sensor.living_room_radar_moving_energy
+                name: Moving energy
+              - entity: sensor.living_room_radar_still_energy
+                name: Still energy
+              - entity: sensor.living_room_radar_wi_fi_signal
+                name: Wi-Fi
+          - type: history-graph
+            title: Presence history
+            hours_to_show: 1
+            entities:
+              - entity: binary_sensor.living_room_radar_presence
+                name: Radar
+              - entity: binary_sensor.living_room_radar_still_target
+                name: Still
+              - entity: binary_sensor.motion_sensor_living_room_occupancy
+                name: PIR
+
+      - type: grid
+        cards:
+          - type: entities
+            title: Calibration
+            show_header_toggle: false
+            entities:
+              - entity: switch.living_room_radar_engineering_mode
+                name: Detailed readings
+              - entity: button.living_room_living_room_radar_refresh_settings
+                name: Refresh settings
+              - entity: number.living_room_radar_presence_timeout
+                name: Absence timeout
+              - entity: number.living_room_radar_maximum_moving_gate
+                name: Maximum moving gate
+              - entity: number.living_room_radar_maximum_still_gate
+                name: Maximum still gate
+              - type: section
+                label: Still thresholds
+              - entity: number.living_room_radar_gate_2_still_threshold
+                name: Gate 2
+              - entity: number.living_room_radar_gate_3_still_threshold
+                name: Gate 3
+              - entity: number.living_room_radar_gate_4_still_threshold
+                name: Gate 4
+              - entity: number.living_room_radar_gate_5_still_threshold
+                name: Gate 5
+              - entity: number.living_room_radar_gate_6_still_threshold
+                name: Gate 6
+              - entity: number.living_room_radar_gate_7_still_threshold
+                name: Gate 7
+              - entity: number.living_room_radar_gate_8_still_threshold
+                name: Gate 8
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: switch.living_room_radar_engineering_mode
+                state: 'on'
+            card:
+              type: history-graph
+              title: Still energy by gate
+              hours_to_show: 1
+              min_y_axis: 0
+              max_y_axis: 100
+              entities:
+                - entity: sensor.living_room_radar_gate_2_still_energy
+                  name: Gate 2
+                - entity: sensor.living_room_radar_gate_3_still_energy
+                  name: Gate 3
+                - entity: sensor.living_room_radar_gate_4_still_energy
+                  name: Gate 4
+                - entity: sensor.living_room_radar_gate_5_still_energy
+                  name: Gate 5
+                - entity: sensor.living_room_radar_gate_6_still_energy
+                  name: Gate 6
+                - entity: sensor.living_room_radar_gate_7_still_energy
+                  name: Gate 7
+                - entity: sensor.living_room_radar_gate_8_still_energy
+                  name: Gate 8
