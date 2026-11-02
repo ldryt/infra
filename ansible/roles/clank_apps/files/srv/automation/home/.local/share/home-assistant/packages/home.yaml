@@ -22,7 +22,6 @@ adaptive_lighting:
   - <<: &adaptive_lighting
       max_color_temp: 4000
       sleep_color_temp: 2000
-      sleep_brightness: 10
     name: Kitchen
     lights:
       - light.light_bulb_kitchen_main
@@ -57,6 +56,14 @@ automation:
           entity_id:
             - switch.adaptive_lighting_kitchen_sleep_mode
             - switch.adaptive_lighting_living_room_sleep_mode
+      - if: "{{ trigger.to_state.state == 'on' }}"
+        then:
+          - action: light.turn_off
+            target:
+              entity_id:
+                - light.light_bulb_kitchen_main
+                - light.light_bulb_living_room_main
+                - light.air_quality_monitor_living_room_display
 
   - id: leaving_home
     alias: Leaving home
