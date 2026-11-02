@@ -1,21 +1,21 @@
 blueprint:
   name: Room lights
   description: >-
-    Button and presence for light.lights_<room>. The PIRs miss me sitting still,
-    so the room only counts as left once another room sees motion (sensor.last_motion).
+    Button and occupancy for light.lights_<room>. The occupancy sensor handles
+    the vacancy delay, so brief dropouts do not undo a manual light-off.
   domain: automation
   input:
     room:
     button:
-    off_after:
+    occupancy:
     extra:
       default: []
     auto_on_at_night:
       default: true
 
-trigger_variables:
-  room: !input room
 variables:
+  room: !input room
+  occupancy: !input occupancy
   extra: !input extra
   auto_on_at_night: !input auto_on_at_night
   lights: light.lights_{{ room }}
@@ -32,18 +32,21 @@ triggers:
       event_type: [multi_press_1, multi_press_2, long_press]
     id: button
   - trigger: state
-    entity_id: sensor.last_motion
-    not_from: [unavailable, unknown]
-    to: !input room
+    entity_id: !input occupancy
+    from: 'off'
+    to: 'on'
     id: entered
-  - trigger: template
-    value_template: "{{ not is_state('sensor.last_motion', room) }}"
-    for: !input off_after
+  - trigger: state
+    entity_id: !input occupancy
+    to: 'off'
     id: left
   - trigger: state
     entity_id: input_boolean.away_mode
     to: 'on'
     id: left
+  - trigger: time_pattern
+    minutes: /1
+    id: check
 
 actions:
   - choose:
@@ -81,14 +84,20 @@ actions:
                   entity_id: "{{ left_scene }}"
           - condition: template
             value_template: "{{ auto_on_at_night or is_state('input_boolean.night_mode', 'off') }}"
-          - action: light.turn_on
-            target:
-              entity_id: >-
+          - variables:
+              turn_on_lights: >-
                 {% set dark = states('sensor.solar_radiation') | float(0 if is_state('sun.sun', 'below_horizon') else 200) < 110 %}
                 {{ extra + ([on_lights] if is_state(lights, 'off') and (was_on or dark) else []) }}
+          - condition: template
+            value_template: "{{ turn_on_lights | count > 0 }}"
+          - action: light.turn_on
+            target:
+              entity_id: "{{ turn_on_lights }}"
       - conditions:
           - condition: trigger
-            id: left
+            id: [left, check]
+          - "{{ is_state('input_boolean.away_mode', 'on') or is_state(occupancy, 'off') }}"
+          - "{{ expand([lights] + extra) | selectattr('state', 'eq', 'on') | list | count > 0 }}"
         sequence:
           - if: "{{ is_state(lights, 'on') }}"
             then:

@@ -29,12 +29,12 @@ views:
               columns: full
             elements:
               - type: image
-                entity: binary_sensor.motion_sensor_kitchen_occupancy
+                entity: binary_sensor.kitchen_occupied
                 image: /local/floorplan/motion_kitchen.svg
                 state_filter: &hidden_when_off {'off': opacity(0), unavailable: opacity(0), unknown: opacity(0)}
                 style: &kitchen {left: 21.00%, top: 21.00%, width: 35.85%}
               - type: image
-                entity: binary_sensor.motion_sensor_living_room_occupancy
+                entity: binary_sensor.living_room_occupied
                 image: /local/floorplan/motion_living_room.svg
                 state_filter: *hidden_when_off
                 style: &living_room {left: 67.92%, top: 32.08%, width: 58.00%}
@@ -121,8 +121,8 @@ views:
             entity: binary_sensor.motion_sensor_living_room_occupancy
             name: Motion
           - type: tile
-            entity: binary_sensor.living_room_radar_presence
-            name: Presence
+            entity: binary_sensor.living_room_occupied
+            name: Occupied
             tap_action:
               action: navigate
               navigation_path: /dashboard-kb/radar
@@ -225,6 +225,8 @@ views:
             title: Living room radar
             show_header_toggle: false
             entities:
+              - entity: binary_sensor.living_room_occupied
+                name: Occupied (5 min hold)
               - entity: binary_sensor.living_room_radar_presence
                 name: Presence
               - entity: binary_sensor.living_room_radar_moving_target
@@ -255,6 +257,8 @@ views:
             title: Presence history
             hours_to_show: 1
             entities:
+              - entity: binary_sensor.living_room_occupied
+                name: Occupied
               - entity: binary_sensor.living_room_radar_presence
                 name: Radar
               - entity: binary_sensor.living_room_radar_still_target

@@ -6,6 +6,18 @@ light:
       - light.light_bulb_living_room_main
       - light.light_bulb_living_room_secondary
 
+template:
+  - binary_sensor:
+      - name: Living room occupied
+        unique_id: living_room_occupied
+        device_class: occupancy
+        availability: "{{ has_value('binary_sensor.living_room_radar_presence') }}"
+        state: >-
+          {{ is_state('binary_sensor.living_room_radar_presence', 'on')
+             or is_state('binary_sensor.motion_sensor_living_room_occupancy', 'on') }}
+        delay_off:
+          minutes: 5
+
 automation:
   - id: living_room_lights
     alias: Living room lights
@@ -14,7 +26,7 @@ automation:
       input:
         room: living_room
         button: event.button_living_room_button_1
-        off_after: {minutes: 5}
+        occupancy: binary_sensor.living_room_occupied
         extra: [light.air_quality_monitor_living_room_display]
         auto_on_at_night: false
 

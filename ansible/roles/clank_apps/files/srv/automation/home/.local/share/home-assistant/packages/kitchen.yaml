@@ -6,6 +6,16 @@ light:
       - light.light_bulb_kitchen_main
       - light.light_bulb_kitchen_secondary
 
+template:
+  - binary_sensor:
+      - name: Kitchen occupied
+        unique_id: kitchen_occupied
+        device_class: occupancy
+        availability: "{{ has_value('sensor.last_motion') }}"
+        state: "{{ is_state('sensor.last_motion', 'kitchen') }}"
+        delay_off:
+          minutes: 2
+
 automation:
   - id: kitchen_lights
     alias: Kitchen lights
@@ -14,7 +24,7 @@ automation:
       input:
         room: kitchen
         button: event.button_living_room_button_2
-        off_after: {minutes: 2}
+        occupancy: binary_sensor.kitchen_occupied
 
   - id: fridge_open_for_too_long
     alias: Fridge open for too long
