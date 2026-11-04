@@ -1,0 +1,27 @@
+[Unit]
+Wants=home-assistant.service gateway.service
+After=home-assistant.service gateway.service
+ConditionPathExists=%h/.local/share/linky/options.json
+ConditionPathExists=%h/.local/share/linky/ha.env
+
+[Container]
+Image={{ automation_images.linky }}
+ContainerName=linky
+Network=internal.network
+Volume=%h/.local/share/linky:/data:ro
+EnvironmentFile=%h/.local/share/linky/ha.env
+Environment=TZ=Europe/Paris WS_URL=ws://ha:8123/api/websocket
+Entrypoint=node
+Exec=/linky/dist/index.js
+ReadOnly=true
+NoNewPrivileges=true
+DropCapability=ALL
+
+[Service]
+Environment=TMPDIR=%h/.cache/tmp
+Restart=on-failure
+RestartSec=60
+TimeoutStartSec=900
+
+[Install]
+WantedBy=default.target

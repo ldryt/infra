@@ -16,6 +16,7 @@
     - .config/nginx
     - .local/share/home-assistant
     - .local/share/matter
+    - .local/share/linky
     - .local/share/custom_components/ingress
     - .local/share/custom_components/adaptive_lighting
     - .cache/tmp
@@ -28,6 +29,7 @@
     - home-assistant
     - matter
     - gateway
+    - linky
   notify: Restart apps
 
 - name: Install radio relays
@@ -133,3 +135,4 @@
     - matter
     - home-assistant
     - gateway
+    - linky
