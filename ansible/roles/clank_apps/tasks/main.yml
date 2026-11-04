@@ -4,6 +4,7 @@
   changed_when: false
   failed_when: clank_apps_storage.stdout != automation_storage_uuid
   check_mode: false
+  tags: always
 
 - name: Create directories
   ansible.builtin.file:
@@ -20,6 +21,51 @@
     - .local/share/custom_components/ingress
     - .local/share/custom_components/adaptive_lighting
     - .cache/tmp
+
+- name: Configure ESPHome
+  tags:
+    - esphome
+    - esphome-flash
+  block:
+    - name: Create ESPHome directory
+      ansible.builtin.file:
+        path: /srv/automation/esphome
+        state: directory
+        owner: automation
+        group: automation
+        mode: '0700'
+      become_user: root
+
+    - name: Install ESPHome configuration
+      ansible.builtin.copy:
+        src: srv/automation/esphome/living-room-presence.yaml
+        dest: /srv/automation/esphome/living-room-presence.yaml
+
+    - name: Install ESPHome secrets
+      ansible.builtin.template:
+        src: srv/automation/esphome/secrets.yaml.j2
+        dest: /srv/automation/esphome/secrets.yaml
+      no_log: true
+      diff: false
+
+- name: Build and flash radar firmware
+  when: "'esphome-flash' in ansible_run_tags"
+  ansible.builtin.command:
+    argv:
+      - podman
+      - run
+      - --rm
+      - --volume
+      - /srv/automation/esphome:/config
+      - "{{ automation_images.esphome }}"
+      - run
+      - /config/living-room-presence.yaml
+      - --device
+      - "{{ (automation_wifi_devices | selectattr('name', 'equalto', 'living_room_radar') | first).ip }}"
+      - --no-logs
+    chdir: /srv/automation/home
+  tags:
+    - esphome-flash
 
 - name: Install containers
   ansible.builtin.template:

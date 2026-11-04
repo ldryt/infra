@@ -9,6 +9,8 @@ automation_images:
   gateway: docker.io/library/nginx:1.30-alpine@sha256:47928bf67eb62a1863cb08d9ecb52d3e704304ba614eaee17884204677702951
   # renovate: datasource=docker depName=ghcr.io/bokub/ha-linky-aarch64
   linky: ghcr.io/bokub/ha-linky-aarch64:1.9.0@sha256:f5d38ff05baa18e63b253fa352de32011687c12effe2ca586fc45e697bfe0d0e
+  # renovate: datasource=docker depName=ghcr.io/esphome/esphome
+  esphome: ghcr.io/esphome/esphome:2026.10.1@sha256:97533c3226359540dc95350ccefb5e57a0f2f073a1bd23eb90fb5227f3110ad3
   # renovate: datasource=docker depName=docker.io/b2un0/silabs-multipan-docker
   multipan: docker.io/b2un0/silabs-multipan-docker:2.4.4@sha256:9476ed7845db9ca6474f738439c10eef8ea7a980ee144764ff97f62261e1e361
 automation_custom_components:
@@ -45,7 +47,9 @@ restic_paths:
   - /srv/automation/home/.local/share/matter
   - /srv/automation/home/.local/share/linky
   - /srv/automation/radio/data
+  - /srv/automation/esphome
 restic_exclude:
+  - /srv/automation/esphome/.esphome
   - /srv/automation/home/.local/share/home-assistant/.cache
   - /srv/automation/home/.local/share/home-assistant/deps
   - /srv/automation/home/.local/share/home-assistant/tts
@@ -59,6 +63,7 @@ restic_cache_directory: /srv/automation/restic-cache
 restic_rclone_config: /srv/automation/restic-rclone.conf
 desec_token: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).desec_token }}"
 clank_wifi_psk: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).clank_wifi_psk }}"
+automation_esphome_secrets: "{{ lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/esphome.yaml') | from_yaml }}"
 restic_password: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).restic_password }}"
 restic_ssh_key: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).restic_ssh_key }}"
 restic_rclone_conf: "{{ (lookup('pipe', 'sops --decrypt ' ~ inventory_dir ~ '/secrets/clank.yaml') | from_yaml).restic_rclone_conf }}"
