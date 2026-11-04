@@ -324,3 +324,32 @@ views:
                   name: Gate 7
                 - entity: sensor.living_room_radar_gate_8_still_energy
                   name: Gate 8
+  - title: Energy
+    path: energy
+    icon: mdi:lightning-bolt
+    type: sections
+    max_columns: 1
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Home (Linky)
+            icon: mdi:transmission-tower
+          - type: energy-date-selection
+            grid_options: *full
+          - type: statistics-graph
+            title: Home consumption
+            chart_type: line
+            stat_types:
+              - change
+            unit: kWh
+            energy_date_selection: true
+            min_y_axis: 0
+            entities:
+              - entity: !secret linky_consumption_statistic
+                name: Home (Linky)
+              - entity: sensor.plug_living_room_summation_delivered
+                name: Home server
+            grid_options: *full
+          - type: energy-sources-table
+            grid_options: *full
