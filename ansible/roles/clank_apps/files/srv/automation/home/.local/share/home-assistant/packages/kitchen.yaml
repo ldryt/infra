@@ -37,7 +37,7 @@ automation:
         entity_id: binary_sensor.door_sensor_fridge
         to: 'on'
         for:
-          seconds: 10
+          seconds: 20
     actions:
       - action: scene.create
         data:
@@ -51,13 +51,16 @@ automation:
         data:
           rgb_color: [165, 29, 45]
           brightness_pct: 100
-      - wait_for_trigger:
-          - trigger: state
-            entity_id: binary_sensor.door_sensor_fridge
-            to: 'off'
+      - wait_template: "{{ is_state('binary_sensor.door_sensor_fridge', 'off') }}"
       - condition: state
-        entity_id: input_boolean.away_mode
-        state: 'off'
-      - action: scene.turn_on
-        target:
-          entity_id: scene.kitchen_before_fridge_alert
+        entity_id: light.lights_kitchen
+        state: 'on'
+      - if: "{{ is_state('binary_sensor.kitchen_occupied', 'on') and is_state('input_boolean.away_mode', 'off') }}"
+        then:
+          - action: scene.turn_on
+            target:
+              entity_id: scene.kitchen_before_fridge_alert
+        else:
+          - action: light.turn_off
+            target:
+              entity_id: light.lights_kitchen
