@@ -15,7 +15,9 @@ template:
       - name: Living room occupied
         unique_id: living_room_occupied
         device_class: occupancy
-        availability: "{{ has_value('binary_sensor.living_room_radar_presence') }}"
+        availability: >-
+          {{ has_value('binary_sensor.living_room_radar_presence')
+             or has_value('binary_sensor.motion_sensor_living_room_occupancy') }}
         state: >-
           {{ is_state('binary_sensor.living_room_radar_presence', 'on')
              or is_state('binary_sensor.motion_sensor_living_room_occupancy', 'on') }}
