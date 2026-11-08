@@ -39,7 +39,7 @@ rest:
 
 adaptive_lighting:
   - <<: &adaptive_lighting
-      max_color_temp: 4000
+      max_color_temp: 5500
       sleep_color_temp: 2000
     name: Kitchen
     lights:

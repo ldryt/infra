@@ -86,7 +86,7 @@ actions:
               entity_id: "{{ return_timer }}"
           - variables:
               turn_on_lights: >-
-                {% set dark = states('sensor.solar_radiation') | float(0 if is_state('sun.sun', 'below_horizon') else 200) < 110 %}
+                {% set dark = states('sensor.solar_radiation') | float(0 if is_state('sun.sun', 'below_horizon') else 200) < 60 %}
                 {{ extra + ([on_lights] if is_state(lights, 'off') and (was_on or dark) else []) }}
           - condition: template
             value_template: "{{ turn_on_lights | count > 0 }}"
