@@ -22,7 +22,7 @@ variables:
   return_timer: timer.{{ room }}_return
   on_lights: >-
     {{ 'light.light_bulb_' ~ room ~ '_secondary'
-       if is_state('input_boolean.night_mode', 'on') else lights }}
+       if is_state('input_boolean.night_mode', 'on') and is_state('input_boolean.manual_mode', 'off') else lights }}
 
 triggers:
   - trigger: event.received
@@ -50,6 +50,9 @@ triggers:
   - trigger: event
     event_type: automation_reloaded
     id: left
+
+conditions:
+  - "{{ trigger.id == 'button' or is_state('input_boolean.manual_mode', 'off') }}"
 
 actions:
   - choose:

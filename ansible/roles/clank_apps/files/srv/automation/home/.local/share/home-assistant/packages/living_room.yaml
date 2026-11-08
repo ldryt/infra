@@ -44,6 +44,7 @@ automation:
           entity_id: sensor.rosetta_next_alarm
           offset: '-00:40:00'
     conditions:
+      - "{{ is_state('input_boolean.manual_mode', 'off') }}"
       - condition: state
         entity_id: person.lucas
         state: home
@@ -71,7 +72,10 @@ automation:
           for_each: "{{ range(-9, 8) | list }}"
           sequence:
             - condition: template
-              value_template: "{{ repeat.first or is_state('light.light_bulb_living_room_secondary', 'on') }}"
+              value_template: >-
+                {{ is_state('input_boolean.manual_mode', 'off')
+                   and is_state('input_boolean.away_mode', 'off')
+                   and (repeat.first or is_state('light.light_bulb_living_room_secondary', 'on')) }}
             - action: light.turn_on
               target:
                 entity_id: light.light_bulb_living_room_secondary
@@ -79,7 +83,10 @@ automation:
                 brightness_pct: "{{ 10 * 10 ** (repeat.item / 7) }}"
                 color_temp_kelvin: 6500
                 transition: 240
-            - delay: 240
+            - wait_template: >-
+                {{ is_state('input_boolean.manual_mode', 'on')
+                   or is_state('input_boolean.away_mode', 'on') }}
+              timeout: 240
 
   - id: co2_high
     alias: CO2 high
@@ -95,7 +102,7 @@ automation:
         below: 600
         id: ok
     actions:
-      - if: "{{ trigger.id == 'high' and is_state('input_boolean.away_mode', 'off') and is_state('input_boolean.night_mode', 'off') }}"
+      - if: "{{ is_state('input_boolean.manual_mode', 'off') and trigger.id == 'high' and is_state('input_boolean.away_mode', 'off') and is_state('input_boolean.night_mode', 'off') }}"
         then:
           - action: light.turn_on
             target:

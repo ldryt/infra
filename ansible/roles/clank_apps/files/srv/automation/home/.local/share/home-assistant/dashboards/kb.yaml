@@ -12,6 +12,9 @@ views:
           - type: tile
             entity: person.lucas
           - type: tile
+            entity: input_boolean.manual_mode
+            name: Manual mode
+          - type: tile
             entity: input_boolean.away_mode
             name: Away mode
           - type: tile
