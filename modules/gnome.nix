@@ -1,7 +1,14 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   services.displayManager.gdm.enable = true;
   services.desktopManager.gnome.enable = true;
+
+  programs.dconf.profiles.gdm.databases = lib.mkBefore [
+    {
+      settings."org/gnome/login-screen".enable-fingerprint-authentication = false;
+      lockAll = true;
+    }
+  ];
 
   environment.gnome.excludePackages = with pkgs; [
     epiphany
