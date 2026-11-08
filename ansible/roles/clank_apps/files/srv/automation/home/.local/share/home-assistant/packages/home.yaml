@@ -21,26 +21,6 @@ input_boolean:
     name: Night mode
     icon: mdi:weather-night
 
-template:
-  - triggers:
-      - trigger: state
-        entity_id:
-          - binary_sensor.motion_sensor_bathroom_occupancy
-          - binary_sensor.motion_sensor_entrance_occupancy
-          - binary_sensor.motion_sensor_kitchen_occupancy
-          - binary_sensor.motion_sensor_living_room_occupancy
-        to: 'on'
-      - trigger: state
-        entity_id: binary_sensor.living_room_occupied
-        from: 'off'
-        to: 'on'
-    sensor:
-      - name: Last motion
-        unique_id: last_motion
-        state: >-
-          {{ 'living_room' if trigger.entity_id == 'binary_sensor.living_room_occupied'
-             else trigger.entity_id | replace('binary_sensor.motion_sensor_', '') | replace('_occupancy', '') }}
-
 rest:
   - resource_template: >-
       https://api.open-meteo.com/v1/forecast?current=shortwave_radiation&latitude={{

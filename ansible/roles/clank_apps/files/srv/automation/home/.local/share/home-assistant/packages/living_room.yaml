@@ -1,3 +1,7 @@
+timer:
+  living_room_return:
+    duration: '00:30:00'
+
 light:
   - platform: group
     name: Lights Living Room

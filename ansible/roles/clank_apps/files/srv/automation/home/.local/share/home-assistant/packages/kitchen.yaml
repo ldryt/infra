@@ -1,3 +1,7 @@
+timer:
+  kitchen_return:
+    duration: '00:30:00'
+
 light:
   - platform: group
     name: Lights Kitchen
@@ -11,8 +15,8 @@ template:
       - name: Kitchen occupied
         unique_id: kitchen_occupied
         device_class: occupancy
-        availability: "{{ has_value('sensor.last_motion') }}"
-        state: "{{ is_state('sensor.last_motion', 'kitchen') }}"
+        availability: "{{ has_value('binary_sensor.motion_sensor_kitchen_occupancy') }}"
+        state: "{{ is_state('binary_sensor.motion_sensor_kitchen_occupancy', 'on') }}"
         delay_off:
           minutes: 2
 

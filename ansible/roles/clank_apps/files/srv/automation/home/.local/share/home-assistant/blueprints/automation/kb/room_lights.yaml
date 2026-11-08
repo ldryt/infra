@@ -19,7 +19,7 @@ variables:
   extra: !input extra
   auto_on_at_night: !input auto_on_at_night
   lights: light.lights_{{ room }}
-  left_scene: scene.{{ room }}_left
+  return_timer: timer.{{ room }}_return
   on_lights: >-
     {{ 'light.light_bulb_' ~ room ~ '_secondary'
        if is_state('input_boolean.night_mode', 'on') else lights }}
@@ -44,9 +44,12 @@ triggers:
     entity_id: input_boolean.away_mode
     to: 'on'
     id: left
-  - trigger: time_pattern
-    minutes: /1
-    id: check
+  - trigger: homeassistant
+    event: start
+    id: left
+  - trigger: event
+    event_type: automation_reloaded
+    id: left
 
 actions:
   - choose:
@@ -74,14 +77,10 @@ actions:
             state: 'off'
         sequence:
           - variables:
-              was_on: >-
-                {{ states[left_scene] is not none
-                   and now() - states[left_scene].last_changed < timedelta(minutes=30) }}
-          - if: "{{ states[left_scene] is not none }}"
-            then:
-              - action: scene.delete
-                target:
-                  entity_id: "{{ left_scene }}"
+              was_on: "{{ is_state(return_timer, 'active') }}"
+          - action: timer.cancel
+            target:
+              entity_id: "{{ return_timer }}"
           - condition: template
             value_template: "{{ auto_on_at_night or is_state('input_boolean.night_mode', 'off') }}"
           - variables:
@@ -95,16 +94,15 @@ actions:
               entity_id: "{{ turn_on_lights }}"
       - conditions:
           - condition: trigger
-            id: [left, check]
+            id: left
           - "{{ is_state('input_boolean.away_mode', 'on') or is_state(occupancy, 'off') }}"
           - "{{ expand([lights] + extra) | selectattr('state', 'eq', 'on') | list | count > 0 }}"
         sequence:
           - if: "{{ is_state(lights, 'on') }}"
             then:
-              - action: scene.create
-                data:
-                  scene_id: "{{ room }}_left"
-                  snapshot_entities: "{{ [lights] }}"
+              - action: timer.start
+                target:
+                  entity_id: "{{ return_timer }}"
           - action: light.turn_off
             target:
               entity_id: "{{ [lights] + extra }}"
