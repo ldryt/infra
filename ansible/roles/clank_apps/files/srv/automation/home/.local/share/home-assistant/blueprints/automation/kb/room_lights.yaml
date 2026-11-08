@@ -10,14 +10,14 @@ blueprint:
     occupancy:
     extra:
       default: []
-    auto_on_at_night:
-      default: true
+    protect_sleep:
+      default: false
 
 variables:
   room: !input room
   occupancy: !input occupancy
   extra: !input extra
-  auto_on_at_night: !input auto_on_at_night
+  protect_sleep: !input protect_sleep
   lights: light.lights_{{ room }}
   return_timer: timer.{{ room }}_return
   on_lights: >-
@@ -52,7 +52,7 @@ triggers:
     id: left
 
 conditions:
-  - "{{ trigger.id == 'button' or is_state('input_boolean.manual_mode', 'off') }}"
+  - "{{ trigger.id == 'button' or (is_state('input_boolean.manual_mode', 'off') and (not protect_sleep or is_state('input_boolean.night_mode', 'off') or is_state('input_boolean.away_mode', 'on'))) }}"
 
 actions:
   - choose:
@@ -84,8 +84,6 @@ actions:
           - action: timer.cancel
             target:
               entity_id: "{{ return_timer }}"
-          - condition: template
-            value_template: "{{ auto_on_at_night or is_state('input_boolean.night_mode', 'off') }}"
           - variables:
               turn_on_lights: >-
                 {% set dark = states('sensor.solar_radiation') | float(0 if is_state('sun.sun', 'below_horizon') else 200) < 110 %}

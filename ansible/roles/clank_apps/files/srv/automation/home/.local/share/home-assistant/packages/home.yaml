@@ -75,9 +75,14 @@ automation:
     triggers:
       - trigger: state
         entity_id: schedule.night
-        to: ['on', 'off']
+        to: 'on'
+      - trigger: time
+        at: sensor.wake_time
+      - trigger: homeassistant
+        event: start
     actions:
-      - action: input_boolean.turn_{{ trigger.to_state.state }}
+      - wait_template: "{{ has_value('sensor.wake_time') }}"
+      - action: input_boolean.turn_{{ 'on' if now().hour >= 23 or now() < as_datetime(states('sensor.wake_time'), today_at('10:00')) else 'off' }}
         target:
           entity_id: input_boolean.night_mode
 

@@ -11,6 +11,16 @@ light:
       - light.light_bulb_living_room_secondary
 
 template:
+  - sensor:
+      - name: Wake time
+        unique_id: wake_time
+        device_class: timestamp
+        state: >-
+          {% set alarm = as_datetime(states('sensor.rosetta_next_alarm'), none) %}
+          {{ (as_local(alarm) if alarm is not none
+              and state_attr('sensor.rosetta_next_alarm', 'Package') == 'com.android.deskclock'
+              and as_local(alarm).date() == now().date()
+              else today_at('10:00')).isoformat() }}
   - binary_sensor:
       - name: Living room occupied
         unique_id: living_room_occupied
@@ -34,15 +44,15 @@ automation:
         button: event.button_living_room_button_1
         occupancy: binary_sensor.living_room_occupied
         extra: [light.air_quality_monitor_living_room_display]
-        auto_on_at_night: false
+        protect_sleep: true
 
   - id: wake_up
     alias: Wake up
     triggers:
       - trigger: time
         at:
-          entity_id: sensor.rosetta_next_alarm
-          offset: '-00:40:00'
+          entity_id: sensor.wake_time
+          offset: '-00:20:00'
     conditions:
       - "{{ is_state('input_boolean.manual_mode', 'off') }}"
       - condition: state
@@ -52,24 +62,15 @@ automation:
         entity_id: input_boolean.away_mode
         state: 'off'
       - condition: state
-        entity_id: sensor.rosetta_next_alarm
-        attribute: Package
-        state: com.android.deskclock
-      - condition: state
         entity_id: light.light_bulb_living_room_secondary
         state: 'off'
     actions:
-      - action: input_boolean.turn_off
-        target:
-          entity_id: input_boolean.night_mode
-      - wait_template: "{{ is_state('switch.adaptive_lighting_living_room_sleep_mode', 'off') }}"
-        timeout: 10
       - action: adaptive_lighting.set_manual_control
         data:
           entity_id: switch.adaptive_lighting_living_room
           lights: light.light_bulb_living_room_secondary
       - repeat:
-          for_each: "{{ range(-9, 8) | list }}"
+          for_each: "{{ range(10) | list }}"
           sequence:
             - condition: template
               value_template: >-
@@ -80,13 +81,13 @@ automation:
               target:
                 entity_id: light.light_bulb_living_room_secondary
               data:
-                brightness_pct: "{{ 10 * 10 ** (repeat.item / 7) }}"
+                brightness_pct: "{{ 0.5 * 200 ** ((repeat.item + 1) / 10) }}"
                 color_temp_kelvin: 6500
-                transition: 240
+                transition: 120
             - wait_template: >-
                 {{ is_state('input_boolean.manual_mode', 'on')
                    or is_state('input_boolean.away_mode', 'on') }}
-              timeout: 240
+              timeout: 120
 
   - id: co2_high
     alias: CO2 high
