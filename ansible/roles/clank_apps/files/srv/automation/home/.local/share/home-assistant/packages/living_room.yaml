@@ -95,26 +95,16 @@ automation:
         below: 600
         id: ok
     actions:
-      - if:
-          - condition: trigger
-            id: high
+      - if: "{{ trigger.id == 'high' and is_state('input_boolean.away_mode', 'off') and is_state('input_boolean.night_mode', 'off') }}"
         then:
-          - if: "{{ is_state('input_boolean.away_mode', 'off') and is_state('input_boolean.night_mode', 'off') }}"
-            then:
-              - action: light.turn_on
-                target:
-                  entity_id: light.air_quality_monitor_living_room_display
-          - action: notify.mobile_app_rosetta
-            data:
-              title: CO₂ high
-              message: >-
-                Living room at {{ states('sensor.air_quality_monitor_living_room_carbon_dioxide') }} ppm,
-                open the window.
-              data:
-                tag: co2
-        else:
-          - action: notify.mobile_app_rosetta
-            data:
-              message: clear_notification
-              data:
-                tag: co2
+          - action: light.turn_on
+            target:
+              entity_id: light.air_quality_monitor_living_room_display
+      - action: notify.mobile_app_rosetta
+        data:
+          title: CO₂ high
+          message: >-
+            {{ 'Living room at ' ~ states('sensor.air_quality_monitor_living_room_carbon_dioxide')
+               ~ ' ppm, open the window.' if trigger.id == 'high' else 'clear_notification' }}
+          data:
+            tag: co2
