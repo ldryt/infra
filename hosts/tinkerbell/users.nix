@@ -1,6 +1,7 @@
 {
   inputs,
   config,
+  lib,
   pkgs-unstable,
   pkgs-master,
   ...
@@ -20,6 +21,13 @@
       inherit pkgs-master;
       firefox-addons = inputs.firefox-addons;
     };
+  };
+
+  # start GDM in parallel
+  systemd.services.home-manager-ldryt.before = lib.mkForce [ "user@1000.service" ];
+  systemd.services."user@1000" = {
+    overrideStrategy = "asDropin";
+    requires = [ "home-manager-ldryt.service" ];
   };
 
   sops.secrets."users/ldryt/hashedPassword".neededForUsers = true;

@@ -1,4 +1,4 @@
-{ config, ... }:
+{ ... }:
 {
   programs.thunderbird = {
     enable = true;
@@ -15,7 +15,4 @@
       };
     };
   };
-
-  xdg.configFile."autostart/thunderbird.desktop".source =
-    "${config.programs.thunderbird.package}/share/applications/thunderbird.desktop";
 }

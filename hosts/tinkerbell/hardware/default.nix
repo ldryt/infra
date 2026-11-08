@@ -94,6 +94,7 @@
         (pkgs.mac-style-plymouth.overrideAttrs (oldAttrs: {
           installPhase = oldAttrs.installPhase + ''
             rm "$out/share/plymouth/themes/mac-style/images/header-image.png"
+            substituteInPlace "$out/share/plymouth/themes/mac-style/mac-style.plymouth" --replace-fail $'[boot-up]\nUseEndAnimation=true' $'[boot-up]\nUseEndAnimation=false'
           '';
         }))
       ];
@@ -117,7 +118,7 @@
 
     loader.efi.canTouchEfiVariables = true;
 
-    loader.timeout = 1;
+    loader.timeout = 0;
     loader.systemd-boot = {
       configurationLimit = 4;
       consoleMode = "auto";
