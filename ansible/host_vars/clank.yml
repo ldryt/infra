@@ -2,7 +2,7 @@ automation_uid: 1100
 automation_storage_uuid: 05da507d-ed5f-434d-bbb5-08275ed5de10
 automation_images:
   # renovate: datasource=docker depName=ghcr.io/home-assistant/home-assistant
-  home_assistant: ghcr.io/home-assistant/home-assistant:2026.11.0@sha256:c6c1ca9931036bf3a2c4cc088d8db25dfea3b33935a5ecc83c40349462e2f69e
+  home_assistant: ghcr.io/home-assistant/home-assistant:2026.11.1@sha256:6785d1eca68747a524c156faae1b139ed415c07357386ae6fe17291986e59e82
   # renovate: datasource=docker depName=ghcr.io/matter-js/matterjs-server
   matter: ghcr.io/matter-js/matterjs-server:1.5.5@sha256:ee149c7c67eff0e90f131e8f0d628f7b099591ec58473c8cda1209e8ae4df66e
   # renovate: datasource=docker depName=docker.io/library/nginx
