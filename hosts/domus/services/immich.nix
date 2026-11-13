@@ -75,9 +75,6 @@ in
     archive
   ];
 
-  systemd.services."restic-backups-immich@glouton".unitConfig.RequiresMountsFor = [
-    cfg.mediaLocation
-  ];
   systemd.services."restic-backups-immich@onedrive".unitConfig.RequiresMountsFor = [
     cfg.mediaLocation
   ];

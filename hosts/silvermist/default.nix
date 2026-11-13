@@ -30,10 +30,8 @@
   sops.age.keyFile = "/nix/sops_age_silvermist.key";
 
   sops.secrets."backups/restic/hosts/domus/sshKey" = { };
-  sops.secrets."backups/restic/hosts/glouton/sshKey" = { };
   sops.secrets."backups/restic/repos/silvermist/password" = { };
   ldryt-infra.backups.hosts = {
-    glouton.sshKey = config.sops.secrets."backups/restic/hosts/glouton/sshKey".path;
     domus.sshKey = config.sops.secrets."backups/restic/hosts/domus/sshKey".path;
   };
 

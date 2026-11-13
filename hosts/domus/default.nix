@@ -63,11 +63,9 @@
     ];
   };
 
-  sops.secrets."backups/restic/hosts/glouton/sshKey" = { };
   sops.secrets."backups/restic/hosts/domus/sshKey" = { };
   sops.secrets."backups/restic/repos/domus/password" = { };
   ldryt-infra.backups.hosts = {
-    glouton.sshKey = config.sops.secrets."backups/restic/hosts/glouton/sshKey".path;
     domus = {
       enable = true;
       sshKey = config.sops.secrets."backups/restic/hosts/domus/sshKey".path;

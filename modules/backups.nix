@@ -52,7 +52,6 @@ in
             hosts = mkOption {
               type = types.listOf (types.enum (attrNames cfg.hosts));
               default = [
-                "glouton"
                 "domus"
                 "onedrive"
               ];
@@ -121,7 +120,6 @@ in
 
   config = {
     ldryt-infra.backups.hosts = {
-      glouton.url = "u391790-sub3@u391790-sub3.your-storagebox.de";
       domus = {
         url = "restic-backups@domus.ldryt.dev";
         port = 22;

@@ -26,11 +26,9 @@
   ldryt-infra.rclone.mounts.scratchpad.umask = "0007";
   sops.age.keyFile = "/nix/persist/sops_age_printer.key";
 
-  sops.secrets."backups/restic/hosts/glouton/sshKey" = { };
   sops.secrets."backups/restic/hosts/domus/sshKey" = { };
   sops.secrets."backups/restic/repos/printer/password" = { };
   ldryt-infra.backups.hosts = {
-    glouton.sshKey = config.sops.secrets."backups/restic/hosts/glouton/sshKey".path;
     domus.sshKey = config.sops.secrets."backups/restic/hosts/domus/sshKey".path;
   };
 
