@@ -40,42 +40,14 @@ let
     };
   });
 
-  # renovate: datasource=github-releases depName=Flowfin/jellyfin-plugin-sso extractVersion=^(?<version>4\.\d+\.\d+)-stable$
-  flowfinVersion = "4.3.0";
-  flowfin = pkgs.fetchzip {
-    name = "flowfin-${flowfinVersion}";
-    url = "https://github.com/Flowfin/jellyfin-plugin-sso/releases/download/${flowfinVersion}-stable/community-sso-for-jellyfin_${flowfinVersion}.0.zip";
-    hash = "sha256-MA4A1+TCMOBErdF5prsI0EaaiQvsB3Y8PYOEoHQt8LI=";
+  jellyfinSso = pkgs.fetchzip rec {
+    # renovate: datasource=github-releases depName=Buco7854/jellyfin-plugin-sso extractVersion=^v(?<version>4[.][0-9.]+)$
+    version = "4.0.0.7";
+    pname = "jellyfin-plugin-sso";
+    url = "https://github.com/Buco7854/jellyfin-plugin-sso/releases/download/v${version}/sso-authentication_${version}.zip";
+    hash = "sha256-oG3Ho3E3ejD9KOLxs8SUHiRG8EjEycaQ7klpldke/5g=";
     stripRoot = false;
   };
-  flowfinConfig = pkgs.writeText "flowfin-sso.json" (
-    builtins.toJSON {
-      FormatVersion = 1;
-      Configuration = {
-        ManageLoginPageButtons = true;
-        OidConfigs.authelia = {
-          OidEndpoint = "https://${config.ldryt-infra.dns.records.authelia}";
-          OidClientId = "jellyfin";
-          OidSecretFile = config.sops.secrets."services/media/jellyfin/oidc_secret".path;
-          BaseUrlOverride = "https://${config.ldryt-infra.dns.records.jellyfin}";
-          Enabled = true;
-          EnableAuthorization = true;
-          EnableAllFolders = true;
-          Roles = [
-            "admin"
-            "media"
-          ];
-          AdminRoles = [ "admin" ];
-          RoleClaim = "groups";
-          OidScopes = [ "groups" ];
-          RequirePkce = true;
-          DisablePushedAuthorization = true;
-          LoginButtonText = "Sign in with Authelia";
-        };
-        SamlConfigs = { };
-      };
-    }
-  );
   acmeMail = "security@ldryt.dev";
 in
 {
@@ -237,13 +209,18 @@ in
   };
 
   systemd.services.jellyfin = {
-    environment.JELLYFIN_SSO_CONFIG_FILE = flowfinConfig;
     unitConfig.RequiresMountsFor = [ mediaDir ];
     serviceConfig.ExecStartPre = [
-      (pkgs.writeShellScript "install-flowfin" ''
-        mkdir -p ${stateDir}/jellyfin/data/plugins
-        rm -rf -- ${stateDir}/jellyfin/data/plugins/flowfin
-        cp -r --no-preserve=mode ${flowfin} ${stateDir}/jellyfin/data/plugins/flowfin
+      (pkgs.writeShellScript "install-jellyfin-sso" ''
+        set -eu
+        data_dir=${stateDir}/jellyfin/data
+        if test -d "$data_dir/plugins/flowfin"; then
+          mkdir -p "$data_dir/sso-migration-backups"
+          backup=$(${pkgs.coreutils}/bin/mktemp -d "$data_dir/sso-migration-backups/flowfin.XXXXXX")
+          mv "$data_dir/plugins/flowfin" "$backup/"
+        fi
+        mkdir -p "$data_dir/plugins/buco-sso"
+        cp -r --no-preserve=mode ${jellyfinSso}/. "$data_dir/plugins/buco-sso/"
       '')
     ];
   };
