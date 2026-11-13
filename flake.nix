@@ -1,9 +1,5 @@
 {
   inputs = {
-    seerr-src = {
-      url = "github:michaelhthomas/seerr/2e523125e8e7262af44309c70db20fe2d7ca28a3";
-      flake = false;
-    };
     papermod = {
       url = "git+https://github.com/adityatelange/hugo-PaperMod?ref=master";
       flake = false;

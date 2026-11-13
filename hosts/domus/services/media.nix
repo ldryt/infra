@@ -1,6 +1,5 @@
 {
   config,
-  inputs,
   lib,
   pkgs,
   ...
@@ -28,18 +27,18 @@ let
     qbittorrent = qbittorrentApi;
   };
 
-  seerrOidc = pkgs.seerr.overrideAttrs (
-    finalAttrs: _: {
-      version = "preview-new-oidc-${inputs.seerr-src.shortRev}";
-      src = inputs.seerr-src;
-      pnpmDeps = pkgs.testers.invalidateFetcherByDrvHash pkgs.fetchPnpmDeps {
-        inherit (finalAttrs) pname version src;
-        pnpm = pkgs.pnpm_10.override { nodejs-slim = pkgs.nodejs-slim_22; };
-        fetcherVersion = 3;
-        hash = "sha256-bfdmNLBypcoJ79/lMRSgRKSIddQJJohcn3/dL21edog=";
-      };
-    }
-  );
+  seerrOidc = pkgs.seerr.overrideAttrs (final: old: {
+    version = "preview-new-oidc-${builtins.substring 0 7 final.src.rev}";
+    src = pkgs.fetchFromGitHub {
+      owner = "michaelhthomas";
+      repo = "seerr";
+      rev = "2e523125e8e7262af44309c70db20fe2d7ca28a3";
+      hash = "sha256-k8qWhsSBnQXfGk/xEmb2+4tlw6xY8viwWzEQUBxtrNs=";
+    };
+    pnpmDeps = old.pnpmDeps.overrideAttrs {
+      outputHash = "sha256-bfdmNLBypcoJ79/lMRSgRKSIddQJJohcn3/dL21edog=";
+    };
+  });
 
   # renovate: datasource=github-releases depName=Flowfin/jellyfin-plugin-sso extractVersion=^(?<version>4\.\d+\.\d+)-stable$
   flowfinVersion = "4.3.0";

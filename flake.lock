@@ -875,7 +875,6 @@
         "nixpkgs-pie": "nixpkgs-pie",
         "nixpkgs-unstable": "nixpkgs-unstable",
         "papermod": "papermod",
-        "seerr-src": "seerr-src",
         "sops-nix": "sops-nix",
         "zen-browser": "zen-browser"
       }
@@ -898,23 +897,6 @@
       "original": {
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "type": "github"
-      }
-    },
-    "seerr-src": {
-      "flake": false,
-      "locked": {
-        "lastModified": 1791603928,
-        "narHash": "sha256-k8qWhsSBnQXfGk/xEmb2+4tlw6xY8viwWzEQUBxtrNs=",
-        "owner": "michaelhthomas",
-        "repo": "seerr",
-        "rev": "2e523125e8e7262af44309c70db20fe2d7ca28a3",
-        "type": "github"
-      },
-      "original": {
-        "owner": "michaelhthomas",
-        "repo": "seerr",
-        "rev": "2e523125e8e7262af44309c70db20fe2d7ca28a3",
         "type": "github"
       }
     },
