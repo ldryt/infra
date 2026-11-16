@@ -2,6 +2,7 @@
   config,
   lib,
   pkgs,
+  utils,
   ...
 }:
 let
@@ -47,7 +48,9 @@ in
   config = {
     ldryt-infra.persist.directories = [ "/var/lib/rclone" ];
     environment.systemPackages = [ pkgs.rclone ];
-    sops.secrets."system/rclone/rclone.conf" = { };
+    sops.secrets."system/rclone/rclone.conf".restartUnits = lib.mapAttrsToList (
+      mountPoint: _: "${utils.escapeSystemdPath mountPoint}.mount"
+    ) (lib.mapAttrs' mount config.ldryt-infra.rclone.mounts);
     fileSystems = lib.mapAttrs' mount config.ldryt-infra.rclone.mounts;
   };
 }
