@@ -84,16 +84,10 @@ in
 
   ldryt-infra.persist.directories = [ stateDir ];
 
-  fileSystems."${mediaDir}" = {
-    device = "/dev/mapper/media";
-    fsType = "ext4";
-    options = [
-      "defaults"
-      "nofail"
-      "x-systemd.automount"
-      "x-systemd.device-timeout=60s"
-      "x-systemd.idle-timeout=5min"
-    ];
+  ldryt-infra.rclone.mounts.media = {
+    mountPoint = mediaDir;
+    group = "media";
+    umask = "0002";
   };
 
   systemd.tmpfiles.rules = [ "d ${mediaDir} 2775 root media -" ];
