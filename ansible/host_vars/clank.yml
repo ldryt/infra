@@ -12,7 +12,7 @@ automation_images:
   # renovate: datasource=docker depName=ghcr.io/esphome/esphome
   esphome: ghcr.io/esphome/esphome:2026.10.1@sha256:97533c3226359540dc95350ccefb5e57a0f2f073a1bd23eb90fb5227f3110ad3
   # renovate: datasource=docker depName=docker.io/b2un0/silabs-multipan-docker
-  multipan: docker.io/b2un0/silabs-multipan-docker:2.4.4@sha256:9476ed7845db9ca6474f738439c10eef8ea7a980ee144764ff97f62261e1e361
+  multipan: docker.io/b2un0/silabs-multipan-docker:2.4.5@sha256:e02f3bb5051cfc72b65f1bedfbf3049c7fd60283bbe79455c540d7940e1c3b55
 automation_custom_components:
   ingress:
     url: https://github.com/lovelylain/hass_ingress/archive/6c88cc7f257debf54d1fb4fd3851d48d087a38a5.tar.gz
