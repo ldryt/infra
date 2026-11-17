@@ -47,7 +47,6 @@
   ldryt-infra.rclone.mounts = {
     onedrive = { };
     gdrive = { };
-    glouton = { };
     scratchpad.umask = "0007";
   };
 
