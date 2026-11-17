@@ -95,6 +95,20 @@ in
   systemd.services.sonarr.unitConfig.RequiresMountsFor = [ mediaDir ];
   systemd.services.qbittorrent.unitConfig.RequiresMountsFor = [ mediaDir ];
 
+  systemd.services.radarr-sync-config = {
+    requires = [ "radarr-api.service" "qbittorrent.service" ];
+    after = [ "qbittorrent.service" ];
+  };
+  systemd.services.sonarr-sync-config = {
+    requires = [ "sonarr-api.service" "qbittorrent.service" ];
+    after = [ "qbittorrent.service" ];
+  };
+  systemd.services.prowlarr-sync-config.requires = [
+    "prowlarr-api.service"
+    "radarr-api.service"
+    "sonarr-api.service"
+  ];
+
   nixarr = {
     enable = true;
     inherit mediaDir stateDir;

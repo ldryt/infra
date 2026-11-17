@@ -24,6 +24,8 @@ let
         "nofail"
         "_netdev"
         "x-systemd.automount"
+        "x-systemd.mount-timeout=31min"
+        "daemon-wait=30m"
         "allow_other"
         "default_permissions"
         "args2env"

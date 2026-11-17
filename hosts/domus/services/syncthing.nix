@@ -22,7 +22,7 @@
       "defaults"
       "nofail"
       "x-systemd.automount"
-      "x-systemd.device-timeout=5s"
+      "x-systemd.device-timeout=120s"
       "x-systemd.idle-timeout=5min"
       "subvol=domus-syncthing"
     ];

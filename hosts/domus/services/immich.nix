@@ -22,7 +22,7 @@ in
       "subvol=domus-immich"
       "noatime"
       "nofail"
-      "x-systemd.device-timeout=30s"
+      "x-systemd.device-timeout=120s"
     ];
   };
 

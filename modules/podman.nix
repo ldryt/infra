@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 {
   virtualisation = {
     podman = {
@@ -15,6 +15,8 @@
     };
     oci-containers.backend = "podman";
   };
+
+  systemd.timers.podman-prune.timerConfig.Persistent = lib.mkForce false;
 
   # https://github.com/NixOS/nixpkgs/issues/226365
   networking.firewall.interfaces."podman+".allowedUDPPorts = [ 53 ];
