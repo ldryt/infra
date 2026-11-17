@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-master, ... }:
 {
   home.sessionVariables."NIXOS_OZONE_WL" = "1";
   home.packages = with pkgs; [
@@ -14,7 +14,7 @@
 
   programs.vscode = {
     enable = true;
-    package = pkgs.vscode;
+    package = pkgs-master.vscode;
     profiles.default = {
       extensions = with pkgs.vscode-extensions; [
         # VSCode utilities

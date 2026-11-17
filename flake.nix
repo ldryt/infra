@@ -87,7 +87,10 @@
             inherit inputs self system;
             inherit (self) nixosConfigurations;
             pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
-            pkgs-master = inputs.nixpkgs-master.legacyPackages.${system};
+            pkgs-master = import nixpkgs-master {
+              inherit system;
+              config.allowUnfree = true;
+            };
           }
           // (meta.specialArgs or { });
           modules = [
