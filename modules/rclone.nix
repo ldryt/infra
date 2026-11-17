@@ -35,7 +35,7 @@ let
         "umask=${umask}"
         "cache-dir=/var/lib/rclone/cache/${name}"
         "vfs-cache-mode=full"
-        "vfs-cache-min-free-space=5G"
+        "vfs-cache-min-free-space=20G"
         "vfs-cache-max-age=876000h"
       ]
       ++ lib.optional readOnly "ro";

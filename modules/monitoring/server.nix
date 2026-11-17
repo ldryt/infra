@@ -168,22 +168,22 @@ in
                       short_url: "${cfg.alertmanager.shortLinks.nodes or ""}"
 
                   - alert: LowDisk
-                    expr: (node_filesystem_avail_bytes{mountpoint=~"${allMountsRegex}"} / node_filesystem_size_bytes{mountpoint=~"${allMountsRegex}"}) * 100 < 8
-                    for: 5m
+                    expr: node_filesystem_avail_bytes{mountpoint=~"${allMountsRegex}"} / 1024^3 < clamp_max(node_filesystem_size_bytes{mountpoint=~"${allMountsRegex}"} / 1024^3 * 0.08, 10)
+                    for: 10m
                     labels:
                       severity: warning
                     annotations:
-                      summary: "Low disk on {{ $labels.instance }}{{ $labels.mountpoint }}: {{ $value | printf \"%.1f\" }}% free"
+                      summary: "Low disk on {{ $labels.instance }}{{ $labels.mountpoint }}: {{ $value | printf \"%.2f\" }} GiB free"
                       dashboard_url: "${nodeDashboard}"
                       short_url: "${cfg.alertmanager.shortLinks.nodes or ""}"
 
                   - alert: CriticalDisk
-                    expr: (node_filesystem_avail_bytes{mountpoint=~"${allMountsRegex}"} / node_filesystem_size_bytes{mountpoint=~"${allMountsRegex}"}) * 100 < 3
+                    expr: node_filesystem_avail_bytes{mountpoint=~"${allMountsRegex}"} / 1024^3 < clamp_max(node_filesystem_size_bytes{mountpoint=~"${allMountsRegex}"} / 1024^3 * 0.03, 5)
                     for: 2m
                     labels:
                       severity: critical
                     annotations:
-                      summary: "Critical disk on {{ $labels.instance }}{{ $labels.mountpoint }}: {{ $value | printf \"%.1f\" }}% free"
+                      summary: "Critical disk on {{ $labels.instance }}{{ $labels.mountpoint }}: {{ $value | printf \"%.2f\" }} GiB free"
                       dashboard_url: "${nodeDashboard}"
                       short_url: "${cfg.alertmanager.shortLinks.nodes or ""}"
 
