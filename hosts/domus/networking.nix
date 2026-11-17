@@ -9,4 +9,6 @@
     enableIPv6 = false;
     useNetworkd = true;
   };
+
+  systemd.network.wait-online.extraArgs = [ "--interface=enp2s0f3u2u2:routable" ];
 }
