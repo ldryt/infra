@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 {
   virtualisation = {
     podman = {
@@ -18,8 +18,10 @@
 
   systemd.timers.podman-prune.timerConfig.Persistent = lib.mkForce false;
 
-  # https://github.com/NixOS/nixpkgs/issues/226365
-  networking.firewall.interfaces."podman+".allowedUDPPorts = [ 53 ];
+  networking.firewall.interfaces.${if config.networking.firewall.backend == "nftables" then "podman*" else "podman+"} = {
+    allowedTCPPorts = [ 53 ];
+    allowedUDPPorts = [ 53 ];
+  };
 
   environment.systemPackages = with pkgs; [
     podman-compose
