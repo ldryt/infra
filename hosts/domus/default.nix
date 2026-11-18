@@ -28,6 +28,7 @@
     ../../modules/nix-settings.nix
     ../../modules/fail2ban.nix
     ../../modules/syncthing-relay.nix
+    ../../modules/snowflake-proxy.nix
     ../../modules/podman.nix
     ../../modules/libvirt.nix
     ../../modules/ntp-pool.nix
