@@ -16,6 +16,10 @@
       "autoconfig",
       "domus"
     ],
+    "time": [
+      "time",
+      "domus"
+    ],
     "immich": [
       "pics",
       "domus"

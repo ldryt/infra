@@ -30,6 +30,7 @@
     ../../modules/syncthing-relay.nix
     ../../modules/podman.nix
     ../../modules/libvirt.nix
+    ../../modules/ntp-pool.nix
 
     ../../modules/colon-user.nix
     ../../modules/ldryt-remote-user.nix
