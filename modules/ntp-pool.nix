@@ -40,11 +40,6 @@
     reloadServices = [ "chronyd.service" ];
   };
 
-  systemd.services."acme-order-renew-${config.ldryt-infra.dns.records.time}".environment = {
-    DESEC_POLLING_INTERVAL = "300";
-    DESEC_PROPAGATION_TIMEOUT = "900";
-  };
-
   systemd.services.chronyd = {
     requires = [ "acme-${config.ldryt-infra.dns.records.time}.service" ];
     after = [ "acme-${config.ldryt-infra.dns.records.time}.service" ];

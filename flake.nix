@@ -95,6 +95,7 @@
           // (meta.specialArgs or { });
           modules = [
             ./hosts/${name}
+            ./modules/acme.nix
             ({ lib, pkgs, ... }: {
               boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
             })
