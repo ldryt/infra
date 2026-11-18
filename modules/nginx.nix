@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, pkgs-master, ... }:
 {
   security.acme = {
     acceptTerms = true;
@@ -15,17 +15,14 @@
 
   services.nginx = {
     enable = true;
-    package = (
-      pkgs.nginxMainline.override {
-        modules = [ pkgs.nginxModules.moreheaders ];
-      }
-    );
+    package = pkgs-master.nginxMainline.override {
+      modules = [ pkgs-master.nginxModules.moreheaders ];
+    };
 
     recommendedOptimisation = true;
     recommendedProxySettings = true;
     recommendedTlsSettings = true;
     recommendedGzipSettings = true;
-    recommendedBrotliSettings = true;
 
     # Only allow PFS-enabled ciphers with AES256
     sslCiphers = "AES256+EECDH:AES256+EDH:!aNULL";
