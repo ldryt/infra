@@ -8,6 +8,10 @@
       "auth",
       "domus"
     ],
+    "archiveteam": [
+      "archiveteam",
+      "domus"
+    ],
     "mailserver": [
       "mx",
       "domus"
