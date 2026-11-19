@@ -8,15 +8,23 @@
     "from": "now-1h",
     "to": "now"
   },
-  "version": 15,
+  "version": 16,
   "templating": {
     "list": [
       {
         "name": "host",
         "label": "Host",
         "type": "query",
-        "datasource": "Loki",
-        "query": "label_values({job=\"systemd-journal\"}, host)",
+        "datasource": {
+          "type": "loki",
+          "uid": "P8E80F9AEF21F6940"
+        },
+        "query": {
+          "type": 1,
+          "label": "host",
+          "stream": "{job=\"systemd-journal\"}",
+          "refId": "LokiVariableQueryEditor-VariableQuery"
+        },
         "refresh": 2,
         "sort": 1,
         "multi": true,
@@ -30,15 +38,28 @@
             "$__all"
           ]
         }
+      },
+      {
+        "name": "priority",
+        "label": "Priority",
+        "type": "custom",
+        "query": "Any : .*, Warning and above : [0-4], Error and above : [0-3]",
+        "current": {
+          "text": "Any",
+          "value": ".*"
+        }
       }
     ]
   },
   "panels": [
     {
       "id": 1,
-      "title": "Logs from all hosts",
+      "title": "Journal logs",
       "type": "logs",
-      "datasource": "Loki",
+      "datasource": {
+        "type": "loki",
+        "uid": "P8E80F9AEF21F6940"
+      },
       "gridPos": {
         "x": 0,
         "y": 0,
@@ -48,7 +69,11 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "{job=\"systemd-journal\", host=~\"${host:regex}\"} | json | line_format `{{.host}} {{if .MESSAGE}}{{.MESSAGE}}{{else}}{{ __line__ }}{{end}}`",
+          "datasource": {
+            "type": "loki",
+            "uid": "P8E80F9AEF21F6940"
+          },
+          "expr": "{job=\"systemd-journal\", host=~\"${host:regex}\"} | json message=\"MESSAGE\", unit=\"_SYSTEMD_UNIT\", identifier=\"SYSLOG_IDENTIFIER\", priority=\"PRIORITY\" | priority=~\"${priority:raw}\" | line_format `{{.host}}{{if .unit}} {{.unit}}{{else if .identifier}} {{.identifier}}{{end}} {{if .message}}{{.message}}{{else}}{{ __line__ }}{{end}}`",
           "queryType": "range",
           "maxLines": 1000
         }

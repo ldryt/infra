@@ -1042,14 +1042,20 @@
       {
         "allValue": null,
         "current": {},
-        "datasource": "Prometheus",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
         "hide": 0,
         "includeAll": true,
         "label": null,
         "multi": true,
         "name": "target",
         "options": [],
-        "query": "label_values(probe_success, instance)",
+        "query": {
+          "query": "label_values(probe_success, instance)",
+          "refId": "Prometheus-target-Variable-Query"
+        },
         "refresh": 1,
         "regex": "",
         "sort": 0,

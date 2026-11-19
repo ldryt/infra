@@ -15486,33 +15486,13 @@
           "type": "prometheus",
           "uid": "${ds_prometheus}"
         },
-        "definition": "label_values(node_uname_info{job=\"$job\"}, nodename)",
+        "definition": "label_values(node_uname_info{job=\"$job\"}, instance)",
         "includeAll": false,
-        "label": "Nodename",
-        "name": "nodename",
-        "options": [],
-        "query": {
-          "query": "label_values(node_uname_info{job=\"$job\"}, nodename)",
-          "refId": "Prometheus-nodename-Variable-Query"
-        },
-        "refresh": 1,
-        "regex": "",
-        "sort": 1,
-        "type": "query"
-      },
-      {
-        "current": {},
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${ds_prometheus}"
-        },
-        "definition": "label_values(node_uname_info{job=\"$job\", nodename=\"$nodename\"}, instance)",
-        "includeAll": false,
-        "label": "Instance",
+        "label": "Host",
         "name": "node",
         "options": [],
         "query": {
-          "query": "label_values(node_uname_info{job=\"$job\", nodename=\"$nodename\"}, instance)",
+          "query": "label_values(node_uname_info{job=\"$job\"}, instance)",
           "refId": "Prometheus-node-Variable-Query"
         },
         "refresh": 1,
@@ -15530,7 +15510,7 @@
   "timezone": "browser",
   "title": "Node Exporter Full",
   "uid": "rYdddlPWk",
-  "version": 101,
+  "version": 102,
   "weekStart": "",
   "gnetId": 1860
 }

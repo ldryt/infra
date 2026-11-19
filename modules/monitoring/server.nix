@@ -44,7 +44,7 @@ in
     let
       toRegex = builtins.concatStringsSep "|";
       escapePubKey = lib.replaceStrings [ "+" ] [ "[+]" ];
-      nodeDashboard = "https://${config.ldryt-infra.dns.records.grafana}/d/rYdddlPWk?var-job=nodes&var-nodename=All&var-node={{ $labels.instance | urlquery }}";
+      nodeDashboard = "https://${config.ldryt-infra.dns.records.grafana}/d/rYdddlPWk?var-job=nodes&var-node={{ $labels.instance | urlquery }}";
       probeDashboard = "https://${config.ldryt-infra.dns.records.grafana}/d/xtkCtBkiz?var-target={{ $labels.instance | urlquery }}";
       logsDashboard = "https://${config.ldryt-infra.dns.records.grafana}/d/sadlil-loki-apps-dashboard?var-host={{ $labels.instance | urlquery }}";
 
@@ -483,12 +483,14 @@ in
           datasources.settings.datasources = [
             {
               name = "Prometheus";
+              uid = "PBFA97CFB590B2093";
               type = "prometheus";
               access = "proxy";
               url = "http://127.0.0.1:${toString common.ports.prometheus}";
             }
             {
               name = "Loki";
+              uid = "P8E80F9AEF21F6940";
               type = "loki";
               access = "proxy";
               url = "http://127.0.0.1:${toString common.ports.loki}";
