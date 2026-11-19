@@ -11,7 +11,7 @@
 
     ../../modules/openssh.nix
     ../../modules/nix-settings.nix
-    ../../modules/fail2ban.nix
+    ../../modules/crowdsec.nix
     ../../modules/nginx.nix
 
     ../../modules/rclone.nix

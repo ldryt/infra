@@ -11,7 +11,7 @@
     ./services/cachefilesd.nix
 
     ../../modules/nginx.nix
-    ../../modules/fail2ban.nix
+    ../../modules/crowdsec.nix
     ../../modules/openssh.nix
     ../../modules/podman.nix
     ../../modules/nix-settings.nix

@@ -28,5 +28,6 @@ rec {
     blackbox = 44190;
     grafana = 44144;
     alertmanager = 44193;
+    crowdsec = 6060;
   };
 }

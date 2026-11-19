@@ -11,7 +11,7 @@
 
     ../../modules/nix-settings.nix
     ../../modules/openssh.nix
-    ../../modules/fail2ban.nix
+    ../../modules/crowdsec.nix
     ../../modules/podman.nix
     ../../modules/nginx.nix
     ../../modules/syncthing-relay.nix

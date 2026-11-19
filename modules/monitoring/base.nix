@@ -19,6 +19,19 @@ in
   };
 
   config = lib.mkIf cfg.enable {
+    systemd.services.monitoring-wireguard-online = lib.mkIf config.networking.wireguard.useNetworkd {
+      before = [ "alertmanager.service" "crowdsec.service" ];
+      requiredBy = lib.optional config.services.prometheus.alertmanager.enable "alertmanager.service";
+      wantedBy = lib.optional config.services.crowdsec.enable "crowdsec.service";
+      after = [ "systemd-networkd.service" ];
+      requires = [ "systemd-networkd.service" ];
+      serviceConfig = {
+        Type = "oneshot";
+        RemainAfterExit = true;
+        ExecStart = "${config.systemd.package}/lib/systemd/systemd-networkd-wait-online --interface=${common.wg.int}:degraded --ipv4 --timeout=60";
+      };
+    };
+
     services.fail2ban.ignoreIP = map (p: p.ip) (
       [ common.wg.server ] ++ builtins.attrValues common.wg.clients
     );

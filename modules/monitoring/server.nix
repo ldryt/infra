@@ -117,6 +117,7 @@ in
         common.ports.loki
         common.ports.lokiGrpc
         common.ports.nodeExporter
+        common.ports.alertmanager
       ];
 
       services.prometheus = {
@@ -262,7 +263,7 @@ in
         ];
         alertmanagers = [
           {
-            static_configs = [ { targets = [ "127.0.0.1:${toString common.ports.alertmanager}" ]; } ];
+            static_configs = [ { targets = [ "${common.wg.server.ip}:${toString common.ports.alertmanager}" ]; } ];
           }
         ];
         exporters = {
@@ -309,6 +310,18 @@ in
               labels.instance = host.hostname;
             }) allWgPeers;
           }
+          {
+            job_name = "crowdsec";
+            static_configs =
+              map (host: {
+                targets = [ "${host.ip}:${toString common.ports.crowdsec}" ];
+                labels.instance = host.hostname;
+              }) (
+                builtins.filter (
+                  host: nixosConfigurations.${host.hostname}.config.services.crowdsec.enable
+                ) allWgPeers
+              );
+          }
         ]
         ++ (lib.mapAttrsToList (module: targets: {
           job_name = "blackbox_${module}";
@@ -339,7 +352,7 @@ in
       services.prometheus.alertmanager = {
         enable = true;
         port = common.ports.alertmanager;
-        listenAddress = "127.0.0.1";
+        listenAddress = common.wg.server.ip;
         configuration = {
           inhibit_rules = [
             {
@@ -499,7 +512,7 @@ in
               name = "Alertmanager";
               type = "alertmanager";
               access = "proxy";
-              url = "http://127.0.0.1:${toString common.ports.alertmanager}";
+              url = "http://${common.wg.server.ip}:${toString common.ports.alertmanager}";
               jsonData.implementation = "prometheus";
             }
           ];
