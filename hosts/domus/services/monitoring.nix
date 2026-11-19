@@ -2,6 +2,8 @@
 {
   imports = [ ../../../modules/monitoring/server.nix ];
 
+  services.prometheus.exporters.node.enabledCollectors = [ "ntp" ];
+
   sops.secrets."services/monitoring/wg/privateKey" = { };
   sops.secrets."services/grafana/adminPassword".owner = "grafana";
   sops.secrets."services/grafana/secretKey".owner = "grafana";

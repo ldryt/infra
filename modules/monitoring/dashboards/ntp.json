@@ -1,0 +1,696 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": "-- Grafana --",
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "gnetId": 7496,
+  "graphTooltip": 0,
+  "id": null,
+  "iteration": 1533956272503,
+  "links": [],
+  "panels": [
+    {
+      "id": 10,
+      "title": "Leap second status",
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "description": "This is the leap status, which can be Normal, Insert a second, Delete a second or Not synchronised.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "node_ntp_leap{job=\"nodes\",instance=\"$instance\"}",
+          "format": "time_series",
+          "legendFormat": "__auto",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "type": "stat",
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "graphMode": "none",
+        "colorMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "noValue": "N/A",
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "OK",
+                  "color": "green"
+                },
+                "1": {
+                  "text": "add leap second at UTC midnight",
+                  "color": "orange"
+                },
+                "2": {
+                  "text": "delete leap second at UTC midnight",
+                  "color": "orange"
+                },
+                "3": {
+                  "text": "unsynchronised",
+                  "color": "red"
+                }
+              }
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 21,
+      "title": "Clock Synchronisation",
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 6,
+        "y": 0
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "node_timex_sync_status{job=\"nodes\",instance=\"$instance\"}",
+          "format": "time_series",
+          "legendFormat": "__auto",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "type": "stat",
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "graphMode": "none",
+        "colorMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "noValue": "N/A",
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "1": {
+                  "text": "OK",
+                  "color": "green"
+                },
+                "0": {
+                  "text": "Not Synchronised",
+                  "color": "red"
+                }
+              }
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 8,
+      "title": "Stratum",
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 12,
+        "y": 0
+      },
+      "description": "The stratum indicates how many hops away from a computer with an attached reference clock we are. Such a computer is a stratum-1 computer, so the computer in the example is two hops away (i.e. foo.example.net is a stratum-2 and is synchronised from a stratum-1)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "node_ntp_stratum{job=\"nodes\",instance=\"$instance\"}",
+          "format": "time_series",
+          "legendFormat": "__auto",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "type": "stat",
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "graphMode": "none",
+        "colorMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "noValue": "N/A",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 4
+              },
+              {
+                "color": "red",
+                "value": 10
+              }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 11,
+      "title": "Sanity check",
+      "gridPos": {
+        "h": 3,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
+      "description": "Aggregate NTPD health including stratum, leap flag, sane freshness, root distance being less than collector.ntp.max-distance and causality violation being less than collector.ntp.local-offset-tolerance.\n\nCausality violation is lower bound estimate of clock error done using SNTP, it's calculated as positive portion of abs(node_ntp_offset) - node_ntp_rtt / 2.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "node_ntp_sanity{job=\"nodes\",instance=\"$instance\"}",
+          "format": "time_series",
+          "legendFormat": "__auto",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "type": "stat",
+      "options": {
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ]
+        },
+        "graphMode": "none",
+        "colorMode": "value"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "noValue": "N/A",
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "Failed",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "OK",
+                  "color": "green"
+                }
+              }
+            }
+          ],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 13,
+      "title": "ntppool status",
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 3
+      },
+      "description": "The Score graph - Blue/red \"double size\" dots are points/scores (using the right axis). A couple of times an hour the pool system checks the time from your server and compares it to the local time. Points are deducted if the server can’t be reached or if the time offset is more than 100ms (as measured from the monitoring systems). More points are deducted the bigger the offset is.\n\n\nThe Offset graph - Green/orange/red small dots are offsets (in milliseconds, using the left axis). The monitoring system works roughly like an SNTP (RFC 2030) client, so it is more susceptible by random network latencies between the server and the monitoring system than a regular ntpd server would be.\n\nThe monitoring system can be inaccurate as much as 10ms or more.",
+      "type": "text",
+      "options": {
+        "mode": "markdown",
+        "content": "[![NTP Pool offset graph](https://graphs.ntppool.net/graph/$ip/offset.png)](https://www.ntppool.org/scores/$ip)"
+      }
+    },
+    {
+      "id": 4,
+      "title": "Offset",
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 3
+      },
+      "description": "Offset - This is the estimated local offset to the ntp sources on the last clock update.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "node_ntp_offset_seconds{job=\"nodes\",instance=\"$instance\"}",
+          "format": "time_series",
+          "legendFormat": "Offset",
+          "instant": false,
+          "range": true
+        }
+      ],
+      "type": "timeseries",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": {
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": -0.02
+              },
+              {
+                "color": "green",
+                "value": -0.01
+              },
+              {
+                "color": "orange",
+                "value": 0.01
+              },
+              {
+                "color": "red",
+                "value": 0.02
+              }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 2,
+      "title": "Round-Trip Time",
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 0,
+        "y": 12
+      },
+      "description": "RTT (round-trip time) from node_exporter collector to local NTPD. This value is used in sanity check as part of causality violation estimate.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "node_ntp_rtt_seconds{job=\"nodes\",instance=\"$instance\"}",
+          "format": "time_series",
+          "legendFormat": "RTT",
+          "instant": false,
+          "range": true
+        }
+      ],
+      "type": "timeseries",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": {
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.3
+              },
+              {
+                "color": "red",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 6,
+      "title": "Sources",
+      "gridPos": {
+        "h": 9,
+        "w": 12,
+        "x": 12,
+        "y": 12
+      },
+      "description": "Root delay - This is the total of the network path delays to the stratum-1 computer from which the computer is ultimately synchronised. In certain extreme situations, this value can be negative. (This can arise in a symmetric peer arrangement where the computers’ frequencies are not tracking each other and the network delay is very short relative to the turn-around time at each computer.)\n\nRoot dispersion - This is the total dispersion accumulated through all the computers back to the stratum-1 computer from which the computer is ultimately synchronised. Dispersion is due to system clock resolution, statistical measurement variations etc. An absolute bound on the computer’s clock accuracy. (The estimate of the total amount of error/variance between that server and the correct time.)",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "node_ntp_root_delay_seconds{job=\"nodes\",instance=\"$instance\"}",
+          "format": "time_series",
+          "legendFormat": "Root Delay",
+          "instant": false,
+          "range": true
+        },
+        {
+          "refId": "B",
+          "expr": "node_ntp_root_dispersion_seconds{job=\"nodes\",instance=\"$instance\"}",
+          "format": "time_series",
+          "legendFormat": "Root Dispersion",
+          "instant": false,
+          "range": true
+        }
+      ],
+      "type": "timeseries",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": {
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.01
+              },
+              {
+                "color": "red",
+                "value": 0.05
+              }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 15,
+      "title": "Last Clock Adjustment",
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 21
+      },
+      "description": "Reference Time. This field show time when the last adjustment was made, but implementation details vary from \"local wall-clock time\" to \"Reference Time field in incoming SNTP packet\".\n\nrepresent some estimate of \"freshness\" of synchronization.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "targets": [
+        {
+          "refId": "B",
+          "expr": "node_time_seconds{job=\"nodes\",instance=\"$instance\"} - node_ntp_reference_timestamp_seconds{job=\"nodes\",instance=\"$instance\"}",
+          "format": "time_series",
+          "legendFormat": "Last Adjustment ",
+          "instant": false,
+          "range": true
+        }
+      ],
+      "type": "timeseries",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 17,
+      "title": "Frequency",
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 21
+      },
+      "description": "The ‘frequency’ is the rate by which the system’s clock would be wrong if the NTP client was not correcting it. It is expressed in ppm (parts per million). For example, a value of 1 ppm would mean that when the system’s clock thinks it has advanced 1 second, it has actually advanced by 1.000001 seconds relative to true time.\n\nIt is the frequency the local clock is adjusted by the NTP client to correct the local time.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(node_timex_frequency_adjustment_ratio{job=\"nodes\",instance=\"$instance\"}-1) * 1e6",
+          "format": "time_series",
+          "legendFormat": "Local clock frequency adjustment (0 = no change)",
+          "instant": false,
+          "range": true
+        }
+      ],
+      "type": "timeseries",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ppm"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 19,
+      "title": "Max Error",
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 0,
+        "y": 31
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "targets": [
+        {
+          "refId": "C",
+          "expr": "node_timex_maxerror_seconds{job=\"nodes\",instance=\"$instance\"}",
+          "format": "time_series",
+          "legendFormat": "Maximum error in seconds",
+          "instant": false,
+          "range": true
+        }
+      ],
+      "type": "timeseries",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      }
+    },
+    {
+      "id": 22,
+      "title": "Estimated Error",
+      "gridPos": {
+        "h": 10,
+        "w": 12,
+        "x": 12,
+        "y": 31
+      },
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "targets": [
+        {
+          "refId": "B",
+          "expr": "node_timex_estimated_error_seconds{job=\"nodes\",instance=\"$instance\"}",
+          "format": "time_series",
+          "legendFormat": "Estimated error in seconds",
+          "instant": false,
+          "range": true
+        }
+      ],
+      "type": "timeseries",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s",
+          "custom": {
+            "thresholdsStyle": {
+              "mode": "line"
+            }
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "orange",
+                "value": 0.001
+              },
+              {
+                "color": "red",
+                "value": 0.005
+              }
+            ]
+          }
+        },
+        "overrides": []
+      }
+    }
+  ],
+  "refresh": "5m",
+  "schemaVersion": 39,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "name": "ip",
+        "label": "NTP Pool IP Address",
+        "type": "constant",
+        "hide": 2,
+        "query": "82.67.219.252",
+        "current": {
+          "text": "82.67.219.252",
+          "value": "82.67.219.252"
+        }
+      },
+      {
+        "name": "instance",
+        "label": "NTP server",
+        "type": "query",
+        "datasource": {
+          "type": "prometheus",
+          "uid": "PBFA97CFB590B2093"
+        },
+        "query": "label_values(node_ntp_stratum{job=\"nodes\"}, instance)",
+        "refresh": 1,
+        "current": {
+          "text": "domus",
+          "value": "domus"
+        },
+        "options": [],
+        "sort": 1
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+  "timezone": "",
+  "title": "NTP",
+  "uid": "38sNyU7iz",
+  "version": 11,
+  "description": "Dashboard for chrony or OpenNTPD."
+}
