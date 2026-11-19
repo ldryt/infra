@@ -31,6 +31,7 @@
     ../../modules/syncthing-relay.nix
     ../../modules/snowflake-proxy.nix
     ../../modules/podman.nix
+    ../../modules/ripe-atlas.nix
     ../../modules/libvirt.nix
     ../../modules/ntp-pool.nix
 
