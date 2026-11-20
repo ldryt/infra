@@ -7,6 +7,7 @@
 let
   mediaDir = "/mnt/media";
   stateDir = "/var/lib/nixarr";
+  torrentDir = "/var/lib/rclone/cache/torrent-staging";
   qbittorrentApi = {
     host = "192.168.15.1";
     port = config.nixarr.qbittorrent.webuiPort;
@@ -90,10 +91,16 @@ in
     umask = "0002";
   };
 
-  systemd.tmpfiles.rules = [ "d ${mediaDir} 2775 root media -" ];
+  systemd.tmpfiles.rules = [
+    "d ${mediaDir} 2775 root media -"
+    "d ${torrentDir} 2775 qbittorrent media -"
+  ];
   systemd.services.radarr.unitConfig.RequiresMountsFor = [ mediaDir ];
   systemd.services.sonarr.unitConfig.RequiresMountsFor = [ mediaDir ];
-  systemd.services.qbittorrent.unitConfig.RequiresMountsFor = [ mediaDir ];
+  systemd.services.qbittorrent = {
+    unitConfig.RequiresMountsFor = [ torrentDir ];
+    serviceConfig.InaccessiblePaths = [ mediaDir ];
+  };
 
   systemd.services.radarr-sync-config = {
     requires = [ "radarr-api.service" "qbittorrent.service" ];
@@ -125,6 +132,13 @@ in
       vpn.enable = true;
       qui.enable = false;
       peerPort = 39656;
+      stateDir = "${stateDir}/qbittorrent-ssd";
+      extraConfig.Preferences = {
+        "Downloads\\SavePath" = torrentDir;
+        "Downloads\\TempPathEnabled" = false;
+        "Downloads\\ScanDirsV2" = "{}";
+        "Downloads\\PreAllocation" = false;
+      };
     };
 
     jellyfin = {
