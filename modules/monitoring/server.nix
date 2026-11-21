@@ -140,7 +140,7 @@ in
 
                   - alert: HighCPUPressure
                     expr: rate(node_pressure_cpu_waiting_seconds_total[5m]) * 100 > 80
-                    for: 45m
+                    for: 65m
                     labels:
                       severity: critical
                     annotations:
@@ -150,7 +150,7 @@ in
 
                   - alert: HighIOPressure
                     expr: rate(node_pressure_io_waiting_seconds_total[5m]) * 100 > 65
-                    for: 45m
+                    for: 65m
                     labels:
                       severity: critical
                     annotations:
@@ -160,7 +160,7 @@ in
 
                   - alert: HighMemoryPressure
                     expr: rate(node_pressure_memory_waiting_seconds_total[5m]) * 100 > 65
-                    for: 45m
+                    for: 65m
                     labels:
                       severity: critical
                     annotations:
