@@ -98,8 +98,9 @@ in
   systemd.services.radarr.unitConfig.RequiresMountsFor = [ mediaDir ];
   systemd.services.sonarr.unitConfig.RequiresMountsFor = [ mediaDir ];
   systemd.services.qbittorrent = {
-    unitConfig.RequiresMountsFor = [ torrentDir ];
-    serviceConfig.InaccessiblePaths = [ mediaDir ];
+    unitConfig.RequiresMountsFor = [ torrentDir mediaDir ];
+    serviceConfig.ReadOnlyPaths = [ mediaDir ];
+    serviceConfig.ReadWritePaths = [ "${mediaDir}/qbittorrent" ];
   };
 
   systemd.services.radarr-sync-config = {
@@ -132,10 +133,9 @@ in
       vpn.enable = true;
       qui.enable = false;
       peerPort = 39656;
-      stateDir = "${stateDir}/qbittorrent-ssd";
+      torrentQueueing.enable = false;
       extraConfig.Preferences = {
-        "Downloads\\SavePath" = torrentDir;
-        "Downloads\\TempPathEnabled" = false;
+        "Downloads\\TempPath" = torrentDir;
         "Downloads\\ScanDirsV2" = "{}";
         "Downloads\\PreAllocation" = false;
       };
@@ -172,6 +172,7 @@ in
           enable = true;
           name = "qBittorrent";
           implementation = "QBittorrent";
+          remove_completed_downloads = false;
           fields = {
             inherit (qbittorrentApi) host port;
             tvCategory = "sonarr";
@@ -187,6 +188,7 @@ in
           enable = true;
           name = "qBittorrent";
           implementation = "QBittorrent";
+          remove_completed_downloads = false;
           fields = {
             inherit (qbittorrentApi) host port;
             movieCategory = "radarr";
