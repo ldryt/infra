@@ -16,6 +16,8 @@
     - .config/systemd/user
     - .config/nginx
     - .local/share/home-assistant
+    - .local/share/home-assistant/managed
+    - .local/share/home-assistant/blueprints/automation/kb
     - .local/share/matter
     - .local/share/linky
     - .local/share/custom_components/ingress
@@ -96,7 +98,7 @@
     - edge
   notify: Restart apps
 
-- name: Install Home Assistant files
+- name: Install Home Assistant startup files
   ansible.builtin.copy:
     src: "{{ item.path }}"
     dest: "/{{ item.path }}"
@@ -105,9 +107,27 @@
     - path: srv/automation/home/.local/share/home-assistant-start
       mode: '0755'
     - path: srv/automation/home/.local/share/bellows-ezsp-reset.patch
-    - path: srv/automation/home/.local/share/home-assistant/
   loop_control:
     label: "{{ item.path }}"
+  notify: Restart apps
+
+- name: Synchronize repo-managed Home Assistant files
+  ansible.posix.synchronize:
+    src: "{{ role_path }}/files/home-assistant/{{ item.src }}/"
+    dest: "/srv/automation/home/.local/share/home-assistant/{{ item.dest }}/"
+    delete: true
+    checksum: true
+    times: false
+    owner: false
+    group: false
+    use_ssh_args: true
+    verify_host: true
+    rsync_opts:
+      - --chmod=D700,F600
+      - --exclude=__pycache__/
+  loop:
+    - { src: config, dest: managed }
+    - { src: blueprints, dest: blueprints/automation/kb }
   notify: Restart apps
 
 - name: Download custom components

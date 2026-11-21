@@ -23,6 +23,7 @@
   community.general.pacman:
     name:
       - podman
+      - rsync
       - crun
       - lego
       - bluez

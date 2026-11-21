@@ -1,6 +1,6 @@
 homeassistant:
   external_url: https://{{ automation_domain }}:{{ automation_https_port }}
-  packages: !include_dir_named packages
+  packages: !include_dir_named managed/packages
 default_config:
 recorder:
   purge_keep_days: 7
@@ -14,7 +14,7 @@ lovelace:
       mode: yaml
       title: KB
       icon: mdi:home-assistant
-      filename: dashboards/kb.yaml
+      filename: managed/dashboards/kb.yaml
 ingress:
   matter:
     title: Matter
