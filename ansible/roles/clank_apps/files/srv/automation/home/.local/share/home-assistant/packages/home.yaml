@@ -1,20 +1,17 @@
 zha:
   custom_quirks_path: /config/quirks
 
-schedule:
-  night:
-    name: Night
-    monday: &night
-      - from: '00:00:00'
-        to: '07:00:00'
-      - from: '23:00:00'
-        to: '24:00:00'
-    tuesday: *night
-    wednesday: *night
-    thursday: *night
-    friday: *night
-    saturday: *night
-    sunday: *night
+recorder:
+  exclude:
+    entity_globs:
+      - sensor.living_room_radar_gate_*
+    entities:
+      - binary_sensor.living_room_radar_moving_target
+      - binary_sensor.living_room_radar_still_target
+      - sensor.living_room_radar_moving_energy
+      - sensor.living_room_radar_still_energy
+      - sensor.living_room_radar_moving_distance
+      - sensor.living_room_radar_still_distance
 
 input_boolean:
   manual_mode:
@@ -26,19 +23,6 @@ input_boolean:
   night_mode:
     name: Night mode
     icon: mdi:weather-night
-
-rest:
-  - resource_template: >-
-      https://api.open-meteo.com/v1/forecast?current=shortwave_radiation&latitude={{
-      state_attr('zone.home', 'latitude') | round(2) }}&longitude={{ state_attr('zone.home', 'longitude') | round(2) }}
-    scan_interval: 900
-    sensor:
-      - name: Solar radiation
-        unique_id: solar_radiation
-        value_template: "{{ value_json.current.shortwave_radiation }}"
-        unit_of_measurement: W/m²
-        device_class: irradiance
-        state_class: measurement
 
 adaptive_lighting:
   - <<: &adaptive_lighting
@@ -69,18 +53,14 @@ automation:
           entity_id:
             - switch.adaptive_lighting_kitchen
             - switch.adaptive_lighting_living_room
-      - action: timer.cancel
-        target:
-          entity_id: [timer.kitchen_return, timer.living_room_return]
 
   - id: night_schedule
     alias: Night schedule
     triggers:
-      - trigger: state
-        entity_id: schedule.night
-        to: 'on'
       - trigger: time
-        at: sensor.wake_time
+        at:
+          - '23:00:00'
+          - sensor.wake_time
       - trigger: homeassistant
         event: start
     actions:
@@ -101,14 +81,6 @@ automation:
           entity_id:
             - switch.adaptive_lighting_kitchen_sleep_mode
             - switch.adaptive_lighting_living_room_sleep_mode
-      - if: "{{ trigger.to_state.state == 'on' and is_state('input_boolean.manual_mode', 'off') }}"
-        then:
-          - action: light.turn_off
-            target:
-              entity_id:
-                - light.light_bulb_kitchen_main
-                - light.light_bulb_living_room_main
-                - light.air_quality_monitor_living_room_display
 
   - id: leaving_home
     alias: Leaving home
@@ -129,6 +101,11 @@ automation:
       - action: input_boolean.turn_on
         target:
           entity_id: input_boolean.away_mode
+      - action: light.turn_off
+        target:
+          entity_id:
+            - light.lights_kitchen
+            - light.lights_living_room
       - if: "{{ is_state('binary_sensor.window_sensor_living_room', 'on') }}"
         then:
           - action: notify.mobile_app_rosetta
@@ -156,6 +133,20 @@ automation:
               data:
                 priority: high
                 ttl: 0
+
+  - id: front_door_lights
+    alias: Turn on kitchen and living room lights when the front door opens
+    triggers:
+      - trigger: state
+        entity_id: binary_sensor.door_sensor_entrance
+        from: 'off'
+        to: 'on'
+    actions:
+      - action: light.turn_on
+        target:
+          entity_id:
+            - light.lights_kitchen
+            - light.lights_living_room
 
   - id: low_batteries
     alias: Low batteries

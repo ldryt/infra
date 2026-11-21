@@ -1,7 +1,3 @@
-timer:
-  living_room_return:
-    duration: '00:30:00'
-
 light:
   - platform: group
     name: Lights Living Room
@@ -40,10 +36,10 @@ automation:
     use_blueprint:
       path: kb/room_lights.yaml
       input:
-        room: living_room
+        lights: light.lights_living_room
+        night_light: light.light_bulb_living_room_secondary
         button: event.button_living_room_button_1
         occupancy: binary_sensor.living_room_occupied
-        extra: [light.air_quality_monitor_living_room_display]
         protect_sleep: true
 
   - id: wake_up
@@ -90,29 +86,23 @@ automation:
               timeout: 120
 
   - id: co2_high
-    alias: CO2 high
+    alias: Ventilate the living room
     triggers:
       - trigger: numeric_state
         entity_id: sensor.air_quality_monitor_living_room_carbon_dioxide
-        above: 700
-        for:
-          minutes: 10
-        id: high
-      - trigger: numeric_state
-        entity_id: sensor.air_quality_monitor_living_room_carbon_dioxide
-        below: 600
-        id: ok
+        above: 1000
+        for: '00:15:00'
+    conditions:
+      - condition: state
+        entity_id: person.lucas
+        state: home
+      - condition: state
+        entity_id: input_boolean.night_mode
+        state: 'off'
     actions:
-      - if: "{{ is_state('input_boolean.manual_mode', 'off') and trigger.id == 'high' and is_state('input_boolean.away_mode', 'off') and is_state('input_boolean.night_mode', 'off') }}"
-        then:
-          - action: light.turn_on
-            target:
-              entity_id: light.air_quality_monitor_living_room_display
       - action: notify.mobile_app_rosetta
         data:
-          title: CO₂ high
-          message: >-
-            {{ 'Living room at ' ~ states('sensor.air_quality_monitor_living_room_carbon_dioxide')
-               ~ ' ppm, open the window.' if trigger.id == 'high' else 'clear_notification' }}
+          title: Living room air
+          message: CO₂ has been above 1000 ppm for 15 minutes. Consider opening a window.
           data:
             tag: co2
