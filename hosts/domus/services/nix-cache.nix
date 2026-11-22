@@ -12,6 +12,10 @@
   services.nginx.virtualHosts."${config.ldryt-infra.dns.records.nix-cache}" = {
     forceSSL = true;
     enableACME = true;
+    extraConfig = ''
+      access_log /var/log/nginx/nix-cache.access.log;
+      error_log /var/log/nginx/nix-cache.error.log;
+    '';
     locations."/".proxyPass = "http://127.0.0.1:${toString config.services.nix-serve.port}";
   };
   nix.sshServe = {
