@@ -53,6 +53,7 @@
     gdrive = { };
     scratchpad.umask = "0007";
   };
+  boot.kernel.sysctl."fs.fuse.default_request_timeout" = 120;
 
   fileSystems."/var/lib/rclone/cache" = {
     device = "/dev/mapper/rclone-cache";
