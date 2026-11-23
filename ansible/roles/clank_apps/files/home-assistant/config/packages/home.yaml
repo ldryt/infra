@@ -24,10 +24,47 @@ input_boolean:
     name: Night mode
     icon: mdi:weather-night
 
+rest:
+  - resource_template: >-
+      https://api.open-meteo.com/v1/forecast?current=shortwave_radiation&latitude={{
+      state_attr('zone.home', 'latitude') | round(2) }}&longitude={{ state_attr('zone.home', 'longitude') | round(2) }}
+    scan_interval: 900
+    sensor:
+      - name: Solar radiation
+        unique_id: solar_radiation
+        value_template: "{{ value_json.current.shortwave_radiation }}"
+        unit_of_measurement: W/m²
+        device_class: irradiance
+        state_class: measurement
+
+script:
+  weather_lights_on:
+    mode: parallel
+    variables:
+      radiation: "{{ states('sensor.solar_radiation') | float(none) }}"
+      target_lights: >-
+        {{ lights if (adjust_existing | default(false))
+           else lights | select('is_state', 'off') | list }}
+    sequence:
+      - condition: template
+        value_template: >-
+          {{ target_lights | count > 0
+             and (not (automatic | default(false))
+                  or (radiation is number and radiation < 60)) }}
+      - action: light.turn_on
+        target:
+          entity_id: "{{ target_lights }}"
+        data:
+          brightness_pct: >-
+            {{ [20, [55, 55 - (radiation | float(60)) / 3] | min]
+               | max | round(0) | int }}
+
 adaptive_lighting:
   - <<: &adaptive_lighting
       max_color_temp: 5500
       sleep_color_temp: 2000
+      adapt_only_on_bare_turn_on: true
+      take_over_control_mode: pause_changed
     name: Kitchen
     lights:
       - light.light_bulb_kitchen_main
@@ -142,9 +179,10 @@ automation:
         from: 'off'
         to: 'on'
     actions:
-      - action: light.turn_on
-        target:
-          entity_id:
+      - action: script.weather_lights_on
+        data:
+          automatic: true
+          lights:
             - light.lights_kitchen
             - light.lights_living_room
 
