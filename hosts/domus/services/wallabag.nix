@@ -24,7 +24,7 @@ in
   sops.secrets."services/wallabag/env" = { };
   virtualisation.oci-containers.containers.wallabag = {
     # renovate: datasource=docker depName=wallabag/wallabag
-    image = "docker.io/wallabag/wallabag:2.6.17@sha256:9055d92d6e7973abea2d902ecb5459f6063fce05595eaef37f6750e49ff8cdee";
+    image = "docker.io/wallabag/wallabag:2.6.19@sha256:957dd984804462367132482c37d7bd1512cabe8a9503ec22e06efddc2872942b";
     ports = [ "127.0.0.1:${toString port}:80" ];
     environment = {
       SYMFONY__ENV__DOMAIN_NAME = "https://${config.ldryt-infra.dns.records.wallabag}";
