@@ -22,7 +22,7 @@
     ./services/wallabag.nix
     ./services/syncthing.nix
     ./services/restic-sftp-host.nix
-    ./services/nix-cache.nix
+    ./services/harmonia.nix
 
     ../../modules/nginx.nix
     ../../modules/openssh.nix
