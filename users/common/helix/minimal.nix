@@ -34,12 +34,18 @@
           "c"
           "h"
         ];
-        formatter.command = "clang-format";
+        formatter = {
+          command = "clang-format";
+          args = [ "--assume-filename" "%{buffer_name}" ];
+        };
         auto-format = true;
       }
       {
         name = "cpp";
-        formatter.command = "clang-format";
+        formatter = {
+          command = "clang-format";
+          args = [ "--assume-filename" "%{buffer_name}" ];
+        };
         auto-format = true;
       }
       {
