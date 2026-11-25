@@ -33,6 +33,7 @@
         enabled-extensions = [
           "launch-new-instance@gnome-shell-extensions.gcampax.github.com"
           "gsconnect@andyholmes.github.io"
+          "thunderbird-tray@domgregori.github.com"
         ];
         favorite-apps = [
           "org.gnome.Nautilus.desktop"
