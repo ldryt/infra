@@ -10,7 +10,7 @@ automation_images:
   # renovate: datasource=docker depName=ghcr.io/bokub/ha-linky-aarch64
   linky: ghcr.io/bokub/ha-linky-aarch64:1.9.0@sha256:f5d38ff05baa18e63b253fa352de32011687c12effe2ca586fc45e697bfe0d0e
   # renovate: datasource=docker depName=ghcr.io/esphome/esphome
-  esphome: ghcr.io/esphome/esphome:2026.10.2@sha256:e32f1b8278509755cf001a62e2ea9f7521e0ee34d1e0183377fcda14f11bbb97
+  esphome: ghcr.io/esphome/esphome:2026.11.1@sha256:49592dfe11e883c1e2d5adb25129598e538fb365c2e7564407a6579ea7ae947b
   # renovate: datasource=docker depName=docker.io/b2un0/silabs-multipan-docker
   multipan: docker.io/b2un0/silabs-multipan-docker:2.4.5@sha256:e02f3bb5051cfc72b65f1bedfbf3049c7fd60283bbe79455c540d7940e1c3b55
 automation_custom_components:
