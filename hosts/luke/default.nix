@@ -11,10 +11,10 @@
 
     ../../modules/nix-settings.nix
     ../../modules/openssh.nix
-    ../../modules/crowdsec.nix
+    ../../modules/crowdsec
     ../../modules/podman.nix
     ../../modules/nginx.nix
-    ../../modules/syncthing-relay.nix
+    ../../modules/syncthing-relay
 
     ../../modules/rclone.nix
     ../../modules/backups.nix

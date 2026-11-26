@@ -96,6 +96,7 @@
           modules = [
             ./hosts/${name}
             ./modules/acme.nix
+            ./modules/monitoring/client.nix
             ({ lib, pkgs, ... }: {
               boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
             })

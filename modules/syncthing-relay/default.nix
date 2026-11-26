@@ -1,5 +1,10 @@
 { config, ... }:
+let
+  relay = config.services.syncthing.relay;
+in
 {
+  imports = [ ./monitoring.nix ];
+
   ldryt-infra.persist.directories = [
     {
       directory = "/var/lib/private/syncthing-relay";
@@ -17,7 +22,8 @@
     providedBy = "https://ldryt.dev";
   };
   networking.firewall.allowedTCPPorts = [
-    config.services.syncthing.relay.statusPort
-    config.services.syncthing.relay.port
+    relay.statusPort
+    relay.port
   ];
+
 }

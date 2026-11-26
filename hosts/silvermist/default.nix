@@ -11,16 +11,15 @@
     ./services/cachefilesd.nix
 
     ../../modules/nginx.nix
-    ../../modules/crowdsec.nix
+    ../../modules/crowdsec
     ../../modules/openssh.nix
     ../../modules/podman.nix
     ../../modules/nix-settings.nix
-    ../../modules/syncthing-relay.nix
+    ../../modules/syncthing-relay
 
     ../../modules/rclone.nix
     ../../modules/backups.nix
     ../../modules/dns.nix
-    ../../modules/monitoring/client.nix
     ../../modules/impermanence.nix
     ../../modules/colon-user.nix
   ];

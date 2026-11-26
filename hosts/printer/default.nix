@@ -11,13 +11,12 @@
 
     ../../modules/openssh.nix
     ../../modules/nix-settings.nix
-    ../../modules/crowdsec.nix
+    ../../modules/crowdsec
     ../../modules/nginx.nix
 
     ../../modules/rclone.nix
     ../../modules/backups.nix
     ../../modules/dns.nix
-    ../../modules/monitoring/client.nix
     ../../modules/impermanence.nix
     ../../modules/colon-user.nix
   ];
@@ -33,9 +32,9 @@
   };
 
   sops.secrets."services/monitoring/wg/privateKey" = { };
-  ldryt-infra.monitoring.client = {
+  ldryt-infra.monitoring = {
     enable = true;
-    wg.privateKeyFile = config.sops.secrets."services/monitoring/wg/privateKey".path;
+    client.wg.privateKeyFile = config.sops.secrets."services/monitoring/wg/privateKey".path;
   };
 
   nix.gc.automatic = lib.mkForce false;

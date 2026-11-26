@@ -86,6 +86,18 @@
     };
   };
 
+  services.prometheus.scrapeConfigs = lib.mkIf config.ldryt-infra.monitoring.enable [
+    {
+      job_name = "syncthing";
+      static_configs = [
+        {
+          targets = [ config.services.syncthing.guiAddress ];
+          labels.instance = config.networking.hostName;
+        }
+      ];
+    }
+  ];
+
   users.users.${config.services.syncthing.user}.createHome = lib.mkForce false;
   systemd.services.syncthing = {
     environment.STNODEFAULTFOLDER = "true";

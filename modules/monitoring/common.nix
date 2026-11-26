@@ -1,5 +1,7 @@
 { }:
-rec {
+{
+  grafanaClientId = "2NADHAc~yxd~kNvfJg4PwJNXE1ErhAcQ2~9FPZEh2TgxLY_GIJdv1LluQGKv38iSy~JYNxo.";
+
   wg = {
     int = "wg-monitoring";
     subnet = "/24";
@@ -13,8 +15,8 @@ rec {
     clients = builtins.mapAttrs (hostname: v: v // { inherit hostname; }) {
       printer = {
         ip = "10.44.128.5";
-        pubKey = "oIj9Q5nKQ0BSCVzlbu6lAx97l9Kzu7Vltlp7jqVSGjc=";
         isEphemeral = true;
+        pubKey = "oIj9Q5nKQ0BSCVzlbu6lAx97l9Kzu7Vltlp7jqVSGjc=";
       };
     };
   };
@@ -24,10 +26,10 @@ rec {
     lokiGrpc = 44192;
     prometheus = 44141;
     nodeExporter = 44191;
-    wireguardExporter = 44194;
+    chronyExporter = 44195;
+    jsonExporter = 44196;
     blackbox = 44190;
     grafana = 44144;
     alertmanager = 44193;
-    crowdsec = 6060;
   };
 }

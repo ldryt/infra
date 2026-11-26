@@ -1,0 +1,57 @@
+groups:
+  - name: services
+    rules:
+      - alert: CriticalDisk
+        expr: node_filesystem_avail_bytes{mountpoint=~"/|/nix",fstype!~"tmpfs|ramfs|overlay"} / 1024^3 < clamp_max(node_filesystem_size_bytes{mountpoint=~"/|/nix",fstype!~"tmpfs|ramfs|overlay"} / 1024^3 * 0.03, 5)
+        for: 10m
+        annotations:
+          summary: 'File system {{ $labels.mountpoint }} on {{ $labels.instance }} has {{ printf "%.2f" $value }} GiB free (below threshold for 10m).'
+      - alert: ChronyNotSynchronized
+        expr: up{job="chrony"} unless on(instance) ((chrony_up == 1) and on(instance) (chrony_tracking_stratum > 0) and on(instance) (chrony_tracking_stratum < 16))
+        for: 10m
+        annotations:
+          summary: 'Chrony on {{ $labels.instance }} has reported no synchronized clock for 10m (exporter scrape up={{ $value }}).'
+      - alert: NTPPoolScoreLow
+        expr: last_over_time(ntppool_score[10m]) < 10
+        for: 30m
+        annotations:
+          summary: 'NTP Pool score for {{ $labels.instance }} is {{ printf "%.2f" $value }} (below 10 for 30m).'
+      - alert: NTPPoolScoreStale
+        expr: up{job="ntppool"} unless on(instance) (time() - ntppool_score_timestamp_seconds < 86400)
+        for: 30m
+        annotations:
+          summary: 'NTP Pool on {{ $labels.instance }} has supplied no score from the last 24 hours.'
+      - alert: RelayUnavailable
+        expr: up{job="strelay"} unless on(instance) (strelay_active_sessions >= 0)
+        for: 10m
+        annotations:
+          summary: 'Relay status on {{ $labels.instance }} has supplied no session count for 10m (exporter scrape up={{ $value }}).'
+      - alert: SystemdUnitFailed
+        expr: node_systemd_unit_state{job="nodes",state="failed",name=~".+[.]service"} == 1
+        for: 5m
+        annotations:
+          summary: 'Systemd unit {{ $labels.name }} on {{ $labels.instance }} has been failed for 5m.'
+      - alert: OOMKillTriggered
+        expr: increase(node_vmstat_oom_kill{job="nodes"}[15m]) > 0
+        annotations:
+          summary: 'The kernel on {{ $labels.instance }} recorded {{ printf "%.0f" $value }} OOM kills in the last 15m.'
+      - alert: HostDown
+        expr: up{job="nodes",alert_host_down="true"} == 0
+        for: 10m
+        annotations:
+          summary: 'Prometheus has been unable to scrape the node exporter on {{ $labels.instance }} for 10m.'
+      - alert: ProbeUnreachable
+        expr: (probe_success{job=~"blackbox_.*",job!="blackbox_tcp_fail"} == 0) or (up{job=~"blackbox_.*"} == 0)
+        for: 5m
+        annotations:
+          summary: 'The probe from the monitoring server to {{ $labels.instance }} has failed for 5m.'
+      - alert: PortExposed
+        expr: probe_success{job="blackbox_tcp_fail"} == 1
+        for: 5m
+        annotations:
+          summary: 'Port {{ $labels.instance }} has accepted connections from the monitoring server for 5m.'
+      - alert: SSLCertExpiring
+        expr: (probe_ssl_earliest_cert_expiry{job=~"blackbox_http_ok|blackbox_http_protected|blackbox_http_clank_api"} - time()) / 86400 < 7
+        for: 1h
+        annotations:
+          summary: 'The TLS certificate for {{ $labels.instance }} expires in {{ printf "%.1f" $value }} days.'

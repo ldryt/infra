@@ -1,30 +1,29 @@
 { config, lib, ... }:
 let
   common = import ./common.nix { };
-  cfg = config.ldryt-infra.monitoring.client;
+  cfg = config.ldryt-infra.monitoring;
 in
 {
-  imports = [ ./base.nix ];
+  imports = [
+    ./base.nix
+    ./json-exporter.nix
+  ];
 
-  options.ldryt-infra.monitoring.client = {
-    enable = lib.mkEnableOption "monitoring client";
-    wg = {
-      privateKeyFile = lib.mkOption {
-        type = lib.types.path;
-      };
-    };
+  options.ldryt-infra.monitoring.isServer = lib.mkOption {
+    type = lib.types.bool;
+    default = false;
+    internal = true;
   };
 
-  config = lib.mkIf cfg.enable {
-    ldryt-infra.monitoring.base = {
-      enable = true;
-      listenAddress = common.wg.clients.${config.networking.hostName}.ip;
-    };
+  options.ldryt-infra.monitoring.client.wg.privateKeyFile = lib.mkOption {
+    type = lib.types.path;
+  };
 
+  config = lib.mkIf (cfg.enable && !cfg.isServer) {
     networking.firewall.allowedUDPPorts = [ common.wg.port ];
     networking.wireguard.interfaces."${common.wg.int}" = {
-      ips = [ "${common.wg.clients.${config.networking.hostName}.ip}${common.wg.subnet}" ];
-      privateKeyFile = cfg.wg.privateKeyFile;
+      ips = [ "${cfg.listenAddress}${common.wg.subnet}" ];
+      privateKeyFile = cfg.client.wg.privateKeyFile;
       peers = [
         {
           publicKey = common.wg.server.pubKey;
@@ -34,6 +33,5 @@ in
         }
       ];
     };
-    networking.firewall.interfaces."${common.wg.int}".allowedTCPPorts = [ common.ports.nodeExporter ];
   };
 }

@@ -4,6 +4,8 @@
   ...
 }:
 {
+  imports = [ ./monitoring.nix ];
+
   services.chrony = {
     enable = true;
     enableNTS = true;

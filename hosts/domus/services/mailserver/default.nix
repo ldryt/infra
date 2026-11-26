@@ -11,6 +11,12 @@
     ./grafana.nix
   ];
 
+  services.prometheus.exporters.postfix = lib.mkIf config.ldryt-infra.monitoring.enable {
+    enable = true;
+    listenAddress = config.ldryt-infra.monitoring.listenAddress;
+  };
+  ldryt-infra.monitoring.endpoints.postfix.port = config.services.prometheus.exporters.postfix.port;
+
   ldryt-infra.monitoring.blackbox.targets = {
     http_ok = [
       "https://${config.ldryt-infra.dns.records.mailserver-autoconfig}/mail/config-v1.1.xml"

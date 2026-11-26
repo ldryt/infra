@@ -206,6 +206,9 @@ in
     };
   };
 
+  systemd.services.immich-server.environment.IMMICH_TELEMETRY_INCLUDE = "job";
+  ldryt-infra.monitoring.endpoints.immich-jobs.port = 8082;
+
   ldryt-infra.monitoring.blackbox.targets = {
     http_ok = [ "https://${config.ldryt-infra.dns.records.immich}/api/server/ping" ];
     http_protected = [ "https://${config.ldryt-infra.dns.records.immich}/api/auth/status" ];

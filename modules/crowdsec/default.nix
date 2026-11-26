@@ -5,7 +5,6 @@
   ...
 }:
 let
-  monitoring = import ./monitoring/common.nix { };
   journal = type: filters: {
     source = "journalctl";
     journalctl_filter = lib.optional (type != "syslog") "--output=cat" ++ filters;
@@ -18,22 +17,11 @@ let
   autheliaFilters = map (instance: "_SYSTEMD_UNIT=authelia-${instance.name}.service") (
     builtins.filter (instance: instance.enable) (builtins.attrValues config.services.authelia.instances)
   );
-  notify = config.ldryt-infra.monitoring.base.enable or false;
-  alertOnlyRanges = [
-    "82.65.203.15/32"
-    "82.67.219.252/32"
-    "49.12.97.63/32"
-    "10.0.0.0/8"
-    "169.254.0.0/16"
-    "172.16.0.0/12"
-    "192.168.0.0/16"
-    "fe80::/10"
-  ];
 in
 {
+  imports = [ ./notifications.nix ];
+
   networking.firewall.logRefusedConnections = true;
-  networking.firewall.interfaces.${monitoring.wg.int}.allowedTCPPorts =
-    lib.optional notify monitoring.ports.crowdsec;
   networking.nftables = {
     enable = true;
     flushRuleset = false;
@@ -41,21 +29,11 @@ in
 
   services.crowdsec = {
     enable = true;
-    package = lib.mkIf notify (
-      pkgs.crowdsec.overrideAttrs (old: {
-        subPackages = old.subPackages ++ [ "cmd/notification-http" ];
-      })
-    );
     settings = {
       lapi.credentialsFile = "/var/lib/crowdsec/state/local-api-credentials.yaml";
       general.api.server = {
         enable = true;
         online_client = null;
-      };
-      general.plugin_config = lib.mkIf notify { };
-      general.prometheus = lib.mkIf notify {
-        listen_addr = config.ldryt-infra.monitoring.base.listenAddress;
-        listen_port = monitoring.ports.crowdsec;
       };
     };
     hub.parsers = [
@@ -78,62 +56,6 @@ in
     ++ lib.optional config.services.jellyfin.enable "LePresidente/jellyfin"
     ++ lib.optional config.services.immich.enable "gauth-fr/immich"
     ++ lib.optional config.services.adguardhome.enable "LePresidente/adguardhome";
-
-    localConfig.parsers.s02Enrich = [
-      {
-        name = "ldryt-infra/trusted-addresses";
-        whitelist = {
-          reason = "Trusted infrastructure";
-          cidr = [
-            "127.0.0.0/8"
-            "::1/128"
-          ]
-          ++ [ "10.44.128.0/24" ]
-          ++ lib.optionals (!notify) alertOnlyRanges;
-        };
-      }
-    ];
-
-    localConfig.profiles = lib.mkIf notify (
-      lib.mkOptionDefault (
-        lib.mkBefore [
-          {
-            name = "local_address_alert";
-            filters = [
-              ''
-                Alert.Remediation == true && Alert.GetScope() == 'Ip' &&
-                  any(${builtins.toJSON alertOnlyRanges}, IpInRange(Alert.GetValue(), #))
-              ''
-            ];
-            notifications = [ "alertmanager" ];
-            on_success = "break";
-          }
-        ]
-      )
-    );
-
-    localConfig.notifications = lib.optional notify {
-      name = "alertmanager";
-      type = "http";
-      method = "POST";
-      url = "http://${monitoring.wg.server.ip}:${toString monitoring.ports.alertmanager}/api/v2/alerts";
-      headers."Content-Type" = "application/json";
-      format = ''
-        [{{ range $i, $alert := . }}{{ if $i }},{{ end }}
-          {
-            "labels": {
-              "alertname": "CrowdSecLocalDetection",
-              "instance": ${builtins.toJSON config.networking.hostName},
-              "source_ip": {{ toJson $alert.Source.IP }},
-              "scenario": {{ toJson $alert.Scenario }}
-            },
-            "annotations": {
-              "summary": {{ toJson $alert.Message }}
-            }
-          }
-        {{ end }}]
-      '';
-    };
 
     localConfig.acquisitions = [
       (journal "syslog" [
@@ -176,19 +98,9 @@ in
   environment.etc."crowdsec/config.yaml".source =
     (pkgs.formats.yaml { }).generate "crowdsec.yaml"
       config.services.crowdsec.settings.general;
-  # CrowdSec requires the plugin executable to be owned by its service user
-  environment.etc."crowdsec/plugins/notification-http" = lib.mkIf notify {
-    source = "${config.services.crowdsec.package}/bin/notification-http";
-    mode = "0500";
-    inherit (config.services.crowdsec) user group;
-  };
-
   systemd.services = {
     crowdsec = {
       unitConfig.RequiresMountsFor = "/var/lib/crowdsec/state";
-      after = lib.optional (
-        notify && config.services.prometheus.alertmanager.enable
-      ) "alertmanager.service";
       environment.PATH = lib.makeBinPath [ pkgs.systemd ];
       serviceConfig.SupplementaryGroups = lib.optional config.services.nginx.enable config.services.nginx.group;
     };

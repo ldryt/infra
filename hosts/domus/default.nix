@@ -14,7 +14,6 @@
     ./services/coturn.nix
     ./services/authelia
     ./services/mailserver
-    ./services/monitoring.nix
     ./services/media.nix
     ./services/immich.nix
     ./services/radicale.nix
@@ -24,16 +23,17 @@
     ./services/restic-sftp-host.nix
     ./services/harmonia.nix
 
+    ../../modules/monitoring/server.nix
     ../../modules/nginx.nix
     ../../modules/openssh.nix
     ../../modules/nix-settings.nix
-    ../../modules/crowdsec.nix
-    ../../modules/syncthing-relay.nix
+    ../../modules/crowdsec
+    ../../modules/syncthing-relay
     ../../modules/snowflake-proxy.nix
     ../../modules/podman.nix
     ../../modules/ripe-atlas.nix
     ../../modules/libvirt.nix
-    ../../modules/ntp-pool.nix
+    ../../modules/ntp-pool
 
     ../../modules/colon-user.nix
     ../../modules/ldryt-remote-user.nix
@@ -41,6 +41,29 @@
     ../../modules/rclone.nix
     ../../modules/backups.nix
     ../../modules/dns.nix
+  ];
+
+  ldryt-infra.monitoring.blackbox.targets.http_clank_api = [
+    "https://pikvm.ldryt.dev/api/info"
+    "https://ha.ldryt.dev:48448/api/"
+  ];
+
+  ldryt-infra.monitoring.endpoints.ripe-atlas = {
+    port = config.services.prometheus.exporters.json.port;
+    metricsPath = "/probe";
+    scrapeInterval = "5m";
+    params = {
+      module = "ripe-atlas";
+      target = "https://atlas.ripe.net/api/v2/probes/1019122/";
+    };
+  };
+  ldryt-infra.monitoring.jsonExporter.modules.ripe-atlas.metrics = [
+    {
+      name = "ripe_atlas_status";
+      path = "{.status.id}";
+      help = "Connection state reported by the RIPE Atlas controller.";
+      valuetype = "gauge";
+    }
   ];
 
   nixpkgs.config.allowUnfree = true;
