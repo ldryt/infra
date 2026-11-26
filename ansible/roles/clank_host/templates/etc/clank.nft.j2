@@ -13,6 +13,8 @@ table inet clank {
 
     chain input {
         type filter hook input priority -10; policy accept;
+        ip daddr {{ monitoring_node_address }} tcp dport {{ monitoring_node_port }} iifname "eth0" ip saddr {{ monitoring_server_address }} accept
+        ip daddr {{ monitoring_node_address }} tcp dport {{ monitoring_node_port }} counter drop
         ct state established,related accept
         iifname "wlan0" jump wifi_input
     }

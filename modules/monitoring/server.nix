@@ -100,7 +100,13 @@ in
               targets = [ "${monitoring.listenAddress}:${toString endpoint.port}" ];
               labels.instance = config.networking.hostName;
             }
-          ];
+          ] ++ lib.optional (job_name == "nodes") {
+            targets = [ "192.168.1.3:${toString common.ports.nodeExporter}" ];
+            labels = {
+              instance = "clank";
+              alert_host_down = "true";
+            };
+          };
         }
         // lib.optionalAttrs (endpoint.scrapeInterval != null) { scrape_interval = endpoint.scrapeInterval; }
       ) monitoring.endpoints
@@ -150,7 +156,7 @@ in
               html = "";
               text = ''
                 {{ range .Alerts }}{{ .Annotations.summary }}
-                {{ if eq .Labels.alertname "SystemdUnitFailed" }}https://${config.ldryt-infra.dns.records.grafana}/d/sadlil-loki-apps-dashboard?var-host={{ .Labels.instance | urlquery }}&var-unit={{ .Labels.name | urlquery }}&time={{ .StartsAt.UnixMilli }}&time.window=3600000{{ end }}
+                {{ if and (eq .Labels.alertname "SystemdUnitFailed") (eq .Labels.instance "${config.networking.hostName}") }}https://${config.ldryt-infra.dns.records.grafana}/d/sadlil-loki-apps-dashboard?var-host={{ .Labels.instance | urlquery }}&var-unit={{ .Labels.name | urlquery }}&time={{ .StartsAt.UnixMilli }}&time.window=3600000{{ end }}
                 {{ end }}
               '';
             }

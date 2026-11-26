@@ -1,5 +1,8 @@
 automation_uid: 1100
 automation_storage_uuid: 05da507d-ed5f-434d-bbb5-08275ed5de10
+monitoring_node_address: 192.168.1.3
+monitoring_node_port: 44191
+monitoring_server_address: 192.168.1.2
 automation_images:
   # renovate: datasource=docker depName=ghcr.io/home-assistant/home-assistant
   home_assistant: ghcr.io/home-assistant/home-assistant:2026.11.3@sha256:24e541ddae5818bf8eb27898b9ba00d0c344a655aa5097e9e9bd4b19356be847

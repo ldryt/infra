@@ -1,0 +1,8 @@
+[Unit]
+After=network-online.target clank-network.service
+Wants=network-online.target
+Requires=clank-network.service
+
+[Service]
+ExecStart=
+ExecStart=/usr/bin/prometheus-node-exporter --web.listen-address={{ monitoring_node_address }}:{{ monitoring_node_port }} --collector.systemd

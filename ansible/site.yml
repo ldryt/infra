@@ -69,6 +69,7 @@
         - user@{{ automation_uid }}
         - clank-multipan
         - bluetooth
+        - prometheus-node-exporter
 
   handlers:
     - name: Reboot host

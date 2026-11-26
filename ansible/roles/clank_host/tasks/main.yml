@@ -30,6 +30,7 @@
       - bluez-utils
       - hostapd
       - nftables
+      - prometheus-node-exporter
 
 - name: Create automation group
   ansible.builtin.group:
@@ -85,6 +86,13 @@
     - /etc/containers/systemd
     - /etc/systemd/system/user@{{ automation_uid }}.service.d
     - /etc/systemd/system/hostapd.service.d
+    - /etc/systemd/system/prometheus-node-exporter.service.d
+
+- name: Bind Node Exporter to the monitoring address
+  ansible.builtin.template:
+    src: etc/systemd/system/prometheus-node-exporter.service.d/clank.conf.j2
+    dest: /etc/systemd/system/prometheus-node-exporter.service.d/clank.conf
+  notify: Restart Node Exporter
 
 - name: Install user manager config
   ansible.builtin.copy:
@@ -146,7 +154,7 @@
     src: etc/clank.nft.j2
     dest: /etc/clank.nft
     validate: /usr/bin/nft --check --file %s
-  notify: Restart host services
+  notify: Reload network isolation
 
 - name: Install host services
   ansible.builtin.copy:
@@ -203,3 +211,8 @@
   loop:
     - clank-network.service
     - hostapd.service
+
+- name: Enable Node Exporter
+  ansible.builtin.systemd_service:
+    name: prometheus-node-exporter.service
+    enabled: true
