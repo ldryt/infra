@@ -75,7 +75,7 @@ locals {
       # },
       "domus" = {
         id        = "domus-2026-06-25"
-        ip        = "82.67.219.252"
+        ip        = jsondecode(file("${path.module}/../ips.json")).domus
         ssh_port  = 34971
         sops_file = "${path.module}/../hosts/domus/secrets.yaml"
         luks      = true
@@ -90,7 +90,7 @@ locals {
       # }
       # "luke" = {
       #   id        = "luke-id-2025-12-12"
-      #   ip        = "129.151.231.71"
+      #   ip        = jsondecode(file("${path.module}/../ips.json")).luke
       #   ssh_port  = 22
       #   sops_file = "${path.module}/../hosts/luke/secrets.yaml"
       # }
