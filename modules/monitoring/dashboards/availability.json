@@ -1,0 +1,293 @@
+{
+  "uid": "availability",
+  "title": "Availability",
+  "description": "Observed uptime for existing service probes. Times without observations are excluded from uptime and shown in coverage.",
+  "schemaVersion": 39,
+  "version": 1,
+  "editable": false,
+  "refresh": "1m",
+  "time": {
+    "from": "now-24h",
+    "to": "now"
+  },
+  "links": [
+    {
+      "type": "link",
+      "title": "Services",
+      "url": "/d/services"
+    }
+  ],
+  "panels": [
+    {
+      "id": 1,
+      "title": "Current status and uptime",
+      "type": "table",
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 24,
+        "h": 12
+      },
+      "description": "Uptime is the percentage of valid probe results that passed. Coverage is the share of scheduled one-minute checks with results over 30 days. Exporter failures and missing observations reduce coverage. Newly added checks have partial coverage.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"} and (up{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"} == 1)) or (up{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"} * 0 + 2)",
+          "instant": true,
+          "range": false,
+          "format": "table",
+          "legendFormat": "Status",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        },
+        {
+          "refId": "B",
+          "expr": "100 * avg_over_time(probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"}[24h])",
+          "instant": true,
+          "range": false,
+          "format": "table",
+          "legendFormat": "24h",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        },
+        {
+          "refId": "C",
+          "expr": "100 * avg_over_time(probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"}[7d])",
+          "instant": true,
+          "range": false,
+          "format": "table",
+          "legendFormat": "7d",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        },
+        {
+          "refId": "D",
+          "expr": "100 * avg_over_time(probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"}[30d])",
+          "instant": true,
+          "range": false,
+          "format": "table",
+          "legendFormat": "30d",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        },
+        {
+          "refId": "E",
+          "expr": "100 * clamp_max((count_over_time(probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"}[30d]) or up{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"} * 0) / 43200, 1)",
+          "instant": true,
+          "range": false,
+          "format": "table",
+          "legendFormat": "Coverage",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        }
+      ],
+      "transformations": [
+        {
+          "id": "filterFieldsByName",
+          "options": {
+            "include": {
+              "pattern": "/^(instance|Value.*)$/"
+            }
+          }
+        },
+        {
+          "id": "joinByField",
+          "options": {
+            "byField": "instance",
+            "mode": "outerTabular"
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "indexByName": {
+              "instance": 0,
+              "Value #A": 1,
+              "Value #B": 2,
+              "Value #C": 3,
+              "Value #D": 4,
+              "Value #E": 5
+            },
+            "renameByName": {
+              "instance": "Endpoint",
+              "Value #A": "Status",
+              "Value #B": "24h uptime",
+              "Value #C": "7d uptime",
+              "Value #D": "30d uptime",
+              "Value #E": "30d coverage"
+            }
+          }
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "noValue": "—"
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Status"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "type": "value",
+                    "options": {
+                      "0": {
+                        "text": "Down",
+                        "color": "red"
+                      },
+                      "1": {
+                        "text": "Up",
+                        "color": "green"
+                      },
+                      "2": {
+                        "text": "Unknown",
+                        "color": "gray"
+                      }
+                    }
+                  }
+                ]
+              },
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-background"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byRegexp",
+              "options": "/(uptime|coverage)$/"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "percent"
+              },
+              {
+                "id": "decimals",
+                "value": 2
+              }
+            ]
+          }
+        ]
+      },
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "displayName": "Endpoint",
+            "desc": false
+          }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "title": "Availability history",
+      "type": "status-history",
+      "gridPos": {
+        "x": 0,
+        "y": 12,
+        "w": 24,
+        "h": 15
+      },
+      "description": "Red means at least one probe failed in the bucket. Gray means a scrape failed. Gaps mark buckets without observations. Green means all observed probes passed.",
+      "datasource": {
+        "type": "prometheus",
+        "uid": "PBFA97CFB590B2093"
+      },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "(min_over_time(probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"}[$__interval]) == 0) or ((min_over_time(up{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"}[$__interval]) == bool 0) * 2 == 2) or min_over_time(probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"}[$__interval])",
+          "instant": false,
+          "range": true,
+          "format": "time_series",
+          "legendFormat": "{{instance}}",
+          "datasource": {
+            "type": "prometheus",
+            "uid": "PBFA97CFB590B2093"
+          }
+        }
+      ],
+      "interval": "1m",
+      "maxDataPoints": 144,
+      "fieldConfig": {
+        "defaults": {
+          "mappings": [
+            {
+              "type": "value",
+              "options": {
+                "0": {
+                  "text": "Down",
+                  "color": "red"
+                },
+                "1": {
+                  "text": "Up",
+                  "color": "green"
+                },
+                "2": {
+                  "text": "Unknown",
+                  "color": "gray"
+                }
+              }
+            }
+          ],
+          "color": {
+            "mode": "thresholds"
+          },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              },
+              {
+                "color": "gray",
+                "value": 2
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "options": {
+        "showValue": "never",
+        "rowHeight": 0.8,
+        "colWidth": 0.9,
+        "legend": {
+          "showLegend": false
+        },
+        "tooltip": {
+          "mode": "single"
+        }
+      }
+    }
+  ]
+}

@@ -8,7 +8,7 @@
     "from": "now-1h",
     "to": "now"
   },
-  "version": 16,
+  "version": 17,
   "templating": {
     "list": [
       {
@@ -40,13 +40,54 @@
         }
       },
       {
+        "name": "unit",
+        "label": "Systemd unit",
+        "type": "query",
+        "datasource": {
+          "type": "loki",
+          "uid": "P8E80F9AEF21F6940"
+        },
+        "query": {
+          "type": 1,
+          "label": "unit",
+          "stream": "{job=\"systemd-journal\", host=~`${host:regex}`}",
+          "refId": "LokiVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 2,
+        "sort": 1,
+        "multi": true,
+        "includeAll": true,
+        "allValue": ".*",
+        "current": {
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
+        },
+        "allowCustomValue": true
+      },
+      {
         "name": "priority",
         "label": "Priority",
         "type": "custom",
-        "query": "Any : .*, Warning and above : [0-4], Error and above : [0-3]",
+        "query": "All : .*, Warnings and worse : [0-4], Errors and worse : [0-3], Emergency : 0, Alert : 1, Critical : 2, Error : 3, Warning : 4, Notice : 5, Info : 6, Debug : 7",
+        "multi": false,
+        "includeAll": false,
         "current": {
-          "text": "Any",
+          "text": "All",
           "value": ".*"
+        }
+      },
+      {
+        "name": "search",
+        "label": "Search logs",
+        "type": "textbox",
+        "query": "",
+        "current": {
+          "text": "",
+          "value": ""
         }
       }
     ]
@@ -73,7 +114,7 @@
             "type": "loki",
             "uid": "P8E80F9AEF21F6940"
           },
-          "expr": "{job=\"systemd-journal\", host=~\"${host:regex}\"} | json message=\"MESSAGE\", unit=\"_SYSTEMD_UNIT\", identifier=\"SYSLOG_IDENTIFIER\", priority=\"PRIORITY\" | priority=~\"${priority:raw}\" | line_format `{{.host}}{{if .unit}} {{.unit}}{{else if .identifier}} {{.identifier}}{{end}} {{if .message}}{{.message}}{{else}}{{ __line__ }}{{end}}`",
+          "expr": "{job=\"systemd-journal\", host=~`${host:regex}`} | json message=\"MESSAGE\", journal_unit=\"_SYSTEMD_UNIT\", identifier=\"SYSLOG_IDENTIFIER\", priority=\"PRIORITY\" | priority=~\"${priority:raw}\" | label_format systemd_unit=`{{ default .journal_unit .unit }}` | systemd_unit=~`${unit:regex}` | line_format `{{.host}}{{if .systemd_unit}} {{.systemd_unit}}{{else if .identifier}} {{.identifier}}{{end}} {{if .message}}{{.message}}{{else}}{{ __line__ }}{{end}}` | label_format search_match=`{{ contains (lower (urldecode \"${search:percentencode}\")) (lower (__line__)) }}` | search_match=\"true\" | drop search_match",
           "queryType": "range",
           "maxLines": 1000
         }
