@@ -2,12 +2,14 @@
   config,
   lib,
   pkgs,
+  utils,
   ...
 }:
 let
   mediaDir = "/mnt/media";
   stateDir = "/var/lib/nixarr";
   torrentDir = "/var/lib/rclone/cache/torrent-staging";
+  mediaMount = "${utils.escapeSystemdPath mediaDir}.mount";
   qbittorrentApi = {
     host = "192.168.15.1";
     port = config.nixarr.qbittorrent.webuiPort;
@@ -98,6 +100,9 @@ in
   systemd.services.radarr.unitConfig.RequiresMountsFor = [ mediaDir ];
   systemd.services.sonarr.unitConfig.RequiresMountsFor = [ mediaDir ];
   systemd.services.qbittorrent = {
+    after = [ mediaMount ];
+    bindsTo = [ mediaMount ];
+    wantedBy = [ mediaMount ];
     unitConfig.RequiresMountsFor = [ torrentDir mediaDir ];
     serviceConfig.ReadOnlyPaths = [ mediaDir ];
     serviceConfig.ReadWritePaths = [ "${mediaDir}/qbittorrent" ];
