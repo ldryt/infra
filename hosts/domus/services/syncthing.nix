@@ -6,8 +6,6 @@
 {
   sops.secrets."services/syncthing/key".owner = config.services.syncthing.user;
   sops.secrets."services/syncthing/cert".owner = config.services.syncthing.user;
-  sops.secrets."services/syncthing/devices/luke/encryptionPassword".owner =
-    config.services.syncthing.user;
 
   sops.secrets."backups/restic/repos/syncthing-silvermist/password" = { };
   ldryt-infra.backups.repos.syncthing = {
@@ -50,13 +48,7 @@
           folderCfg = {
             devices = [
               "tinkerbell"
-              "silvermist"
               "rosetta"
-              {
-                name = "luke";
-                encryptionPasswordFile =
-                  config.sops.secrets."services/syncthing/devices/luke/encryptionPassword".path;
-              }
               "sm-epita"
             ];
             versioning = {

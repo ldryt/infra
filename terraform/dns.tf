@@ -12,7 +12,7 @@ resource "desec_rrset" "root_web_aliases" {
 }
 
 resource "desec_rrset" "servers_subdomains" {
-  for_each = { for k, v in local.servers : k => v.ip if lookup(v, "dns", true) }
+  for_each = { for k, v in local.servers : k => v.ip }
 
   domain  = "ldryt.dev"
   subname = each.key

@@ -5,49 +5,24 @@
 ```mermaid
 %%{init: {"theme": "dark", "themeVariables": {"lineColor": "#888"}}}%%
 flowchart TB
-    tinkerbell["<b>tinkerbell</b><br/><small>laptop</small>"]
+    tinkerbell["<b>tinkerbell</b><br/><small>workstation</small>"]
 
     subgraph home["Home"]
         freebox{{"Freebox"}}
         domus["<b>domus</b><br/><small>homeserver</small>"]
         clank["<b>clank</b><br/><small>PiKVM + HA</small>"]
-        printer["<b>printer</b><br/><small>3D printer</small>"]
     end
 
-    subgraph hetzner["Hetzner"]
-        silvermist["<b>silvermist</b>"]
-        storagebox[("Storage Box")]
-    end
-    subgraph oracle["Oracle"]
-        luke["<b>luke</b>"]
-    end
-    subgraph scaleway["Scaleway"]
-        vidia["<b>vidia</b><br/><small>LLMs, streaming</small>"]
-    end
     onedrive[("OneDrive")]
     gdrive[("Google Drive")]
 
-    tinkerbell -.-> freebox
     tinkerbell <--> domus
-    tinkerbell <--> luke
-    tinkerbell <--> silvermist
     freebox --> domus
     freebox --> clank
-    clank --> domus
-    printer -.-> silvermist
-    printer -.-> domus
-    vidia --> domus
-    domus <--> luke
-    domus <--> silvermist
-    luke <--> silvermist
-    domus --> storagebox
+    clank -->|"Restic backups"| domus
+    clank --> onedrive
     domus --> onedrive
     domus --> gdrive
-    luke --> storagebox
-    luke --> onedrive
-    silvermist --> storagebox
-    silvermist --> onedrive
-    clank ~~~ vidia
 ```
 
 ## clank

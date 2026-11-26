@@ -1,54 +1,18 @@
 keys:
   - &tinkerbell age18gc6nka7mveyup3he02ff08dl96f7uf9nd4c4rgcq04qwpc95djs8f75p2
-  - &silvermist age1daxu747h3aw4puz77ws4ptxx86rgfumvq7a8yw7w9vn34970vdnq603y05
-  - &zarina age1mn4uc8yxqmgcxhcgcjsrk3en7mhjtkwev287whgfmn8c9p3szv7s888pxj
   - &domus age1xvfsgq2yk82pakqkw7nyx6phq7z6qhpjj8umrlsc8zckwplsspaqsymdc6
-  - &printer age1tcd9kj7qldza9wvm9shcu766h2jy03nlkjn3uml5ljx75vtfr5zqgfc29r
-  - &tp420ia age1claperypgl6azqx64k83vslrcuch9d2cs6xs8aak3y6qt9fq2aeslf2j9r
-  - &luke age17w5m4sen9zl9qf7enj2g8974uyfa6jnsuukut9v6tjawmrxh5vaqye03sc
-  - &vidia age1mre85fuhmuwqvg9ytqg0tz604kpvpjuavvqczsxqxngtewhmmalqwa27uk
   - &sm-epita age1lmtdthrukmz0kezwgthgd37g45enze0ayvc8ausd464utty5h9gskxzl0k
   - &ldryt age1d7d0ed4268h2gdew58c62gcpac2y9tn9ke03kdkr5c93alvzm5rqn2zg2j
 creation_rules:
-  - path_regex: hosts/silvermist/secrets.yaml$
-    key_groups:
-      - age:
-        - *silvermist
-        - *ldryt
   - path_regex: hosts/tinkerbell/secrets.yaml$
     key_groups:
       - age:
         - *tinkerbell
         - *ldryt
-  - path_regex: hosts/zarina/secrets.yaml$
-    key_groups:
-      - age:
-        - *zarina
-        - *ldryt
-  - path_regex: hosts/printer/secrets.yaml$
-    key_groups:
-      - age:
-        - *printer
-        - *ldryt
   - path_regex: hosts/domus/secrets.yaml$
     key_groups:
       - age:
         - *domus
-        - *ldryt
-  - path_regex: hosts/tp420ia/secrets.yaml$
-    key_groups:
-      - age:
-        - *tp420ia
-        - *ldryt
-  - path_regex: hosts/luke/secrets.yaml$
-    key_groups:
-      - age:
-        - *luke
-        - *ldryt
-  - path_regex: hosts/vidia/secrets.yaml$
-    key_groups:
-      - age:
-        - *vidia
         - *ldryt
   - path_regex: users/lucas.ladreyt/secrets.yaml$
     key_groups:

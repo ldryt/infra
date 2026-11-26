@@ -2,31 +2,20 @@
   config,
   lib,
   pkgs,
-  nixosConfigurations,
   ...
 }:
 let
   common = import ./common.nix { };
   inherit (config.sops) secrets;
-  allWgPeers = [ common.wg.server ] ++ builtins.attrValues common.wg.clients;
-  enrolledHosts = builtins.filter ({ monitoring, ... }: monitoring.enable) (
-    map (host: {
-      inherit host;
-      monitoring = nixosConfigurations.${host.hostname}.config.ldryt-infra.monitoring;
-    }) allWgPeers
-  );
-  endpointJobs = lib.foldAttrs (endpoint: endpoints: [ endpoint ] ++ endpoints) [ ] (
-    map (
-      { host, monitoring }: lib.mapAttrs (_: endpoint: { inherit host endpoint; }) monitoring.endpoints
-    ) enrolledHosts
-  );
-  blackboxTargets = lib.mapAttrs (_: lib.unique) (
-    lib.foldAttrs lib.concat [ ] (map ({ monitoring, ... }: monitoring.blackbox.targets) enrolledHosts)
-  );
+  monitoring = config.ldryt-infra.monitoring;
+  blackboxTargets = monitoring.blackbox.targets;
 in
 {
-  ldryt-infra.monitoring.isServer = true;
-  sops.secrets."services/monitoring/wg/privateKey" = { };
+  imports = [
+    ./base.nix
+    ./json-exporter.nix
+  ];
+
   sops.secrets."services/grafana/adminPassword".owner = "grafana";
   sops.secrets."services/grafana/secretKey".owner = "grafana";
   sops.secrets."services/grafana/oidc/clientSecret".owner = "grafana";
@@ -53,32 +42,15 @@ in
     }
   ];
 
-  networking.firewall.allowedUDPPorts = [ common.wg.port ];
-
-  networking.wireguard.interfaces."${common.wg.int}" = {
-    ips = [ "${common.wg.server.ip}${common.wg.subnet}" ];
-    listenPort = common.wg.port;
-    privateKeyFile = secrets."services/monitoring/wg/privateKey".path;
-    peers = map (client: {
-      publicKey = client.pubKey;
-      allowedIPs = [ "${client.ip}/32" ];
-    }) (builtins.attrValues common.wg.clients);
-  };
-
-  networking.firewall.interfaces."${common.wg.int}".allowedTCPPorts = [
-    common.ports.loki
-    common.ports.lokiGrpc
-    common.ports.alertmanager
-  ];
-
   services.prometheus = {
     enable = true;
+    listenAddress = "127.0.0.1";
     port = common.ports.prometheus;
     rules = [ (builtins.readFile ./alerts.yml) ];
     alertmanagers = [
       {
         static_configs = [
-          { targets = [ "${common.wg.server.ip}:${toString common.ports.alertmanager}" ]; }
+          { targets = [ "127.0.0.1:${toString common.ports.alertmanager}" ]; }
         ];
       }
     ];
@@ -118,35 +90,20 @@ in
 
     scrapeConfigs =
       lib.mapAttrsToList (
-        job_name: endpoints:
-        let
-          inherit ((builtins.head endpoints).endpoint) scrapeInterval;
-        in
-        assert lib.assertMsg (builtins.all (entry: entry.endpoint.scrapeInterval == scrapeInterval)
-          endpoints
-        ) "Monitoring endpoints for Prometheus job ${job_name} must use the same scrapeInterval.";
+        job_name: endpoint:
         {
           inherit job_name;
-          static_configs = map (
-            { host, endpoint }:
+          metrics_path = endpoint.metricsPath;
+          params = lib.mapAttrs (_: value: [ value ]) endpoint.params;
+          static_configs = [
             {
-              targets = [ "${host.ip}:${toString endpoint.port}" ];
-              labels = {
-                instance = host.hostname;
-                __metrics_path__ = endpoint.metricsPath;
-              }
-              //
-                lib.optionalAttrs
-                  (job_name == "nodes" && host.hostname != common.wg.server.hostname && !(host.isEphemeral or false))
-                  {
-                    alert_host_down = "true";
-                  }
-              // lib.mapAttrs' (name: lib.nameValuePair "__param_${name}") endpoint.params;
+              targets = [ "${monitoring.listenAddress}:${toString endpoint.port}" ];
+              labels.instance = config.networking.hostName;
             }
-          ) endpoints;
+          ];
         }
-        // lib.optionalAttrs (scrapeInterval != null) { scrape_interval = scrapeInterval; }
-      ) endpointJobs
+        // lib.optionalAttrs (endpoint.scrapeInterval != null) { scrape_interval = endpoint.scrapeInterval; }
+      ) monitoring.endpoints
       ++ lib.mapAttrsToList (module: targets: {
         job_name = "blackbox_${module}";
         metrics_path = "/probe";
@@ -167,7 +124,7 @@ in
   services.prometheus.alertmanager = {
     enable = true;
     port = common.ports.alertmanager;
-    listenAddress = common.wg.server.ip;
+    listenAddress = "127.0.0.1";
     configuration = {
       route = {
         receiver = "email";
@@ -207,6 +164,8 @@ in
     enable = true;
     configuration = {
       server = {
+        http_listen_address = "127.0.0.1";
+        grpc_listen_address = "127.0.0.1";
         http_listen_port = common.ports.loki;
         grpc_listen_port = common.ports.lokiGrpc;
         log_level = "warn";
@@ -305,7 +264,7 @@ in
           name = "Alertmanager";
           type = "alertmanager";
           access = "proxy";
-          url = "http://${common.wg.server.ip}:${toString common.ports.alertmanager}";
+          url = "http://127.0.0.1:${toString common.ports.alertmanager}";
           jsonData.implementation = "prometheus";
         }
       ];

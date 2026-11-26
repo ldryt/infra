@@ -19,11 +19,7 @@ in
     group = bckpUser;
     uid = 1442;
     openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEqS0CzQnK6xfd/dch7Jm1QQCYZUuZyWgXZYImQ8OmiD colon@silvermist"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGb0ZhjF+uNHovVeddQ7ZikoMl3DuQmajM3o6QYx3inm ldryt@tinkerbell"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIK/FQMGmX4ufehnHBclgRxiUK0uVd6fGFHxP8MiQmKo colon@luke"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMaNQCMEUxGla8VAR3X0ihEcZ5glaFWlQQMveDrQ9mQR colon@printer"
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILDpUpSM4JpWGZajuofRk9GhirC4pQAB8auCEVoUZZRW backups@vidia"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINWM9ROZ2YOuSJk0dtWXNtrNc19qkR5vs3ia0Jzb0M+I backups@clank"
     ];
   };

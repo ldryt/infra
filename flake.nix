@@ -4,10 +4,6 @@
       url = "git+https://github.com/adityatelange/hugo-PaperMod?ref=master";
       flake = false;
     };
-    camera-streamer-src = {
-      url = "git+https://github.com/ayufan/camera-streamer?ref=main&submodules=1";
-      flake = false;
-    };
     alacritty-theme = {
       url = "github:alacritty/alacritty-theme";
       flake = false;
@@ -49,7 +45,6 @@
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
     impermanence.url = "github:nix-community/impermanence";
     mailserver.url = "gitlab:simple-nixos-mailserver/nixos-mailserver/nixos-26.05";
@@ -85,7 +80,6 @@
           inherit system;
           specialArgs = {
             inherit inputs self system;
-            inherit (self) nixosConfigurations;
             pkgs-unstable = inputs.nixpkgs-unstable.legacyPackages.${system};
             pkgs-master = import nixpkgs-master {
               inherit system;
@@ -96,7 +90,6 @@
           modules = [
             ./hosts/${name}
             ./modules/acme.nix
-            ./modules/monitoring/client.nix
             ({ lib, pkgs, ... }: {
               boot.kernelPackages = lib.mkDefault pkgs.linuxPackages_latest;
             })
@@ -122,7 +115,6 @@
           tofu-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/tofu-keepass.nix { };
           ansible-keepass = pkgs.callPackage ./pkgs/keepass-wrappers/ansible-keepass.nix { };
           www-lucasladreyt-eu = pkgs.callPackage ./pkgs/www.lucasladreyt.eu { theme = inputs.papermod; };
-          sdImage-printer = self.nixosConfigurations.printer.config.system.build.sdImage;
         }
       );
 

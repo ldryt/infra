@@ -2,7 +2,6 @@
 {
   sops.secrets."services/syncthing/key" = { };
   sops.secrets."services/syncthing/cert" = { };
-  sops.secrets."services/syncthing/devices/luke/encryptionPassword" = { };
 
   # workaround to avoid syncthing-init.service dependency failure on boot
   systemd.user.services."syncthing".Unit.After = [ "sops-nix.service" ];
@@ -25,14 +24,8 @@
         let
           folderCfg = {
             devices = [
-              "silvermist"
               "domus"
               "rosetta"
-              {
-                name = "luke";
-                encryptionPasswordFile =
-                  config.sops.secrets."services/syncthing/devices/luke/encryptionPassword".path;
-              }
               "sm-epita"
             ];
             versioning = {

@@ -1,39 +1,4 @@
 { pkgs }:
-let
-  keepass_cmd = "keepassxc-cli show -q -a";
-
-  DB_PATH = "$HOME/Sync/Vault/keyring.kdbx";
-
-  TF_VAR_ENTRIES = [
-    "state_passphrase"
-    "desec_token"
-    "hcloud_token"
-    "ovh_application_key"
-    "ovh_application_secret"
-    "ovh_consumer_key"
-    "openstack_username"
-    "openstack_password"
-    "openstack_project_id"
-    "scw_access_key"
-    "scw_secret_key"
-    "scw_project_id"
-  ];
-  TF_VAR_ATTR = "notes";
-
-  SOPS_KEY_ENTRY = "ldryt - sops";
-  SOPS_KEY_ATTR = "notes";
-
-  genTfVarExports =
-    entries:
-    builtins.concatStringsSep "\n" (
-      map (entry: ''
-        TF_VAR_${entry}="$(
-          echo "$KEEPASS_PASSWORD" | ${keepass_cmd} "${TF_VAR_ATTR}" "${DB_PATH}" "${entry}"
-        )"
-        export TF_VAR_${entry}
-      '') entries
-    );
-in
 pkgs.writeShellApplication {
   name = "tofu-keepass";
 
@@ -44,21 +9,23 @@ pkgs.writeShellApplication {
   ];
 
   text = ''
-    set -euo pipefail
+    db_path="$HOME/Sync/Vault/keyring.kdbx"
+    read -rsp "Enter password to unlock $db_path: " keepass_password
+    printf '\n'
 
-    read -rsp "Enter password to unlock ${DB_PATH}: " KEEPASS_PASSWORD
-    echo
+    keepass_notes() {
+      printf '%s\n' "$keepass_password" | keepassxc-cli show -q -a notes "$db_path" "$1"
+    }
 
     SOPS_AGE_KEY_FILE="$(umask 077; mktemp)"
     trap 'rm -f "$SOPS_AGE_KEY_FILE"' EXIT
 
-    echo "$KEEPASS_PASSWORD" | ${keepass_cmd} "${SOPS_KEY_ATTR}" "${DB_PATH}" "${SOPS_KEY_ENTRY}" > "$SOPS_AGE_KEY_FILE"
+    keepass_notes "ldryt - sops" > "$SOPS_AGE_KEY_FILE"
+    TF_VAR_state_passphrase="$(keepass_notes state_passphrase)"
+    TF_VAR_desec_token="$(keepass_notes desec_token)"
+    unset keepass_password
 
-    ${genTfVarExports TF_VAR_ENTRIES}
-
-    unset KEEPASS_PASSWORD
-
-    export SOPS_AGE_KEY_FILE
+    export SOPS_AGE_KEY_FILE TF_VAR_state_passphrase TF_VAR_desec_token
     tofu "$@"
   '';
 }

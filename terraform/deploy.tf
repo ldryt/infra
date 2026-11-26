@@ -1,19 +1,14 @@
-locals {
-  _servers          = { for k, v in local.servers : k => v if !lookup(v, "no_install", false) }
-  noinstall_servers = { for k, v in local.servers : k => v if lookup(v, "no_install", false) }
-}
-
 module "deploy" {
-  for_each = local._servers
+  for_each = local.servers
 
   source = "github.com/nix-community/nixos-anywhere//terraform/all-in-one"
 
   nixos_system_attr      = ".#nixosConfigurations.${each.key}.config.system.build.toplevel"
   nixos_partitioner_attr = ".#nixosConfigurations.${each.key}.config.system.build.diskoScript"
 
-  instance_id     = each.value.id
-  target_host     = each.value.ip
-  target_port     = each.value.ssh_port
+  instance_id = each.value.id
+  target_host = each.value.ip
+  target_port = each.value.ssh_port
 
   target_user        = "colon"
   deployment_ssh_key = nonsensitive(data.sops_file.secrets[each.key].data["nixos-anywhere.deploy.colon.sshKey"])
@@ -38,27 +33,6 @@ module "deploy" {
     } : {}
   )
 
-  debug_logging = true
+  debug_logging   = true
   build_on_remote = true
-}
-
-module "build" {
-  for_each = local.noinstall_servers
-
-  source = "github.com/nix-community/nixos-anywhere//terraform/nix-build"
-
-  attribute = ".#nixosConfigurations.${each.key}.config.system.build.toplevel"
-}
-
-module "deploy_noinstall" {
-  for_each = local.noinstall_servers
-
-  source = "github.com/nix-community/nixos-anywhere//terraform/nixos-rebuild"
-
-  nixos_system = module.build[each.key].result.out
-  target_user  = "colon"
-  target_host  = each.value.ip
-  target_port  = each.value.ssh_port
-
-  ssh_private_key = nonsensitive(data.sops_file.secrets[each.key].data["nixos-anywhere.deploy.colon.sshKey"])
 }

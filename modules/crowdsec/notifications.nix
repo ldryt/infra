@@ -34,7 +34,6 @@ in
           cidr = [
             "127.0.0.0/8"
             "::1/128"
-            "10.44.128.0/24"
           ]
           ++ lib.optionals (!notify) alertOnlyRanges;
         };
@@ -63,7 +62,7 @@ in
       name = "alertmanager";
       type = "http";
       method = "POST";
-      url = "http://${monitoring.wg.server.ip}:${toString monitoring.ports.alertmanager}/api/v2/alerts";
+      url = "http://127.0.0.1:${toString monitoring.ports.alertmanager}/api/v2/alerts";
       headers."Content-Type" = "application/json";
       format = ''
         [{{ range $i, $alert := . }}{{ if $i }},{{ end }}
