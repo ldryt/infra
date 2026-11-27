@@ -36,6 +36,18 @@ in
         help = "Connection state reported by the RIPE Atlas controller.";
         valuetype = "gauge";
       }
+      {
+        name = "ripe_atlas_status_since_seconds";
+        path = "{.status_since}";
+        help = "Unix timestamp of the last probe status change.";
+        valuetype = "gauge";
+      }
+      {
+        name = "ripe_atlas_total_uptime_seconds";
+        path = "{.total_uptime}";
+        help = "Accumulated probe uptime reported by RIPE Atlas.";
+        valuetype = "gauge";
+      }
     ];
   };
 
