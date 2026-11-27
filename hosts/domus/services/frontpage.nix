@@ -34,6 +34,13 @@
     '';
   };
 
+  services.nginx.virtualHosts."${config.ldryt-infra.dns.records.status}" = {
+    enableACME = true;
+    forceSSL = true;
+    locations."/".return =
+      "302 https://${config.ldryt-infra.dns.records.grafana}/public-dashboards/e5df93f80a7c456ea4c0a8828484bda8";
+  };
+
   services.nginx.virtualHosts."lucasladreyt.eu" = {
     enableACME = true;
     forceSSL = true;

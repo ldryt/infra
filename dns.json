@@ -36,6 +36,10 @@
       "monitor",
       "domus"
     ],
+    "status": [
+      "status",
+      "domus"
+    ],
     "coturn": [
       "ice",
       "domus"
