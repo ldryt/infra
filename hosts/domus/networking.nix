@@ -3,17 +3,21 @@
   networking = {
     hostName = "domus";
     nameservers = [
-      "45.90.28.178"
-      "45.90.30.178"
+      "86.54.11.100"
+      "86.54.11.200"
     ];
     enableIPv6 = false;
     useNetworkd = true;
   };
 
-  services.resolved.settings.Resolve.FallbackDNS = [
-    "1.1.1.1"
-    "1.0.0.1"
-  ];
+  services.resolved.settings.Resolve.FallbackDNS = "";
 
-  systemd.network.wait-online.extraArgs = [ "--interface=enp2s0f3u2u2:routable" ];
+  systemd.network = {
+    networks."99-ethernet-default-dhcp" = {
+      dhcpV4Config.UseDNS = false;
+      dhcpV6Config.UseDNS = false;
+      ipv6AcceptRAConfig.UseDNS = false;
+    };
+    wait-online.extraArgs = [ "--interface=enp2s0f3u2u2:routable" ];
+  };
 }
