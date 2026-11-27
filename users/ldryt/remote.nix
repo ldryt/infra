@@ -1,4 +1,8 @@
+{ lib, ... }:
 {
+  programs.vim.defaultEditor = lib.mkForce false;
+  programs.helix.defaultEditor = true;
+
   programs.bash.initExtra = ''
     if [[ -z $TMUX ]]; then
       exec tmux new-session -A -s remote
