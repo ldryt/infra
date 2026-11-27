@@ -4,6 +4,7 @@
     ../common/bash.nix
     ../common/vim.nix
     ../common/packages/cli.nix
+    ../common/pi/notify.nix
   ];
 
   programs.home-manager.enable = true;

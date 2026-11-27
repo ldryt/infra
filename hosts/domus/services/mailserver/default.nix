@@ -9,6 +9,7 @@
     ./immich.nix
     # ./paperless.nix
     ./grafana.nix
+    ./pi.nix
   ];
 
   services.prometheus.exporters.postfix = lib.mkIf config.ldryt-infra.monitoring.enable {
