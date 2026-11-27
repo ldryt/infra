@@ -1,9 +1,6 @@
 { pkgs, ... }:
 {
-  imports = [
-    ../common/packages/cli.nix
-    ./keypassxc.nix
-  ];
+  imports = [ ./keypassxc.nix ];
 
   home.packages = with pkgs; [
     nix-tree

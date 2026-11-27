@@ -12,7 +12,10 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     users = {
-      ldryt = import ../../users/ldryt;
+      ldryt.imports = [
+        ../../users/ldryt
+        ../../users/ldryt/desktop.nix
+      ];
     };
     sharedModules = [ inputs.sops-nix.homeManagerModules.sops ];
     extraSpecialArgs = {

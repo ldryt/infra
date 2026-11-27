@@ -31,7 +31,10 @@ in
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
-      users.ldryt = import ../users/ldryt/remote.nix;
+      users.ldryt.imports = [
+        ../users/ldryt
+        ../users/ldryt/remote.nix
+      ];
     };
 
     ldryt-infra.persist.directories = [
