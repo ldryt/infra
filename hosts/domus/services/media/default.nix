@@ -14,7 +14,7 @@ let
     host = "192.168.15.1";
     port = config.nixarr.qbittorrent.webuiPort;
   };
-  arrApps = {
+  mediaAdminApps = {
     radarr = {
       host = "127.0.0.1";
       port = config.services.radarr.settings.server.port;
@@ -27,22 +27,23 @@ let
       host = "127.0.0.1";
       port = config.services.prowlarr.settings.server.port;
     };
+    qbittorrent = qbittorrentApi;
   };
-  mediaAdminApps = arrApps // { qbittorrent = qbittorrentApi; };
-  monitoring = config.ldryt-infra.monitoring;
 
-  seerrOidc = pkgs.seerr.overrideAttrs (final: old: {
-    version = "preview-new-oidc-${builtins.substring 0 7 final.src.rev}";
-    src = pkgs.fetchFromGitHub {
-      owner = "michaelhthomas";
-      repo = "seerr";
-      rev = "2e523125e8e7262af44309c70db20fe2d7ca28a3";
-      hash = "sha256-k8qWhsSBnQXfGk/xEmb2+4tlw6xY8viwWzEQUBxtrNs=";
-    };
-    pnpmDeps = old.pnpmDeps.overrideAttrs {
-      outputHash = "sha256-bfdmNLBypcoJ79/lMRSgRKSIddQJJohcn3/dL21edog=";
-    };
-  });
+  seerrOidc = pkgs.seerr.overrideAttrs (
+    final: old: {
+      version = "preview-new-oidc-${builtins.substring 0 7 final.src.rev}";
+      src = pkgs.fetchFromGitHub {
+        owner = "michaelhthomas";
+        repo = "seerr";
+        rev = "2e523125e8e7262af44309c70db20fe2d7ca28a3";
+        hash = "sha256-k8qWhsSBnQXfGk/xEmb2+4tlw6xY8viwWzEQUBxtrNs=";
+      };
+      pnpmDeps = old.pnpmDeps.overrideAttrs {
+        outputHash = "sha256-bfdmNLBypcoJ79/lMRSgRKSIddQJJohcn3/dL21edog=";
+      };
+    }
+  );
 
   jellyfinSso = pkgs.fetchzip rec {
     # renovate: datasource=github-releases depName=Buco7854/jellyfin-plugin-sso extractVersion=^v(?<version>4[.][0-9.]+)$
@@ -52,74 +53,10 @@ let
     hash = "sha256-oG3Ho3E3ejD9KOLxs8SUHiRG8EjEycaQ7klpldke/5g=";
     stripRoot = false;
   };
-  jellyfinExporter = pkgs.fetchzip rec {
-    # renovate: datasource=github-releases depName=rebelcore/jellyfin_exporter
-    version = "1.6.0";
-    url = "https://github.com/rebelcore/jellyfin_exporter/releases/download/v${version}/jellyfin_exporter-${version}.linux-amd64.tar.gz";
-    hash = "sha256-Tyznpk5qiqLhRp0EbYcv2hqcyaRjsYunfoUeY338XHQ=";
-  };
-  jellyfinExporterPort = 9594;
-  jellyfinExporterKey = "services/monitoring/endpoints/jellyfin/apiKey";
   acmeMail = "security@ldryt.dev";
 in
 {
-  imports = [
-    {
-      config = lib.mkIf monitoring.enable {
-        systemd.services = lib.mapAttrs' (
-          name: _:
-          lib.nameValuePair "prometheus-exportarr-${name}-exporter" {
-            after = [ "${name}-api.service" ];
-            requires = [ "${name}-api.service" ];
-          }
-        ) arrApps;
-
-        services.prometheus.exporters = lib.mapAttrs' (
-          name: app:
-          lib.nameValuePair "exportarr-${name}" {
-            enable = true;
-            port = config.nixarr.${name}.exporter.port;
-            inherit (monitoring) listenAddress;
-            environment.INTERFACE = monitoring.listenAddress;
-            url = "http://${app.host}:${toString app.port}";
-            apiKeyFile = "${stateDir}/secrets/${name}.api-key";
-          }
-        ) arrApps;
-
-        ldryt-infra.monitoring = {
-          endpoints =
-            lib.mapAttrs (name: _: {
-              port = config.services.prometheus.exporters."exportarr-${name}".port;
-            }) arrApps
-            // {
-              qbittorrent = {
-                port = config.services.prometheus.exporters.json.port;
-                metricsPath = "/probe";
-                params = {
-                  module = "qbittorrent";
-                  target = "http://${qbittorrentApi.host}:${toString qbittorrentApi.port}/api/v2/transfer/info";
-                };
-              };
-            };
-
-          jsonExporter.modules.qbittorrent.metrics = [
-            {
-              name = "qbittorrent_download_bytes_per_second";
-              path = "{.dl_info_speed}";
-              help = "Total qBittorrent download rate in bytes per second.";
-              valuetype = "gauge";
-            }
-            {
-              name = "qbittorrent_upload_bytes_per_second";
-              path = "{.up_info_speed}";
-              help = "Total qBittorrent upload rate in bytes per second.";
-              valuetype = "gauge";
-            }
-          ];
-        };
-      };
-    }
-  ];
+  imports = [ (import ./monitoring.nix { inherit mediaAdminApps; }) ];
 
   sops.secrets = {
     "services/media/vpn/wg-media.conf".restartUnits = [ "wg.service" ];
@@ -170,17 +107,26 @@ in
     after = [ mediaMount ];
     bindsTo = [ mediaMount ];
     wantedBy = [ mediaMount ];
-    unitConfig.RequiresMountsFor = [ torrentDir mediaDir ];
+    unitConfig.RequiresMountsFor = [
+      torrentDir
+      mediaDir
+    ];
     serviceConfig.ReadOnlyPaths = [ mediaDir ];
     serviceConfig.ReadWritePaths = [ "${mediaDir}/qbittorrent" ];
   };
 
   systemd.services.radarr-sync-config = {
-    requires = [ "radarr-api.service" "qbittorrent.service" ];
+    requires = [
+      "radarr-api.service"
+      "qbittorrent.service"
+    ];
     after = [ "qbittorrent.service" ];
   };
   systemd.services.sonarr-sync-config = {
-    requires = [ "sonarr-api.service" "qbittorrent.service" ];
+    requires = [
+      "sonarr-api.service"
+      "qbittorrent.service"
+    ];
     after = [ "qbittorrent.service" ];
   };
   systemd.services.prowlarr-sync-config.requires = [
@@ -320,48 +266,6 @@ in
       '')
     ];
   };
-
-  sops.secrets.${jellyfinExporterKey}.restartUnits = [ "jellyfin-exporter.service" ];
-
-  systemd.services.jellyfin-exporter = lib.mkIf monitoring.enable {
-    description = "Jellyfin Prometheus exporter";
-    wantedBy = [ "multi-user.target" ];
-    after = [ "jellyfin.service" ];
-    serviceConfig = {
-      DynamicUser = true;
-      LoadCredential = "api-key:${config.sops.secrets.${jellyfinExporterKey}.path}";
-      Restart = "on-failure";
-    };
-    script = ''
-      export JELLYFIN_TOKEN="$(<"$CREDENTIALS_DIRECTORY/api-key")"
-      exec ${jellyfinExporter}/jellyfin_exporter \
-        --web.listen-address=127.0.0.1:${toString jellyfinExporterPort} \
-        --collector.disable-defaults --collector.playing --collector.transcoding
-    '';
-  };
-
-  services.prometheus.scrapeConfigs = lib.mkIf monitoring.enable [
-    {
-      job_name = "jellyfin";
-      static_configs = [
-        {
-          targets = [ "127.0.0.1:${toString jellyfinExporterPort}" ];
-          labels.instance = config.networking.hostName;
-        }
-      ];
-      metric_relabel_configs = [
-        {
-          source_labels = [ "__name__" ];
-          regex = "jellyfin_(now_playing_state|transcoding_sessions)";
-          action = "keep";
-        }
-        {
-          regex = "__name__|instance|job|session_id";
-          action = "labelkeep";
-        }
-      ];
-    }
-  ];
 
   systemd.services.seerr.preStart = ''
     umask 0077

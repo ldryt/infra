@@ -1,20 +1,11 @@
-{ config, lib, ... }:
+{ config, ... }:
 let
-  relay = config.services.syncthing.relay;
-  monitoring = config.ldryt-infra.monitoring;
+  inherit (config.services.syncthing.relay) statusPort;
 in
 {
-  ldryt-infra.monitoring = lib.mkIf monitoring.enable {
-    endpoints.strelay = {
-      port = config.services.prometheus.exporters.json.port;
-      metricsPath = "/probe";
-      params = {
-        module = "strelay";
-        target = "http://127.0.0.1:${toString relay.statusPort}/status";
-      };
-    };
-
-    jsonExporter.modules.strelay.metrics = [
+  ldryt-infra.monitoring.jsonProbes.strelay = {
+    target = "http://127.0.0.1:${toString statusPort}/status";
+    metrics = [
       {
         name = "strelay_bytes_proxied_total";
         path = "{.bytesProxied}";

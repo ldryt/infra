@@ -25,68 +25,56 @@ in
     ];
   };
 
-  ldryt-infra.monitoring = lib.mkMerge [
-    (lib.mkIf monitoring.enable {
-      endpoints.chrony.port = config.services.prometheus.exporters.chrony.port;
-    })
-    (lib.mkIf (monitoring.enable && poolAddress != null) {
-      endpoints.ntppool = {
-        port = config.services.prometheus.exporters.json.port;
-        metricsPath = "/probe";
+  ldryt-infra.monitoring = {
+    endpoints.chrony = lib.mkIf monitoring.enable {
+      port = config.services.prometheus.exporters.chrony.port;
+    };
+
+    jsonProbes = lib.mkIf (poolAddress != null) {
+      ntppool = {
         scrapeInterval = "5m";
-        params = {
-          module = "ntppool";
-          target = "https://www.ntppool.org/scores/${poolAddress}/json?limit=1";
-        };
+        target = "https://www.ntppool.org/scores/${poolAddress}/json?limit=1";
+        metrics = [
+          {
+            name = "ntppool_score";
+            path = "{.history[0].score}";
+            help = "Latest aggregate NTP Pool score.";
+            valuetype = "gauge";
+          }
+          {
+            name = "ntppool_score_timestamp_seconds";
+            path = "{.history[0].ts}";
+            help = "Unix timestamp of the latest aggregate NTP Pool score, in seconds.";
+            valuetype = "gauge";
+          }
+        ];
       };
 
-      jsonExporter.modules.ntppool.metrics = [
-        {
-          name = "ntppool_score";
-          path = "{.history[0].score}";
-          help = "Latest aggregate NTP Pool score.";
-          valuetype = "gauge";
-        }
-        {
-          name = "ntppool_score_timestamp_seconds";
-          path = "{.history[0].ts}";
-          help = "Unix timestamp of the latest aggregate NTP Pool score, in seconds.";
-          valuetype = "gauge";
-        }
-      ];
-
-      endpoints.ntppool-dns = {
-        port = config.services.prometheus.exporters.json.port;
-        metricsPath = "/probe";
+      ntppool-dns = {
         scrapeInterval = "5m";
-        params = {
-          module = "ntppool-dns";
-          target = "https://www.ntppool.org/api/data/server/dns/answers/${poolAddress}";
-        };
+        target = "https://www.ntppool.org/api/data/server/dns/answers/${poolAddress}";
+        metrics = [
+          {
+            name = "ntppool_dns";
+            type = "object";
+            path = "{.Server[*]}";
+            help = "NTP Pool DNS answer share in parts per ten thousand.";
+            labels.country = "{.CC}";
+            values.answer_points = "{.Points}";
+            values.expected_points = "{.Netspeed}";
+            valuetype = "gauge";
+          }
+          {
+            name = "ntppool_dns";
+            type = "object";
+            path = "{.Server[*]}";
+            help = "NTP Pool DNS answer count by client country.";
+            labels.country = "{.CC}";
+            values.answers = "{.Count}";
+            valuetype = "gauge";
+          }
+        ];
       };
-
-      jsonExporter.modules.ntppool-dns.metrics = [
-        {
-          name = "ntppool_dns";
-          type = "object";
-          path = "{.Server[*]}";
-          help = "NTP Pool DNS answer share in parts per ten thousand.";
-          labels.country = "{.CC}";
-          values.answer_points = "{.Points}";
-          values.expected_points = "{.Netspeed}";
-          valuetype = "gauge";
-        }
-        {
-          name = "ntppool_dns";
-          type = "object";
-          path = "{.Server[*]}";
-          help = "NTP Pool DNS answer count by client country.";
-          labels.country = "{.CC}";
-          values.answers = "{.Count}";
-          valuetype = "gauge";
-        }
-      ];
-    })
-  ];
-
+    };
+  };
 }

@@ -26,6 +26,19 @@ in
     }
   ];
 
+  ldryt-infra.monitoring.jsonProbes.ripe-atlas = {
+    target = "https://atlas.ripe.net/api/v2/probes/1019122/";
+    scrapeInterval = "5m";
+    metrics = [
+      {
+        name = "ripe_atlas_status";
+        path = "{.status.id}";
+        help = "Connection state reported by the RIPE Atlas controller.";
+        valuetype = "gauge";
+      }
+    ];
+  };
+
   virtualisation.oci-containers = {
     backend = "podman";
     containers.ripe-atlas = {
