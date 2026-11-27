@@ -6,13 +6,15 @@
     "--isolated"
     "--sandbox"
     "--config"
-    (pkgs.writeText "playwright-mcp-config.json" (builtins.toJSON {
-      browser.launchOptions.chromiumSandbox = true;
-    }))
+    (pkgs.writeText "playwright-mcp-config.json" (
+      builtins.toJSON {
+        browser.launchOptions.chromiumSandbox = true;
+      }
+    ))
     "--output-mode"
     "stdout"
   ];
-  description = "Browse websites with a separate Chromium session: navigate, read pages, and interact with links and forms.";
+  description = "Use Playwright to inspect or interact with pages. If `web_search` is unavailable, browse with Playwright, not Bash.";
   exposure = "deferred";
   toolExposure = {
     "*" = "hidden";

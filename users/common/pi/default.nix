@@ -10,10 +10,6 @@
     ./web-search
   ];
 
-  home.file.".pi/agent/AGENTS.md".text = ''
-    Use Playwright to inspect or interact with pages, or when `web_search` is unavailable.
-  '';
-
   home.file.".pi/agent/mcp.json".text = builtins.toJSON {
     mcpServers = {
       playwright = import ./playwright.nix { inherit lib pkgs; };
