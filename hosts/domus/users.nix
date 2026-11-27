@@ -1,5 +1,17 @@
-{ config, ... }:
+{ config, inputs, ... }:
 {
+  home-manager.sharedModules = [ inputs.sops-nix.homeManagerModules.sops ];
+  home-manager.users = {
+    ldryt = {
+      sops.defaultSopsFile = ../../users/ldryt/secrets/domus.yaml;
+      sops.age.keyFile = "/nix/persist/sops_age_ldryt_domus.key";
+    };
+    colon = {
+      sops.defaultSopsFile = ../../users/colon/secrets/domus.yaml;
+      sops.age.keyFile = "/nix/persist/sops_age_colon_domus.key";
+    };
+  };
+
   ldryt-infra.users.colon = {
     enable = true;
     authorizedKeys = [

@@ -12,10 +12,14 @@
     useGlobalPkgs = true;
     useUserPackages = true;
     users = {
-      ldryt.imports = [
-        ../../users/ldryt
-        ../../users/ldryt/desktop.nix
-      ];
+      ldryt = {
+        imports = [
+          ../../users/ldryt
+          ../../users/ldryt/desktop.nix
+        ];
+        sops.defaultSopsFile = ../../users/ldryt/secrets/tinkerbell.yaml;
+        sops.age.keyFile = "/nix/persist/sops_age_ldryt_tinkerbell.key";
+      };
     };
     sharedModules = [ inputs.sops-nix.homeManagerModules.sops ];
     extraSpecialArgs = {

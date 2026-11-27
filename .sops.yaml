@@ -3,6 +3,9 @@ keys:
   - &domus age1xvfsgq2yk82pakqkw7nyx6phq7z6qhpjj8umrlsc8zckwplsspaqsymdc6
   - &sm-epita age1lmtdthrukmz0kezwgthgd37g45enze0ayvc8ausd464utty5h9gskxzl0k
   - &ldryt age1d7d0ed4268h2gdew58c62gcpac2y9tn9ke03kdkr5c93alvzm5rqn2zg2j
+  - &ldryt-tinkerbell age16nx63km5v0n4qqd8qj4dpwtj87lhhjphu0ysp2q6tav9q24h0asq2nzc9p
+  - &ldryt-domus age1cz3apvvxp3zvs6seus7zrxxt44n52tggmhkvmxmjq34x3mpjr37qfajzt3
+  - &colon-domus age105qaqcrjz8e2e5g6emex9u8lg87khz96k0jsm3hljuf6nvw6yvrsajx6z7
 creation_rules:
   - path_regex: hosts/tinkerbell/secrets.yaml$
     key_groups:
@@ -22,6 +25,21 @@ creation_rules:
   - path_regex: users/ldryt/secrets.yaml$
     key_groups:
       - age:
+        - *ldryt
+  - path_regex: '^users/ldryt/secrets/tinkerbell\.yaml$'
+    key_groups:
+      - age:
+        - *ldryt-tinkerbell
+        - *ldryt
+  - path_regex: '^users/ldryt/secrets/domus\.yaml$'
+    key_groups:
+      - age:
+        - *ldryt-domus
+        - *ldryt
+  - path_regex: '^users/colon/secrets/domus\.yaml$'
+    key_groups:
+      - age:
+        - *colon-domus
         - *ldryt
   - path_regex: ansible/secrets/[^/]+\.yaml$
     key_groups:
