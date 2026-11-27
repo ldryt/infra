@@ -5,6 +5,7 @@
   ...
 }:
 let
+  bouncerMetricsPort = 60601;
   journal = type: filters: {
     source = "journalctl";
     journalctl_filter = lib.optional (type != "syslog") "--output=cat" ++ filters;
@@ -20,6 +21,11 @@ let
 in
 {
   imports = [ ./notifications.nix ];
+
+  ldryt-infra.monitoring.endpoints = {
+    crowdsec.port = config.services.crowdsec.settings.general.prometheus.listen_port;
+    crowdsec-bouncer.port = bouncerMetricsPort;
+  };
 
   networking.firewall.logRefusedConnections = true;
   networking.nftables = {
@@ -92,6 +98,11 @@ in
     settings.nftables = {
       ipv4.set-only = false;
       ipv6.set-only = false;
+    };
+    settings.prometheus = lib.mkIf config.ldryt-infra.monitoring.enable {
+      enabled = true;
+      listen_addr = "127.0.0.1";
+      listen_port = toString bouncerMetricsPort;
     };
   };
   # Bouncer registration invokes cscli without --config
