@@ -6,6 +6,7 @@
 }:
 {
   imports = [
+    ./hashline
     ./notify.nix
     ./web-search
   ];
