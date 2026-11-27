@@ -10,6 +10,10 @@
     hash = "sha256-8HgICeK/HB07pLb+KRpB6kxIRW9Vc8s0VcJmtutuKr8=";
   };
 
+  home.file.".pi/agent/AGENTS.md".text = ''
+    Use Playwright to inspect or interact with pages, or when `web_search` is unavailable.
+  '';
+
   home.file.".pi/agent/mcp.json".text = builtins.toJSON {
     mcpServers = {
       playwright = import ./playwright.nix { inherit lib pkgs; };
