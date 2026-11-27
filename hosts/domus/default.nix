@@ -22,7 +22,6 @@
     ./services/syncthing.nix
     ./services/restic-sftp-host.nix
     ./services/harmonia.nix
-    ./services/searxng.nix
 
     ../../modules/monitoring/server.nix
     ../../modules/nginx.nix

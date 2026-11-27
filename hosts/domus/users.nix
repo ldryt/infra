@@ -16,10 +16,6 @@
     ];
   };
 
-  sops.secrets."pi/searx/password" = {
-    owner = "ldryt";
-    mode = "0400";
-  };
   sops.secrets."users/ldryt/hashedPassword".neededForUsers = true;
   users.users.ldryt = {
     extraGroups = [ "syncthing" ];

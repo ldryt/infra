@@ -87,10 +87,6 @@
     "nix-cache": [
       "nix-cache",
       "domus"
-    ],
-    "searxng": [
-      "search",
-      "domus"
     ]
   },
   "lucasladreyt.eu": {
