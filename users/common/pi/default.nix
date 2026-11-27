@@ -11,6 +11,8 @@
     ./web-search
   ];
 
+  home.sessionVariables.PI_OFFLINE = "1";
+
   home.file.".pi/agent/mcp.json".text = builtins.toJSON {
     mcpServers = {
       playwright = import ./playwright.nix { inherit lib pkgs; };
