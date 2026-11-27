@@ -1,9 +1,9 @@
 {
   "uid": "availability",
   "title": "Availability",
-  "description": "Observed uptime for existing service probes. Times without observations are excluded from uptime and shown in coverage.",
+  "description": "Service checks from domus.",
   "schemaVersion": 39,
-  "version": 1,
+  "version": 6,
   "editable": false,
   "refresh": "1m",
   "time": {
@@ -19,16 +19,72 @@
   ],
   "panels": [
     {
+      "id": 3,
+      "title": "Status",
+      "description": "Checks run from domus, not from the public internet.",
+      "type": "stat",
+      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 4 },
+      "targets": [
+        {
+          "refId": "A",
+          "expr": "count((probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"} == 1) and (up == 1)) or 0 * count(up{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"})",
+          "legendFormat": "Passing",
+          "instant": true,
+          "range": false
+        },
+        {
+          "refId": "B",
+          "expr": "count((probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"} == 0) and (up == 1)) or 0 * count(up{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"})",
+          "legendFormat": "Failing",
+          "instant": true,
+          "range": false
+        },
+        {
+          "refId": "C",
+          "expr": "count(up{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"} unless (probe_success and (up == 1))) or 0 * count(up{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"})",
+          "legendFormat": "Unknown",
+          "instant": true,
+          "range": false
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short",
+          "decimals": 0,
+          "color": { "mode": "thresholds" },
+          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] }
+        },
+        "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Failing" },
+            "properties": [{ "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "gray", "value": null }, { "color": "red", "value": 1 }] } }]
+          },
+          {
+            "matcher": { "id": "byName", "options": "Unknown" },
+            "properties": [{ "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "gray", "value": null }, { "color": "orange", "value": 1 }] } }]
+          }
+        ]
+      },
+      "options": {
+        "orientation": "vertical",
+        "colorMode": "value",
+        "graphMode": "none",
+        "textMode": "value_and_name",
+        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
+      }
+    },
+    {
       "id": 1,
-      "title": "Current status and uptime",
+      "title": "Uptime",
       "type": "table",
       "gridPos": {
         "x": 0,
-        "y": 0,
+        "y": 4,
         "w": 24,
         "h": 12
       },
-      "description": "Uptime is the percentage of valid probe results that passed. Coverage is the share of scheduled one-minute checks with results over 30 days. Exporter failures and missing observations reduce coverage. Newly added checks have partial coverage.",
+      "description": "Uptime counts only checks that returned a result. Coverage shows how often we got one.",
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
@@ -135,9 +191,14 @@
       ],
       "fieldConfig": {
         "defaults": {
-          "noValue": "—"
+          "noValue": "—",
+          "custom": { "minWidth": 90 }
         },
         "overrides": [
+          {
+            "matcher": { "id": "byName", "options": "Endpoint" },
+            "properties": [{ "id": "custom.width", "value": 350 }]
+          },
           {
             "matcher": {
               "id": "byName",
@@ -204,15 +265,14 @@
     },
     {
       "id": 2,
-      "title": "Availability history",
+      "title": "Check history",
       "type": "status-history",
       "gridPos": {
         "x": 0,
-        "y": 12,
+        "y": 16,
         "w": 24,
         "h": 15
       },
-      "description": "Red means at least one probe failed in the bucket. Gray means a scrape failed. Gaps mark buckets without observations. Green means all observed probes passed.",
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
@@ -282,7 +342,7 @@
         "rowHeight": 0.8,
         "colWidth": 0.9,
         "legend": {
-          "showLegend": false
+          "showLegend": true
         },
         "tooltip": {
           "mode": "single"

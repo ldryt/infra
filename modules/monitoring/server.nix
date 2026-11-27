@@ -46,6 +46,7 @@ in
     enable = true;
     listenAddress = "127.0.0.1";
     port = common.ports.prometheus;
+    retentionTime = "35d";
     rules = [ (builtins.readFile ./alerts.yml) ];
     alertmanagers = [
       {
@@ -100,7 +101,8 @@ in
               targets = [ "${monitoring.listenAddress}:${toString endpoint.port}" ];
               labels.instance = config.networking.hostName;
             }
-          ] ++ lib.optional (job_name == "nodes") {
+          ]
+          ++ lib.optional (job_name == "nodes") {
             targets = [ "192.168.1.3:${toString common.ports.nodeExporter}" ];
             labels = {
               instance = "clank";
@@ -108,7 +110,9 @@ in
             };
           };
         }
-        // lib.optionalAttrs (endpoint.scrapeInterval != null) { scrape_interval = endpoint.scrapeInterval; }
+        // lib.optionalAttrs (endpoint.scrapeInterval != null) {
+          scrape_interval = endpoint.scrapeInterval;
+        }
       ) monitoring.endpoints
       ++ lib.mapAttrsToList (module: targets: {
         job_name = "blackbox_${module}";
