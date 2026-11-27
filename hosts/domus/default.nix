@@ -5,7 +5,6 @@
     ./networking.nix
     ./users.nix
 
-    ./services/adguardhome.nix
     ./services/archiveteam.nix
     ./services/frontpage.nix
     ./services/shlink.nix
