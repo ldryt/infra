@@ -8,6 +8,7 @@
     "terraform",
     "github-actions",
     "ansible-galaxy",
+    "npm",
     "custom.regex"
   ],
   "nix": {
