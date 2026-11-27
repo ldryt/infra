@@ -341,9 +341,12 @@ in
     }
   ) mediaAdminApps;
 
-  ldryt-infra.monitoring.blackbox.targets.http_protected = lib.mapAttrsToList (
-    name: _: "https://${config.ldryt-infra.dns.records.${name}}/"
-  ) mediaAdminApps;
+  ldryt-infra.monitoring.blackbox.targets = {
+    http_ok = [ "https://${config.ldryt-infra.dns.records.jellyfin}/health" ];
+    http_protected = lib.mapAttrsToList (
+      name: _: "https://${config.ldryt-infra.dns.records.${name}}/"
+    ) mediaAdminApps;
+  };
 
   services.prowlarr.settings = {
     auth.method = "External";
