@@ -69,6 +69,10 @@
       ".parsec"
       ".parsec-persistent"
       ".gnupg"
+      {
+        directory = ".pi/agent";
+        mode = "0700";
+      }
       "STM32Cube"
       "STM32CubeIDE"
       ".stm32cubemx"

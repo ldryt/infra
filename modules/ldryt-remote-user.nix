@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   pkgs,
   ...
@@ -31,6 +32,7 @@ in
     home-manager = {
       useGlobalPkgs = true;
       useUserPackages = true;
+      extraSpecialArgs = { inherit inputs; };
       users.ldryt.imports = [
         ../users/ldryt
         ../users/ldryt/remote.nix

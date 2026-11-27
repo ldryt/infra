@@ -6,6 +6,7 @@
     ../common/helix/full.nix
     ../common/git.nix
     ../common/packages/cli.nix
+    ../common/pi
   ];
 
   home = {

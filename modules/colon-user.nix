@@ -1,5 +1,6 @@
 {
   config,
+  inputs,
   lib,
   pkgs-master,
   ...
@@ -25,7 +26,7 @@ in
       useGlobalPkgs = true;
       useUserPackages = true;
       users.colon = import ../users/colon;
-      extraSpecialArgs = { inherit pkgs-master; };
+      extraSpecialArgs = { inherit inputs pkgs-master; };
     };
 
     sops.secrets."users/colon/hashedPassword".neededForUsers = true;

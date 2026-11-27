@@ -8,6 +8,8 @@
   programs.tmux = {
     enable = true;
     extraConfig = ''
+      set -g extended-keys on
+      set -g extended-keys-format csi-u
       bind-key -n PageUp if-shell -F '#{alternate_on}' 'send-keys PageUp' 'copy-mode -eu'
     '';
   };
