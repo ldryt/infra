@@ -7,7 +7,7 @@ automation_images:
   # renovate: datasource=docker depName=ghcr.io/home-assistant/home-assistant
   home_assistant: ghcr.io/home-assistant/home-assistant:2026.11.3@sha256:24e541ddae5818bf8eb27898b9ba00d0c344a655aa5097e9e9bd4b19356be847
   # renovate: datasource=docker depName=ghcr.io/matter-js/matterjs-server
-  matter: ghcr.io/matter-js/matterjs-server:1.6.0@sha256:9eb98c839d0b4b07f9230b96ad52de570f7f2a7c286c5992b4c04b6b26c08a3f
+  matter: ghcr.io/matter-js/matterjs-server:1.6.1@sha256:5591f9f65926ca4b13b34cfd9c9888cb9d9ee9f147fe0b04c8e025cbeeee0eb7
   # renovate: datasource=docker depName=docker.io/library/nginx
   gateway: docker.io/library/nginx:1.31-alpine@sha256:b50897d5c7b1aa08067c3d90c5e8b3e47ec4e3c91c91446f67820228f7b41e34
   # renovate: datasource=docker depName=ghcr.io/bokub/ha-linky-aarch64
