@@ -33,8 +33,7 @@ jobs:
       - name: Build and repair Renovate hashes
         run: bash .github/scripts/check.sh
       - name: Cache
-        if: github.event_name == 'push'
-        continue-on-error: true
+        if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
         env:
           SSH_KNOWN_HOSTS: ${{ vars.SSH_KNOWN_HOSTS }}
           NIX_CACHE_SSH_PRIVKEY: ${{ secrets.NIX_CACHE_SSH_PRIVKEY }}
