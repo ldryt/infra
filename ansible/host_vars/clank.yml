@@ -9,7 +9,7 @@ automation_images:
   # renovate: datasource=docker depName=ghcr.io/matter-js/matterjs-server
   matter: ghcr.io/matter-js/matterjs-server:1.6.1@sha256:5591f9f65926ca4b13b34cfd9c9888cb9d9ee9f147fe0b04c8e025cbeeee0eb7
   # renovate: datasource=docker depName=docker.io/library/nginx
-  gateway: docker.io/library/nginx:1.31-alpine@sha256:b50897d5c7b1aa08067c3d90c5e8b3e47ec4e3c91c91446f67820228f7b41e34
+  gateway: docker.io/library/nginx:1.31-alpine@sha256:7fc0fb4af7bf006aeb31aea88069976060f8f0a0a86b667126742cc17f4e31ae
   # renovate: datasource=docker depName=ghcr.io/bokub/ha-linky-aarch64
   linky: ghcr.io/bokub/ha-linky-aarch64:1.9.0@sha256:f5d38ff05baa18e63b253fa352de32011687c12effe2ca586fc45e697bfe0d0e
   # renovate: datasource=docker depName=ghcr.io/esphome/esphome
