@@ -8,10 +8,11 @@ let
     inherit src;
     npmDeps = pkgs.importNpmLock { npmRoot = src; };
     inherit (pkgs.importNpmLock) npmConfigHook;
+    npmFlags = [ "--legacy-peer-deps" ];
     dontNpmBuild = true;
   };
 in
 {
-  home.file.".pi/agent/extensions/${name}".source =
+  home.file.".pi/agent/extensions/${baseNameOf name}".source =
     "${runtime}/lib/node_modules/${package.name}/node_modules/${name}";
 }
