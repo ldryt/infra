@@ -8,6 +8,7 @@
   imports = [
     ./hashline
     ./notify.nix
+    ./subscription-usage
     ./web-search
   ];
 

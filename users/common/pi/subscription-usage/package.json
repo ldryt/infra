@@ -1,0 +1,8 @@
+{
+  "name": "pi-subscription-usage-runtime",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@gowthamgts/pi-subscription-usage": "1.0.0"
+  }
+}
