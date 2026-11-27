@@ -33,6 +33,10 @@
     requires = [ "home-manager-ldryt.service" ];
   };
 
+  sops.secrets."pi/searx/password" = {
+    owner = "ldryt";
+    mode = "0400";
+  };
   sops.secrets."users/ldryt/hashedPassword".neededForUsers = true;
   users = {
     mutableUsers = false;
