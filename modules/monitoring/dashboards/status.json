@@ -9,75 +9,19 @@
     "from": "now-24h",
     "to": "now"
   },
-  "version": 20,
+  "version": 22,
   "panels": [
-    {
-      "id": 3,
-      "title": "Status",
-      "description": "Checks run from domus, not from the public internet.",
-      "type": "stat",
-      "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 4 },
-      "targets": [
-        {
-          "refId": "A",
-          "expr": "count((probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"} == 1) and (up == 1)) or 0 * count(up{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"})",
-          "legendFormat": "Passing",
-          "instant": true,
-          "range": false
-        },
-        {
-          "refId": "B",
-          "expr": "count((probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"} == 0) and (up == 1)) or 0 * count(up{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"})",
-          "legendFormat": "Failing",
-          "instant": true,
-          "range": false
-        },
-        {
-          "refId": "C",
-          "expr": "count(up{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"} unless (probe_success and (up == 1))) or 0 * count(up{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"})",
-          "legendFormat": "Unknown",
-          "instant": true,
-          "range": false
-        }
-      ],
-      "fieldConfig": {
-        "defaults": {
-          "unit": "short",
-          "decimals": 0,
-          "color": { "mode": "thresholds" },
-          "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] }
-        },
-        "overrides": [
-          {
-            "matcher": { "id": "byName", "options": "Failing" },
-            "properties": [{ "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "gray", "value": null }, { "color": "red", "value": 1 }] } }]
-          },
-          {
-            "matcher": { "id": "byName", "options": "Unknown" },
-            "properties": [{ "id": "thresholds", "value": { "mode": "absolute", "steps": [{ "color": "gray", "value": null }, { "color": "orange", "value": 1 }] } }]
-          }
-        ]
-      },
-      "options": {
-        "orientation": "vertical",
-        "colorMode": "value",
-        "graphMode": "none",
-        "textMode": "value_and_name",
-        "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }
-      }
-    },
     {
       "id": 1,
       "title": "Uptime",
       "type": "table",
       "gridPos": {
         "x": 0,
-        "y": 4,
+        "y": 0,
         "w": 24,
         "h": 12
       },
-      "description": "Uptime counts only checks that returned a result. Coverage shows how often we got one.",
+      "description": "Checks from domus. Uptime counts only checks that returned a result; coverage is the share of expected checks with a result.",
       "datasource": {
         "type": "prometheus",
         "uid": "PBFA97CFB590B2093"
@@ -85,7 +29,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "(probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"} and (up{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"} == 1)) or (up{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"} * 0 + 2)",
+          "expr": "(probe_success{job=~\"blackbox_http_ok|blackbox_tcp_connect\"} and (up == 1)) or (up{job=~\"blackbox_http_ok|blackbox_tcp_connect\"} * 0 + 2)",
           "instant": true,
           "range": false,
           "format": "table",
@@ -97,7 +41,7 @@
         },
         {
           "refId": "B",
-          "expr": "100 * avg_over_time(probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"}[24h])",
+          "expr": "100 * avg_over_time(probe_success{job=~\"blackbox_http_ok|blackbox_tcp_connect\"}[24h])",
           "instant": true,
           "range": false,
           "format": "table",
@@ -109,7 +53,7 @@
         },
         {
           "refId": "C",
-          "expr": "100 * avg_over_time(probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"}[7d])",
+          "expr": "100 * avg_over_time(probe_success{job=~\"blackbox_http_ok|blackbox_tcp_connect\"}[7d])",
           "instant": true,
           "range": false,
           "format": "table",
@@ -121,7 +65,7 @@
         },
         {
           "refId": "D",
-          "expr": "100 * avg_over_time(probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"}[30d])",
+          "expr": "100 * avg_over_time(probe_success{job=~\"blackbox_http_ok|blackbox_tcp_connect\"}[30d])",
           "instant": true,
           "range": false,
           "format": "table",
@@ -133,7 +77,7 @@
         },
         {
           "refId": "E",
-          "expr": "100 * clamp_max((count_over_time(probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"}[30d]) or up{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"} * 0) / 43200, 1)",
+          "expr": "100 * clamp_max((count_over_time(probe_success{job=~\"blackbox_http_ok|blackbox_tcp_connect\"}[30d]) or up{job=~\"blackbox_http_ok|blackbox_tcp_connect\"} * 0) / 43200, 1)",
           "instant": true,
           "range": false,
           "format": "table",
@@ -172,7 +116,7 @@
               "Value #E": 5
             },
             "renameByName": {
-              "instance": "Endpoint",
+              "instance": "Check",
               "Value #A": "Status",
               "Value #B": "24h uptime",
               "Value #C": "7d uptime",
@@ -189,8 +133,12 @@
         },
         "overrides": [
           {
-            "matcher": { "id": "byName", "options": "Endpoint" },
-            "properties": [{ "id": "custom.width", "value": 350 }]
+            "matcher": { "id": "byName", "options": "Check" },
+            "properties": [
+              { "id": "mappings", "value": [
+                { "type": "regex", "options": { "pattern": "^https?://([^/]+).*$", "result": { "text": "$1" } } }
+              ] }
+            ]
           },
           {
             "matcher": {
@@ -250,7 +198,7 @@
         "showHeader": true,
         "sortBy": [
           {
-            "displayName": "Endpoint",
+            "displayName": "Check",
             "desc": false
           }
         ]
@@ -262,9 +210,9 @@
       "type": "status-history",
       "gridPos": {
         "x": 0,
-        "y": 16,
+        "y": 12,
         "w": 24,
-        "h": 15
+        "h": 19
       },
       "datasource": {
         "type": "prometheus",
@@ -273,7 +221,7 @@
       "targets": [
         {
           "refId": "A",
-          "expr": "(min_over_time(probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"}[$__interval]) == 0) or ((min_over_time(up{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"}[$__interval]) == bool 0) * 2 == 2) or min_over_time(probe_success{job=~\"blackbox_.+\",job!=\"blackbox_tcp_fail\"}[$__interval])",
+          "expr": "(min_over_time(probe_success{job=~\"blackbox_http_ok|blackbox_tcp_connect\"}[$__interval]) == 0) or ((min_over_time(up{job=~\"blackbox_http_ok|blackbox_tcp_connect\"}[$__interval]) == bool 0) * 2 == 2) or min_over_time(probe_success{job=~\"blackbox_http_ok|blackbox_tcp_connect\"}[$__interval])",
           "instant": false,
           "range": true,
           "format": "time_series",
@@ -283,6 +231,9 @@
             "uid": "PBFA97CFB590B2093"
           }
         }
+      ],
+      "transformations": [
+        { "id": "renameByRegex", "options": { "regex": "^https?://([^/]+).*$", "renamePattern": "$1" } }
       ],
       "interval": "1m",
       "maxDataPoints": 144,
@@ -307,26 +258,7 @@
               }
             }
           ],
-          "color": {
-            "mode": "thresholds"
-          },
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "red",
-                "value": null
-              },
-              {
-                "color": "green",
-                "value": 1
-              },
-              {
-                "color": "gray",
-                "value": 2
-              }
-            ]
-          }
+          "color": { "mode": "palette-classic" }
         },
         "overrides": []
       },
