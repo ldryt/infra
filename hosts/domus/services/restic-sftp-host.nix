@@ -19,6 +19,7 @@ in
     group = bckpUser;
     uid = 1442;
     openssh.authorizedKeys.keys = [
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEqS0CzQnK6xfd/dch7Jm1QQCYZUuZyWgXZYImQ8OmiD colon@domus"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGb0ZhjF+uNHovVeddQ7ZikoMl3DuQmajM3o6QYx3inm ldryt@tinkerbell"
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINWM9ROZ2YOuSJk0dtWXNtrNc19qkR5vs3ia0Jzb0M+I backups@clank"
     ];
