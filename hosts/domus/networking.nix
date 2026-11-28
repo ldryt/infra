@@ -3,8 +3,8 @@
   networking = {
     hostName = "domus";
     nameservers = [
-      "86.54.11.100"
-      "86.54.11.200"
+      "76.76.2.0"
+      "76.76.10.0"
     ];
     enableIPv6 = false;
     useNetworkd = true;
