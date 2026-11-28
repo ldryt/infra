@@ -267,7 +267,7 @@
         "rowHeight": 0.8,
         "colWidth": 0.9,
         "legend": {
-          "showLegend": true
+          "showLegend": false
         },
         "tooltip": {
           "mode": "single"
