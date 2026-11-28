@@ -1,10 +1,14 @@
-{ pkgs, ... }:
+{ config, lib, ... }:
 {
   ldryt-infra.persist.directories = [
     "/var/lib/fail2ban"
   ];
+  networking.nftables.enable = lib.mkDefault true;
+  networking.firewall.logRefusedConnections = true;
+
   services.fail2ban = {
     enable = true;
+    daemonSettings.Definition.logtarget = "STDOUT";
     ignoreIP = [
       "10.0.0.0/8"
       "127.0.0.0/8"
@@ -17,8 +21,7 @@
       "82.67.219.252"
       "49.12.97.63"
     ];
-    extraPackages = [ pkgs.ipset ];
-    banaction = "iptables-ipset-proto6-allports";
+    banaction = config.services.fail2ban.banaction-allports;
     maxretry = 1;
     bantime = "8h";
     bantime-increment = {
@@ -43,13 +46,9 @@
     };
   };
 
-  environment.etc = {
-    "fail2ban/filter.d/portscan.conf".text = ''
-      [Definition]
-      failregex = ^.*refused connection.* IN=.* SRC=<HOST>.* DPT=(?!80|443|22000)\d+.*$
-      journalmatch = _TRANSPORT=kernel
-      ignoreregex =
-    '';
-  };
-
+  environment.etc."fail2ban/filter.d/portscan.conf".text = ''
+    [Definition]
+    failregex = ^.*refused connection: IN=.* SRC=<HOST>.* DPT=(?!(?:80|443|22000)(?:\s|$))\d+(?:\s|$)
+    journalmatch = _TRANSPORT=kernel
+  '';
 }

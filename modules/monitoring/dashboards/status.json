@@ -9,7 +9,7 @@
     "from": "now-24h",
     "to": "now"
   },
-  "version": 22,
+  "version": 24,
   "panels": [
     {
       "id": 1,
@@ -695,79 +695,37 @@
     },
     {
       "id": 60,
-      "title": "CrowdSec",
+      "title": "Fail2ban",
       "type": "row",
       "collapsed": true,
       "gridPos": { "x": 0, "y": 41, "w": 24, "h": 1 },
       "panels": [
         {
           "id": 61,
-          "title": "Active bans",
-          "type": "timeseries",
-          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-          "gridPos": { "x": 0, "y": 42, "w": 8, "h": 7 },
+          "title": "New bans (24h)",
+          "description": "Ban events over the previous 24 hours, not the number of IPs currently banned.",
+          "type": "stat",
+          "datasource": { "type": "loki", "uid": "P8E80F9AEF21F6940" },
+          "gridPos": { "x": 0, "y": 42, "w": 6, "h": 8 },
           "targets": [
-            { "refId": "A", "expr": "sum(cs_active_decisions{job=\"crowdsec\",action=\"ban\"} and on (job, instance) (up == 1)) or 0 * count(cs_info{job=\"crowdsec\"} and on (job, instance) (up == 1))", "legendFormat": "Bans", "range": true, "instant": false }
+            { "refId": "A", "expr": "sum(count_over_time({job=\"systemd-journal\",unit=\"fail2ban.service\"} |= \"] Ban \" [24h])) or vector(0)", "queryType": "instant" }
           ],
-          "fieldConfig": { "defaults": { "min": 0, "decimals": 0, "custom": { "lineInterpolation": "stepAfter", "fillOpacity": 8, "showPoints": "never" } }, "overrides": [] },
-          "options": { "legend": { "showLegend": false } }
+          "fieldConfig": { "defaults": { "decimals": 0 }, "overrides": [] },
+          "options": { "colorMode": "none", "graphMode": "none", "textMode": "value" }
         },
         {
           "id": 73,
-          "title": "Packets dropped",
+          "title": "New bans by jail",
+          "description": "Each point counts ban events in the preceding hour.",
           "type": "timeseries",
-          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-          "gridPos": { "x": 8, "y": 42, "w": 11, "h": 7 },
+          "datasource": { "type": "loki", "uid": "P8E80F9AEF21F6940" },
+          "gridPos": { "x": 6, "y": 42, "w": 18, "h": 8 },
+          "interval": "5m",
           "targets": [
-            { "refId": "A", "expr": "(60 * sum(rate(fw_bouncer_dropped_packets{job=\"crowdsec-bouncer\"}[$__rate_interval])) or on () 0 * count(rate(fw_bouncer_processed_packets{job=\"crowdsec-bouncer\"}[$__rate_interval]))) and on () (up{job=\"crowdsec-bouncer\"} == 1)", "legendFormat": "Drops", "range": true, "instant": false, "interval": "1m" }
+            { "refId": "A", "expr": "sum by (jail) (count_over_time({job=\"systemd-journal\",unit=\"fail2ban.service\"} |= \"] Ban \" | regexp `\\[(?P<jail>[[:alnum:]_.-]+)\\]:? Ban ` | jail != \"\" [1h]))", "legendFormat": "{{jail}}", "queryType": "range" }
           ],
-          "fieldConfig": { "defaults": { "unit": "suffix: pkt/min", "min": 0, "custom": { "fillOpacity": 8, "showPoints": "never" } }, "overrides": [] },
-          "options": { "legend": { "showLegend": false } }
-        },
-        {
-          "id": 74,
-          "title": "Bouncer polling",
-          "description": "Checks whether the firewall fetched decisions in the last five minutes.",
-          "type": "stat",
-          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-          "gridPos": { "x": 19, "y": 42, "w": 5, "h": 7 },
-          "targets": [
-            { "refId": "A", "expr": "((sum(increase(cs_lapi_bouncer_requests_total{job=\"crowdsec\",bouncer=\"crowdsec-firewall-bouncer\",route=\"/v1/decisions/stream\"}[5m])) > bool 0) or on () 0 * count(up{job=\"crowdsec\"} == 1)) and on () (up{job=\"crowdsec\"} == 1)", "instant": true, "range": false }
-          ],
-          "fieldConfig": {
-            "defaults": {
-              "mappings": [
-                { "type": "value", "options": { "0": { "text": "No recent polls", "color": "red" }, "1": { "text": "Polling", "color": "green" } } }
-              ]
-            },
-            "overrides": []
-          },
-          "options": { "colorMode": "value", "graphMode": "none", "textMode": "value" }
-        },
-        {
-          "id": 75,
-          "title": "Top detections (24h)",
-          "description": "Counts rule triggers, not unique attackers.",
-          "type": "bargauge",
-          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-          "gridPos": { "x": 0, "y": 49, "w": 12, "h": 8 },
-          "targets": [
-            { "refId": "A", "expr": "(topk(5, sum by (name) (increase(cs_bucket_overflowed_total{job=\"crowdsec\"}[24h]))) > 0) or on () label_replace(0 * count(up{job=\"crowdsec\"} == 1), \"name\", \"No detections\", \"name\", \".*\")", "legendFormat": "{{name}}", "instant": true, "range": false }
-          ],
-          "fieldConfig": { "defaults": { "min": 0, "decimals": 0, "color": { "mode": "fixed", "fixedColor": "blue" } }, "overrides": [] },
-          "options": { "orientation": "horizontal", "displayMode": "basic", "showUnfilled": false }
-        },
-        {
-          "id": 76,
-          "title": "Logs read by source",
-          "type": "timeseries",
-          "datasource": { "type": "prometheus", "uid": "PBFA97CFB590B2093" },
-          "gridPos": { "x": 12, "y": 49, "w": 12, "h": 8 },
-          "targets": [
-            { "refId": "A", "expr": "60 * sum by (acquis_type) (rate({__name__=~\"cs_(file|journalctl)source_hits_total\",job=\"crowdsec\"}[$__rate_interval]))", "legendFormat": "{{acquis_type}}", "range": true, "instant": false, "interval": "1m" }
-          ],
-          "fieldConfig": { "defaults": { "unit": "suffix: lines/min", "min": 0, "custom": { "showPoints": "never" } }, "overrides": [] },
-          "options": { "tooltip": { "mode": "multi", "sort": "desc" } }
+          "fieldConfig": { "defaults": { "min": 0, "decimals": 0 }, "overrides": [] },
+          "options": { "tooltip": { "mode": "multi" } }
         }
       ]
     },

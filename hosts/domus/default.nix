@@ -26,7 +26,7 @@
     ../../modules/nginx.nix
     ../../modules/openssh.nix
     ../../modules/nix-settings.nix
-    ../../modules/crowdsec
+    ../../modules/fail2ban.nix
     ../../modules/syncthing-relay
     ../../modules/snowflake-proxy.nix
     ../../modules/podman.nix
